@@ -11,7 +11,7 @@ classdef AnnFemMf < handle
     
     %% init
     methods (Access = public)
-        function self = AnnFemMf(data_ann)            
+        function self = AnnFemMf(data_ann)
             % assign input
             self.ann_input = data_ann.ann_input;
             self.ann_data = data_ann.ann_data;
@@ -39,11 +39,15 @@ classdef AnnFemMf < handle
             [is_valid_fom, fom] = self.ann_manager_obj.predict(n_sol, geom_rel, out_approx);
             is_valid = is_valid_param&is_valid_fom;
             
+            geom = self.get_geom(param);
+        end
+        
+        function geom = get_geom(self, param)
             geom.fact_window = param.fact_window;
             geom.fact_core = param.fact_core;
             geom.fact_core_window = param.fact_core_window;
             geom.fact_gap = param.fact_gap;
-                        
+            
             geom.S_box = param.S_box;
             geom.V_box = param.V_box;
             
@@ -54,10 +58,10 @@ classdef AnnFemMf < handle
             geom.y_window = param.y_window;
             geom.d_iso = param.d_iso;
             geom.r_curve = param.r_curve;
-
+            
             geom.A_core = param.A_core;
             geom.A_winding = param.A_winding;
-
+            
             geom.V_winding = param.V_winding;
             geom.V_core = param.V_core;
         end

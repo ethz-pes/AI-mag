@@ -1,4 +1,4 @@
-function master_fem(folder_fem, sweep, const, fct_param, fct_out_fem)
+function master_fem(folder_fem, sweep, const)
 
 % name
 fprintf('################## master_fem\n')
@@ -9,7 +9,7 @@ fprintf('sweep\n')
 
 % fem
 fprintf('fem\n')
-get_fem(folder_fem, n_sol, inp, const, fct_param, fct_out_fem);
+get_fem(folder_fem, n_sol, inp, const);
 
 fprintf('################## master_fem\n')
 

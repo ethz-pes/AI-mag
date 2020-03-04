@@ -11,8 +11,6 @@ inp = data_tmp.inp;
 out_fem = data_tmp.out_fem;
 out_approx = data_tmp.out_approx;
 const = data_tmp.const;
-fct_param = data_tmp.fct_param;
-fct_out_approx = data_tmp.fct_out_approx;
 
 % init
 fprintf('create ann\n')
@@ -34,7 +32,7 @@ obj.delete();
 
 % save
 fprintf('save\n')
-save(file_ann, 'ann_input', 'ann_data', 'const', 'fct_param', 'fct_out_approx')
+save(file_ann, 'ann_input', 'ann_data', 'const')
 
 fprintf('################## master_train\n')
 
