@@ -4,15 +4,15 @@ assert(any(strcmp(model_type, {'ht', 'mf'})), 'invalid model_type')
 
 % var_inp
 if any(strcmp(model_type, {'ht', 'mf'}))
-    var_inp.fact_window = struct('var_trf', 'log', 'var_norm', 'avg');
-    var_inp.fact_core = struct('var_trf', 'log', 'var_norm', 'avg');
-    var_inp.fact_core_window = struct('var_trf', 'log', 'var_norm', 'avg');
-    var_inp.fact_gap = struct('var_trf', 'log', 'var_norm', 'avg');
-    var_inp.volume_target = struct('var_trf', 'log', 'var_norm', 'avg');
+    var_inp.fact_window = struct('var_trf', 'log', 'var_norm', 'avg', 'min', 2.0, 'max', 4.0);
+    var_inp.fact_core = struct('var_trf', 'log', 'var_norm', 'avg', 'min', 1.0, 'max', 3.0);
+    var_inp.fact_core_window = struct('var_trf', 'log', 'var_norm', 'avg', 'min', 0.3, 'max', 3.0);
+    var_inp.fact_gap = struct('var_trf', 'log', 'var_norm', 'avg', 'min', 0.01, 'max', 0.2);
+    var_inp.volume_target = struct('var_trf', 'log', 'var_norm', 'avg', 'min', 0.01e-3, 'max', 1e-3);
 end
 if strcmp(model_type, 'ht')
-    var_inp.ht_stress = struct('var_trf', 'log', 'var_norm', 'avg');
-    var_inp.ht_sharing = struct('var_trf', 'log', 'var_norm', 'avg');
+    var_inp.ht_stress = struct('var_trf', 'log', 'var_norm', 'avg', 'min', NaN, 'max', NaN);
+    var_inp.ht_sharing = struct('var_trf', 'log', 'var_norm', 'avg', 'min', NaN, 'max', NaN);
 end
 
 % var_out

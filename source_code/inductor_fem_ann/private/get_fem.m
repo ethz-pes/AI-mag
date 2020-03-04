@@ -1,16 +1,16 @@
-function get_fem(folder, n_sol, inp, const, fct_extend_param, fct_out_fem)
+function get_fem(folder, n_sol, inp, const, fct_param, fct_out_fem)
 
 % compute
 for i=1:n_sol
     fprintf('    %d / %d\n', i, n_sol)
     inp_tmp =  get_struct_idx(inp, i);
 
-    get_out_sub(folder, inp_tmp, const, fct_extend_param, fct_out_fem);
+    get_out_sub(folder, inp_tmp, const, fct_param, fct_out_fem);
 end
 
 end
 
-function get_out_sub(folder, inp, const, fct_extend_param, fct_out_fem)
+function get_out_sub(folder, inp, const, fct_param, fct_out_fem)
 
 % get filename
 hash = get_hash(inp);
@@ -24,7 +24,7 @@ if make_computation==true
     
     % merge
     param = get_struct_merge(inp, const);
-    [is_valid, param] = fct_extend_param(param);
+    [is_valid, param] = fct_param(param);
             
     % disp
     if is_valid==true

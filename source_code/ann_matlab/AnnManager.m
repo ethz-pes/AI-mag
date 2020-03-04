@@ -87,6 +87,10 @@ classdef AnnManager < handle
             self.out_ref = out_ref;
             self.out_scl = out_scl;
                         
+            % check range
+            is_valid = get_range_inp(self.var_inp, self.inp);
+            assert(all(is_valid==true), 'invalid inp')
+            
             % split the data
             [self.idx_train, self.idx_test] = get_idx_split(self.n_sol, self.split_train_test);
             
@@ -127,7 +131,7 @@ classdef AnnManager < handle
             self.display_properties();
         end
         
-        function [out_ann_tmp, out_scl_tmp] = predict(self, n_sol_tmp, inp_tmp, out_scl_tmp)
+        function [is_valid_tmp, out_ann_tmp] = predict(self, n_sol_tmp, inp_tmp, out_scl_tmp)
             % check state
             assert(self.is_train==true, 'invalid state')
                         
@@ -137,6 +141,9 @@ classdef AnnManager < handle
             
             % unscale the result
             out_ann_tmp = get_unscale_out(self.var_out, self.norm_param_out, out_scl_tmp, out_mat_tmp);
+            
+            % check validity
+            is_valid_tmp = get_range_inp(self.var_inp, inp_tmp);
             
             % check set
             check_set(n_sol_tmp, self.var_inp, inp_tmp)

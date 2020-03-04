@@ -70,12 +70,12 @@ d_gap = param.d_gap;
 A_winding = param.A_winding;
 x_window = param.x_window;
 y_window = param.y_window;
-mu = param.mu;
+mu_core = param.mu_core;
 
 % L_norm
 mu0 = 4.*pi.*1e-7;
 F = 1+(d_gap./sqrt(A_core)).*log(2.*y_window./d_gap);
-R_core = l_core./(mu0.*mu.*A_core);
+R_core = l_core./(mu0.*mu_core.*A_core);
 R_gap = d_gap./(mu0.*F.*A_core);
 L_norm = 1./(R_core+R_gap+R_gap);
 

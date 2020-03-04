@@ -5,8 +5,8 @@ addpath(genpath('source_input'))
 close('all')
 
 %% run
-run_sub('ht');
-% run_sub('mf');
+% run_sub('ht');
+run_sub('mf');
 
 end
 

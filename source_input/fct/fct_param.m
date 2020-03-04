@@ -1,4 +1,4 @@
-function [is_valid, param] = fct_extend_param(model_type, param)
+function [is_valid, param] = fct_param(model_type, param)
 
 param = get_scale(param);
 
@@ -124,6 +124,7 @@ switch model_type
     case 'mf'
         param.I_winding = 1.0;
     case 'ht'
+        param.T_ambient = 0.0;
         param.P_tot = param.ht_stress.*param.S_box;
         param.P_core = sqrt(param.P_tot./param.ht_sharing);
         param.P_winding = sqrt(param.P_tot.*param.ht_sharing);
@@ -139,11 +140,11 @@ function is_valid = get_is_valid(param)
 is_valid = true;
 is_valid = is_valid&isfinite(param.A_core_window);
 is_valid = is_valid&isreal(param.A_core_window);
-is_valid = is_valid&(param.A_core_window>0);
-is_valid = is_valid&(param.x_window>(4.*param.d_iso));
-is_valid = is_valid&(param.y_window>(4.*param.d_iso));
-is_valid = is_valid&(param.t_core>(2.*param.r_curve));
-is_valid = is_valid&(param.d_gap>param.d_gap_min);
+is_valid = is_valid&(param.A_core_window>=0);
+is_valid = is_valid&(param.x_window>=(4.*param.d_iso));
+is_valid = is_valid&(param.y_window>=(4.*param.d_iso));
+is_valid = is_valid&(param.t_core>=(2.*param.r_curve));
+is_valid = is_valid&(param.d_gap>=param.d_gap_min);
 
 end
 
