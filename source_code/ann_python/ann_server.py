@@ -32,7 +32,7 @@ class AnnHandler(server.PythonMatlabServer):
 
             keys = list(self.data.keys())
             print("        status: ok / %s" % keys)
-        except:
+        except Exception as e:
             data_info = {}
             data_status = {"status": np.array(False, dtype="bool")}
 
@@ -67,8 +67,8 @@ class AnnHandler(server.PythonMatlabServer):
             raise ValueError('invalid type')
 
     def __train(self, tag_train, inp, out):
-        fct_model_tmp = lambda n_sol, n_inp, n_out: self.fct_model(n_sol, n_inp, n_out, tag_train)
-        fct_train_tmp = lambda model, inp_ref, out_ref: self.fct_train(model, inp_ref, out_ref, tag_train)
+        fct_model_tmp = lambda n_sol, n_inp, n_out: self.fct_model(tag_train, n_sol, n_inp, n_out)
+        fct_train_tmp = lambda model, inp_ref, out_ref: self.fct_train(tag_train, model, inp_ref, out_ref)
 
         (model, history) = ann_run.train(inp, out, fct_model_tmp, fct_train_tmp)
         history = ann_dump.parse_keras_history(history)

@@ -22,7 +22,7 @@ def fct_model(tag_train, n_sol, n_inp, n_out):
 
     return model
 
-def fct_train(model, tag_train, inp, out):
+def fct_train(tag_train, model, inp, out):
     assert isinstance(tag_train, str), 'invalid size'
 
     model.compile(loss='mse', optimizer=keras.optimizers.RMSprop(0.001), metrics=['mae', 'mse'])

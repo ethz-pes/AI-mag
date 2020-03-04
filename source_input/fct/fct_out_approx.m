@@ -48,11 +48,10 @@ R_conv_winding_internal = 1./(h_internal.*S_winding_internal);
 R_extract_core = 1./((1./(R_conv_winding_exposed+R_iso_winding_exposed))+(1./(R_conv_winding_internal+R_iso_winding_internal)));
 
 % circuit
-den = R_extract_core + R_extract_winding + R_iso_core_winding;
-T_core_max = (P_core.*R_core.*R_extract_core + P_core.*R_core.*R_extract_winding + P_core.*R_core.*R_iso_core_winding + P_core.*R_extract_core.*R_extract_winding + P_core.*R_extract_core.*R_iso_core_winding + P_winding.*R_extract_core.*R_extract_winding)./den;
-T_core_min = (R_extract_core.*(P_core.*R_extract_winding + P_core.*R_iso_core_winding + P_winding.*R_extract_winding))./den;
-T_winding_max = (P_core.*R_extract_core.*R_extract_winding + P_winding.*R_extract_core.*R_extract_winding + P_winding.*R_extract_winding.*R_iso_core_winding + P_winding.*R_extract_core.*R_winding + P_winding.*R_extract_winding.*R_winding + P_winding.*R_iso_core_winding.*R_winding)./den;
-T_winding_min = (R_extract_winding.*(P_core.*R_extract_core + P_winding.*R_extract_core + P_winding.*R_iso_core_winding))./den;
+T_winding_min = R_extract_winding.*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1).*(P_core.*R_extract_core+P_winding.*R_extract_core+P_winding.*R_iso_core_winding);
+T_core_min = (-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1).*((-1).*P_core.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_core.*R_extract_winding+(-1).*P_core.*R_extract_core.*R_iso_core_winding);
+T_winding_max = (-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1).*((-1).*P_core.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_winding.*R_iso_core_winding+(-1).*P_winding.*R_extract_core.*R_winding+(-1).*P_winding.*R_extract_winding.*R_winding+(-1).*P_winding.*R_iso_core_winding.*R_winding);
+T_core_max = (-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1).*((-1).*P_core.*R_core.*R_extract_core+(-1).*P_core.*R_core.*R_extract_winding+(-1).*P_core.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_core.*R_extract_winding+(-1).*P_core.*R_core.*R_iso_core_winding+(-1).*P_core.*R_extract_core.*R_iso_core_winding);
 
 % assign
 fom_approx.T_core_max = T_core_max;
