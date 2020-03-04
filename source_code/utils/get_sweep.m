@@ -8,7 +8,7 @@ switch sweep.type
     case 'vector'
         [n_sol, var] = get_vector(sweep.var, sweep.n_sol);
     case 'matrix'
-        [n_sol, var] = get_matrix(sweep.var, sweep.n_sol_max);
+        [n_sol, var] = get_matrix(sweep.var);
     case 'random'
         [n_sol, var] = get_random(sweep.var, sweep.n_sol);
     otherwise
@@ -39,7 +39,7 @@ end
 
 end
 
-function [n_sol, var] = get_matrix(var, n_sol_max)
+function [n_sol, var] = get_matrix(var)
 
 field = fieldnames(var);
 for i=1:length(field)
@@ -49,7 +49,6 @@ for i=1:length(field)
 end
 
 [n_sol, var] = get_struct_combination(var);
-assert(n_sol<=n_sol_max, 'invalid length')
 
 end
 

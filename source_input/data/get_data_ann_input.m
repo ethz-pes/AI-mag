@@ -47,6 +47,7 @@ switch ann_type
         ann_info.type = 'python';
         ann_info.hostname = 'localhost';
         ann_info.port = 10000;
+        ann_info.timeout = 120;
     otherwise
         error('invalid data')
 end

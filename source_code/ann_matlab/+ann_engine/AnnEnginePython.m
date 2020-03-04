@@ -3,16 +3,18 @@ classdef AnnEnginePython < ann_engine.AnnEngineAbstract
     properties (SetAccess = private, GetAccess = private)
         hostname
         port
+        timeout
         client_obj
     end
     
     %% init
     methods (Access = public)
-        function self = AnnEnginePython(hostname, port)
+        function self = AnnEnginePython(hostname, port, timeout)
             self = self@ann_engine.AnnEngineAbstract();
             self.hostname = hostname;
             self.port = port;
-            self.client_obj = mat_py_bridge.MatlabPythonClient(hostname, port);
+            self.timeout = timeout;
+            self.client_obj = mat_py_bridge.MatlabPythonClient(hostname, port, timeout);
         end
                 
         function [model, history] = train(self, tag_train, inp, out)

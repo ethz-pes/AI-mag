@@ -110,7 +110,7 @@ classdef AnnManager < handle
             % run the network
             inp_mat = get_scale_inp(self.var_inp, self.norm_param_inp, self.inp);
             out_mat = self.predict_engine(inp_mat);
-            
+                        
             % unscale the result
             self.out_ann = get_unscale_out(self.var_out, self.norm_param_out, self.out_scl, out_mat);
             
@@ -151,7 +151,7 @@ classdef AnnManager < handle
                 case 'matlab'
                     self.ann_engine_obj = ann_engine.AnnEngineMatlab(self.ann_info.fct_model, self.ann_info.fct_train);
                 case 'python'
-                    self.ann_engine_obj = ann_engine.AnnEnginePython(self.ann_info.hostname, self.ann_info.port);
+                    self.ann_engine_obj = ann_engine.AnnEnginePython(self.ann_info.hostname, self.ann_info.port, self.ann_info.timeout);
                 otherwise
                     error('invalid engine')
             end

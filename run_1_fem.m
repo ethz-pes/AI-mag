@@ -21,7 +21,7 @@ fct_extend_param_tmp = @(param) fct_extend_param(model_type, param);
 fct_out_fem_tmp = @(param) fct_out_fem(model_type, param);
 
 % master_fem
-sweep = get_data_sweep(model_type, 'random');
+sweep = get_data_sweep(model_type, 'random', 1000);
 master_fem(folder_fem, sweep, const, fct_extend_param_tmp, fct_out_fem_tmp);
 
 end
