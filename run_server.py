@@ -1,7 +1,7 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow.keras as keras
-import ann_python.ann_server as ann_server
+import source_code.ann_python.ann_server as ann_server
 
 
 def fct_model(n_sol, n_inp, n_out, tag):
