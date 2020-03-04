@@ -1,8 +1,8 @@
-function disp_set_error(tag, name, var, data_cmp, data_ref, idx_train, idx_test)
+function disp_set_error(tag, var, data_cmp, data_ref, idx_train, idx_test)
 
 % disp
 fprintf('%s\n', tag);
-figure('name', [name ' / ' tag])
+figure('name', tag)
 
 % error
 field = fieldnames(var);

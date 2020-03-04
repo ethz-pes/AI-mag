@@ -1,10 +1,8 @@
 classdef AnnManager < handle
     %% properties
     properties (SetAccess = private, GetAccess = public)
-        name
         var_inp
         var_out
-        fct_scl
         split_train_test
         split_var
         ann_info
@@ -26,17 +24,13 @@ classdef AnnManager < handle
     
     %% init
     methods (Access = public)
-        function self = AnnManager(name, input)
-            % assign
-            self.name = name;
-            
+        function self = AnnManager(ann_input)            
             % assign input
-            self.var_inp = input.var_inp;
-            self.var_out = input.var_out;
-            self.fct_scl = input.fct_scl;
-            self.split_train_test = input.split_train_test;
-            self.split_var = input.split_var;
-            self.ann_info = input.ann_info;
+            self.var_inp = ann_input.var_inp;
+            self.var_out = ann_input.var_out;
+            self.split_train_test = ann_input.split_train_test;
+            self.split_var = ann_input.split_var;
+            self.ann_info = ann_input.ann_info;
             
             % set training
             self.is_train = false;
@@ -45,42 +39,40 @@ classdef AnnManager < handle
             self.init_engine();
         end
         
-        function [input, properties] = dump(self)
-            % input data
-            input.name = self.name;
-            input.var_inp = self.var_inp;
-            input.var_out = self.var_out;
-            input.fct_scl = self.fct_scl;
-            input.split_train_test = self.split_train_test;
-            input.split_var = self.split_var;
-            input.ann_info = self.ann_info;
+        function [ann_input, ann_data] = dump(self)
+            % ann_input data
+            ann_input.var_inp = self.var_inp;
+            ann_input.var_out = self.var_out;
+            ann_input.split_train_test = self.split_train_test;
+            ann_input.split_var = self.split_var;
+            ann_input.ann_info = self.ann_info;
             
             % properties
-            properties.n_sol = self.n_sol;
-            properties.inp = self.inp;
-            properties.out_ref = self.out_ref;
-            properties.out_scl = self.out_scl;
-            properties.out_ann = self.out_ann;
-            properties.norm_param_inp = self.norm_param_inp;
-            properties.norm_param_out = self.norm_param_out;
-            properties.idx_train = self.idx_train;
-            properties.idx_test = self.idx_test;
-            properties.is_train = self.is_train;
-            properties.ann_data = self.ann_data;
+            ann_data.n_sol = self.n_sol;
+            ann_data.inp = self.inp;
+            ann_data.out_ref = self.out_ref;
+            ann_data.out_scl = self.out_scl;
+            ann_data.out_ann = self.out_ann;
+            ann_data.norm_param_inp = self.norm_param_inp;
+            ann_data.norm_param_out = self.norm_param_out;
+            ann_data.idx_train = self.idx_train;
+            ann_data.idx_test = self.idx_test;
+            ann_data.is_train = self.is_train;
+            ann_data.ann_data = self.ann_data;
         end
         
-        function load(self, properties)
-            self.n_sol = properties.n_sol;
-            self.inp = properties.inp;
-            self.out_ref = properties.out_ref;
-            self.out_scl = properties.out_scl;
-            self.out_ann = properties.out_ann;
-            self.norm_param_inp = properties.norm_param_inp;
-            self.norm_param_out = properties.norm_param_out;
-            self.idx_train = properties.idx_train;
-            self.idx_test = properties.idx_test;
-            self.is_train = properties.is_train;
-            self.ann_data = properties.ann_data;
+        function load(self, ann_data)
+            self.n_sol = ann_data.n_sol;
+            self.inp = ann_data.inp;
+            self.out_ref = ann_data.out_ref;
+            self.out_scl = ann_data.out_scl;
+            self.out_ann = ann_data.out_ann;
+            self.norm_param_inp = ann_data.norm_param_inp;
+            self.norm_param_out = ann_data.norm_param_out;
+            self.idx_train = ann_data.idx_train;
+            self.idx_test = ann_data.idx_test;
+            self.is_train = ann_data.is_train;
+            self.ann_data = ann_data.ann_data;
             
             % load the engine
             if self.is_train==true
@@ -88,15 +80,13 @@ classdef AnnManager < handle
             end
         end
         
-        function train(self, n_sol, inp, out_ref, tag)
+        function train(self, tag_train, n_sol, inp, out_ref, out_scl)
             % assign
             self.n_sol = n_sol;
             self.inp = inp;
             self.out_ref = out_ref;
-            
-            % get scaling set
-            self.out_scl = self.fct_scl(self.n_sol, self.inp);
-            
+            self.out_scl = out_scl;
+                        
             % split the data
             [self.idx_train, self.idx_test] = get_idx_split(self.n_sol, self.split_train_test);
             
@@ -114,7 +104,7 @@ classdef AnnManager < handle
             out_mat_train = get_scale_out(self.var_out, self.norm_param_out, out_ref_train, out_scl_train);
             
             % train the network
-            self.train_engine(inp_mat_train, out_mat_train, tag);
+            self.train_engine(inp_mat_train, out_mat_train, tag_train);
             self.load_engine();
             
             % run the network
@@ -133,21 +123,14 @@ classdef AnnManager < handle
         end
         
         function disp(self)
-            fprintf('################## %s\n', self.name)
-
-            self.display_input();
+            self.display_ann_input();
             self.display_properties();
-            
-            fprintf('################## %s\n', self.name)
         end
         
-        function [out_ann_tmp, out_scl_tmp] = predict(self, n_sol_tmp, inp_tmp)
+        function [out_ann_tmp, out_scl_tmp] = predict(self, n_sol_tmp, inp_tmp, out_scl_tmp)
             % check state
             assert(self.is_train==true, 'invalid state')
-            
-            % get scaling set
-            out_scl_tmp = self.fct_scl(self.n_sol, inp_tmp);
-            
+                        
             % run the network
             inp_mat_tmp = get_scale_inp(self.var_inp, self.norm_param_inp, inp_tmp);
             out_mat_tmp = self.predict_engine(inp_mat_tmp);
@@ -175,16 +158,16 @@ classdef AnnManager < handle
             self.ann_engine_obj.clean()
         end
                 
-        function train_engine(self, inp_mat, out_mat, tag)
+        function train_engine(self, inp_mat, out_mat, tag_train)
             n_var = length(fieldnames(self.var_out));
             if self.split_var==true
                 self.ann_data = {};
                 for i=1:n_var
-                    [model, history] = self.ann_engine_obj.train(inp_mat, out_mat(i,:), tag);
+                    [model, history] = self.ann_engine_obj.train(tag_train, inp_mat, out_mat(i,:));
                     self.ann_data{i} = struct('model', model, 'history', history);
                 end
             else
-                [model, history] = self.ann_engine_obj.train(inp_mat, out_mat, tag);
+                [model, history] = self.ann_engine_obj.train(tag_train, inp_mat, out_mat);
                 self.ann_data = struct('model', model, 'history', history);
             end
         end
@@ -219,10 +202,9 @@ classdef AnnManager < handle
     end
     
     methods (Access = public)
-        function display_input(self)
+        function display_ann_input(self)
             disp_data('var_inp', self.var_inp);
             disp_data('var_out', self.var_out);
-            disp_data('fct_scl', self.fct_scl);
             disp_data('split_train_test', self.split_train_test);
             disp_data('split_var', self.split_var);
             disp_data('ann_info', self.ann_info);
@@ -237,12 +219,12 @@ classdef AnnManager < handle
                 disp_data('n_train', nnz(self.idx_train));
                 disp_data('n_test', nnz(self.idx_test));
                 
-                disp_set_data('inp', self.name, self.var_inp, self.inp, self.idx_train, self.idx_test)
-                disp_set_data('out_ref', self.name, self.var_out, self.out_ref, self.idx_train, self.idx_test)
-                disp_set_data('out_scl', self.name, self.var_out, self.out_scl, self.idx_train, self.idx_test)
-                disp_set_data('out_ann', self.name, self.var_out, self.out_ann, self.idx_train, self.idx_test)
-                disp_set_error('out_scl / out_ref', self.name, self.var_out, self.out_scl, self.out_ref, self.idx_train, self.idx_test);
-                disp_set_error('out_ann / out_ref', self.name, self.var_out, self.out_ann, self.out_ref, self.idx_train, self.idx_test);
+                disp_set_data('inp', self.var_inp, self.inp, self.idx_train, self.idx_test)
+                disp_set_data('out_ref', self.var_out, self.out_ref, self.idx_train, self.idx_test)
+                disp_set_data('out_scl', self.var_out, self.out_scl, self.idx_train, self.idx_test)
+                disp_set_data('out_ann', self.var_out, self.out_ann, self.idx_train, self.idx_test)
+                disp_set_error('out_scl / out_ref', self.var_out, self.out_scl, self.out_ref, self.idx_train, self.idx_test);
+                disp_set_error('out_ann / out_ref', self.var_out, self.out_ann, self.out_ref, self.idx_train, self.idx_test);
             end
         end
     end

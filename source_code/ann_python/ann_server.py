@@ -46,8 +46,8 @@ class AnnHandler(server.PythonMatlabServer):
         if data_inp["type"]=="train":
             inp = data_inp["inp"]
             out = data_inp["out"]
-            tag = data_inp["tag"]
-            (model_dump, history_dump) =  self.__train(inp, out, tag)
+            tag_train = data_inp["tag_train"]
+            (model_dump, history_dump) =  self.__train(tag_train, inp, out)
             return {"model": model_dump, "history": history_dump}
         elif data_inp["type"]=="clean":
             self.__clean()
@@ -66,9 +66,9 @@ class AnnHandler(server.PythonMatlabServer):
         else:
             raise ValueError('invalid type')
 
-    def __train(self, inp, out, tag):
-        fct_model_tmp = lambda n_sol, n_inp, n_out: self.fct_model(n_sol, n_inp, n_out, tag)
-        fct_train_tmp = lambda model, inp_ref, out_ref: self.fct_train(model, inp_ref, out_ref, tag)
+    def __train(self, tag_train, inp, out):
+        fct_model_tmp = lambda n_sol, n_inp, n_out: self.fct_model(n_sol, n_inp, n_out, tag_train)
+        fct_train_tmp = lambda model, inp_ref, out_ref: self.fct_train(model, inp_ref, out_ref, tag_train)
 
         (model, history) = ann_run.train(inp, out, fct_model_tmp, fct_train_tmp)
         history = ann_dump.parse_keras_history(history)

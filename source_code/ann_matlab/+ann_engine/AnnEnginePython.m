@@ -15,11 +15,11 @@ classdef AnnEnginePython < ann_engine.AnnEngineAbstract
             self.client_obj = mat_py_bridge.MatlabPythonClient(hostname, port);
         end
                 
-        function [model, history] = train(self, inp, out, tag)
+        function [model, history] = train(self, tag_train, inp, out)
             data_inp.type = 'train';
+            data_inp.tag_train = tag_train;
             data_inp.inp = inp;
             data_inp.out = out;
-            data_inp.tag = tag;
             
             data_out = self.client_obj.run(data_inp);
             assert(data_out.status==true, 'train error')

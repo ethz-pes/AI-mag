@@ -4,11 +4,11 @@ import tensorflow.keras as keras
 import source_code.ann_python.ann_server as ann_server
 
 
-def fct_model(n_sol, n_inp, n_out, tag):
+def fct_model(tag_train, n_sol, n_inp, n_out):
+    assert isinstance(tag_train, str), 'invalid size'
     assert isinstance(n_sol, int), 'invalid size'
     assert isinstance(n_inp, int), 'invalid size'
     assert isinstance(n_out, int), 'invalid size'
-    assert isinstance(tag, str), 'invalid size'
 
     model = keras.Sequential([
         keras.layers.Dense(64, input_dim=n_inp, activation='relu'),
@@ -22,8 +22,8 @@ def fct_model(n_sol, n_inp, n_out, tag):
 
     return model
 
-def fct_train(model, inp, out, tag):
-    assert isinstance(tag, str), 'invalid size'
+def fct_train(model, tag_train, inp, out):
+    assert isinstance(tag_train, str), 'invalid size'
 
     model.compile(loss='mse', optimizer=keras.optimizers.RMSprop(0.001), metrics=['mae', 'mse'])
     history = model.fit(

@@ -1,8 +1,8 @@
-function disp_set_data(tag, name, var, data, idx_train, idx_test)
+function disp_set_data(tag, var, data, idx_train, idx_test)
 
 % disp
 fprintf('%s\n', tag);
-figure('name', [name ' / ' tag])
+figure('name', tag)
 
 % var
 field = fieldnames(var);

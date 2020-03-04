@@ -15,7 +15,7 @@ classdef AnnEngineMatlab < ann_engine.AnnEngineAbstract
             self.data = struct();
         end
                 
-        function [model, history] = train(self, inp, out, tag)
+        function [model, history] = train(self, tag_train, inp, out)
             % parse var
             n_inp = size(inp, 1);
             n_out = size(out, 1);
@@ -30,8 +30,8 @@ classdef AnnEngineMatlab < ann_engine.AnnEngineAbstract
             assert(n_sol>0, 'invalid size')
             assert(n_inp>0, 'invalid size')
             assert(n_out>0, 'invalid size')
-            model = self.fct_model(n_sol, n_inp, n_out, tag);
-            [model, history] = self.fct_train(model, inp, out, tag);
+            model = self.fct_model(tag_train, n_sol, n_inp, n_out);
+            [model, history] = self.fct_train(tag_train, model, inp, out);
             
             assert(isa(model, 'network'), 'invalid model')
             assert(isstruct(history), 'invalid model')
