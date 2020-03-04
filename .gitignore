@@ -1,0 +1,7 @@
+*.lock
+*.pyc
+*.asv
+*.idea
+*.venv
+**/__pycache__
+data/*
