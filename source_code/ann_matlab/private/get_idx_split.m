@@ -4,7 +4,7 @@ function [idx_train, idx_test] = get_idx_split(n_sol, split_train_test)
 rng('shuffle');
 
 % check size
-assert(n_sol>split_train_test.n_min, 'invalid number of solutions')
+assert(n_sol>=split_train_test.n_min, 'invalid number of solutions')
 
 % get size
 n_train = round(n_sol.*split_train_test.ratio_train);

@@ -11,8 +11,8 @@ if any(strcmp(model_type, {'ht', 'mf'}))
     var_inp.volume_target = struct('var_trf', 'log', 'var_norm', 'avg', 'min', 0.01e-3, 'max', 1e-3);
 end
 if strcmp(model_type, 'ht')
-    var_inp.ht_stress = struct('var_trf', 'log', 'var_norm', 'avg', 'min', NaN, 'max', NaN);
-    var_inp.ht_sharing = struct('var_trf', 'log', 'var_norm', 'avg', 'min', NaN, 'max', NaN);
+    var_inp.ht_stress = struct('var_trf', 'log', 'var_norm', 'avg', 'min', 0.01e4, 'max', 0.6e4);
+    var_inp.ht_sharing = struct('var_trf', 'log', 'var_norm', 'avg', 'min', 0.1, 'max', 10.0);
 end
 
 % var_out

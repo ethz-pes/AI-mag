@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     12712,        327]
-NotebookOptionsPosition[     11710,        290]
-NotebookOutlinePosition[     12061,        305]
-CellTagsIndexPosition[     12018,        302]
+NotebookDataLength[     14435,        356]
+NotebookOptionsPosition[     13429,        319]
+NotebookOutlinePosition[     13780,        334]
+CellTagsIndexPosition[     13737,        331]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -41,18 +41,23 @@ Cell[BoxData[
  RowBox[{
   RowBox[{"eq1", "=", 
    RowBox[{"Twindingmin", "==", 
-    RowBox[{"Rextractwinding", "*", "Pextractwinding"}]}]}], ";"}]], "Input",
+    RowBox[{
+     RowBox[{"Rextractwinding", "*", "Pextractwinding"}], "+", 
+     "Tambient"}]}]}], ";"}]], "Input",
  CellChangeTimes->{{3.792322311583023*^9, 3.7923223229955025`*^9}, {
    3.7923223942439165`*^9, 3.7923224390282936`*^9}, {3.792322506691542*^9, 
-   3.7923225073021774`*^9}, 3.7923228083578086`*^9}],
+   3.7923225073021774`*^9}, 3.7923228083578086`*^9, {3.7923974133133144`*^9, 
+   3.792397415377843*^9}}],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{"eq2", "=", 
    RowBox[{"Tcoremin", "==", 
-    RowBox[{"Rextractcore", "*", "Pextractcore"}]}]}], ";"}]], "Input",
+    RowBox[{
+     RowBox[{"Rextractcore", "*", "Pextractcore"}], "+", "Tambient"}]}]}], 
+  ";"}]], "Input",
  CellChangeTimes->{{3.7923224256849146`*^9, 3.7923225096848125`*^9}, 
-   3.7923228092043133`*^9}],
+   3.7923228092043133`*^9, 3.7923974207057896`*^9}],
 
 Cell[BoxData[
  RowBox[{
@@ -129,30 +134,6 @@ Cell[BoxData[
   RowBox[{"{", 
    RowBox[{
     RowBox[{"Twindingmin", "\[Rule]", 
-     FractionBox[
-      RowBox[{"Rextractwinding", " ", 
-       RowBox[{"(", 
-        RowBox[{
-         RowBox[{"Pcore", " ", "Rextractcore"}], "+", 
-         RowBox[{"Pwinding", " ", "Rextractcore"}], "+", 
-         RowBox[{"Pwinding", " ", "Risocorewinding"}]}], ")"}]}], 
-      RowBox[{
-      "Rextractcore", "+", "Rextractwinding", "+", "Risocorewinding"}]]}], 
-    ",", 
-    RowBox[{"Tcoremin", "\[Rule]", 
-     RowBox[{"-", 
-      FractionBox[
-       RowBox[{
-        RowBox[{
-         RowBox[{"-", "Pcore"}], " ", "Rextractcore", " ", 
-         "Rextractwinding"}], "-", 
-        RowBox[{"Pwinding", " ", "Rextractcore", " ", "Rextractwinding"}], 
-        "-", 
-        RowBox[{"Pcore", " ", "Rextractcore", " ", "Risocorewinding"}]}], 
-       RowBox[{
-       "Rextractcore", "+", "Rextractwinding", "+", "Risocorewinding"}]]}]}], 
-    ",", 
-    RowBox[{"Twindingmax", "\[Rule]", 
      RowBox[{"-", 
       FractionBox[
        RowBox[{
@@ -163,27 +144,68 @@ Cell[BoxData[
         "-", 
         RowBox[{"Pwinding", " ", "Rextractwinding", " ", "Risocorewinding"}], 
         "-", 
-        RowBox[{"Pwinding", " ", "Rextractcore", " ", "Rwinding"}], "-", 
-        RowBox[{"Pwinding", " ", "Rextractwinding", " ", "Rwinding"}], "-", 
-        RowBox[{"Pwinding", " ", "Risocorewinding", " ", "Rwinding"}]}], 
+        RowBox[{"Rextractcore", " ", "Tambient"}], "-", 
+        RowBox[{"Rextractwinding", " ", "Tambient"}], "-", 
+        RowBox[{"Risocorewinding", " ", "Tambient"}]}], 
        RowBox[{
        "Rextractcore", "+", "Rextractwinding", "+", "Risocorewinding"}]]}]}], 
     ",", 
-    RowBox[{"Tcoremax", "\[Rule]", 
+    RowBox[{"Tcoremin", "\[Rule]", 
      RowBox[{"-", 
       FractionBox[
        RowBox[{
         RowBox[{
-         RowBox[{"-", "Pcore"}], " ", "Rcore", " ", "Rextractcore"}], "-", 
-        RowBox[{"Pcore", " ", "Rcore", " ", "Rextractwinding"}], "-", 
-        RowBox[{"Pcore", " ", "Rextractcore", " ", "Rextractwinding"}], "-", 
+         RowBox[{"-", "Pcore"}], " ", "Rextractcore", " ", 
+         "Rextractwinding"}], "-", 
         RowBox[{"Pwinding", " ", "Rextractcore", " ", "Rextractwinding"}], 
         "-", 
-        RowBox[{"Pcore", " ", "Rcore", " ", "Risocorewinding"}], "-", 
-        RowBox[{"Pcore", " ", "Rextractcore", " ", "Risocorewinding"}]}], 
+        RowBox[{"Pcore", " ", "Rextractcore", " ", "Risocorewinding"}], "-", 
+        RowBox[{"Rextractcore", " ", "Tambient"}], "-", 
+        RowBox[{"Rextractwinding", " ", "Tambient"}], "-", 
+        RowBox[{"Risocorewinding", " ", "Tambient"}]}], 
        RowBox[{
        "Rextractcore", "+", "Rextractwinding", "+", "Risocorewinding"}]]}]}], 
     ",", 
+    RowBox[{"Twindingmax", "\[Rule]", 
+     RowBox[{"-", 
+      RowBox[{
+       FractionBox["1", 
+        RowBox[{
+        "Rextractcore", "+", "Rextractwinding", "+", "Risocorewinding"}]], 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"-", "Pcore"}], " ", "Rextractcore", " ", 
+          "Rextractwinding"}], "-", 
+         RowBox[{"Pwinding", " ", "Rextractcore", " ", "Rextractwinding"}], 
+         "-", 
+         RowBox[{"Pwinding", " ", "Rextractwinding", " ", "Risocorewinding"}],
+          "-", 
+         RowBox[{"Pwinding", " ", "Rextractcore", " ", "Rwinding"}], "-", 
+         RowBox[{"Pwinding", " ", "Rextractwinding", " ", "Rwinding"}], "-", 
+         RowBox[{"Pwinding", " ", "Risocorewinding", " ", "Rwinding"}], "-", 
+         RowBox[{"Rextractcore", " ", "Tambient"}], "-", 
+         RowBox[{"Rextractwinding", " ", "Tambient"}], "-", 
+         RowBox[{"Risocorewinding", " ", "Tambient"}]}], ")"}]}]}]}], ",", 
+    RowBox[{"Tcoremax", "\[Rule]", 
+     RowBox[{"-", 
+      RowBox[{
+       FractionBox["1", 
+        RowBox[{
+        "Rextractcore", "+", "Rextractwinding", "+", "Risocorewinding"}]], 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"-", "Pcore"}], " ", "Rcore", " ", "Rextractcore"}], "-", 
+         RowBox[{"Pcore", " ", "Rcore", " ", "Rextractwinding"}], "-", 
+         RowBox[{"Pcore", " ", "Rextractcore", " ", "Rextractwinding"}], "-", 
+         RowBox[{"Pwinding", " ", "Rextractcore", " ", "Rextractwinding"}], 
+         "-", 
+         RowBox[{"Pcore", " ", "Rcore", " ", "Risocorewinding"}], "-", 
+         RowBox[{"Pcore", " ", "Rextractcore", " ", "Risocorewinding"}], "-", 
+         RowBox[{"Rextractcore", " ", "Tambient"}], "-", 
+         RowBox[{"Rextractwinding", " ", "Tambient"}], "-", 
+         RowBox[{"Risocorewinding", " ", "Tambient"}]}], ")"}]}]}]}], ",", 
     RowBox[{"Pextractwinding", "\[Rule]", 
      RowBox[{"-", 
       FractionBox[
@@ -210,7 +232,7 @@ Cell[BoxData[
   3.792322290078349*^9, {3.7923228059361877`*^9, 3.7923228192555428`*^9}, {
    3.7923229818025513`*^9, 3.7923229861460505`*^9}, 3.7923231368927913`*^9, 
    3.7923237040446167`*^9, 3.792323791426605*^9, 3.792324033567588*^9, 
-   3.7923240658101387`*^9, 3.7923242100623417`*^9}]
+   3.7923240658101387`*^9, 3.7923242100623417`*^9, 3.7923974380748444`*^9}]
 }, Open  ]],
 
 Cell[BoxData[
@@ -249,35 +271,42 @@ Cell[BoxData[
      "\"\<Risocorewinding\>\"", "\[Rule]", "\"\<R_iso_core_winding\>\""}], 
      ",", " ", 
      RowBox[{"\"\<Pcore\>\"", "\[Rule]", "\"\<P_core\>\""}], ",", " ", 
-     RowBox[{"\"\<Pwinding\>\"", "\[Rule]", "\"\<P_winding\>\""}]}], "}"}]}], 
+     RowBox[{"\"\<Pwinding\>\"", "\[Rule]", "\"\<P_winding\>\""}], ",", " ", 
+     RowBox[{"\"\<Tambient\>\"", "\[Rule]", "\"\<T_ambient\>\""}]}], "}"}]}], 
   "]"}]], "Input",
  CellChangeTimes->{{3.720442108614932*^9, 3.7204421108301325`*^9}, {
    3.720621819840639*^9, 3.7206218257836294`*^9}, {3.72103929367078*^9, 
    3.7210393074484177`*^9}, {3.7903474005062485`*^9, 3.790347421433237*^9}, {
    3.7917839567521906`*^9, 3.7917839705821333`*^9}, 3.791784404743269*^9, {
    3.7923237142767653`*^9, 3.7923237877177296`*^9}, {3.792324025668108*^9, 
-   3.792324062437069*^9}}],
+   3.792324062437069*^9}, {3.7923974260347433`*^9, 3.7923974335114484`*^9}}],
 
-Cell[BoxData["\<\"[R_extract_winding.*(R_extract_core+R_extract_winding+R_iso_\
-core_winding).^(-1).*(P_core.*R_extract_core+P_winding.*R_extract_core+P_\
-winding.*R_iso_core_winding),(-1).*(R_extract_core+R_extract_winding+R_iso_\
-core_winding).^(-1).*((-1).*P_core.*R_extract_core.*R_extract_winding+(-1).*P_\
-winding.*R_extract_core.*R_extract_winding+(-1).*P_core.*R_extract_core.*R_\
-iso_core_winding),(-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).\
-^(-1).*((-1).*P_core.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_\
+Cell[BoxData["\<\"[(-1).*(R_extract_core+R_extract_winding+R_iso_core_winding)\
+.^(-1).*((-1).*P_core.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_\
 extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_winding.*R_iso_\
-core_winding+(-1).*P_winding.*R_extract_core.*R_winding+(-1).*P_winding.*R_\
-extract_winding.*R_winding+(-1).*P_winding.*R_iso_core_winding.*R_winding),(-\
-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1).*((-1).*P_\
-core.*R_core.*R_extract_core+(-1).*P_core.*R_core.*R_extract_winding+(-1).*P_\
-core.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_core.*R_\
-extract_winding+(-1).*P_core.*R_core.*R_iso_core_winding+(-1).*P_core.*R_\
-extract_core.*R_iso_core_winding),(-1).*(R_extract_core+R_extract_winding+R_\
-iso_core_winding).^(-1).*((-1).*P_core.*R_extract_core+(-1).*P_winding.*R_\
-extract_core+(-1).*P_winding.*R_iso_core_winding),(-1).*(R_extract_core+R_\
-extract_winding+R_iso_core_winding).^(-1).*((-1).*P_core.*R_extract_winding+(-\
-1).*P_winding.*R_extract_winding+(-1).*P_core.*R_iso_core_winding)];\\n\"\>"],\
- "Output",
+core_winding+(-1).*R_extract_core.*T_ambient+(-1).*R_extract_winding.*T_\
+ambient+(-1).*R_iso_core_winding.*T_ambient),(-1).*(R_extract_core+R_extract_\
+winding+R_iso_core_winding).^(-1).*((-1).*P_core.*R_extract_core.*R_extract_\
+winding+(-1).*P_winding.*R_extract_core.*R_extract_winding+(-1).*P_core.*R_\
+extract_core.*R_iso_core_winding+(-1).*R_extract_core.*T_ambient+(-1).*R_\
+extract_winding.*T_ambient+(-1).*R_iso_core_winding.*T_ambient),(-1).*(R_\
+extract_core+R_extract_winding+R_iso_core_winding).^(-1).*((-1).*P_core.*R_\
+extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_core.*R_extract_\
+winding+(-1).*P_winding.*R_extract_winding.*R_iso_core_winding+(-1).*P_\
+winding.*R_extract_core.*R_winding+(-1).*P_winding.*R_extract_winding.*R_\
+winding+(-1).*P_winding.*R_iso_core_winding.*R_winding+(-1).*R_extract_core.*\
+T_ambient+(-1).*R_extract_winding.*T_ambient+(-1).*R_iso_core_winding.*T_\
+ambient),(-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1).*((\
+-1).*P_core.*R_core.*R_extract_core+(-1).*P_core.*R_core.*R_extract_winding+(-\
+1).*P_core.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_core.\
+*R_extract_winding+(-1).*P_core.*R_core.*R_iso_core_winding+(-1).*P_core.*R_\
+extract_core.*R_iso_core_winding+(-1).*R_extract_core.*T_ambient+(-1).*R_\
+extract_winding.*T_ambient+(-1).*R_iso_core_winding.*T_ambient),(-1).*(R_\
+extract_core+R_extract_winding+R_iso_core_winding).^(-1).*((-1).*P_core.*R_\
+extract_core+(-1).*P_winding.*R_extract_core+(-1).*P_winding.*R_iso_core_\
+winding),(-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1).*((\
+-1).*P_core.*R_extract_winding+(-1).*P_winding.*R_extract_winding+(-1).*P_\
+core.*R_iso_core_winding)];\\n\"\>"], "Output",
  CellChangeTimes->{{3.720442100750532*^9, 3.7204421225909324`*^9}, 
    3.720621833333255*^9, {3.721039284038042*^9, 3.721039308294009*^9}, 
    3.7210426193489623`*^9, 3.721042779708997*^9, 3.7210429569437184`*^9, 
@@ -285,7 +314,7 @@ extract_winding+R_iso_core_winding).^(-1).*((-1).*P_core.*R_extract_winding+(-\
    3.7917847628412495`*^9, {3.7923228059751463`*^9, 3.7923228192975173`*^9}, 
    3.792322986193024*^9, 3.79232313693678*^9, 3.792323704077588*^9, 
    3.792323791461599*^9, 3.7923240335985727`*^9, 3.792324065843121*^9, 
-   3.792324210099306*^9}]
+   3.792324210099306*^9, 3.7923974381068277`*^9}]
 }, Open  ]]
 },
 WindowSize->{1920, 1117},
@@ -310,24 +339,24 @@ Cell[877, 27, 76, 1, 30, "Input"],
 Cell[956, 30, 53, 1, 30, "Input"],
 Cell[1012, 33, 203, 4, 44, "Input",
  Evaluatable->False],
-Cell[1218, 39, 355, 7, 30, "Input"],
-Cell[1576, 48, 246, 6, 30, "Input"],
-Cell[1825, 56, 285, 7, 30, "Input"],
-Cell[2113, 65, 271, 7, 30, "Input"],
-Cell[2387, 74, 457, 11, 30, "Input"],
-Cell[2847, 87, 350, 9, 30, "Input"],
-Cell[3200, 98, 151, 3, 44, "Input",
+Cell[1218, 39, 446, 10, 30, "Input"],
+Cell[1667, 51, 306, 8, 30, "Input"],
+Cell[1976, 61, 285, 7, 30, "Input"],
+Cell[2264, 70, 271, 7, 30, "Input"],
+Cell[2538, 79, 457, 11, 30, "Input"],
+Cell[2998, 92, 350, 9, 30, "Input"],
+Cell[3351, 103, 151, 3, 44, "Input",
  Evaluatable->False],
 Cell[CellGroupData[{
-Cell[3376, 105, 888, 19, 30, "Input"],
-Cell[4267, 126, 3448, 86, 166, "Output"]
+Cell[3527, 110, 888, 19, 30, "Input"],
+Cell[4418, 131, 4378, 103, 242, "Output"]
 }, Open  ]],
-Cell[7730, 215, 352, 6, 44, "Input",
+Cell[8811, 237, 352, 6, 44, "Input",
  Evaluatable->False],
-Cell[8085, 223, 442, 8, 30, "Input"],
+Cell[9166, 245, 442, 8, 30, "Input"],
 Cell[CellGroupData[{
-Cell[8552, 235, 1121, 23, 30, "Input"],
-Cell[9676, 260, 2018, 27, 145, "Output"]
+Cell[9633, 257, 1249, 24, 30, "Input"],
+Cell[10885, 283, 2528, 33, 183, "Output"]
 }, Open  ]]
 }
 ]

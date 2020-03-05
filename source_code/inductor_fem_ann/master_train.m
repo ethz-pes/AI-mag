@@ -1,15 +1,16 @@
-function master_train(file_fem, file_ann, ann_input, tag_train)
+function master_train(file_ann, file_assemble, ann_input, tag_train)
 
 % name
 fprintf('################## master_train\n')
 
-% fem
+% load
 fprintf('load\n')
-data_tmp = load(file_fem);
+data_tmp = load(file_assemble);
 n_sol = data_tmp.n_sol;
 inp = data_tmp.inp;
 out_fem = data_tmp.out_fem;
 out_approx = data_tmp.out_approx;
+model_type = data_tmp.model_type;
 const = data_tmp.const;
 
 % init
@@ -32,7 +33,7 @@ obj.delete();
 
 % save
 fprintf('save\n')
-save(file_ann, 'ann_input', 'ann_data', 'const')
+save(file_ann, 'ann_input', 'ann_data', 'model_type', 'const')
 
 fprintf('################## master_train\n')
 

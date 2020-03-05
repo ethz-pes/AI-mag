@@ -15,11 +15,9 @@ function run_sub(model_type)
 % sim_name
 folder_fem = ['data/fem_' model_type];
 file_fem = ['data/' model_type '_fem.mat'];
-
-% data
-const = get_data_const(model_type);
+file_assemble = ['data/' model_type '_assemble.mat'];
 
 % master_assemble_fem
-master_assemble(folder_fem, file_fem, const)
+master_assemble(file_assemble, file_fem, folder_fem)
 
 end

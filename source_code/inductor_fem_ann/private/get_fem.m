@@ -1,16 +1,16 @@
-function get_fem(folder, n_sol, inp, const)
+function get_fem(folder, model_type, n_sol, inp, const)
 
 % compute
 for i=1:n_sol
     fprintf('    %d / %d\n', i, n_sol)
     inp_tmp =  get_struct_idx(inp, i);
 
-    get_out_sub(folder, inp_tmp, const);
+    get_out_sub(folder, model_type, inp_tmp, const);
 end
 
 end
 
-function get_out_sub(folder, inp, const)
+function get_out_sub(folder, model_type, inp, const)
 
 % get filename
 hash = get_hash(inp);
@@ -23,12 +23,14 @@ if make_computation==true
     fprintf('        compute: start\n')
     
     % merge
-    [is_valid, geom] = get_geom(inp, const.geom);
+    [is_valid_geom, geom] = get_geom(inp, const.geom);
+    [is_valid_physics, physics] = get_physics(model_type, inp, const.physics);
+    is_valid = is_valid_geom&is_valid_physics;
         
     % disp
     if is_valid==true
         fprintf('        compute: valid\n')
-        out_fem = get_out_fem(inp, geom, const.model_type, const.fem, const.material);
+        out_fem = get_out_fem(model_type, inp, geom, physics, const.fem);
     else
         fprintf('        compute: invalid\n')
         out_fem = struct();
@@ -40,7 +42,7 @@ if make_computation==true
     fprintf('        compute: %s\n', char(diff))
         
     % save
-    save(filename, 'inp', 'is_valid', 'const', 'out_fem', 'diff')
+    save(filename, 'inp', 'is_valid', 'const', 'model_type', 'out_fem', 'diff')
 end
 
 end

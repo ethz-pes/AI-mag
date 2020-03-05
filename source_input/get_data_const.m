@@ -1,18 +1,18 @@
 function const = get_data_const(model_type)
 
 const.geom = get_geom();
-const.fem = get_fem(model_type);
-const.material = get_material(model_type);
-const.model_type = model_type;
+const.fem = get_fem();
+const.physics = get_physics(model_type);
 
 end
 
-function const = get_material(model_type)
+function const = get_physics(model_type)
 
 switch model_type
     case 'mf'
         const.mu_core = 2200;
         const.beta_core = 2.4;
+        const.I_winding = 1.0;
     case 'ht'
         const.k_core = 5.0;
         const.k_iso = 0.5;
@@ -22,28 +22,20 @@ switch model_type
         const.d_contact = 100e-6;
         const.h_exposed = 20.0;
         const.h_internal = 5.0;
+        const.T_ambient = 0.0;
     otherwise
         error('invalid model')
 end
 
 end
 
-function const = get_fem(model_type)
+function const = get_fem()
 
 const.n_mesh_min = 4;
 const.n_mesh_max = 4;
 const.mesh_growth = 1.6;
 const.mesh_res = 0.1;
 const.fact_air = 0.3;
-
-switch model_type
-    case 'mf'
-        const.I_winding = 1.0;
-    case 'ht'
-        const.T_ambient = 0.0;
-    otherwise
-        error('invalid model')
-end
 
 end
 

@@ -1,4 +1,4 @@
-function out_approx = get_out_approx_ht(geom, material, P_core, P_winding)
+function out_approx = get_out_approx_ht(geom, physics)
 
 % add surface
 geom = get_surface(geom);
@@ -15,12 +15,15 @@ S_winding_exposed = geom.S_winding_exposed;
 S_winding_internal = geom.S_winding_internal;
 d_iso = geom.d_iso;
 
-% extract material
-k_core = material.k_core;
-k_winding_n = material.k_winding_n;
-k_iso = material.k_iso;
-h_exposed = material.h_exposed;
-h_internal = material.h_internal;
+% extract physics
+k_core = physics.k_core;
+k_winding_n = physics.k_winding_n;
+k_iso = physics.k_iso;
+h_exposed = physics.h_exposed;
+h_internal = physics.h_internal;
+T_ambient = physics.T_ambient;
+P_core = physics.P_core;
+P_winding = physics.P_winding;
 
 % resistance
 R_core = (V_core./(S_core.^2.*k_core));
@@ -39,16 +42,16 @@ R_conv_winding_internal = 1./(h_internal.*S_winding_internal);
 R_extract_core = 1./((1./(R_conv_winding_exposed+R_iso_winding_exposed))+(1./(R_conv_winding_internal+R_iso_winding_internal)));
 
 % circuit
-T_winding_min = R_extract_winding.*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1).*(P_core.*R_extract_core+P_winding.*R_extract_core+P_winding.*R_iso_core_winding);
-T_core_min = (-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1).*((-1).*P_core.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_core.*R_extract_winding+(-1).*P_core.*R_extract_core.*R_iso_core_winding);
-T_winding_max = (-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1).*((-1).*P_core.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_winding.*R_iso_core_winding+(-1).*P_winding.*R_extract_core.*R_winding+(-1).*P_winding.*R_extract_winding.*R_winding+(-1).*P_winding.*R_iso_core_winding.*R_winding);
-T_core_max = (-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1).*((-1).*P_core.*R_core.*R_extract_core+(-1).*P_core.*R_core.*R_extract_winding+(-1).*P_core.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_core.*R_extract_winding+(-1).*P_core.*R_core.*R_iso_core_winding+(-1).*P_core.*R_extract_core.*R_iso_core_winding);
+T_winding_min = (-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1).*((-1).*P_core.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_winding.*R_iso_core_winding+(-1).*R_extract_core.*T_ambient+(-1).*R_extract_winding.*T_ambient+(-1).*R_iso_core_winding.*T_ambient);
+T_core_min = (-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1).*((-1).*P_core.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_core.*R_extract_winding+(-1).*P_core.*R_extract_core.*R_iso_core_winding+(-1).*R_extract_core.*T_ambient+(-1).*R_extract_winding.*T_ambient+(-1).*R_iso_core_winding.*T_ambient);
+T_winding_max = (-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1).*((-1).*P_core.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_winding.*R_iso_core_winding+(-1).*P_winding.*R_extract_core.*R_winding+(-1).*P_winding.*R_extract_winding.*R_winding+(-1).*P_winding.*R_iso_core_winding.*R_winding+(-1).*R_extract_core.*T_ambient+(-1).*R_extract_winding.*T_ambient+(-1).*R_iso_core_winding.*T_ambient);
+T_core_max = (-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1).*((-1).*P_core.*R_core.*R_extract_core+(-1).*P_core.*R_core.*R_extract_winding+(-1).*P_core.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_core.*R_extract_winding+(-1).*P_core.*R_core.*R_iso_core_winding+(-1).*P_core.*R_extract_core.*R_iso_core_winding+(-1).*R_extract_core.*T_ambient+(-1).*R_extract_winding.*T_ambient+(-1).*R_iso_core_winding.*T_ambient);
 
 % assign
-out_approx.T_core_max = T_core_max;
-out_approx.T_core_avg = (T_core_max+T_core_min)./2;
-out_approx.T_winding_max = T_winding_max;
-out_approx.T_winding_avg = (T_winding_max+T_winding_min)./2;
+out_approx.T_core_max = T_core_max-T_ambient;
+out_approx.T_core_avg = ((T_core_max-+T_core_min)./2)-T_ambient;
+out_approx.T_winding_max = T_winding_max-T_ambient;
+out_approx.T_winding_avg = ((T_winding_max+T_winding_min)./2)-T_ambient;
 
 end
 

@@ -1,4 +1,4 @@
-function out_approx = get_out_approx_mf(geom, material)
+function out_approx = get_out_approx_mf(geom, physics)
 
 % extract geom
 A_core = geom.A_core;
@@ -9,7 +9,8 @@ x_window = geom.x_window;
 y_window = geom.y_window;
 
 % extract material
-mu_core = material.mu_core;
+mu_core = physics.mu_core;
+I_winding = physics.I_winding;
 
 % L_norm
 mu0 = 4.*pi.*1e-7;
@@ -19,15 +20,18 @@ R_gap = d_gap./(mu0.*F.*A_core);
 L_norm = 1./(R_core+R_gap+R_gap);
 
 % B_norm
-B_norm = L_norm./A_core;
+B_tot = I_winding.*L_norm./A_core;
+B_norm = B_tot./I_winding;
 
 % J_norm
-J_norm = 1./A_winding;
+J_tot = I_winding./A_winding;
+J_norm = J_tot./I_winding;
 
 % H_norm
-H_rms_x = 1./(2.*sqrt(3).*x_window);
-H_rms_y = 1./(2.*sqrt(3).*y_window);
-H_norm = sqrt(H_rms_x.^2+H_rms_y.^2);
+H_rms_x = I_winding./(2.*sqrt(3).*x_window);
+H_rms_y = I_winding./(2.*sqrt(3).*y_window);
+H_tot = sqrt(H_rms_x.^2+H_rms_y.^2);
+H_norm = H_tot./I_winding;
 
 % assign
 out_approx.L_norm = L_norm;

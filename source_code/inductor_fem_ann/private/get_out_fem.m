@@ -1,4 +1,4 @@
-function out_fem = get_out_fem(inp, geom, model_type, fem, material)
+function out_fem = get_out_fem(model_type, inp, geom, physics, fem)
 
 % get expression
 switch model_type
@@ -15,12 +15,8 @@ path = fileparts(mfilename('fullpath'));
 switch model_type
     case 'mf'
         model = mphload([path filesep() 'model_mf.mph']);
-        inp_tmp = struct();
     case 'ht'
         model = mphload([path filesep() 'model_ht.mph']);
-        inp_tmp.P_tot = inp.ht_stress.*geom.S_box;
-        inp_tmp.P_core = sqrt(inp_tmp.P_tot./inp.ht_sharing);
-        inp_tmp.P_winding = sqrt(inp_tmp.P_tot.*inp.ht_sharing);
     otherwise
         error('invalid type')
 end
@@ -33,7 +29,7 @@ tag_param = 'default';
 fem = get_mesh(fem, geom);
 
 % set param
-param = get_struct_merge(geom, inp_tmp, fem, material);
+param = get_struct_merge(geom, physics, fem);
 set_parameter(model, tag_param, param)
 
 % run the model

@@ -2,6 +2,7 @@ function [n_tot, n_sol, inp, out_fem] = get_assemble(folder)
 
 % get file
 filelist = dir([folder filesep() '*.mat']);
+assert(length(filelist)>0, 'invalid data')
 
 % load
 for i=1:length(filelist)
