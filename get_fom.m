@@ -1,12 +1,22 @@
 function get_fom()
 
-data_tmp = load('data\mf_ann.mat');
+data_tmp_mf = load('data\mf_ann.mat');
+data_tmp_ht = load('data\ht_ann.mat');
 
-obj = AnnFemMf(data_tmp);
+obj = AnnFem(data_tmp_mf, data_tmp_ht);
 
-sweep = get_data_sweep('mf', 'random', 100);
-[n_sol, inp] = get_sweep(sweep);
+sweep = get_data_sweep('geom', 'random', 100);
+[n_sol, geom_rel] = get_sweep(sweep);
 
-[is_valid, geom, fom] = obj.run_rel_geom(n_sol, inp);
+
+
+[is_valid, geom, fom] = obj.run_mf(n_sol, geom_rel);
+
+
+
+
+
+
+
 
 end

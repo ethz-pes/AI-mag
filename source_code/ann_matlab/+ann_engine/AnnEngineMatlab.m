@@ -37,8 +37,8 @@ classdef AnnEngineMatlab < ann_engine.AnnEngineAbstract
             assert(isstruct(history), 'invalid model')
         end
         
-        function clean(self)
-            self.data = struct();
+        function delete(self, name)
+            self.data = rmfield(self.data, name);
         end
         
         function load(self, name, model, history)

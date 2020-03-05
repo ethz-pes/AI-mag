@@ -13,7 +13,7 @@ end
 function get_out_sub(folder, model_type, inp, const)
 
 % get filename
-hash = get_hash(inp);
+hash = get_hash_struct(inp);
 filename = [folder filesep() hash '.mat'];
 make_computation = exist(filename, 'file')~=2;
 

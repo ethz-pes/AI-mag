@@ -3,7 +3,7 @@ function sweep = get_data_sweep(model_type, sweep_type, n)
 switch sweep_type
     case 'matrix'
         sweep.type = 'matrix';
-        if any(strcmp(model_type, {'ht', 'mf'}))
+        if any(strcmp(model_type, {'ht', 'mf', 'geom'}))
             sweep.var.fact_window = struct('var_trf', 'log', 'lb', 2.0, 'ub', 4.0, 'n', n);
             sweep.var.fact_core = struct('var_trf', 'log', 'lb', 1.0,  'ub', 3.0, 'n', n);
             sweep.var.fact_core_window = struct('var_trf', 'log', 'lb', 0.3,  'ub', 3.0, 'n', n);
@@ -17,7 +17,7 @@ switch sweep_type
     case 'random'
         sweep.type = 'random';
         sweep.n_sol = n;
-        if any(strcmp(model_type, {'ht', 'mf'}))
+        if any(strcmp(model_type, {'ht', 'mf', 'geom'}))
             sweep.var.fact_window = struct('var_trf', 'log', 'lb', 2.0, 'ub', 4.0);
             sweep.var.fact_core = struct('var_trf', 'log', 'lb', 1.0,  'ub', 3.0);
             sweep.var.fact_core_window = struct('var_trf', 'log', 'lb', 0.3,  'ub', 3.0);

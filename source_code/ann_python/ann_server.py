@@ -49,8 +49,9 @@ class AnnHandler(server.PythonMatlabServer):
             tag_train = data_inp["tag_train"]
             (model_dump, history_dump) =  self.__train(tag_train, inp, out)
             return {"model": model_dump, "history": history_dump}
-        elif data_inp["type"]=="clean":
-            self.__clean()
+        elif data_inp["type"]=="delete":
+            name = data_inp["name"]
+            self.__delete(name)
             return {}
         elif data_inp["type"]=="load":
             name = data_inp["name"]
@@ -79,8 +80,9 @@ class AnnHandler(server.PythonMatlabServer):
 
         return (model_dump, history_dump)
 
-    def __clean(self):
-        self.data = {}
+    def __delete(self, name):
+        self.data.pop(name, None)
+
         return {}
 
     def __load(self, name, model_dump, history_dump):
@@ -88,7 +90,10 @@ class AnnHandler(server.PythonMatlabServer):
         history = ann_dump.undump_keras_history(history_dump)
         assert self.__check_model_history(model, history), 'model/history error'
 
-        self.data[name] = {"model": model, "history":history}
+        self.data[name] = {"model": model, "history": history}
+
+        return {}
+
 
     def __predict(self, name, inp):
         model = self.data[name]["model"]

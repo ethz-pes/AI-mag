@@ -9,7 +9,7 @@ classdef AnnEngineAbstract < handle
     %% public abstract api
     methods (Abstract, Access=public)
         [model, history] = train(self, tag_train, inp, out)
-        clean(self)
+        delete(self, name)
         load(self, name, model, history)
         out = predict(self, name, inp)
     end

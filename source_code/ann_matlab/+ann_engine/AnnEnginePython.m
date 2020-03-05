@@ -30,8 +30,9 @@ classdef AnnEnginePython < ann_engine.AnnEngineAbstract
             history = data_out.history;
         end
         
-        function clean(self)
-            data_inp.type = 'clean';
+        function delete(self, name)
+            data_inp.type = 'delete';
+            data_inp.name = name;
             
             data_out = self.client_obj.run(data_inp);
             assert(data_out.status==true, 'train error')

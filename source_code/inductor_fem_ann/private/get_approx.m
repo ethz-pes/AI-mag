@@ -10,14 +10,7 @@ physics = get_struct_size(const.physics, n_sol);
 is_valid = is_valid_geom&is_valid_physics;
 assert(all(is_valid==true), 'invalid data');
 
-% approx
-switch model_type
-    case 'mf'
-        out_approx = get_out_approx_mf(geom, physics);
-    case 'ht'
-        out_approx = get_out_approx_ht(geom, physics);
-    otherwise
-        error('invalid model')
-end
+% get approx
+out_approx = get_out_approx(model_type, geom, physics);
 
 end

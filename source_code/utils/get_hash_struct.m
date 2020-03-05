@@ -1,4 +1,4 @@
-function hash = get_hash(data)
+function hash = get_hash_struct(data)
 
 engine = java.security.MessageDigest.getInstance('MD5');
 hash = get_hash_sub(data, engine);

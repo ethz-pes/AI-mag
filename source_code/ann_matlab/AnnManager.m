@@ -150,6 +150,10 @@ classdef AnnManager < handle
             check_set(n_sol_tmp, self.var_out, out_scl_tmp)
             check_set(n_sol_tmp, self.var_out, out_ann_tmp)
         end
+        
+        function delete(self)
+            self.delete_engine();
+        end
     end
     
     methods (Access = public)
@@ -162,7 +166,6 @@ classdef AnnManager < handle
                 otherwise
                     error('invalid engine')
             end
-            self.ann_engine_obj.clean()
         end
                 
         function train_engine(self, inp_mat, out_mat, tag_train)
@@ -170,40 +173,57 @@ classdef AnnManager < handle
             if self.split_var==true
                 self.ann_data = {};
                 for i=1:n_var
+                    hash = get_hash_random();
                     [model, history] = self.ann_engine_obj.train(tag_train, inp_mat, out_mat(i,:));
-                    self.ann_data{i} = struct('model', model, 'history', history);
+                    self.ann_data{i} = struct('model', model, 'history', history, 'hash', hash);
                 end
             else
+                hash = get_hash_random();
                 [model, history] = self.ann_engine_obj.train(tag_train, inp_mat, out_mat);
-                self.ann_data = struct('model', model, 'history', history);
+                self.ann_data = struct('model', model, 'history', history, 'hash', hash);
             end
         end
         
         function load_engine(self)
-            self.ann_engine_obj.clean()
-
             n_var = length(fieldnames(self.var_out));
             if self.split_var==true
                 for i=1:n_var
                     model = self.ann_data{i}.model;
                     history = self.ann_data{i}.history;
-                    self.ann_engine_obj.load(['ann_' num2str(i)], model, history)
+                    hash = self.ann_data{i}.hash;
+                    self.ann_engine_obj.load(hash, model, history)
                 end
             else
                 model = self.ann_data.model;
                 history = self.ann_data.history;
-                self.ann_engine_obj.load('ann', model, history)
+                hash = self.ann_data.hash;
+                self.ann_engine_obj.load(hash, model, history)
             end
         end
-        
+
+        function delete_engine(self)
+            n_var = length(fieldnames(self.var_out));
+            if self.split_var==true
+                for i=1:n_var
+                    hash = self.ann_data{i}.hash;
+                    self.ann_engine_obj.delete(hash)
+                end
+            else
+                hash = self.ann_data.hash;
+                self.ann_engine_obj.delete(hash)
+            end
+        end
+
         function out_mat = predict_engine(self, in_mat)
             n_var = length(fieldnames(self.var_out));
             if self.split_var==true
                 for i=1:n_var
-                    out_mat(i,:) = self.ann_engine_obj.predict(['ann_' num2str(i)], in_mat);
+                    hash = self.ann_data{i}.hash;
+                    out_mat(i,:) = self.ann_engine_obj.predict(hash, in_mat);
                 end
             else
-                out_mat = self.ann_engine_obj.predict('ann', in_mat);
+                hash = self.ann_data.hash;
+                out_mat = self.ann_engine_obj.predict(hash, in_mat);
             end
         end
     end
