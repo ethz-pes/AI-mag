@@ -1,29 +1,29 @@
-function out_approx = get_out_approx_ht(geom, physics)
+function out_approx = get_out_approx_ht(param)
 
 % add surface
-geom = get_surface(geom);
+param = get_surface(param);
 
 % extract geom
-V_core = geom.V_core;
-S_core = geom.S_core;
-S_core_exposed = geom.S_core_exposed;
-S_core_internal = geom.S_core_internal;
-S_core_winding = geom.S_core_winding;
-V_winding = geom.V_winding;
-S_winding = geom.S_winding;
-S_winding_exposed = geom.S_winding_exposed;
-S_winding_internal = geom.S_winding_internal;
-d_iso = geom.d_iso;
+V_core = param.V_core;
+S_core = param.S_core;
+S_core_exposed = param.S_core_exposed;
+S_core_internal = param.S_core_internal;
+S_core_winding = param.S_core_winding;
+V_winding = param.V_winding;
+S_winding = param.S_winding;
+S_winding_exposed = param.S_winding_exposed;
+S_winding_internal = param.S_winding_internal;
+d_iso = param.d_iso;
 
 % extract physics
-k_core = physics.k_core;
-k_winding_n = physics.k_winding_n;
-k_iso = physics.k_iso;
-h_exposed = physics.h_exposed;
-h_internal = physics.h_internal;
-T_ambient = physics.T_ambient;
-P_core = physics.P_core;
-P_winding = physics.P_winding;
+k_core = param.k_core;
+k_winding_n = param.k_winding_n;
+k_iso = param.k_iso;
+h_exposed = param.h_exposed;
+h_internal = param.h_internal;
+T_ambient = param.T_ambient;
+P_core = param.P_core;
+P_winding = param.P_winding;
 
 % resistance
 R_core = (V_core./(S_core.^2.*k_core));
@@ -55,27 +55,27 @@ out_approx.T_winding_avg = ((T_winding_max+T_winding_min)./2)-T_ambient;
 
 end
 
-function geom = get_surface(geom)
+function param = get_surface(param)
 
 % core
-S_core_winding = 4.*geom.x_window.*geom.z_core+4.*geom.y_window.*geom.z_core;
-S_core_top = 2.*geom.x_core.*geom.z_core;
-S_core_side = 2.*geom.y_core.*geom.z_core;
-S_core_front_exposed = 4.*geom.y_window.*geom.t_core./2+4.*geom.x_core.*geom.t_core./2;
-S_core_front_internal = 2.*geom.y_window.*geom.t_core;
+S_core_winding = 4.*param.x_window.*param.z_core+4.*param.y_window.*param.z_core;
+S_core_top = 2.*param.x_core.*param.z_core;
+S_core_side = 2.*param.y_core.*param.z_core;
+S_core_front_exposed = 4.*param.y_window.*param.t_core./2+4.*param.x_core.*param.t_core./2;
+S_core_front_internal = 2.*param.y_window.*param.t_core;
 
 % head
-S_head_inner = (2.*(geom.t_core-2*geom.r_curve)+2.*pi.*(geom.r_curve+geom.x_window)).*geom.y_window;
-S_head_top = 2.*(2.*(geom.t_core-2*geom.r_curve)+2.*pi.*(geom.r_curve+geom.x_window./2)).*geom.x_window;
-S_head_outer = (2.*(geom.t_core-2*geom.r_curve)+2.*pi.*(geom.r_curve)).*geom.y_window;
+S_head_inner = (2.*(param.t_core-2*param.r_curve)+2.*pi.*(param.r_curve+param.x_window)).*param.y_window;
+S_head_top = 2.*(2.*(param.t_core-2*param.r_curve)+2.*pi.*(param.r_curve+param.x_window./2)).*param.x_window;
+S_head_outer = (2.*(param.t_core-2*param.r_curve)+2.*pi.*(param.r_curve)).*param.y_window;
 
 % assign
-geom.S_core = S_core_winding+S_core_top+S_core_side+S_core_front_exposed+S_core_front_internal;
-geom.S_core_winding = S_core_winding;
-geom.S_core_exposed = S_core_top+S_core_side+S_core_front_exposed;
-geom.S_core_internal = S_core_front_internal;
-geom.S_winding = S_core_winding+S_head_inner+S_head_top+S_head_outer;
-geom.S_winding_exposed = S_head_top+S_head_outer;
-geom.S_winding_internal = S_head_inner;
+param.S_core = S_core_winding+S_core_top+S_core_side+S_core_front_exposed+S_core_front_internal;
+param.S_core_winding = S_core_winding;
+param.S_core_exposed = S_core_top+S_core_side+S_core_front_exposed;
+param.S_core_internal = S_core_front_internal;
+param.S_winding = S_core_winding+S_head_inner+S_head_top+S_head_outer;
+param.S_winding_exposed = S_head_top+S_head_outer;
+param.S_winding_internal = S_head_inner;
 
 end

@@ -4,6 +4,8 @@ assert(isstruct(data), 'invalid data')
 
 field_var = fieldnames(var);
 field_data = fieldnames(data);
+field_data = intersect(field_var, field_data);
+
 assert(length(field_var)==length(field_data), 'invalid data')
 assert(all(strcmp(sort(field_var), sort(field_data))), 'invalid data')
 

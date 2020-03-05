@@ -173,14 +173,12 @@ classdef AnnManager < handle
             if self.split_var==true
                 self.ann_data = {};
                 for i=1:n_var
-                    hash = get_hash_random();
                     [model, history] = self.ann_engine_obj.train(tag_train, inp_mat, out_mat(i,:));
-                    self.ann_data{i} = struct('model', model, 'history', history, 'hash', hash);
+                    self.ann_data{i} = struct('model', model, 'history', history, 'name', ['ann_' num2str(i)]);
                 end
             else
-                hash = get_hash_random();
                 [model, history] = self.ann_engine_obj.train(tag_train, inp_mat, out_mat);
-                self.ann_data = struct('model', model, 'history', history, 'hash', hash);
+                self.ann_data = struct('model', model, 'history', history, 'name', 'ann');
             end
         end
         
@@ -190,14 +188,14 @@ classdef AnnManager < handle
                 for i=1:n_var
                     model = self.ann_data{i}.model;
                     history = self.ann_data{i}.history;
-                    hash = self.ann_data{i}.hash;
-                    self.ann_engine_obj.load(hash, model, history)
+                    name = self.ann_data{i}.name;
+                    self.ann_engine_obj.load(name, model, history)
                 end
             else
                 model = self.ann_data.model;
                 history = self.ann_data.history;
-                hash = self.ann_data.hash;
-                self.ann_engine_obj.load(hash, model, history)
+                name = self.ann_data.name;
+                self.ann_engine_obj.load(name, model, history)
             end
         end
 
@@ -205,12 +203,12 @@ classdef AnnManager < handle
             n_var = length(fieldnames(self.var_out));
             if self.split_var==true
                 for i=1:n_var
-                    hash = self.ann_data{i}.hash;
-                    self.ann_engine_obj.unload(hash)
+                    name = self.ann_data{i}.name;
+                    self.ann_engine_obj.unload(name)
                 end
             else
-                hash = self.ann_data.hash;
-                self.ann_engine_obj.unload(hash)
+                name = self.ann_data.name;
+                self.ann_engine_obj.unload(name)
             end
         end
 
@@ -218,12 +216,12 @@ classdef AnnManager < handle
             n_var = length(fieldnames(self.var_out));
             if self.split_var==true
                 for i=1:n_var
-                    hash = self.ann_data{i}.hash;
-                    out_mat(i,:) = self.ann_engine_obj.predict(hash, in_mat);
+                    name = self.ann_data{i}.name;
+                    out_mat(i,:) = self.ann_engine_obj.predict(name, in_mat);
                 end
             else
-                hash = self.ann_data.hash;
-                out_mat = self.ann_engine_obj.predict(hash, in_mat);
+                name = self.ann_data.name;
+                out_mat = self.ann_engine_obj.predict(name, in_mat);
             end
         end
     end

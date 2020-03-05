@@ -23,14 +23,13 @@ if make_computation==true
     fprintf('        compute: start\n')
     
     % merge
-    [is_valid_geom, geom] = get_geom(inp, const.geom);
-    [is_valid_physics, physics] = get_physics(model_type, inp, const.physics);
-    is_valid = is_valid_geom&is_valid_physics;
+    param = get_struct_merge(inp, const);
+    [is_valid, param] = get_extend_param(model_type, param);
         
     % disp
     if is_valid==true
         fprintf('        compute: valid\n')
-        out_fem = get_out_fem(model_type, inp, geom, physics, const.fem);
+        out_fem = get_out_fem(model_type, param);
     else
         fprintf('        compute: invalid\n')
         out_fem = struct();

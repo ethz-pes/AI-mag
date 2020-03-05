@@ -5,8 +5,8 @@ addpath(genpath('source_input'))
 close('all')
 
 %% run
-% run_sub('ht');
-run_sub('mf');
+run_sub('ht');
+% run_sub('mf');
 
 end
 
@@ -17,8 +17,12 @@ folder_fem = ['data/fem_' model_type];
 file_fem = ['data/' model_type '_fem.mat'];
 
 % data
-const = get_data_const(model_type);
-sweep = get_data_sweep(model_type, 'random', 6000);
+const = get_data_const();
+sweep = get_data_sweep('random', 6000);
+
+type.model = 'model_type';
+type.model = 'model_type';
+type.model = 'model_type';
 
 % master_fem
 master_fem(file_fem, folder_fem, model_type, sweep, const);
