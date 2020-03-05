@@ -152,7 +152,7 @@ classdef AnnManager < handle
         end
         
         function delete(self)
-            self.delete_engine();
+            self.unload_engine();
         end
     end
     
@@ -201,16 +201,16 @@ classdef AnnManager < handle
             end
         end
 
-        function delete_engine(self)
+        function unload_engine(self)
             n_var = length(fieldnames(self.var_out));
             if self.split_var==true
                 for i=1:n_var
                     hash = self.ann_data{i}.hash;
-                    self.ann_engine_obj.delete(hash)
+                    self.ann_engine_obj.unload(hash)
                 end
             else
                 hash = self.ann_data.hash;
-                self.ann_engine_obj.delete(hash)
+                self.ann_engine_obj.unload(hash)
             end
         end
 

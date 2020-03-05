@@ -30,8 +30,8 @@ classdef AnnEnginePython < ann_engine.AnnEngineAbstract
             history = data_out.history;
         end
         
-        function delete(self, name)
-            data_inp.type = 'delete';
+        function unload(self, name)
+            data_inp.type = 'unload';
             data_inp.name = name;
             
             data_out = self.client_obj.run(data_inp);

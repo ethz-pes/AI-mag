@@ -1,42 +1,32 @@
 import socket
 import struct
 from abc import ABC, abstractmethod
+from threading import Thread
 from . import deserialize
 from . import serialize
+import numpy as np
 
+class PythonMatlabConnection(Thread):
+    def __init__(self, connection, client_address, handler_obj):
+        Thread.__init__(self)
+        self.connection = connection
+        self.client_address = client_address
+        self.handler_obj = handler_obj
 
-class PythonMatlabServer(ABC):
-    def __init__(self, hostname, port):
-        super().__init__()
-
-        self.hostname = hostname
-        self.port = port
-        self.connection = None
-
-    def start(self):
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.bind((self.hostname, self.port))
-        sock.listen(1)
-
-        while True:
-            print('[SERVER] waiting for a connection')
-            self.connection, client_address = sock.accept()
-            try:
-                print('    [SERVER] connected')
-                self.handler_connect()
-                self.__loop()
-            finally:
-                print('    [SERVER] disconnected')
-                self.handler_disconnect()
-                self.connection.close()
-                self.connection = None
+    def run(self):
+        try:
+            print('[SERVER] connected: %s / %d' % self.client_address)
+            self.__loop()
+        finally:
+            print('[SERVER] disconnected: %s / %d' % self.client_address)
+            self.connection.close()
 
     def __loop(self):
         while True:
             try:
                 data = self.__receive()
-                print('    [SERVER] run data')
-                data = self.handler_run_data(data)
+                print('[SERVER] run data: %s / %d' % self.client_address)
+                data = self.handler_obj.run_data(data)
                 self.__send(data)
             except socket.error:
                 break
@@ -71,14 +61,31 @@ class PythonMatlabServer(ABC):
         self.connection.sendall(n)
         self.connection.sendall(byte)
 
-    @abstractmethod
-    def handler_connect(self):
-        pass
+
+class HandlerAbtract(ABC):
+    def __init__(self):
+        super().__init__()
 
     @abstractmethod
-    def handler_disconnect(self):
+    def run_data(self, handler_data):
         pass
 
-    @abstractmethod
-    def handler_run_data(self, data):
-        pass
+
+class PythonMatlabServer():
+    def __init__(self, hostname, port, n_connection, handler_class):
+        self.hostname = hostname
+        self.port = port
+        self.n_connection = n_connection
+        self.handler_class = handler_class
+
+    def start_server(self):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.bind((self.hostname, self.port))
+        sock.listen(self.n_connection)
+
+        print('[SERVER] waiting for connections')
+        while True:
+            (connection, client_address) = sock.accept()
+            handler_obj = self.handler_class()
+            thread_obj = PythonMatlabConnection(connection, client_address, handler_obj)
+            thread_obj.start()

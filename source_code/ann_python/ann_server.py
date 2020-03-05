@@ -5,39 +5,27 @@ from .ann_engine import ann_dump
 from .mat_py_bridge import server
 
 
-class AnnHandler(server.PythonMatlabServer):
-    def __init__(self, hostname, port, fct_model, fct_train):
-        super().__init__(hostname, port)
-        self.data = {}
+class AnnHandler(server.HandlerAbtract):
+    def __init__(self, fct_model, fct_train):
+        super().__init__()
+        
+        self.ann_data = {}
         self.fct_model = fct_model
         self.fct_train = fct_train
 
-    def handler_connect(self):
-        keys = list(self.data.keys())
-        print("        message: hello")
-        print("        name: %s" % keys)
-
-    def handler_disconnect(self):
-        keys = list(self.data.keys())
-        print("        name: %s" % keys)
-        print("        message: bye")
-
-    def handler_run_data(self, data_inp):
+    def run_data(self, data_inp):
         try:
-            keys = list(self.data.keys())
-            print("        type: %s / %s" % (data_inp["type"], keys))
+            print("    type: %s / n_model: %d" % (data_inp["type"], len(self.ann_data)))
 
             data_info = self.__run_data_sub(data_inp)
             data_status = {"status": np.array(True, dtype="bool")}
 
-            keys = list(self.data.keys())
-            print("        status: ok / %s" % keys)
+            print("    status: ok / n_model: %d" % len(self.ann_data))
         except Exception as e:
             data_info = {}
             data_status = {"status": np.array(False, dtype="bool")}
 
-            keys = list(self.data.keys())
-            print("        status: fail / %s" % keys)
+            print("    status: fail / n_model: %d" % len(self.ann_data))
 
         data_out = {**data_info, **data_status}
         return data_out
@@ -49,9 +37,9 @@ class AnnHandler(server.PythonMatlabServer):
             tag_train = data_inp["tag_train"]
             (model_dump, history_dump) =  self.__train(tag_train, inp, out)
             return {"model": model_dump, "history": history_dump}
-        elif data_inp["type"]=="delete":
+        elif data_inp["type"]=="unload":
             name = data_inp["name"]
-            self.__delete(name)
+            self.__unload(name)
             return {}
         elif data_inp["type"]=="load":
             name = data_inp["name"]
@@ -80,8 +68,8 @@ class AnnHandler(server.PythonMatlabServer):
 
         return (model_dump, history_dump)
 
-    def __delete(self, name):
-        self.data.pop(name, None)
+    def __unload(self, name):
+        self.ann_data.pop(name, None)
 
         return {}
 
@@ -90,14 +78,14 @@ class AnnHandler(server.PythonMatlabServer):
         history = ann_dump.undump_keras_history(history_dump)
         assert self.__check_model_history(model, history), 'model/history error'
 
-        self.data[name] = {"model": model, "history": history}
+        self.ann_data[name] = {"model": model, "history": history}
 
         return {}
 
 
     def __predict(self, name, inp):
-        model = self.data[name]["model"]
-        history = self.data[name]["history"]
+        model = self.ann_data[name]["model"]
+        history = self.ann_data[name]["history"]
         assert self.__check_model_history(model, history), 'model/history error'
 
         out = ann_run.predict(model, inp)
@@ -112,6 +100,7 @@ class AnnHandler(server.PythonMatlabServer):
         return is_ok
 
 
-def run(hostname, port, fct_model, fct_train):
-    obj = AnnHandler(hostname, port, fct_model, fct_train)
-    obj.start()
+def run(hostname, port, n_connection, fct_model, fct_train):
+    handler_class = lambda: AnnHandler(fct_model, fct_train)
+    obj = server.PythonMatlabServer(hostname, port, n_connection, handler_class)
+    obj.start_server()

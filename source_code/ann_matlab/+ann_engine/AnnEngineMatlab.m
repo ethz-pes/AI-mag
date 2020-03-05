@@ -3,7 +3,7 @@ classdef AnnEngineMatlab < ann_engine.AnnEngineAbstract
     properties (SetAccess = private, GetAccess = private)
         fct_model
         fct_train
-        data
+        ann_data
     end
     
     %% init
@@ -12,7 +12,7 @@ classdef AnnEngineMatlab < ann_engine.AnnEngineAbstract
             self = self@ann_engine.AnnEngineAbstract();
             self.fct_model = fct_model;
             self.fct_train = fct_train;
-            self.data = struct();
+            self.ann_data = struct();
         end
                 
         function [model, history] = train(self, tag_train, inp, out)
@@ -37,20 +37,20 @@ classdef AnnEngineMatlab < ann_engine.AnnEngineAbstract
             assert(isstruct(history), 'invalid model')
         end
         
-        function delete(self, name)
-            self.data = rmfield(self.data, name);
+        function unload(self, name)
+            self.ann_data = rmfield(self.ann_data, name);
         end
         
         function load(self, name, model, history)
             assert(isa(model, 'network'), 'invalid model')
             assert(isstruct(history), 'invalid model')
 
-            self.data.(name) = struct('model', model, 'history', history);
+            self.ann_data.(name) = struct('model', model, 'history', history);
         end
                 
         function out = predict(self, name, inp)
-            model = self.data.(name).model;
-            history = self.data.(name).history;
+            model = self.ann_data.(name).model;
+            history = self.ann_data.(name).history;
             assert(isa(model, 'network'), 'invalid model')
             assert(isstruct(history), 'invalid model')
             

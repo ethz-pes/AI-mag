@@ -40,4 +40,4 @@ def fct_train(tag_train, model, inp, out):
 
 
 if __name__ == "__main__":
-    ann_server.run('localhost', 10000, fct_model, fct_train)
+    ann_server.run('localhost', 10000, 10, fct_model, fct_train)
