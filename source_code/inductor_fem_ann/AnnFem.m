@@ -25,9 +25,12 @@ classdef AnnFem < handle
             self.ann_manager_obj.load(self.ann_data);
         end
         
-        function [is_valid, fom] = run(self, var_type, n_sol, inp)
-            % fom
-            [is_valid, fom] = get_fom(self.ann_manager_obj, self.const, self.model_type, var_type, n_sol, inp);
+        function [is_valid, fom] = run_ann(self, var_type, n_sol, inp)
+            [is_valid, fom] = get_fom(self.ann_manager_obj, self.const, self.model_type, var_type, n_sol, inp, 'ann');
+        end
+
+        function [is_valid, fom] = run_approx(self, var_type, n_sol, inp)
+            [is_valid, fom] = get_fom(self.ann_manager_obj, self.const, self.model_type, var_type, n_sol, inp, 'approx');
         end
     end
 end

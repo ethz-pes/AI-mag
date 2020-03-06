@@ -131,7 +131,19 @@ classdef AnnManager < handle
             self.display_properties();
         end
         
-        function [is_valid_tmp, out_ann_tmp] = predict(self, n_sol_tmp, inp_tmp, out_scl_tmp)
+        function [is_valid_tmp, out_scl_tmp] = predict_scl(self, n_sol_tmp, inp_tmp, out_scl_tmp)
+            % check state
+            assert(self.is_train==true, 'invalid state')
+                                                
+            % check validity
+            is_valid_tmp = get_range_inp(self.var_inp, inp_tmp);
+            
+            % check set
+            check_set(n_sol_tmp, self.var_inp, inp_tmp)
+            check_set(n_sol_tmp, self.var_out, out_scl_tmp)
+        end
+
+        function [is_valid_tmp, out_ann_tmp] = predict_ann(self, n_sol_tmp, inp_tmp, out_scl_tmp)
             % check state
             assert(self.is_train==true, 'invalid state')
                         

@@ -4,7 +4,7 @@ data_tmp_ht = load('data\ht_ann.mat');
 
 obj_ht = AnnFem(data_tmp_ht);
 
-sweep = get_data_sweep('random', 100);
+sweep = get_data_sweep('ht', 'random', 100);
 [n_sol, inp] = get_sweep(sweep);
 
 
@@ -26,7 +26,9 @@ inp_abs.P_core = 2.0;
 
 var_type.geom = 'abs';
 var_type.excitation = 'abs';
-[is_valid, fom] = obj_ht.run(var_type, n_sol, inp_abs);
+[is_valid, fom] = obj_ht.run_ann(var_type, n_sol, inp_abs);
+[is_valid, fom] = obj_ht.run_approx(var_type, n_sol, inp_abs);
+
 is_valid
 fom
 

@@ -1,4 +1,4 @@
-function [is_valid, fom] = get_fom(ann_manager_obj, const, model_type, var_type, n_sol, inp)
+function [is_valid, fom] = get_fom(ann_manager_obj, const, model_type, var_type, n_sol, inp, ann_type)
 
 % inp
 const = get_struct_size(const, n_sol);
@@ -9,7 +9,14 @@ inp = get_struct_merge(inp, const);
 out_approx = get_out_approx(model_type, inp);
 
 % ann
-[is_valid_fom, out_ann] = ann_manager_obj.predict(n_sol, inp, out_approx);
+switch ann_type
+    case 'ann'
+        [is_valid_fom, out_ann] = ann_manager_obj.predict_ann(n_sol, inp, out_approx);
+    case 'approx'
+        [is_valid_fom, out_ann] = ann_manager_obj.predict_scl(n_sol, inp, out_approx);
+    otherwise
+        error('invalid data')
+end
 
 % data
 is_valid = is_valid_inp&is_valid_fom;

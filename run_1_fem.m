@@ -5,8 +5,8 @@ addpath(genpath('source_input'))
 close('all')
 
 %% run
-run_sub('ht');
-% run_sub('mf');
+% run_sub('ht');
+run_sub('mf');
 
 end
 
@@ -18,7 +18,7 @@ file_fem = ['data/' model_type '_fem.mat'];
 
 % data
 const = get_data_const();
-sweep = get_data_sweep('random', 6000);
+sweep = get_data_sweep(model_type, 'random', 6000);
 
 % type
 var_type.geom = 'rel';
