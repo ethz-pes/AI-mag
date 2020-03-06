@@ -12,8 +12,8 @@ assert(all(strcmp(sort(field_var), sort(field_data))), 'invalid data')
 field = fieldnames(data);
 for i=1:length(field)
     data_tmp = data.(field{i});
-    validateattributes(data_tmp, {'double', 'single'},{'row', 'nonempty', 'nonnan', 'real','finite'});
-    assert(length(data_tmp)==n_sol, 'invalid data')
+    assert(size(data_tmp, 1)==1, 'invalid data')
+    assert(size(data_tmp, 2)==n_sol, 'invalid data')
 end
 
 end

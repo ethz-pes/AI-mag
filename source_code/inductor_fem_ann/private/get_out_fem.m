@@ -1,4 +1,4 @@
-function out_fem = get_out_fem(model_type, param)
+function out_fem = get_out_fem(model_type, inp)
 
 % get expression
 switch model_type
@@ -26,10 +26,10 @@ tag_sol = 'sol1';
 tag_param = 'default';
 
 % mesh
-param = get_mesh(param);
+inp = get_mesh(inp);
 
 % set param
-set_parameter(model, tag_param, param)
+set_parameter(model, tag_param, inp)
 
 % run the model
 model.sol(tag_sol).runAll;
@@ -60,22 +60,22 @@ end
 
 end
 
-function param = get_mesh(param)
+function inp = get_mesh(inp)
 
 % fem
-d_char_all = max([param.x_box param.y_box param.z_box]);
-d_char_core = min([param.t_core param.z_core]);
-d_char_winding = min([param.x_window param.y_window param.z_core]);
-d_char_min = min([param.d_gap param.d_iso param.r_fill]);
-d_char_air = min([param.x_box param.y_box param.z_box]);
+d_char_all = max([inp.x_box inp.y_box inp.z_box]);
+d_char_core = min([inp.t_core inp.z_core]);
+d_char_winding = min([inp.x_window inp.y_window inp.z_core]);
+d_char_min = min([inp.d_gap inp.d_iso inp.r_fill]);
+d_char_air = min([inp.x_box inp.y_box inp.z_box]);
 d_char_iso = min([d_char_core d_char_winding]);
 
 % assign
-param.d_air = d_char_all.*param.fact_air;
-param.d_mesh_core = d_char_core./param.n_mesh_max;
-param.d_mesh_winding = d_char_winding./param.n_mesh_max;
-param.d_mesh_air = d_char_air./param.n_mesh_max;
-param.d_mesh_iso = d_char_iso./param.n_mesh_max;
-param.d_mesh_min = d_char_min./param.n_mesh_min;
+inp.d_air = d_char_all.*inp.fact_air;
+inp.d_mesh_core = d_char_core./inp.n_mesh_max;
+inp.d_mesh_winding = d_char_winding./inp.n_mesh_max;
+inp.d_mesh_air = d_char_air./inp.n_mesh_max;
+inp.d_mesh_iso = d_char_iso./inp.n_mesh_max;
+inp.d_mesh_min = d_char_min./inp.n_mesh_min;
 
 end

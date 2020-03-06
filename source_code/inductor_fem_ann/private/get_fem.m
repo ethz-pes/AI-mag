@@ -23,13 +23,13 @@ if make_computation==true
     fprintf('        compute: start\n')
     
     % merge
-    param = get_struct_merge(inp, const);
-    [is_valid, param] = get_extend_param(model_type, var_type, param);
+    inp = get_struct_merge(inp, const);
+    [is_valid, inp] = get_extend_inp(model_type, var_type, inp);
         
     % disp
     if is_valid==true
         fprintf('        compute: valid\n')
-        out_fem = get_out_fem(model_type, param);
+        out_fem = get_out_fem(model_type, inp);
     else
         fprintf('        compute: invalid\n')
         out_fem = struct();
@@ -41,7 +41,7 @@ if make_computation==true
     fprintf('        compute: %s\n', char(diff))
         
     % save
-    save(filename, 'inp', 'is_valid', 'const', 'model_type', 'out_fem', 'diff')
+    save(filename, 'inp', 'is_valid', 'model_type', 'out_fem', 'diff')
 end
 
 end

@@ -15,7 +15,7 @@ fprintf('assemble\n')
 [n_tot, n_sol, inp, out_fem] = get_assemble(folder_fem);
 
 fprintf('approx\n')
-out_approx = get_approx(model_type, var_type, n_sol, inp, const);
+out_approx = get_out_approx(model_type, inp);
 
 % disp
 fprintf('size\n')

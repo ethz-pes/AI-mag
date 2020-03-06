@@ -1,29 +1,29 @@
-function out_approx = get_out_approx_ht(param)
+function out_approx = get_out_approx_ht(inp)
 
 % add surface
-param = get_surface(param);
+inp = get_surface(inp);
 
 % extract geom
-V_core = param.V_core;
-S_core = param.S_core;
-S_core_exposed = param.S_core_exposed;
-S_core_internal = param.S_core_internal;
-S_core_winding = param.S_core_winding;
-V_winding = param.V_winding;
-S_winding = param.S_winding;
-S_winding_exposed = param.S_winding_exposed;
-S_winding_internal = param.S_winding_internal;
-d_iso = param.d_iso;
+V_core = inp.V_core;
+S_core = inp.S_core;
+S_core_exposed = inp.S_core_exposed;
+S_core_internal = inp.S_core_internal;
+S_core_winding = inp.S_core_winding;
+V_winding = inp.V_winding;
+S_winding = inp.S_winding;
+S_winding_exposed = inp.S_winding_exposed;
+S_winding_internal = inp.S_winding_internal;
+d_iso = inp.d_iso;
 
 % extract physics
-k_core = param.k_core;
-k_winding_n = param.k_winding_n;
-k_iso = param.k_iso;
-h_exposed = param.h_exposed;
-h_internal = param.h_internal;
-T_ambient = param.T_ambient;
-P_core = param.P_core;
-P_winding = param.P_winding;
+k_core = inp.k_core;
+k_winding_n = inp.k_winding_n;
+k_iso = inp.k_iso;
+h_exposed = inp.h_exposed;
+h_internal = inp.h_internal;
+T_ambient = inp.T_ambient;
+P_core = inp.P_core;
+P_winding = inp.P_winding;
 
 % resistance
 R_core = (V_core./(S_core.^2.*k_core));
@@ -55,27 +55,27 @@ out_approx.T_winding_avg = ((T_winding_max+T_winding_min)./2)-T_ambient;
 
 end
 
-function param = get_surface(param)
+function inp = get_surface(inp)
 
 % core
-S_core_winding = 4.*param.x_window.*param.z_core+4.*param.y_window.*param.z_core;
-S_core_top = 2.*param.x_core.*param.z_core;
-S_core_side = 2.*param.y_core.*param.z_core;
-S_core_front_exposed = 4.*param.y_window.*param.t_core./2+4.*param.x_core.*param.t_core./2;
-S_core_front_internal = 2.*param.y_window.*param.t_core;
+S_core_winding = 4.*inp.x_window.*inp.z_core+4.*inp.y_window.*inp.z_core;
+S_core_top = 2.*inp.x_core.*inp.z_core;
+S_core_side = 2.*inp.y_core.*inp.z_core;
+S_core_front_exposed = 4.*inp.y_window.*inp.t_core./2+4.*inp.x_core.*inp.t_core./2;
+S_core_front_internal = 2.*inp.y_window.*inp.t_core;
 
 % head
-S_head_inner = (2.*(param.t_core-2*param.r_curve)+2.*pi.*(param.r_curve+param.x_window)).*param.y_window;
-S_head_top = 2.*(2.*(param.t_core-2*param.r_curve)+2.*pi.*(param.r_curve+param.x_window./2)).*param.x_window;
-S_head_outer = (2.*(param.t_core-2*param.r_curve)+2.*pi.*(param.r_curve)).*param.y_window;
+S_head_inner = (2.*(inp.t_core-2*inp.r_curve)+2.*pi.*(inp.r_curve+inp.x_window)).*inp.y_window;
+S_head_top = 2.*(2.*(inp.t_core-2*inp.r_curve)+2.*pi.*(inp.r_curve+inp.x_window./2)).*inp.x_window;
+S_head_outer = (2.*(inp.t_core-2*inp.r_curve)+2.*pi.*(inp.r_curve)).*inp.y_window;
 
 % assign
-param.S_core = S_core_winding+S_core_top+S_core_side+S_core_front_exposed+S_core_front_internal;
-param.S_core_winding = S_core_winding;
-param.S_core_exposed = S_core_top+S_core_side+S_core_front_exposed;
-param.S_core_internal = S_core_front_internal;
-param.S_winding = S_core_winding+S_head_inner+S_head_top+S_head_outer;
-param.S_winding_exposed = S_head_top+S_head_outer;
-param.S_winding_internal = S_head_inner;
+inp.S_core = S_core_winding+S_core_top+S_core_side+S_core_front_exposed+S_core_front_internal;
+inp.S_core_winding = S_core_winding;
+inp.S_core_exposed = S_core_top+S_core_side+S_core_front_exposed;
+inp.S_core_internal = S_core_front_internal;
+inp.S_winding = S_core_winding+S_head_inner+S_head_top+S_head_outer;
+inp.S_winding_exposed = S_head_top+S_head_outer;
+inp.S_winding_internal = S_head_inner;
 
 end

@@ -1,14 +1,14 @@
-function out_approx = get_out_approx_mf(param)
+function out_approx = get_out_approx_mf(inp)
 
 % extract geom
-A_core = param.A_core;
-l_core = param.l_core;
-d_gap = param.d_gap;
-A_winding = param.A_winding;
-x_window = param.x_window;
-y_window = param.y_window;
-mu_core = param.mu_core;
-I_winding = param.I_winding;
+A_core = inp.A_core;
+l_core = inp.l_core;
+d_gap = inp.d_gap;
+A_winding = inp.A_winding;
+x_window = inp.x_window;
+y_window = inp.y_window;
+mu_core = inp.mu_core;
+I_winding = inp.I_winding;
 
 % L_norm
 mu0 = 4.*pi.*1e-7;
