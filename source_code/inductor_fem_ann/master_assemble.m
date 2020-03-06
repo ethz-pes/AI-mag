@@ -8,13 +8,14 @@ fprintf('load\n')
 data_tmp = load(file_fem);
 const = data_tmp.const;
 model_type = data_tmp.model_type;
+var_type = data_tmp.var_type;
 
 % run
 fprintf('assemble\n')
 [n_tot, n_sol, inp, out_fem] = get_assemble(folder_fem);
 
 fprintf('approx\n')
-out_approx = get_approx(model_type, n_sol, inp, const);
+out_approx = get_approx(model_type, var_type, n_sol, inp, const);
 
 % disp
 fprintf('size\n')
@@ -23,7 +24,7 @@ fprintf('    n_sol = %d\n', n_sol)
 
 % save
 fprintf('save\n')
-save(file_assemble, 'n_sol', 'inp', 'out_fem', 'out_approx', 'model_type', 'const')
+save(file_assemble, 'n_sol', 'inp', 'out_fem', 'out_approx', 'model_type', 'var_type', 'const')
 
 fprintf('################## master_assemble\n')
 

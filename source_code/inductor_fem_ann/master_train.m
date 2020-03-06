@@ -11,6 +11,7 @@ inp = data_tmp.inp;
 out_fem = data_tmp.out_fem;
 out_approx = data_tmp.out_approx;
 model_type = data_tmp.model_type;
+var_type = data_tmp.var_type;
 const = data_tmp.const;
 
 % init
@@ -33,7 +34,7 @@ obj.delete();
 
 % save
 fprintf('save\n')
-save(file_ann, 'ann_input', 'ann_data', 'model_type', 'const')
+save(file_ann, 'ann_input', 'ann_data', 'model_type', 'var_type', 'const')
 
 fprintf('################## master_train\n')
 

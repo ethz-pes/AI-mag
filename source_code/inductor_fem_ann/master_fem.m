@@ -1,4 +1,4 @@
-function master_fem(file_fem, folder_fem, model_type, sweep, const)
+function master_fem(file_fem, folder_fem, model_type, var_type, sweep, const)
 
 % name
 fprintf('################## master_fem\n')
@@ -9,11 +9,11 @@ fprintf('sweep\n')
 
 % save
 fprintf('save\n')
-save(file_fem, 'model_type', 'const')
+save(file_fem, 'model_type', 'var_type', 'const')
 
 % fem
 fprintf('fem\n')
-get_fem(folder_fem, model_type, n_sol, inp, const);
+get_fem(folder_fem, model_type, var_type, n_sol, inp, const);
 
 fprintf('################## master_fem\n')
 

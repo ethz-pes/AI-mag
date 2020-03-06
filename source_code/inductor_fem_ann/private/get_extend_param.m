@@ -1,45 +1,77 @@
-function [is_valid, param] = get_extend_param(model_type, param)
+function [is_valid, param] = get_extend_param(model_type, var_type, param)
 
-param = get_base(param);
+% type
+geom_type = var_type.geom;
+excitation_type = var_type.excitation;
+
+% get geom
+param = get_base(geom_type, param);
 param = get_core(param);
 param = get_winding(param);
 param = get_box(param);
-param = get_model(model_type, param);
+
+% get model
+param = get_model(model_type, excitation_type, param);
+
+% check
 is_valid = get_is_valid(param);
 
 end
 
-function param = get_model(model_type, param)
+function param = get_model(model_type, excitation_type, param)
 
 switch model_type
     case 'mf'
         % pass
     case 'ht'
-        A_box = 6.*param.volume_target.^(2./3);
-        P_tot = param.ht_stress.*A_box;
-
-        param.P_core = P_tot.*(1./(1+param.ht_sharing));
-        param.P_winding = P_tot.*(param.ht_sharing./(1+param.ht_sharing));
+        switch excitation_type
+            case 'rel'
+                param.P_tot = param.ht_stress.*param.S_box;
+                param.P_core = param.P_tot.*(1./(1+param.ht_sharing));
+                param.P_winding = param.P_tot.*(param.ht_sharing./(1+param.ht_sharing));
+            case 'abs'
+                param.P_tot = param.P_winding+param.P_core;
+                param.ht_stress = param.P_tot./param.S_box;
+                param.ht_sharing = param.P_winding./param.P_core;
+            otherwise
+                error('invalid type')
+        end
     otherwise
         error('invalid type')
 end
 
 end
 
-function param = get_base(param)
+function param = get_base(geom_type, param)
 
-% compute param
-param.A_core_window = get_area_product(param);
-
-param.A_window = sqrt(param.A_core_window./param.fact_core_window);
-param.x_window = sqrt(param.A_window./param.fact_window);
-param.y_window = sqrt(param.A_window.*param.fact_window);
-
-param.A_core = sqrt(param.A_core_window.*param.fact_core_window);
-param.t_core = sqrt(param.A_core./param.fact_core);
-param.z_core = sqrt(param.A_core.*param.fact_core);
-
-param.d_gap = param.fact_gap.*sqrt(param.A_core);
+switch geom_type
+    case 'rel'
+        param.A_core_window = get_area_product(param);
+        
+        param.A_window = sqrt(param.A_core_window./param.fact_core_window);
+        param.x_window = sqrt(param.A_window./param.fact_window);
+        param.y_window = sqrt(param.A_window.*param.fact_window);
+        
+        param.A_core = sqrt(param.A_core_window.*param.fact_core_window);
+        param.t_core = sqrt(param.A_core./param.fact_core);
+        param.z_core = sqrt(param.A_core.*param.fact_core);
+        
+        param.d_gap = param.fact_gap.*sqrt(param.A_core);
+    case 'abs'
+        param.A_window = param.x_window.*param.y_window;
+        param.fact_window = param.y_window./param.x_window;
+        
+        param.A_core = param.z_core.*param.t_core;
+        param.fact_core = param.z_core./param.t_core;
+        
+        param.A_core_window = param.A_window.*param.A_core;
+        param.fact_core_window = param.A_core./param.A_window;
+        
+        param.fact_gap = param.d_gap./sqrt(param.A_core);
+        param.volume_target = NaN;
+    otherwise
+        error('invalid data')
+end
 
 % fillet
 param.r_fill = param.r_fill_fact.*param.d_gap;

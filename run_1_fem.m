@@ -20,11 +20,11 @@ file_fem = ['data/' model_type '_fem.mat'];
 const = get_data_const();
 sweep = get_data_sweep('random', 6000);
 
-type.model = 'model_type';
-type.model = 'model_type';
-type.model = 'model_type';
+% type
+var_type.geom = 'rel';
+var_type.excitation = 'rel';
 
 % master_fem
-master_fem(file_fem, folder_fem, model_type, sweep, const);
+master_fem(file_fem, folder_fem, model_type, var_type, sweep, const);
 
 end
