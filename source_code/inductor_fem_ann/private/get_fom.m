@@ -13,7 +13,7 @@ switch ann_type
     case 'ann'
         [is_valid_fom, out_ann] = ann_manager_obj.predict_ann(n_sol, inp, out_approx);
     case 'approx'
-        [is_valid_fom, out_ann] = ann_manager_obj.predict_scl(n_sol, inp, out_approx);
+        [is_valid_fom, out_ann] = ann_manager_obj.predict_nrm(n_sol, inp, out_approx);
     otherwise
         error('invalid data')
 end

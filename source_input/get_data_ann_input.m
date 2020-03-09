@@ -3,30 +3,32 @@ function ann_input = get_data_ann_input(model_type, ann_type)
 assert(any(strcmp(model_type, {'ht', 'mf'})), 'invalid model_type')
 
 % var_inp
+var_inp = {};
 if any(strcmp(model_type, {'ht', 'mf'}))
-    var_inp.fact_window = struct('var_trf', 'log', 'var_norm', 'avg', 'min', 2.0, 'max', 4.0);
-    var_inp.fact_core = struct('var_trf', 'log', 'var_norm', 'avg', 'min', 1.0, 'max', 3.0);
-    var_inp.fact_core_window = struct('var_trf', 'log', 'var_norm', 'avg', 'min', 0.3, 'max', 3.0);
-    var_inp.fact_gap = struct('var_trf', 'log', 'var_norm', 'avg', 'min', 0.01, 'max', 0.2);
-    var_inp.volume_target = struct('var_trf', 'log', 'var_norm', 'avg', 'min', 0.01e-3, 'max', 1e-3);
+    var_inp{end+1} = struct('name', 'fact_window', 'var_trf', 'log', 'var_norm', 'avg', 'min', 0.99.*2.0, 'max', 1.01.*4.0);
+    var_inp{end+1} = struct('name', 'fact_core', 'var_trf', 'log', 'var_norm', 'avg', 'min', 0.99.*1.0, 'max', 1.01.*3.0);
+    var_inp{end+1} = struct('name', 'fact_core_window', 'var_trf', 'log', 'var_norm', 'avg', 'min', 0.99.*0.3, 'max', 1.01.*3.0);
+    var_inp{end+1} = struct('name', 'fact_gap', 'var_trf', 'log', 'var_norm', 'avg', 'min', 0.99.*0.01, 'max', 1.01.*0.2);
+    var_inp{end+1} = struct('name', 'volume_target', 'var_trf', 'log', 'var_norm', 'avg', 'min', 0.99.*0.01e-3, 'max', 1.01.*1e-3);
 end
 if strcmp(model_type, 'ht')
-    var_inp.ht_stress = struct('var_trf', 'log', 'var_norm', 'avg', 'min', 0.01e4, 'max', 0.6e4);
-    var_inp.ht_sharing = struct('var_trf', 'log', 'var_norm', 'avg', 'min', 0.1, 'max', 10.0);
+    var_inp{end+1} = struct('name', 'ht_stress', 'var_trf', 'log', 'var_norm', 'avg', 'min', 0.99.*0.01e4, 'max', 1.01.*0.6e4);
+    var_inp{end+1} = struct('name', 'ht_sharing', 'var_trf', 'log', 'var_norm', 'avg', 'min', 0.99.*0.1, 'max', 1.01.*10.0);
 end
 
 % var_out
+var_out = {};
 if strcmp(model_type, 'mf')
-    var_out.L_norm = struct('var_trf', 'lin', 'var_norm', 'avg', 'use_scl', true);
-    var_out.B_norm = struct('var_trf', 'lin', 'var_norm', 'avg', 'use_scl', true);
-    var_out.J_norm = struct('var_trf', 'lin', 'var_norm', 'avg', 'use_scl', true);
-    var_out.H_norm = struct('var_trf', 'lin', 'var_norm', 'avg', 'use_scl', true);
+    var_out{end+1} = struct('name', 'L_norm', 'var_trf', 'lin', 'var_norm', 'avg', 'use_nrm', true);
+    var_out{end+1} = struct('name', 'B_norm', 'var_trf', 'lin', 'var_norm', 'avg', 'use_nrm', true);
+    var_out{end+1} = struct('name', 'J_norm', 'var_trf', 'lin', 'var_norm', 'avg', 'use_nrm', true);
+    var_out{end+1} = struct('name', 'H_norm', 'var_trf', 'lin', 'var_norm', 'avg', 'use_nrm', true);
 end
 if strcmp(model_type, 'ht')
-    var_out.T_core_max = struct('var_trf', 'lin', 'var_norm', 'avg', 'use_scl', true);
-    var_out.T_core_avg = struct('var_trf', 'lin', 'var_norm', 'avg', 'use_scl', true);
-    var_out.T_winding_max = struct('var_trf', 'lin', 'var_norm', 'avg', 'use_scl', true);
-    var_out.T_winding_avg = struct('var_trf', 'lin', 'var_norm', 'avg', 'use_scl', true);
+    var_out{end+1} = struct('name', 'T_core_max', 'var_trf', 'lin', 'var_norm', 'avg', 'use_nrm', true);
+    var_out{end+1} = struct('name', 'T_core_avg', 'var_trf', 'lin', 'var_norm', 'avg', 'use_nrm', true);
+    var_out{end+1} = struct('name', 'T_winding_max', 'var_trf', 'lin', 'var_norm', 'avg', 'use_nrm', true);
+    var_out{end+1} = struct('name', 'T_winding_avg', 'var_trf', 'lin', 'var_norm', 'avg', 'use_nrm', true);
 end
 
 % split_train_test
@@ -39,12 +41,29 @@ split_var = false;
 
 % ann_info
 switch ann_type
-    case 'matlab'
-        ann_info.type = 'matlab';
-        ann_info.fct_model = @get_model;
-        ann_info.fct_train = @get_train;
-    case 'python'
-        ann_info.type = 'python';
+    case 'matlab_lsq'
+        ann_info.type = 'matlab_lsq';
+
+        ann_info.options.Display = 'off';
+        ann_info.options.FunctionTolerance = 1e-6;
+        ann_info.options.StepTolerance = 1e-6;
+        ann_info.options.MaxIterations = 1e3;
+        ann_info.options.MaxFunctionEvaluations = 10e3;
+
+        ann_info.x_value.x0 = 0.0;
+        ann_info.x_value.ub = +10.0;
+        ann_info.x_value.lb = -10.0;
+        
+        ann_info.fct_fit = @fct_fit;
+        ann_info.fct_err = @fct_err;
+    case 'matlab_ann'
+        ann_info.type = 'matlab_ann';
+        
+        ann_info.fct_model = @fct_model;
+        ann_info.fct_train = @fct_train;
+    case 'python_ann'
+        ann_info.type = 'python_ann';
+        
         ann_info.hostname = 'localhost';
         ann_info.port = 10000;
         ann_info.timeout = 120;
@@ -61,7 +80,7 @@ ann_input.ann_info = ann_info;
 
 end
 
-function model = get_model(tag_train, n_sol, n_inp, n_out)
+function model = fct_model(tag_train, n_sol, n_inp, n_out)
 
 assert(ischar(tag_train), 'invalid output')
 assert(isfinite(n_sol), 'invalid input')
@@ -78,9 +97,26 @@ model.divideParam.testRatio = 0.0;
 
 end
 
-function [model, history] = get_train(tag_train, model, inp, out)
+function [model, history] = fct_train(tag_train, model, inp, out)
 
 assert(ischar(tag_train), 'invalid output')
 [model, history] = train(model, inp, out);
+
+end
+
+function out_fit = fct_fit(tag_train, x, inp)
+
+assert(ischar(tag_train), 'invalid output');
+out_fit = x.*ones(4, size(inp, 2));
+
+end
+
+function err = fct_err(tag_train, x, inp, out)
+
+assert(ischar(tag_train), 'invalid output')
+
+out_fit = fct_fit(tag_train, x, inp);
+err = out-out_fit;
+err = err(:);
 
 end

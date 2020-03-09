@@ -17,8 +17,8 @@ file_assemble = ['data/' model_type '_assemble.mat'];
 file_ann = ['data/' model_type '_ann.mat'];
 
 % data
-ann_input = get_data_ann_input(model_type, 'python');
 tag_train = 'none';
+ann_input = get_data_ann_input(model_type, 'matlab_lsq');
 
 % master_train
 master_train(file_ann, file_assemble, ann_input, tag_train)

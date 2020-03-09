@@ -1,17 +1,17 @@
-function out_mat = get_scale_out(var_out, norm_param_out, out_ref, out_scl)
+function out_mat = get_scale_out(var_out, norm_param_out, out_ref, out_nrm)
 
-field = fieldnames(var_out);
-for i=1:length(field)
+for i=1:length(var_out)
     % extract
-    var_trf_tmp = var_out.(field{i}).var_trf;
-    use_scl_tmp = var_out.(field{i}).use_scl;
-    norm_param_tmp = norm_param_out.(field{i});
+    name_tmp = var_out{i}.name;
+    var_trf_tmp = var_out{i}.var_trf;
+    use_nrm_tmp = var_out{i}.use_nrm;
+    norm_param_tmp = norm_param_out{i};
     
-    value_tmp = out_ref.(field{i});
-    scale_tmp = out_scl.(field{i});
+    value_tmp = out_ref.(name_tmp);
+    scale_tmp = out_nrm.(name_tmp);
     
     % scale
-    if use_scl_tmp==true
+    if use_nrm_tmp==true
         value_tmp = value_tmp./scale_tmp;
     end
     

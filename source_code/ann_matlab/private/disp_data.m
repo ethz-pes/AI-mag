@@ -22,6 +22,13 @@ elseif isa(data, 'struct')
         data_tmp = data.(field{i});
         disp_data_sub(level+1, name_tmp, data_tmp)
     end
+elseif isa(data, 'cell')
+    print_indent(level, '%s : n_cell = %d', name, length(data))
+    for i=1:length(data)
+        name_tmp = [name ' / ' num2str(i)];
+        data_tmp = data{i};
+        disp_data_sub(level+1, name_tmp, data_tmp)
+    end
 else
     error('invalid type')
 end

@@ -1,12 +1,12 @@
 function inp_mat = get_scale_inp(var_inp, norm_param_inp, inp)
 
-field = fieldnames(var_inp);
-for i=1:length(field)
+for i=1:length(var_inp)
     % extract
-    var_trf_tmp = var_inp.(field{i}).var_trf;
-    norm_param_tmp = norm_param_inp.(field{i});
+    name_tmp = var_inp{i}.name;
+    var_trf_tmp = var_inp{i}.var_trf;
+    norm_param_tmp = norm_param_inp{i};
     
-    value_tmp = inp.(field{i});
+    value_tmp = inp.(name_tmp);
     
     % transform and normalize
     value_tmp = get_var_trf(value_tmp, var_trf_tmp, 'scale');

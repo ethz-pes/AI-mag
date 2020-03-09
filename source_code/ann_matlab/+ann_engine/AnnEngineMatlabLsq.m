@@ -1,17 +1,21 @@
-classdef AnnEngineMatlab < ann_engine.AnnEngineAbstract
+classdef AnnEngineMatlabLsq < ann_engine.AnnEngineAbstract
     %% properties
     properties (SetAccess = private, GetAccess = private)
-        fct_model
-        fct_train
+        fct_fit
+        fct_err
+        x_value
+        options
         ann_data
     end
     
     %% init
     methods (Access = public)
-        function self = AnnEngineMatlab(fct_model, fct_train)
+        function self = AnnEngineMatlabLsq(fct_fit, fct_err, x_value, options)
             self = self@ann_engine.AnnEngineAbstract();
-            self.fct_model = fct_model;
-            self.fct_train = fct_train;
+            self.fct_fit = fct_fit;
+            self.fct_err = fct_err;
+            self.x_value = x_value;
+            self.options = options;
             self.ann_data = struct();
         end
                 
@@ -30,11 +34,17 @@ classdef AnnEngineMatlab < ann_engine.AnnEngineAbstract
             assert(n_sol>0, 'invalid size')
             assert(n_inp>0, 'invalid size')
             assert(n_out>0, 'invalid size')
-            model = self.fct_model(tag_train, n_sol, n_inp, n_out);
-            [model, history] = self.fct_train(tag_train, model, inp, out);
+
+            % fit
+            fct_err_tmp = @(x) self.fct_err(tag_train, x, inp, out);
+            x0 = self.x_value.x0;
+            lb = self.x_value.lb;
+            ub = self.x_value.ub;
+            [x, resnorm, residual, exitflag, output] = lsqnonlin(fct_err_tmp, x0, lb, ub, self.options);
             
-            assert(isa(model, 'network'), 'invalid model')
-            assert(isstruct(history), 'invalid model')
+            % assign
+            model = struct('tag_train', tag_train, 'x', x);
+            history = struct('resnorm', resnorm, 'residual', residual, 'exitflag', exitflag, 'output', output);
         end
         
         function unload(self, name)
@@ -42,7 +52,7 @@ classdef AnnEngineMatlab < ann_engine.AnnEngineAbstract
         end
         
         function load(self, name, model, history)
-            assert(isa(model, 'network'), 'invalid model')
+            assert(isstruct(model), 'invalid model')
             assert(isstruct(history), 'invalid model')
 
             self.ann_data.(name) = struct('model', model, 'history', history);
@@ -51,10 +61,12 @@ classdef AnnEngineMatlab < ann_engine.AnnEngineAbstract
         function out = predict(self, name, inp)
             model = self.ann_data.(name).model;
             history = self.ann_data.(name).history;
-            assert(isa(model, 'network'), 'invalid model')
+            assert(isstruct(model), 'invalid model')
             assert(isstruct(history), 'invalid model')
             
-            out = model(inp);
+            x = model.x;
+            tag_train = model.tag_train;
+            out = self.fct_fit(tag_train, x, inp);
             assert(size(inp, 2)==size(out, 2), 'invalid size')
         end
     end

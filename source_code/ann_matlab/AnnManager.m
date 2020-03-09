@@ -10,7 +10,7 @@ classdef AnnManager < handle
         n_sol
         inp
         out_ref
-        out_scl
+        out_nrm
         out_ann
         norm_param_inp
         norm_param_out
@@ -51,7 +51,7 @@ classdef AnnManager < handle
             ann_data.n_sol = self.n_sol;
             ann_data.inp = self.inp;
             ann_data.out_ref = self.out_ref;
-            ann_data.out_scl = self.out_scl;
+            ann_data.out_nrm = self.out_nrm;
             ann_data.out_ann = self.out_ann;
             ann_data.norm_param_inp = self.norm_param_inp;
             ann_data.norm_param_out = self.norm_param_out;
@@ -65,7 +65,7 @@ classdef AnnManager < handle
             self.n_sol = ann_data.n_sol;
             self.inp = ann_data.inp;
             self.out_ref = ann_data.out_ref;
-            self.out_scl = ann_data.out_scl;
+            self.out_nrm = ann_data.out_nrm;
             self.out_ann = ann_data.out_ann;
             self.norm_param_inp = ann_data.norm_param_inp;
             self.norm_param_out = ann_data.norm_param_out;
@@ -80,12 +80,12 @@ classdef AnnManager < handle
             end
         end
         
-        function train(self, tag_train, n_sol, inp, out_ref, out_scl)
+        function train(self, tag_train, n_sol, inp, out_ref, out_nrm)
             % assign
             self.n_sol = n_sol;
             self.inp = inp;
             self.out_ref = out_ref;
-            self.out_scl = out_scl;
+            self.out_nrm = out_nrm;
                         
             % check range
             is_valid = get_range_inp(self.var_inp, self.inp);
@@ -97,15 +97,15 @@ classdef AnnManager < handle
             % extract training data
             inp_train = get_struct_idx(self.inp, self.idx_train);
             out_ref_train = get_struct_idx(self.out_ref, self.idx_train);
-            out_scl_train = get_struct_idx(self.out_scl, self.idx_train);
+            out_nrm_train = get_struct_idx(self.out_nrm, self.idx_train);
             
             % get normalization
             self.norm_param_inp = get_norm_var_inp(self.var_inp, inp_train);
-            self.norm_param_out = get_norm_var_out(self.var_out, out_ref_train, out_scl_train);
+            self.norm_param_out = get_norm_var_out(self.var_out, out_ref_train, out_nrm_train);
             
             % get training matrices
             inp_mat_train = get_scale_inp(self.var_inp, self.norm_param_inp, inp_train);
-            out_mat_train = get_scale_out(self.var_out, self.norm_param_out, out_ref_train, out_scl_train);
+            out_mat_train = get_scale_out(self.var_out, self.norm_param_out, out_ref_train, out_nrm_train);
             
             % train the network
             self.train_engine(inp_mat_train, out_mat_train, tag_train);
@@ -116,12 +116,12 @@ classdef AnnManager < handle
             out_mat = self.predict_engine(inp_mat);
                         
             % unscale the result
-            self.out_ann = get_unscale_out(self.var_out, self.norm_param_out, self.out_scl, out_mat);
+            self.out_ann = get_unscale_out(self.var_out, self.norm_param_out, self.out_nrm, out_mat);
             
             % check set
             check_set(self.n_sol, self.var_inp, self.inp)
             check_set(self.n_sol, self.var_out, self.out_ref)
-            check_set(self.n_sol, self.var_out, self.out_scl)
+            check_set(self.n_sol, self.var_out, self.out_nrm)
             check_set(self.n_sol, self.var_out, self.out_ann)
             self.is_train = true;
         end
@@ -131,7 +131,7 @@ classdef AnnManager < handle
             self.display_properties();
         end
         
-        function [is_valid_tmp, out_scl_tmp] = predict_scl(self, n_sol_tmp, inp_tmp, out_scl_tmp)
+        function [is_valid_tmp, out_nrm_tmp] = predict_nrm(self, n_sol_tmp, inp_tmp, out_nrm_tmp)
             % check state
             assert(self.is_train==true, 'invalid state')
                                                 
@@ -140,10 +140,10 @@ classdef AnnManager < handle
             
             % check set
             check_set(n_sol_tmp, self.var_inp, inp_tmp)
-            check_set(n_sol_tmp, self.var_out, out_scl_tmp)
+            check_set(n_sol_tmp, self.var_out, out_nrm_tmp)
         end
 
-        function [is_valid_tmp, out_ann_tmp] = predict_ann(self, n_sol_tmp, inp_tmp, out_scl_tmp)
+        function [is_valid_tmp, out_ann_tmp] = predict_ann(self, n_sol_tmp, inp_tmp, out_nrm_tmp)
             % check state
             assert(self.is_train==true, 'invalid state')
                         
@@ -152,36 +152,49 @@ classdef AnnManager < handle
             out_mat_tmp = self.predict_engine(inp_mat_tmp);
             
             % unscale the result
-            out_ann_tmp = get_unscale_out(self.var_out, self.norm_param_out, out_scl_tmp, out_mat_tmp);
+            out_ann_tmp = get_unscale_out(self.var_out, self.norm_param_out, out_nrm_tmp, out_mat_tmp);
             
             % check validity
             is_valid_tmp = get_range_inp(self.var_inp, inp_tmp);
             
             % check set
             check_set(n_sol_tmp, self.var_inp, inp_tmp)
-            check_set(n_sol_tmp, self.var_out, out_scl_tmp)
+            check_set(n_sol_tmp, self.var_out, out_nrm_tmp)
             check_set(n_sol_tmp, self.var_out, out_ann_tmp)
         end
         
         function delete(self)
-            self.unload_engine();
+            if self.is_train==true
+                self.unload_engine();
+            end
         end
     end
     
     methods (Access = public)
         function init_engine(self)
             switch self.ann_info.type
-                case 'matlab'
-                    self.ann_engine_obj = ann_engine.AnnEngineMatlab(self.ann_info.fct_model, self.ann_info.fct_train);
+                case 'matlab_ann'
+                    fct_model = self.ann_info.fct_model;
+                    fct_train = self.ann_info.fct_train;
+                    self.ann_engine_obj = ann_engine.AnnEngineMatlabAnn(fct_model, fct_train);
+                case 'matlab_lsq'
+                    options = self.ann_info.options;
+                    x_value = self.ann_info.x_value;
+                    fct_fit = self.ann_info.fct_fit;
+                    fct_err = self.ann_info.fct_err;
+                    self.ann_engine_obj = ann_engine.AnnEngineMatlabLsq(fct_fit, fct_err, x_value, options);
                 case 'python'
-                    self.ann_engine_obj = ann_engine.AnnEnginePython(self.ann_info.hostname, self.ann_info.port, self.ann_info.timeout);
+                    hostname = self.ann_info.hostname;
+                    port = self.ann_info.port;
+                    timeout = self.ann_info.timeout;
+                    self.ann_engine_obj = ann_engine.AnnEnginePythonAnn(hostname, port, timeout);
                 otherwise
                     error('invalid engine')
             end
         end
                 
         function train_engine(self, inp_mat, out_mat, tag_train)
-            n_var = length(fieldnames(self.var_out));
+            n_var = length(self.var_out);
             if self.split_var==true
                 self.ann_data = {};
                 for i=1:n_var
@@ -195,7 +208,7 @@ classdef AnnManager < handle
         end
         
         function load_engine(self)
-            n_var = length(fieldnames(self.var_out));
+            n_var = length(self.var_out);
             if self.split_var==true
                 for i=1:n_var
                     model = self.ann_data{i}.model;
@@ -212,7 +225,7 @@ classdef AnnManager < handle
         end
 
         function unload_engine(self)
-            n_var = length(fieldnames(self.var_out));
+            n_var = length(self.var_out);
             if self.split_var==true
                 for i=1:n_var
                     name = self.ann_data{i}.name;
@@ -225,7 +238,7 @@ classdef AnnManager < handle
         end
 
         function out_mat = predict_engine(self, in_mat)
-            n_var = length(fieldnames(self.var_out));
+            n_var = length(self.var_out);
             if self.split_var==true
                 for i=1:n_var
                     name = self.ann_data{i}.name;
@@ -258,9 +271,9 @@ classdef AnnManager < handle
                 
                 disp_set_data('inp', self.var_inp, self.inp, self.idx_train, self.idx_test)
                 disp_set_data('out_ref', self.var_out, self.out_ref, self.idx_train, self.idx_test)
-                disp_set_data('out_scl', self.var_out, self.out_scl, self.idx_train, self.idx_test)
+                disp_set_data('out_nrm', self.var_out, self.out_nrm, self.idx_train, self.idx_test)
                 disp_set_data('out_ann', self.var_out, self.out_ann, self.idx_train, self.idx_test)
-                disp_set_error('out_scl / out_ref', self.var_out, self.out_scl, self.out_ref, self.idx_train, self.idx_test);
+                disp_set_error('out_nrm / out_ref', self.var_out, self.out_nrm, self.out_ref, self.idx_train, self.idx_test);
                 disp_set_error('out_ann / out_ref', self.var_out, self.out_ann, self.out_ref, self.idx_train, self.idx_test);
             end
         end

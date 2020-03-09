@@ -2,7 +2,10 @@ function check_set(n_sol, var, data)
 
 assert(isstruct(data), 'invalid data')
 
-field_var = fieldnames(var);
+field_var = cell(length(var), 1);
+for i=1:length(var)
+    field_var{i} = var{i}.name;
+end
 field_data = fieldnames(data);
 field_data = intersect(field_var, field_data);
 

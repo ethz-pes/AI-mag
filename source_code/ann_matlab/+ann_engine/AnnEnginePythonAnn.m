@@ -1,4 +1,4 @@
-classdef AnnEnginePython < ann_engine.AnnEngineAbstract
+classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
     %% properties
     properties (SetAccess = private, GetAccess = private)
         hostname
@@ -9,7 +9,7 @@ classdef AnnEnginePython < ann_engine.AnnEngineAbstract
     
     %% init
     methods (Access = public)
-        function self = AnnEnginePython(hostname, port, timeout)
+        function self = AnnEnginePythonAnn(hostname, port, timeout)
             self = self@ann_engine.AnnEngineAbstract();
             self.hostname = hostname;
             self.port = port;

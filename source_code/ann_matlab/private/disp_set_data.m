@@ -5,12 +5,12 @@ fprintf('%s\n', tag);
 figure('name', tag)
 
 % var
-field = fieldnames(var);
-for i=1:length(field)
-    vec = data.(field{i});
+for i=1:length(var)
+    name_tmp = var{i}.name;
+    vec = data.(name_tmp);
     
-    subplot(length(field), 1, i)
-    disp_var(field{i}, vec, idx_train, idx_test)
+    subplot(length(var), 1, i)
+    disp_var(name_tmp, vec, idx_train, idx_test)
 end
 
 end
