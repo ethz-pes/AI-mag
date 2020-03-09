@@ -55,7 +55,22 @@ switch ann_type
         ann_info.x_value.lb = -10.0;
         
         ann_info.fct_fit = @fct_fit;
-        ann_info.fct_err = @fct_err;
+        ann_info.fct_err = @fct_err_vec;
+    case 'matlab_ga'
+        ann_info.type = 'matlab_ga';
+
+        ann_info.options.Display = 'off';
+        ann_info.options.TolFun = 1e-6;
+        ann_info.options.ConstraintTolerance = 1e-3;
+        ann_info.options.Generations = 20;
+        ann_info.options.PopulationSize = 2000;
+        
+        ann_info.x_value.n = 1;
+        ann_info.x_value.ub = +10.0;
+        ann_info.x_value.lb = -10.0;
+        
+        ann_info.fct_fit = @fct_fit;
+        ann_info.fct_err = @fct_err_sum;
     case 'matlab_ann'
         ann_info.type = 'matlab_ann';
         
@@ -111,12 +126,21 @@ out_fit = x.*ones(4, size(inp, 2));
 
 end
 
-function err = fct_err(tag_train, x, inp, out)
+function err_vec = fct_err_vec(tag_train, x, inp, out)
 
 assert(ischar(tag_train), 'invalid output')
 
 out_fit = fct_fit(tag_train, x, inp);
-err = out-out_fit;
-err = err(:);
+err_vec = out-out_fit;
+err_vec = err_vec(:);
+
+end
+
+function err = fct_err_sum(tag_train, x, inp, out)
+
+assert(ischar(tag_train), 'invalid output')
+
+err_vec = fct_err_vec(tag_train, x, inp, out);
+err = sum(err_vec.^2);
 
 end

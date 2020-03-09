@@ -183,6 +183,12 @@ classdef AnnManager < handle
                     fct_fit = self.ann_info.fct_fit;
                     fct_err = self.ann_info.fct_err;
                     self.ann_engine_obj = ann_engine.AnnEngineMatlabLsq(fct_fit, fct_err, x_value, options);
+                case 'matlab_ga'
+                    options = self.ann_info.options;
+                    x_value = self.ann_info.x_value;
+                    fct_fit = self.ann_info.fct_fit;
+                    fct_err = self.ann_info.fct_err;
+                    self.ann_engine_obj = ann_engine.AnnEngineMatlabGa(fct_fit, fct_err, x_value, options);
                 case 'python'
                     hostname = self.ann_info.hostname;
                     port = self.ann_info.port;
@@ -194,10 +200,9 @@ classdef AnnManager < handle
         end
                 
         function train_engine(self, inp_mat, out_mat, tag_train)
-            n_var = length(self.var_out);
             if self.split_var==true
                 self.ann_data = {};
-                for i=1:n_var
+                for i=1:length(self.var_out)
                     [model, history] = self.ann_engine_obj.train(tag_train, inp_mat, out_mat(i,:));
                     self.ann_data{i} = struct('model', model, 'history', history, 'name', ['ann_' num2str(i)]);
                 end
@@ -208,9 +213,8 @@ classdef AnnManager < handle
         end
         
         function load_engine(self)
-            n_var = length(self.var_out);
             if self.split_var==true
-                for i=1:n_var
+                for i=1:length(self.var_out)
                     model = self.ann_data{i}.model;
                     history = self.ann_data{i}.history;
                     name = self.ann_data{i}.name;
@@ -227,7 +231,7 @@ classdef AnnManager < handle
         function unload_engine(self)
             n_var = length(self.var_out);
             if self.split_var==true
-                for i=1:n_var
+                for i=1:length(self.var_out)
                     name = self.ann_data{i}.name;
                     self.ann_engine_obj.unload(name)
                 end
@@ -238,9 +242,8 @@ classdef AnnManager < handle
         end
 
         function out_mat = predict_engine(self, in_mat)
-            n_var = length(self.var_out);
             if self.split_var==true
-                for i=1:n_var
+                for i=1:length(self.var_out)
                     name = self.ann_data{i}.name;
                     out_mat(i,:) = self.ann_engine_obj.predict(name, in_mat);
                 end

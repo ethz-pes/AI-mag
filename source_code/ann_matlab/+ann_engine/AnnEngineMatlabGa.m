@@ -1,4 +1,4 @@
-classdef AnnEngineMatlabLsq < ann_engine.AnnEngineAbstract
+classdef AnnEngineMatlabGa < ann_engine.AnnEngineAbstract
     %% properties
     properties (SetAccess = private, GetAccess = private)
         fct_fit
@@ -10,7 +10,7 @@ classdef AnnEngineMatlabLsq < ann_engine.AnnEngineAbstract
     
     %% init
     methods (Access = public)
-        function self = AnnEngineMatlabLsq(fct_fit, fct_err, x_value, options)
+        function self = AnnEngineMatlabGa(fct_fit, fct_err, x_value, options)
             self = self@ann_engine.AnnEngineAbstract();
             self.fct_fit = fct_fit;
             self.fct_err = fct_err;
@@ -35,14 +35,14 @@ classdef AnnEngineMatlabLsq < ann_engine.AnnEngineAbstract
 
             % fit
             fct_err_tmp = @(x) self.fct_err(tag_train, x, inp, out);
-            x0 = self.x_value.x0;
+            n = self.x_value.n;
             lb = self.x_value.lb;
             ub = self.x_value.ub;
-            [x, resnorm, residual, exitflag, output] = lsqnonlin(fct_err_tmp, x0, lb, ub, self.options);
+            [x, fval, exitflag, output, population, scores] = ga(fct_err_tmp, n, [], [], [], [], lb, ub, [], self.options);
             
             % assign
             model = struct('tag_train', tag_train, 'x', x);
-            history = struct('resnorm', resnorm, 'residual', residual, 'exitflag', exitflag, 'output', output);
+            history = struct('fval', fval, 'population', population, 'scores', scores, 'exitflag', exitflag, 'output', output);
         end
         
         function unload(self, name)
