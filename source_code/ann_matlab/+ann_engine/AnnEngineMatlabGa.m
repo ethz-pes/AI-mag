@@ -39,7 +39,7 @@ classdef AnnEngineMatlabGa < ann_engine.AnnEngineAbstract
             lb = self.x_value.lb;
             ub = self.x_value.ub;
             [x, fval, exitflag, output, population, scores] = ga(fct_err_tmp, n, [], [], [], [], lb, ub, [], self.options);
-            
+                        
             % assign
             model = struct('tag_train', tag_train, 'x', x);
             history = struct('fval', fval, 'population', population, 'scores', scores, 'exitflag', exitflag, 'output', output);

@@ -39,7 +39,7 @@ classdef AnnEngineMatlabLsq < ann_engine.AnnEngineAbstract
             lb = self.x_value.lb;
             ub = self.x_value.ub;
             [x, resnorm, residual, exitflag, output] = lsqnonlin(fct_err_tmp, x0, lb, ub, self.options);
-            
+
             % assign
             model = struct('tag_train', tag_train, 'x', x);
             history = struct('resnorm', resnorm, 'residual', residual, 'exitflag', exitflag, 'output', output);

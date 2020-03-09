@@ -25,7 +25,7 @@ classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
             
             data_out = self.client_obj.run(data_inp);
             assert(data_out.status==true, 'train error')
-
+            
             model = data_out.model;
             history = data_out.history;
         end
@@ -55,7 +55,7 @@ classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
             
             data_out = self.client_obj.run(data_inp);
             assert(data_out.status==true, 'train error')
-
+            
             out = data_out.out;
         end
     end

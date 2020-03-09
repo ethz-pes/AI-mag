@@ -17,6 +17,7 @@ def fct_model(tag_train, n_sol, n_inp, n_out):
         keras.layers.Dense(64, activation='relu'),
         keras.layers.Dense(64, activation='relu'),
         keras.layers.Dense(64, activation='relu'),
+        keras.layers.Dense(64, activation='relu'),
         keras.layers.Dense(activation='linear', units=n_out),
     ])
 
@@ -25,12 +26,12 @@ def fct_model(tag_train, n_sol, n_inp, n_out):
 def fct_train(tag_train, model, inp, out):
     assert isinstance(tag_train, str), 'invalid size'
 
-    model.compile(loss='mse', optimizer=keras.optimizers.RMSprop(0.001), metrics=['mae', 'mse'])
+    model.compile(loss='mse', optimizer=keras.optimizers.Adam(lr=0.001), metrics=['mae', 'mse'])
     history = model.fit(
         inp, out,
-        batch_size=5,
+        batch_size=10,
         validation_split=0.2,
-        epochs=50,
+        epochs=100,
         shuffle=False,
         verbose=False,
         callbacks=[keras.callbacks.EarlyStopping(monitor='val_loss', patience=10)],

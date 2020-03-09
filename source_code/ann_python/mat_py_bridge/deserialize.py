@@ -58,7 +58,7 @@ def deserialize_matrix(byte, cls):
     [byte, byte_tmp] = get_byte(byte, n_elem*n_byte)
 
     data = np.frombuffer(byte_tmp, dtype=cls)
-    data = np.reshape(data, size_vec)
+    data = np.reshape(data, size_vec, order='F')
 
     return (data, byte)
 

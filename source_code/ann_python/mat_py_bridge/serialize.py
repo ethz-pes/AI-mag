@@ -63,7 +63,7 @@ def serialize_matrix(byte, data):
     byte_add = struct.pack('%sI' % len(size_vec), *size_vec)
     byte = append_byte(byte, byte_add)
 
-    byte_add = data.tobytes()
+    byte_add = data.tobytes(order="F")
     byte = append_byte(byte, byte_add)
 
     return byte

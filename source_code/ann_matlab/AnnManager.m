@@ -189,7 +189,7 @@ classdef AnnManager < handle
                     fct_fit = self.ann_info.fct_fit;
                     fct_err = self.ann_info.fct_err;
                     self.ann_engine_obj = ann_engine.AnnEngineMatlabGa(fct_fit, fct_err, x_value, options);
-                case 'python'
+                case 'python_ann'
                     hostname = self.ann_info.hostname;
                     port = self.ann_info.port;
                     timeout = self.ann_info.timeout;
@@ -229,7 +229,6 @@ classdef AnnManager < handle
         end
 
         function unload_engine(self)
-            n_var = length(self.var_out);
             if self.split_var==true
                 for i=1:length(self.var_out)
                     name = self.ann_data{i}.name;
