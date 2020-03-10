@@ -4,6 +4,8 @@ classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
         hostname
         port
         timeout
+    end
+    properties (SetAccess = private, GetAccess = private)
         client_obj
     end
     

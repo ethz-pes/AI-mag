@@ -3,7 +3,8 @@ function const = get_data_const()
 % mf
 const.mu_core = 2200;
 const.beta_core = 2.4;
-const.I_winding = 1.0;
+const.I_winding_norm = 1.0;
+const.J_winding_norm = 1.0;
 
 % ht
 const.k_core = 5.0;

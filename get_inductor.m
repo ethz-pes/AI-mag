@@ -76,12 +76,19 @@ data.iter = iter;
 
 end
 
-function [ann_fem_mf_obj, ann_fem_ht_obj] = get_ann_fem()
+function ann_fem_obj = get_ann_fem()
 
-data_tmp_ht = load('data\mf_ann.mat');
-ann_fem_mf_obj = AnnFem(data_tmp_ht);
+data_tmp = load('data\ht_ann.mat');
+ann_ht = data_tmp;
 
-data_tmp_ht = load('data\ht_ann.mat');
-ann_fem_ht_obj = AnnFem(data_tmp_ht);
+data_tmp = load('data\mf_ann.mat');
+ann_mf = data_tmp;
+
+data_tmp = load('data\init.mat');
+const = data_tmp.const;
+
+eval_type = 'ann';
+
+ann_fem_obj = AnnFem(const, ann_mf, ann_ht, eval_type);
 
 end

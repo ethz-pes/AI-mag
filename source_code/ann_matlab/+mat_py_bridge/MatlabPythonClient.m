@@ -3,8 +3,10 @@ classdef MatlabPythonClient < handle
     properties (SetAccess = immutable, GetAccess = private)
         hostname
         port
-        tcp
         timeout
+    end
+    properties (SetAccess = private, GetAccess = private)
+        tcp
     end
     
     %% init

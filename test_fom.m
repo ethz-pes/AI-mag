@@ -1,18 +1,20 @@
 function test_fom()
 
+%% init
 data_tmp = load('data\ht_ann.mat');
-data.ht = data_tmp;
+ann_ht = data_tmp;
 
 data_tmp = load('data\mf_ann.mat');
-data.mf = data_tmp;
+ann_mf = data_tmp;
 
+data_tmp = load('data\init.mat');
+const = data_tmp.const;
 
-data_tmp_mf = load('data\init.mat');
+eval_type = 'ann';
 
+obj = AnnFem(const, ann_mf, ann_ht, eval_type);
 
-
-
-
+%% geom
 geom.z_core = 25e-3;
 geom.t_core = 20e-3;
 geom.x_window = 15e-3;
@@ -20,42 +22,18 @@ geom.y_window = 45e-3;
 geom.d_gap = 1e-3;
 
 n_sol = 1;
+geom_type = 'abs';
 
-var_type.geom = 'abs';
-var_type.eval = 'ann';
+obj.set_geom(geom_type, n_sol, geom);
 
-obj_ht = AnnFem(const, data_tmp_ht, data_tmp_mf, n_sol, geom, var_type);
+obj.get_geom();
 
+I_winding = 1.0;
+P_core = 1;
+P_winding = 1;
 
+obj.get_mf(I_winding);
 
-
-
-sweep = get_data_sweep('ht', 'random', 100);
-[n_sol, inp] = get_sweep(sweep);
-
-
-var_type.geom = 'rel';
-var_type.excitation = 'rel';
-
-[is_valid, fom] = obj_ht.run_ann(var_type, n_sol, inp);
-
-
-n_sol = 1;
-inp_abs.z_core = 25e-3;
-inp_abs.t_core = 20e-3;
-inp_abs.x_window = 15e-3;
-inp_abs.y_window = 45e-3;
-inp_abs.d_gap = 1e-3;
-inp_abs.P_winding = 2.2;
-inp_abs.P_core = 2.0;
-
-
-var_type.geom = 'abs';
-var_type.excitation = 'abs';
-[is_valid, fom] = obj_ht.run_ann(var_type, n_sol, inp_abs);
-[is_valid, fom] = obj_ht.run_approx(var_type, n_sol, inp_abs);
-
-is_valid
-fom
+obj.get_ht(P_winding, P_core);
 
 end

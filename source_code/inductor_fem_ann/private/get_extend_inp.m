@@ -34,17 +34,24 @@ switch model_type
     case 'none'
         % pass
     case 'mf'
-        % pass
+        switch excitation_type
+            case 'rel'
+                inp.I_winding = inp.J_winding.*inp.A_winding;
+            case 'abs'
+                inp.J_winding = inp.I_winding./inp.A_winding;
+            otherwise
+                error('invalid type')
+        end
     case 'ht'
         switch excitation_type
             case 'rel'
-                inp.P_tot = inp.ht_stress.*inp.S_box;
-                inp.P_core = inp.P_tot.*(1./(1+inp.ht_sharing));
-                inp.P_winding = inp.P_tot.*(inp.ht_sharing./(1+inp.ht_sharing));
+                inp.P_tot = inp.p_density_tot.*inp.S_box;
+                inp.P_core = inp.P_tot.*(1./(1+inp.p_ratio_winding_core));
+                inp.P_winding = inp.P_tot.*(inp.p_ratio_winding_core./(1+inp.p_ratio_winding_core));
             case 'abs'
                 inp.P_tot = inp.P_winding+inp.P_core;
-                inp.ht_stress = inp.P_tot./inp.S_box;
-                inp.ht_sharing = inp.P_winding./inp.P_core;
+                inp.p_density_tot = inp.P_tot./inp.S_box;
+                inp.p_ratio_winding_core = inp.P_winding./inp.P_core;
             otherwise
                 error('invalid type')
         end

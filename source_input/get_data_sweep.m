@@ -13,9 +13,12 @@ if any(strcmp(model_type, {'ht', 'mf'}))
     sweep.var.fact_gap = struct('var_trf', 'log', 'lb', 0.01,  'ub', 0.2, 'n', n);
     sweep.var.V_box = struct('var_trf', 'log', 'lb', 0.01e-3,  'ub', 1e-3, 'n', n);
 end
+if strcmp(model_type, 'mf')
+    sweep.var.J_winding = struct('var_trf', 'log', 'lb', 0.1e6,  'ub', 20e6, 'n', n);
+end
 if strcmp(model_type, 'ht')
-    sweep.var.ht_stress = struct('var_trf', 'log', 'lb', 0.01e4,  'ub', 0.6e4, 'n', n);
-    sweep.var.ht_sharing = struct('var_trf', 'log', 'lb', 0.1,  'ub', 10.0, 'n', n);
+    sweep.var.p_density_tot = struct('var_trf', 'log', 'lb', 0.01e4,  'ub', 0.6e4, 'n', n);
+    sweep.var.p_ratio_winding_core = struct('var_trf', 'log', 'lb', 0.1,  'ub', 10.0, 'n', n);
 end
 
 end

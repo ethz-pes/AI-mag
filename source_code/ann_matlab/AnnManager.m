@@ -20,7 +20,6 @@ classdef AnnManager < handle
         idx_test
         is_train
         ann_data
-        
         ann_engine_obj
     end
     

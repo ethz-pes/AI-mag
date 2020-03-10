@@ -9,6 +9,11 @@ switch model_type
     otherwise
         error('invalid type')
 end
+
+for i=1:length(expr)
+    out_fem.(expr{i}) = rand();
+end
+return
        
 % load
 path = fileparts(mfilename('fullpath'));
