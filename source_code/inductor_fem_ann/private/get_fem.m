@@ -1,11 +1,11 @@
-function get_fem(folder, model_type, var_type, n_sol, inp, const)
+function get_fem(folder, model_type, geom_type, n_sol, inp, const)
 
 % compute
 for i=1:n_sol
     fprintf('    %d / %d\n', i, n_sol)
     inp_tmp =  get_struct_idx(inp, i);
 
-    get_out_sub(folder, model_type, var_type, inp_tmp, const);
+    get_out_sub(folder, model_type, geom_type, inp_tmp, const);
 end
 
 end
@@ -23,8 +23,8 @@ if make_computation==true
     fprintf('        compute: start\n')
     
     % merge
-    inp = get_struct_merge(inp, const);
-    [is_valid, inp] = get_extend_inp(model_type, var_type, inp);
+    n_sol = 1;
+    [is_valid, inp] = get_extend_inp(const, model_type, var_type, n_sol, inp);
         
     % disp
     if is_valid==true
@@ -41,7 +41,7 @@ if make_computation==true
     fprintf('        compute: %s\n', char(diff))
         
     % save
-    save(filename, 'inp', 'is_valid', 'model_type', 'out_fem', 'diff')
+    save(filename, 'inp', 'is_valid', 'model_type', 'var_type', 'out_fem', 'diff')
 end
 
 end

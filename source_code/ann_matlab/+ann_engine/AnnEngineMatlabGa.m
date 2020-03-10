@@ -1,10 +1,12 @@
 classdef AnnEngineMatlabGa < ann_engine.AnnEngineAbstract
     %% properties
-    properties (SetAccess = private, GetAccess = private)
+    properties (SetAccess = immutable, GetAccess = private)
         fct_fit
         fct_err
         x_value
         options
+    end
+    properties (SetAccess = private, GetAccess = private)
         ann_data
     end
     
@@ -18,7 +20,7 @@ classdef AnnEngineMatlabGa < ann_engine.AnnEngineAbstract
             self.options = options;
             self.ann_data = struct();
         end
-                
+        
         function [model, history] = train(self, tag_train, inp, out)
             % parse var
             n_inp = size(inp, 1);
@@ -32,14 +34,14 @@ classdef AnnEngineMatlabGa < ann_engine.AnnEngineAbstract
             assert(n_sol_inp>0, 'invalid size')
             assert(n_inp>0, 'invalid size')
             assert(n_out>0, 'invalid size')
-
+            
             % fit
             fct_err_tmp = @(x) self.fct_err(tag_train, x, inp, out);
             n = self.x_value.n;
             lb = self.x_value.lb;
             ub = self.x_value.ub;
             [x, fval, exitflag, output, population, scores] = ga(fct_err_tmp, n, [], [], [], [], lb, ub, [], self.options);
-                        
+            
             % assign
             model = struct('tag_train', tag_train, 'x', x);
             history = struct('fval', fval, 'population', population, 'scores', scores, 'exitflag', exitflag, 'output', output);
@@ -52,10 +54,10 @@ classdef AnnEngineMatlabGa < ann_engine.AnnEngineAbstract
         function load(self, name, model, history)
             assert(isstruct(model), 'invalid model')
             assert(isstruct(history), 'invalid model')
-
+            
             self.ann_data.(name) = struct('model', model, 'history', history);
         end
-                
+        
         function out = predict(self, name, inp)
             model = self.ann_data.(name).model;
             history = self.ann_data.(name).history;

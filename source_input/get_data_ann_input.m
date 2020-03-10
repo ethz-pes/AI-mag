@@ -9,7 +9,7 @@ if any(strcmp(model_type, {'ht', 'mf'}))
     var_inp{end+1} = struct('name', 'fact_core', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*1.0, 'max', 1.01.*3.0);
     var_inp{end+1} = struct('name', 'fact_core_window', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.3, 'max', 1.01.*3.0);
     var_inp{end+1} = struct('name', 'fact_gap', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.01, 'max', 1.01.*0.2);
-    var_inp{end+1} = struct('name', 'volume_target', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.01e-3, 'max', 1.01.*1e-3);
+    var_inp{end+1} = struct('name', 'V_box', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.01e-3, 'max', 1.01.*1e-3);
 end
 if strcmp(model_type, 'ht')
     var_inp{end+1} = struct('name', 'ht_stress', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.01e4, 'max', 1.01.*0.6e4);
@@ -29,6 +29,7 @@ if strcmp(model_type, 'ht')
     var_out{end+1} = struct('name', 'T_core_avg', 'var_trf', 'lin', 'var_norm', 'min_max', 'use_nrm', true);
     var_out{end+1} = struct('name', 'T_winding_max', 'var_trf', 'lin', 'var_norm', 'min_max', 'use_nrm', true);
     var_out{end+1} = struct('name', 'T_winding_avg', 'var_trf', 'lin', 'var_norm', 'min_max', 'use_nrm', true);
+    var_out{end+1} = struct('name', 'T_iso_max', 'var_trf', 'lin', 'var_norm', 'min_max', 'use_nrm', true);
 end
 
 % split_train_test

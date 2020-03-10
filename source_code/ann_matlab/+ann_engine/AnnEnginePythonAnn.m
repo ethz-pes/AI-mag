@@ -1,6 +1,6 @@
 classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
     %% properties
-    properties (SetAccess = private, GetAccess = private)
+    properties (SetAccess = immutable, GetAccess = private)
         hostname
         port
         timeout

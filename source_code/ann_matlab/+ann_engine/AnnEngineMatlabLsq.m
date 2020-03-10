@@ -1,10 +1,12 @@
 classdef AnnEngineMatlabLsq < ann_engine.AnnEngineAbstract
     %% properties
-    properties (SetAccess = private, GetAccess = private)
+    properties (SetAccess = immutable, GetAccess = private)
         fct_fit
         fct_err
         x_value
         options
+    end
+    properties (SetAccess = private, GetAccess = private)
         ann_data
     end
     

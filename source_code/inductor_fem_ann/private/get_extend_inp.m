@@ -1,13 +1,23 @@
-function [is_valid, inp] = get_extend_inp(model_type, var_type, inp)
+function [is_valid, inp] = get_extend_inp(const, model_type, var_type, n_sol, inp)
 
-% type
-geom_type = var_type.geom;
-excitation_type = var_type.excitation;
+% inp
+const = get_struct_size(const, n_sol);
+inp = get_struct_merge(inp, const);
+[is_valid, inp] = get_extend_inp_sub(model_type, var_type, inp);
+
+end
+
+function [is_valid, inp] = get_extend_inp_sub(model_type, var_type, inp)
+
+% extract
+geom_type = var_type.geom_type;
+excitation_type = var_type.excitation_type;
 
 % get geom
 inp = get_base(geom_type, inp);
 inp = get_core(inp);
 inp = get_winding(inp);
+inp = get_iso(inp);
 inp = get_box(inp);
 
 % get model
@@ -21,6 +31,8 @@ end
 function inp = get_model(model_type, excitation_type, inp)
 
 switch model_type
+    case 'none'
+        % pass
     case 'mf'
         % pass
     case 'ht'
@@ -68,7 +80,6 @@ switch geom_type
         inp.fact_core_window = inp.A_core./inp.A_window;
         
         inp.fact_gap = inp.d_gap./sqrt(inp.A_core);
-        inp.volume_target = NaN;
     otherwise
         error('invalid data')
 end
@@ -91,7 +102,7 @@ end
 function A_core_window = get_area_product(inp)
 
 % extract
-volume_target = inp.volume_target;
+V_box = inp.V_box;
 fact_core = inp.fact_core;
 fact_window = inp.fact_window;
 fact_core_window = inp.fact_core_window;
@@ -99,7 +110,7 @@ fact_curve = inp.fact_curve;
 
 % solve
 fact = 2.*((fact_core.^(-1).*fact_core_window.^(1/2)).^(1/2)+((fact_core_window.^(-1)).^(1/2).*fact_window.^(-1)).^(1/2)).*((fact_core.*fact_core_window.^(1/2)).^(1/2)+(fact_core.^(-1).*fact_core_window.^(1/2)).^(1/2).*fact_curve+2.*((fact_core_window.^(-1)).^(1/2).*fact_window.^(-1)).^(1/2)).*((fact_core.^(-1).*fact_core_window.^(1/2)).^(1/2)+((fact_core_window.^(-1)).^(1/2).*fact_window).^(1/2));
-x = (volume_target./fact).^(1./3);
+x = (V_box./fact).^(1./3);
 A_core_window = x.^4;
 
 end
@@ -123,6 +134,14 @@ inp.V_winding = inp.l_winding.*inp.A_winding;
 
 end
 
+function inp = get_iso(inp)
+
+inp.A_iso = inp.A_window-inp.A_winding;
+inp.l_iso = 2.*(inp.z_core+inp.t_core-2*inp.r_curve)+2.*pi.*(inp.r_curve+inp.x_window./2);
+inp.V_iso = inp.l_iso.*inp.A_iso;
+
+end
+
 function inp = get_box(inp)
 
 % mesh
@@ -131,7 +150,6 @@ inp.y_box = inp.y_window+inp.t_core;
 inp.z_box = inp.z_core+2.*(inp.x_window+inp.fact_curve.*inp.t_core./2);
 inp.S_box = 2.*(inp.x_box.*inp.y_box+inp.x_box.*inp.z_box+inp.y_box.*inp.z_box);
 inp.V_box = inp.x_box.*inp.y_box.*inp.z_box;
-inp.volume_target = inp.x_box.*inp.y_box.*inp.z_box;
 
 end
 

@@ -1,12 +1,14 @@
 classdef AnnManager < handle
     %% properties
-    properties (SetAccess = private, GetAccess = public)
+    properties (SetAccess = immutable, GetAccess = public)
         var_inp
         var_out
         split_train_test
         split_var
         ann_info
-        
+    end
+    
+    properties (SetAccess = private, GetAccess = public)
         n_sol
         inp
         out_ref

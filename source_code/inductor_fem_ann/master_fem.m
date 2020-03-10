@@ -1,15 +1,16 @@
-function master_fem(file_fem, folder_fem, model_type, var_type, sweep, const)
+function master_fem(file_init, folder_fem, model_type, var_type, sweep)
 
 % name
 fprintf('################## master_fem\n')
 
+% load
+fprintf('load\n')
+data_tmp = load(file_init);
+const = data_tmp.const;
+
 % sweep
 fprintf('sweep\n')
 [n_sol, inp] = get_sweep(sweep);
-
-% save
-fprintf('save\n')
-save(file_fem, 'model_type', 'var_type', 'const')
 
 % fem
 fprintf('fem\n')

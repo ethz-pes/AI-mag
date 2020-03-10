@@ -1,6 +1,6 @@
 classdef MatlabPythonClient < handle
     %% properties
-    properties (SetAccess = private, GetAccess = private)
+    properties (SetAccess = immutable, GetAccess = private)
         hostname
         port
         tcp

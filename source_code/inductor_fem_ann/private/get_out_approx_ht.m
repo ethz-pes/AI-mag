@@ -52,6 +52,7 @@ out_approx.T_core_max = T_core_max-T_ambient;
 out_approx.T_core_avg = ((T_core_max+T_core_min)./2)-T_ambient;
 out_approx.T_winding_max = T_winding_max-T_ambient;
 out_approx.T_winding_avg = ((T_winding_max+T_winding_min)./2)-T_ambient;
+out_approx.T_iso_max = max(T_winding_min, T_core_min)-T_ambient;
 
 end
 

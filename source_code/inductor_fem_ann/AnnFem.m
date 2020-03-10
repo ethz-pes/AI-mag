@@ -1,6 +1,6 @@
 classdef AnnFem < handle
     %% properties
-    properties (SetAccess = private, GetAccess = public)
+    properties (SetAccess = immutable, GetAccess = public)
         ann_input
         ann_data
         model_type
@@ -24,13 +24,19 @@ classdef AnnFem < handle
             self.ann_manager_obj = AnnManager(self.ann_input);
             self.ann_manager_obj.load(self.ann_data);
         end
+                
+        function [is_valid, inp] = run_inp(self, var_type, n_sol, inp)
+            [is_valid, inp] = get_extend_inp(self.const, self.model_type, var_type, n_sol, inp);
+        end
         
         function [is_valid, fom] = run_ann(self, var_type, n_sol, inp)
-            [is_valid, fom] = get_fom(self.ann_manager_obj, self.const, self.model_type, var_type, n_sol, inp, 'ann');
+            [is_valid, inp] = get_extend_inp(self.const, self.model_type, var_type, n_sol, inp);
+            [is_valid, fom] = get_fom(self.ann_manager_obj, self.model_type, n_sol, inp, is_valid, 'ann');
         end
 
-        function [is_valid, fom] = run_approx(self, var_type, n_sol, inp)
-            [is_valid, fom] = get_fom(self.ann_manager_obj, self.const, self.model_type, var_type, n_sol, inp, 'approx');
+        function [is_valid, inp, fom] = run_approx(self, var_type, n_sol, inp)
+            [is_valid, inp] = get_extend_inp(self.const, self.model_type, var_type, n_sol, inp);
+            [is_valid, fom] = get_fom(self.ann_manager_obj, self.model_type, n_sol, inp, is_valid, 'approx');
         end
     end
 end
