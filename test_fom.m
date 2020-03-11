@@ -10,9 +10,10 @@ ann_mf = data_tmp;
 data_tmp = load('data\init.mat');
 const = data_tmp.const;
 
+geom_type = 'abs';
 eval_type = 'ann';
 
-obj = AnnFem(const, ann_mf, ann_ht, eval_type);
+obj = AnnFem(const, ann_mf, ann_ht, geom_type, eval_type);
 
 %% geom
 geom.z_core = 25e-3;
@@ -22,9 +23,8 @@ geom.y_window = 45e-3;
 geom.d_gap = 1e-3;
 
 n_sol = 1;
-geom_type = 'abs';
 
-obj.set_geom(geom_type, n_sol, geom);
+obj.set_geom(n_sol, geom);
 
 obj.get_geom();
 

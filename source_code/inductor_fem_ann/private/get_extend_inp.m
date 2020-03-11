@@ -45,12 +45,12 @@ switch model_type
     case 'ht'
         switch excitation_type
             case 'rel'
-                inp.P_tot = inp.p_density_tot.*inp.S_box;
+                inp.P_tot = inp.p_density_tot.*inp.A_box;
                 inp.P_core = inp.P_tot.*(1./(1+inp.p_ratio_winding_core));
                 inp.P_winding = inp.P_tot.*(inp.p_ratio_winding_core./(1+inp.p_ratio_winding_core));
             case 'abs'
                 inp.P_tot = inp.P_winding+inp.P_core;
-                inp.p_density_tot = inp.P_tot./inp.S_box;
+                inp.p_density_tot = inp.P_tot./inp.A_box;
                 inp.p_ratio_winding_core = inp.P_winding./inp.P_core;
             otherwise
                 error('invalid type')
@@ -155,7 +155,7 @@ function inp = get_box(inp)
 inp.x_box = 2.*inp.x_window+2.*inp.t_core;
 inp.y_box = inp.y_window+inp.t_core;
 inp.z_box = inp.z_core+2.*(inp.x_window+inp.fact_curve.*inp.t_core./2);
-inp.S_box = 2.*(inp.x_box.*inp.y_box+inp.x_box.*inp.z_box+inp.y_box.*inp.z_box);
+inp.A_box = 2.*(inp.x_box.*inp.y_box+inp.x_box.*inp.z_box+inp.y_box.*inp.z_box);
 inp.V_box = inp.x_box.*inp.y_box.*inp.z_box;
 
 end

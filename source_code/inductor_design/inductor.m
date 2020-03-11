@@ -3,38 +3,52 @@ classdef inductor < handle
     properties (SetAccess = immutable, GetAccess = private)
         n_sol
         data
-        ann_fem_mf_obj
-        ann_fem_ht_obj
+        ann_fem_obj
     end
     properties (SetAccess = private, GetAccess = private)        
         is_valid        
-        fom                
-        transformer_plot_obj
-        transformer_losses_obj
-        transformer_thermal_obj
-        iter_thermal_losses_obj
+        fom
     end
     
     %% init
     methods (Access = public)
-        function self = inductor(n_sol, data, ann_fem_mf_obj, ann_fem_ht_obj)
+        function self = inductor(n_sol, data, ann_fem_obj)
             % parse the data
             self.n_sol = n_sol;
             self.data = data;            
-            self.ann_fem_mf_obj = ann_fem_mf_obj;            
-            self.ann_fem_ht_obj = ann_fem_ht_obj;            
+            self.ann_fem_obj = ann_fem_obj;
+            
+            % init
+            self.data = get_struct_size(self.data, self.n_sol);
+            self.is_valid = true(1, self.n_sol);
+
+            % set
+            self.ann_fem_obj.set_geom(self.n_sol, self.data.geom);
+            [is_valid_tmp, geom] = self.ann_fem_obj.get_geom();
+            self.is_valid = self.is_valid&is_valid_tmp;
+            
+            self.fom.geom.z_core = geom.z_core;
+            self.fom.geom.t_core = geom.t_core;
+            self.fom.geom.x_window = geom.x_window;
+            self.fom.geom.y_window = geom.y_window;
+            self.fom.geom.d_gap = geom.d_gap;
+            self.fom.geom.d_iso = geom.d_iso;
+            self.fom.geom.r_curve = geom.r_curve;
+            
+            self.fom.area.A_core = geom.A_core;
+            self.fom.area.A_winding = geom.A_winding;
+            self.fom.area.A_box = geom.A_box;
+            
+            self.fom.volume.V_iso = geom.V_iso;
+            self.fom.volume.V_core = geom.V_core;
+            self.fom.volume.V_winding = geom.V_winding;
+            self.fom.volume.V_winding = geom.V_winding;
+            self.fom.volume.V_box = geom.V_box;
             
             
             keyboard
             
-            var_type.geom = 'abs';
-var_type.excitation = 'rel';
 
-            
-            [is_valid, fom] = ann_fem_mf_obj.run_inp(var_type, n_sol, self.data.geom);
-
-            
-            self.init_data();
         end
         
         function fom = get_fom(self)

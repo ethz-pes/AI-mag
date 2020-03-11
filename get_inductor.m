@@ -5,9 +5,9 @@ addpath('tmp')
 n_sol = 1;
 
 data = get_data();
-[ann_fem_mf_obj, ann_fem_ht_obj] = get_ann_fem();
+ann_fem_obj = get_ann_fem();
 
-obj = inductor(n_sol, data, ann_fem_mf_obj, ann_fem_ht_obj);
+obj = inductor(n_sol, data, ann_fem_obj);
 
 
 end
@@ -19,10 +19,8 @@ geom.t_core = 20e-3;
 geom.x_window = 15e-3;
 geom.y_window = 45e-3;
 geom.d_gap = 1e-3;
-geom.n_turn = 6;
 
-geom.type = 'abs';
-geom.eval = 'ann';
+n_turn = 6;
 
 %% winding
 winding = get_fct_transformer_winding(71);
@@ -66,9 +64,9 @@ iter.relax_thermal = 1.0;
 %% assign
 data.winding = winding;
 data.iso = iso;
+data.n_turn = n_turn;
 data.core = core;
 data.geom = geom;
-data.thermal = thermal;
 data.fom_data = fom_data;
 data.fom_limit = fom_limit;
 data.losses_add = losses_add;
@@ -87,8 +85,9 @@ ann_mf = data_tmp;
 data_tmp = load('data\init.mat');
 const = data_tmp.const;
 
+geom_type = 'abs';
 eval_type = 'ann';
 
-ann_fem_obj = AnnFem(const, ann_mf, ann_ht, eval_type);
+ann_fem_obj = AnnFem(const, ann_mf, ann_ht, geom_type, eval_type);
 
 end

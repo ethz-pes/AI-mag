@@ -17,13 +17,14 @@ classdef AnnFem < handle
     
     %% init
     methods (Access = public)
-        function self = AnnFem(const, ann_mf, ann_ht, eval_type)
+        function self = AnnFem(const, ann_mf, ann_ht, geom_type, eval_type)
             % assign input      
             self.const = const;
             self.ann_mf = ann_mf;
             self.ann_ht = ann_ht;
+            self.geom_type = geom_type;
             self.eval_type = eval_type;
-            
+
             % mf
             assert(strcmp(ann_mf.model_type, 'mf'), 'invalid type')
             self.ann_manager_mf_obj = AnnManager(ann_mf.ann_input);
@@ -38,8 +39,7 @@ classdef AnnFem < handle
             self.is_geom = false;
         end
         
-        function set_geom(self, geom_type, n_sol, geom)
-            self.geom_type = geom_type;
+        function set_geom(self, n_sol, geom)
             self.n_sol = n_sol;
             self.geom = geom;
             self.is_geom = true;
