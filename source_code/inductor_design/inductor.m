@@ -21,7 +21,7 @@ classdef inductor < handle
             % init
             self.data = get_struct_size(self.data, self.n_sol);
             self.is_valid = true(1, self.n_sol);
-
+            
             % set
             self.ann_fem_obj.set_geom(self.n_sol, self.data.geom);
             [is_valid_tmp, geom] = self.ann_fem_obj.get_geom();
@@ -42,18 +42,40 @@ classdef inductor < handle
             self.fom.volume.V_iso = geom.V_iso;
             self.fom.volume.V_core = geom.V_core;
             self.fom.volume.V_winding = geom.V_winding;
-            self.fom.volume.V_winding = geom.V_winding;
             self.fom.volume.V_box = geom.V_box;
             
-            
-            keyboard
-            
+            self.fom.mass.m_iso = self.data.iso.rho.*self.fom.volume.V_iso;
+            self.fom.mass.m_core = self.data.core.rho.*self.fom.volume.V_core;
+            self.fom.mass.m_winding = self.data.winding.rho.*self.fom.volume.V_winding;
+            self.fom.mass.m_box = self.fom.mass.m_iso+self.fom.mass.m_core+self.fom.mass.m_winding;
 
+            self.fom.cost.c_iso = self.data.iso.lambda.*self.fom.volume.V_iso;
+            self.fom.cost.c_core = self.data.core.lambda.*self.fom.volume.V_core;
+            self.fom.cost.c_winding = self.data.winding.lambda.*self.fom.volume.V_winding;
+            self.fom.cost.c_box = self.fom.cost.c_iso+self.fom.cost.c_core+self.fom.cost.c_winding;
+
+            self.fom.n_turn = self.data.n_turn;
+
+            I_winding = self.data.n_turn.*self.data.I_test;
+            [is_valid_tmp, fom] = self.ann_fem_obj.get_mf(I_winding);
+            self.is_valid = self.is_valid&is_valid_tmp;
+            
+            self.fom.circuit.L = self.data.n_turn.^2.*fom.L_norm;
+            self.fom.circuit.I_peak = self.data.core.B_peak_max./(self.data.n_turn.*fom.B_norm);
+            self.fom.circuit.I_rms = (self.data.winding.fill.*self.data.winding.J_rms_max)./(self.data.n_turn.*fom.J_norm);
+            
+            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.volume.V_box, self.data.fom_limit.V_box);
+            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.cost.c_box, self.data.fom_limit.c_box);
+            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.mass.m_box, self.data.fom_limit.m_box);
+            
+            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.L, self.data.fom_limit.L);
+            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.I_peak, self.data.fom_limit.I_peak);
+            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.I_rms, self.data.fom_limit.I_rms);
         end
         
-        function fom = get_fom(self)
-            fom = utils.unfilter_struct(self.fom, self.is_valid);
-            fom.is_valid = self.is_valid;
+        function [is_valid, fom] = get_fom(self)
+            fom = self.fom;
+            is_valid = self.is_valid;
         end
 
         function fig = get_plot(self, name, idx)
@@ -62,7 +84,7 @@ classdef inductor < handle
             assert(any(idx==(1:self.n_sol)), 'invalid data')
 
             is_select = find(self.is_valid)==idx;
-            fig = self.transformer_plot_obj.get_plot(name, is_select);
+            fig = get_plot_inductor(name, self.fom.geom, is_select);
         end
 
         function operating = get_operating(self, excitation)     
@@ -149,5 +171,13 @@ classdef inductor < handle
             self.is_valid = is_valid_tmp;
             self.fom = fom_tmp;
         end
+        
+        function is_valid_tmp = init_is_valid_check(self, vec, limit)
+            % check the validity
+            is_valid_min = vec>=limit.min;
+            is_valid_max = vec<=limit.max;
+            is_valid_tmp = is_valid_min&is_valid_max;
+        end
+        
     end
 end

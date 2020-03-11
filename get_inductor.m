@@ -1,6 +1,7 @@
 function get_inductor
 
 addpath('tmp')
+close all;
 
 n_sol = 1;
 
@@ -8,6 +9,7 @@ data = get_data();
 ann_fem_obj = get_ann_fem();
 
 obj = inductor(n_sol, data, ann_fem_obj);
+obj.get_plot('test', 1)
 
 
 end
@@ -21,6 +23,7 @@ geom.y_window = 45e-3;
 geom.d_gap = 1e-3;
 
 n_turn = 6;
+I_test = 60;
 
 %% winding
 winding = get_fct_transformer_winding(71);
@@ -50,9 +53,10 @@ losses_add.P_offset = 0.0;
 fom_limit.L = struct('min', 0.0, 'max', 1e9);
 fom_limit.I_peak = struct('min', 0.0, 'max', 1e9);
 fom_limit.I_rms = struct('min', 0.0, 'max', 1e9);
-fom_limit.cost = struct('min', 0.0, 'max', 1e9);
-fom_limit.m = struct('min', 0.0, 'max', 1e9);
-fom_limit.V = struct('min', 0.0, 'max', 1e9);
+
+fom_limit.c_box = struct('min', 0.0, 'max', 1e9);
+fom_limit.m_box = struct('min', 0.0, 'max', 1e9);
+fom_limit.V_box = struct('min', 0.0, 'max', 1e9);
 
 %% iter
 iter.n_iter = 15;
@@ -65,6 +69,7 @@ iter.relax_thermal = 1.0;
 data.winding = winding;
 data.iso = iso;
 data.n_turn = n_turn;
+data.I_test = I_test;
 data.core = core;
 data.geom = geom;
 data.fom_data = fom_data;
