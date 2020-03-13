@@ -1,7 +1,35 @@
-function run_extract_map()
+function run_core()
 
 close('all');
 addpath(genpath('utils'))
+
+%% data
+id = [97 87 49 95];
+rho = [4850 4850 4750 4900];
+kappa = [7.5 7.0 12.5 9.5];
+
+%% parse
+data = {};
+for i=1:length(id)
+   [tol, add, material] = get_data(rho(i), kappa(i));
+   
+   data_mat = load(['data/N' num2str(id(i)) '_map.txt']);
+   data_map = extract_map(data_mat, tol, add);
+
+   data_tmp = load('data/dc_bias.mat');
+   data_bias = data_tmp.data;
+   
+   material = get_material(data_map, data_bias, material);
+
+   data{end+1} = struct('id', id(i), 'material', material);
+end
+
+%% save
+save('core_data.mat', 'data')
+
+end
+
+function [tol, add, material] = get_data(rho, kappa)
 
 %% map
 tol = 1e-6;
@@ -41,9 +69,18 @@ add.temperature{end+1} = struct('B_peak', 300e-3, 'T', 140, 'T_other_1', 110, 'T
 
 add.frequency = {};
 
-extract_map('N97', tol, add);
-extract_map('N87', tol, add);
-extract_map('N95', tol, add);
-extract_map('N49', tol, add);
+%% material
+material.interp.f = logspace(log10(25e3), log10(1e6), 20);
+material.interp.B_peak = logspace(log10(2.5e-3), log10(250e-3), 20);
+material.interp.B_dc = 0e-3:10e-3:250e-3;
+material.interp.T = 20:10:140;
+
+material.param.fact_igse = 0.1;
+material.param.B_sat = 300e-3;
+material.param.P_max = 1000e3;
+material.param.P_scale = 1.3;
+material.param.T_max = 130.0;
+material.param.rho = rho;
+material.param.lambda = rho.*kappa;
 
 end

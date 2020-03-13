@@ -1,6 +1,6 @@
-function data_raw = get_data_map(name, tol, add)
+function data_raw = get_data_map(data_mat, tol, add)
 
-data_raw = load_file(name);
+data_raw = load_file(data_mat);
 
 for i=1:length(add.pts_grid)
    data_raw = add_pts_grid(data_raw, tol, add.pts_grid{i});
@@ -14,9 +14,7 @@ end
 
 end
 
-function data_raw = load_file(name)
-
-data_mat = load(['data/' name '_map.txt']);
+function data_raw = load_file(data_mat)
 
 data_raw.f = 1e3.*data_mat(:,1).';
 data_raw.B_peak = 1e-3.*data_mat(:,2).';
