@@ -1,16 +1,16 @@
-function P_vec = interp_map(data, f_vec, B_peak_vec, T_vec)
+function P = interp_map(data, f, B_ac_peak, T)
 
 %% load
-f = data.f;
-B_peak = data.B_peak;
-T = data.T;
-P_f_B_peak_T = data.P_f_B_peak_T;
+f_vec = data.f_vec;
+B_ac_peak_vec = data.B_ac_peak_vec;
+T_vec = data.T_vec;
+P_mat = data.P_mat;
 
 %% interp
-[f_mat, B_peak_mat, T_mat] = ndgrid(f, B_peak, T);
-interp = griddedInterpolant(log10(f_mat), log10(B_peak_mat), T_mat, log10(P_f_B_peak_T), 'linear', 'linear');
+[f_mat, B_ac_peak_mat, T_mat] = ndgrid(f_vec, B_ac_peak_vec, T_vec);
+interp = griddedInterpolant(log10(f_mat), log10(B_ac_peak_mat), T_mat, log10(P_mat), 'linear', 'linear');
 
 %% interp
-P_vec = 10.^interp(log10(f_vec), log10(B_peak_vec), T_vec);
+P = 10.^interp(log10(f), log10(B_ac_peak), T);
 
 end

@@ -17,15 +17,14 @@ m = obj.get_cost();
 T_max = obj.get_temperature();
 
 f = repmat(50e3, 1, n);
-B_peak = repmat(50e-3, 1, n);
+B_ac_peak = repmat(50e-3, 1, n);
 B_dc = repmat(50e-3, 1, n);
 T = repmat(70, 1, n);
+d_c = repmat(0.8, 1, n);
 
-[is_valid1, P1] = obj.get_losses_sin(f, B_peak, B_dc, T);
+[is_valid1, P1] = obj.get_losses_sin(f, B_ac_peak, B_dc, T)
 
-[is_valid2, P2] = obj.get_losses_tri(f, 0.6, B_peak, B_dc, T);
-
-fdgdfg
+[is_valid2, P2] = obj.get_losses_tri(f, d_c, B_ac_peak, B_dc, T)
 
 %% grid
 data_tmp = load('source_scratch\loss_map\winding_data.mat');
@@ -33,18 +32,23 @@ data = data_tmp.data;
 
 %% obj
 id = [71 71 100 50 100];
+n = length(id);
+
 obj = WindingData(data, id);
 
 m = obj.get_mass();
 m = obj.get_cost();
 T_max = obj.get_temperature();
 
-J_dc = repmat(1e6, 1, 7);
-J_rms = repmat(1e6, 1, 7);
-H_rms = repmat(10e4, 1, 7);
-T = repmat(70, 1, 7);
+f = repmat(50e3, 1, n);
+J_dc = repmat(1e6, 1, n);
+J_ac_peak = repmat(1e6, 1, n);
+H_ac_peak = repmat(5e3, 1, n);
+T = repmat(70, 1, n);
+d_c = repmat(0.8, 1, n);
 
-[is_valid, P] = obj.get_losses_sin(f, J_rms, H_rms, J_dc, T);
+[is_valid, P] = obj.get_losses_sin(f, J_dc, J_ac_peak, H_ac_peak, T)
+[is_valid, P] = obj.get_losses_tri(f, d_c, J_dc, J_ac_peak, H_ac_peak, T)
 
 
 end
