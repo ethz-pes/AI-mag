@@ -1,19 +1,12 @@
 function test_fom()
 
 %% init
-data_tmp = load('data\ht_ann.mat');
-ann_ht = data_tmp;
-
-data_tmp = load('data\mf_ann.mat');
-ann_mf = data_tmp;
-
-data_tmp = load('data\init.mat');
-const = data_tmp.const;
+data_fem_ann = load('data\fem_ann\export.mat');
 
 geom_type = 'abs';
 eval_type = 'ann';
 
-obj = AnnFem(const, ann_mf, ann_ht, geom_type, eval_type);
+obj = AnnFem(data_fem_ann, geom_type, eval_type);
 
 %% geom
 geom.z_core = 25e-3;

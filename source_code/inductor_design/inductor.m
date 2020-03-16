@@ -2,7 +2,9 @@ classdef inductor < handle
     %% init
     properties (SetAccess = immutable, GetAccess = private)
         n_sol
-        data
+        data_vec
+        data_const
+        data_material
         ann_fem_obj
     end
     properties (SetAccess = private, GetAccess = private)        
@@ -12,14 +14,16 @@ classdef inductor < handle
     
     %% init
     methods (Access = public)
-        function self = inductor(n_sol, data, ann_fem_obj)
+        function self = inductor(n_sol, data_vec, data_material, data_const, ann_fem_obj)
             % parse the data
             self.n_sol = n_sol;
-            self.data = data;            
+            self.data_vec = data_vec;            
+            self.data_material = data_material;            
+            self.data_const = data_const;            
             self.ann_fem_obj = ann_fem_obj;
             
             % init
-            self.data = get_struct_size(self.data, self.n_sol);
+            self.data_vec = get_struct_size(self.data_vec, self.n_sol);
             self.is_valid = true(1, self.n_sol);
             
             % set

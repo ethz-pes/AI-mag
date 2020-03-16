@@ -5,8 +5,7 @@ fprintf('################## master_fem\n')
 
 % load
 fprintf('load\n')
-data_tmp = load(file_init);
-const = data_tmp.const;
+const = load(file_init);
 
 % sweep
 fprintf('sweep\n')

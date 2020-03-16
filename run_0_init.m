@@ -4,10 +4,13 @@ addpath(genpath('source_code'))
 addpath(genpath('source_input'))
 close('all')
 
-%% run
+%% file
 file_init = 'data/fem_ann/init.mat';
 
+%% run
 const = get_data_const();
-save(file_init, 'const')
+
+%% save
+save(file_init, '-struct', 'const')
 
 end

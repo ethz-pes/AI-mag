@@ -10,9 +10,9 @@ ann_fem_obj = get_ann_fem();
 
 data_vec = get_material();
 data_material = get_data();
-data_iter = get_iter();
+data_const = get_data_const();
 
-obj = inductor(n_sol, data_vec, data_material, data_iter, ann_fem_obj);
+obj = inductor(n_sol, data_vec, data_material, data_const, ann_fem_obj);
 obj.get_plot('test', 1)
 
 end
@@ -77,14 +77,7 @@ end
 
 function ann_fem_obj = get_ann_fem()
 
-data_tmp = load('data\ht_ann.mat');
-ann_ht = data_tmp;
-
-data_tmp = load('data\mf_ann.mat');
-ann_mf = data_tmp;
-
-data_tmp = load('data\init.mat');
-const = data_tmp.const;
+data = load('data\fem_ann\export.mat');
 
 geom_type = 'abs';
 eval_type = 'ann';
@@ -93,32 +86,32 @@ ann_fem_obj = AnnFem(const, ann_mf, ann_ht, geom_type, eval_type);
 
 end
 
-function iter = get_iter()
+function data_const = get_data_const()
 
 %% iter
-iter.n_iter = 15;
-iter.tol_losses = 5.0;
-iter.tol_thermal = 2.0;
-iter.relax_losses = 1.0;
-iter.relax_thermal = 1.0;
+data_const.iter.n_iter = 15;
+data_const.iter.tol_losses = 5.0;
+data_const.iter.tol_thermal = 2.0;
+data_const.iter.relax_losses = 1.0;
+data_const.iter.relax_thermal = 1.0;
 
-excitation.waveform_type = 'sin';
-excitation.excitation_type = 'voltage';
+data_const.excitation.waveform_type = 'sin';
+data_const.excitation.excitation_type = 'voltage';
 
 end
 
 function data_material = get_material()
 
 %% core
-data_tmp = load('source_scratch\loss_map\core_data.mat');
+data_tmp = load('data\material\core_data.mat');
 data_material.core = data_tmp.data;
 
 %% winding
-data_tmp = load('source_scratch\loss_map\winding_data.mat');
+data_tmp = load('data\material\winding_data.mat');
 data_material.winding = data_tmp.data;
 
 %% iso
-data_tmp = load('source_scratch\loss_map\iso_data.mat');
+data_tmp = load('data\material\iso_data.mat');
 data_material.iso = data_tmp.data;
 
 end

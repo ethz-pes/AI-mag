@@ -1,4 +1,4 @@
-function [is_valid, fom] = get_fom(ann_manager_obj, model_type, n_sol, inp, is_valid, ann_type)
+function [is_valid, fom] = get_fom(ann_manager_obj, model_type, n_sol, is_valid, inp, ann_type)
 
 % approx
 out_approx = get_out_approx(model_type, inp);

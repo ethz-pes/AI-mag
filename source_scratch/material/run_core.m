@@ -9,23 +9,26 @@ rho = [4850 4850 4750 4900];
 kappa = [7.5 7.0 12.5 9.5];
 
 %% parse
-data = {};
+data_tmp = {};
 for i=1:length(id)
    [tol, add, material] = get_data(rho(i), kappa(i));
    
    data_mat = load(['data/N' num2str(id(i)) '_map.txt']);
    data_map = extract_map(data_mat, tol, add);
 
-   data_tmp = load('data/dc_bias.mat');
-   data_bias = data_tmp.data;
+   data_bias = load('data/dc_bias.mat');
    
    material = get_material(data_map, data_bias, material);
 
-   data{end+1} = struct('id', id(i), 'material', material);
+   data_tmp{end+1} = struct('id', id(i), 'material', material);
 end
 
+%% assign
+data.n = length(id);
+data.data = data_tmp;
+
 %% save
-save('data/core_data.mat', 'data')
+save('data/core_data.mat', '-struct', 'data')
 
 end
 
