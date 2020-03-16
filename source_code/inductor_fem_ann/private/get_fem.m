@@ -1,20 +1,20 @@
-function get_fem(folder, model_type, geom_type, n_sol, inp, const)
+function get_fem(file_model, folder_fem, model_type, geom_type, n_sol, inp, const)
 
 % compute
 for i=1:n_sol
     fprintf('    %d / %d\n', i, n_sol)
     inp_tmp =  get_struct_idx(inp, i);
 
-    get_out_sub(folder, model_type, geom_type, inp_tmp, const);
+    get_out_sub(file_model, folder_fem, model_type, geom_type, inp_tmp, const);
 end
 
 end
 
-function get_out_sub(folder, model_type, var_type, inp, const)
+function get_out_sub(file_model, folder_fem, model_type, var_type, inp, const)
 
 % get filename
 hash = get_struct_hash(inp);
-filename = [folder filesep() hash '.mat'];
+filename = [folder_fem filesep() hash '.mat'];
 make_computation = exist(filename, 'file')~=2;
 
 if make_computation==true
@@ -29,7 +29,7 @@ if make_computation==true
     % disp
     if is_valid==true
         fprintf('        compute: valid\n')
-        out_fem = get_out_fem(model_type, inp);
+        out_fem = get_out_fem(file_model, model_type, inp);
     else
         fprintf('        compute: invalid\n')
         out_fem = struct();

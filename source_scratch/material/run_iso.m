@@ -14,7 +14,7 @@ for i=1:length(id)
 end
 
 %% save
-save('iso_data.mat', 'data')
+save('data/iso_data.mat', 'data')
 
 end
 

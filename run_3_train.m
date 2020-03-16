@@ -13,8 +13,8 @@ end
 function run_sub(model_type)
 
 % sim_name
-file_assemble = ['data/' model_type '_assemble.mat'];
-file_ann = ['data/' model_type '_ann.mat'];
+file_assemble = ['data/fem_ann/' model_type '_assemble.mat'];
+file_ann = ['data/fem_ann/' model_type '_ann.mat'];
 
 % data
 tag_train = 'none';

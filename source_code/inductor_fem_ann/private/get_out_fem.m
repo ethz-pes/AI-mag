@@ -1,4 +1,4 @@
-function out_fem = get_out_fem(model_type, inp)
+function out_fem = get_out_fem(file_model, model_type, inp)
 
 % get expression
 switch model_type
@@ -9,17 +9,9 @@ switch model_type
     otherwise
         error('invalid type')
 end
-       
+
 % load
-path = fileparts(mfilename('fullpath'));
-switch model_type
-    case 'mf'
-        model = mphload([path filesep() 'model_mf.mph']);
-    case 'ht'
-        model = mphload([path filesep() 'model_ht.mph']);
-    otherwise
-        error('invalid type')
-end
+model = mphload(file_model);
 
 % tag
 tag_sol = 'sol1';

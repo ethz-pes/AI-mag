@@ -16,7 +16,7 @@ for i=1:length(id)
 end
 
 %% save
-save('winding_data.mat', 'data')
+save('data/winding_data.mat', 'data')
 
 end
 

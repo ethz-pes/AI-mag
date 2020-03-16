@@ -25,7 +25,7 @@ for i=1:length(id)
 end
 
 %% save
-save('core_data.mat', 'data')
+save('data/core_data.mat', 'data')
 
 end
 

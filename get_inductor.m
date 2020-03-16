@@ -1,20 +1,31 @@
 function get_inductor
 
-addpath('tmp')
+addpath(genpath('source_code'))
+addpath(genpath('source_input'))
 close all;
 
 n_sol = 1;
 
-data = get_data();
 ann_fem_obj = get_ann_fem();
 
-obj = inductor(n_sol, data, ann_fem_obj);
-obj.get_plot('test', 1)
+data_vec = get_material();
+data_material = get_data();
+data_iter = get_iter();
 
+obj = inductor(n_sol, data_vec, data_material, data_iter, ann_fem_obj);
+obj.get_plot('test', 1)
 
 end
 
-function  data = get_data()
+function excitation = get_excitation()
+
+excitation.T_ambient = 40.0;
+excitation.I_dc = 10.0;
+excitation.f = 500e3;
+
+end
+
+function  data_vec = get_data()
 
 geom.z_core = 25e-3;
 geom.t_core = 20e-3;
@@ -24,18 +35,6 @@ geom.d_gap = 1e-3;
 
 n_turn = 6;
 I_test = 60;
-
-%% winding
-winding = get_fct_transformer_winding(71);
-
-%% core
-core = get_fct_transformer_core(95);
-
-%% iso
-iso.rho = 1500.0;
-iso.lambda = 1500.0.*5;
-iso.T_max = 130.0;
-iso.T_init = 130.0;
 
 %% fom_data
 fom_data.m_scale = 1.0;
@@ -58,24 +57,21 @@ fom_limit.c_box = struct('min', 0.0, 'max', 1e9);
 fom_limit.m_box = struct('min', 0.0, 'max', 1e9);
 fom_limit.V_box = struct('min', 0.0, 'max', 1e9);
 
-%% iter
-iter.n_iter = 15;
-iter.tol_losses = 5.0;
-iter.tol_thermal = 2.0;
-iter.relax_losses = 1.0;
-iter.relax_thermal = 1.0;
+thermal.T_init = 80;
+thermal.T_ambient = 80;
 
 %% assign
-data.winding = winding;
-data.iso = iso;
-data.n_turn = n_turn;
-data.I_test = I_test;
-data.core = core;
-data.geom = geom;
-data.fom_data = fom_data;
-data.fom_limit = fom_limit;
-data.losses_add = losses_add;
-data.iter = iter;
+data_vec.winding_id = 71;
+data_vec.core_id = 71;
+data_vec.iso_id = 71;
+
+data_vec.n_turn = n_turn;
+data_vec.I_test = I_test;
+data_vec.geom = geom;
+data_vec.fom_data = fom_data;
+data_vec.fom_limit = fom_limit;
+data_vec.losses_add = losses_add;
+data_vec.thermal = thermal;
 
 end
 
@@ -94,5 +90,35 @@ geom_type = 'abs';
 eval_type = 'ann';
 
 ann_fem_obj = AnnFem(const, ann_mf, ann_ht, geom_type, eval_type);
+
+end
+
+function iter = get_iter()
+
+%% iter
+iter.n_iter = 15;
+iter.tol_losses = 5.0;
+iter.tol_thermal = 2.0;
+iter.relax_losses = 1.0;
+iter.relax_thermal = 1.0;
+
+excitation.waveform_type = 'sin';
+excitation.excitation_type = 'voltage';
+
+end
+
+function data_material = get_material()
+
+%% core
+data_tmp = load('source_scratch\loss_map\core_data.mat');
+data_material.core = data_tmp.data;
+
+%% winding
+data_tmp = load('source_scratch\loss_map\winding_data.mat');
+data_material.winding = data_tmp.data;
+
+%% iso
+data_tmp = load('source_scratch\loss_map\iso_data.mat');
+data_material.iso = data_tmp.data;
 
 end
