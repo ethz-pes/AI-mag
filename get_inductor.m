@@ -42,7 +42,7 @@ geom.d_gap = 1e-3;
 
 n_turn = 6;
 I_test = 60;
-thermal.T_init = 80;
+T_init = 80;
 
 %% fom_data
 fom_data.m_scale = 1.0;
@@ -76,7 +76,7 @@ data_vec.geom = geom;
 data_vec.fom_data = fom_data;
 data_vec.fom_limit = fom_limit;
 data_vec.losses_add = losses_add;
-data_vec.thermal = thermal;
+data_vec.T_init = T_init;
 
 end
 

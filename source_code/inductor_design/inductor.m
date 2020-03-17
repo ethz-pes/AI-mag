@@ -7,12 +7,13 @@ classdef inductor < handle
         data_material
         ann_fem_obj
     end
-    properties (SetAccess = private, GetAccess = private)        
-        is_valid        
+    properties (SetAccess = private, GetAccess = private)
+        is_valid
         fom
-core_obj
-winding_obj
-iso_obj
+        core_obj
+        winding_obj
+        iso_obj
+        iter_thermal_losses_obj
     end
     
     %% init
@@ -84,6 +85,16 @@ iso_obj
             self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.L, self.data_vec.fom_limit.L);
             self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.I_peak, self.data_vec.fom_limit.I_peak);
             self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.I_rms, self.data_vec.fom_limit.I_rms);
+            
+            
+            
+            fct.operating_init = self.get_thermal_init();
+            fct.get_thermal = @(operating, excitation) self.get_thermal(operating, excitation);
+            fct.get_losses = @(operating, excitation) self.get_losses(operating, excitation);
+            fct.get_thermal_vec = @(operating) self.get_thermal_vec(operating);
+            fct.get_losses_vec = @(operating) self.get_losses_vec(operating);
+            self.iter_thermal_losses_obj = iter_thermal_losses(self.data_const.iter, fct);
+
         end
         
         function [is_valid, fom] = get_fom(self)
@@ -104,7 +115,7 @@ iso_obj
             % parse
             excitation = get_struct_size(excitation, self.n_sol);
             excitation = get_struct_filter(excitation, self.is_valid);
-                        
+                                    
             % iter
             [operating, is_valid_iter] = self.iter_thermal_losses_obj.get_iter(excitation);
             operating.is_valid_iter = is_valid_iter;
@@ -119,7 +130,78 @@ iso_obj
     
     %% private api / init
     methods (Access = private)
-        function init_data(self)            
+        function operating = get_thermal_init(self)
+            operating.T_core_max = self.data_vec.T_init;
+            operating.T_core_avg = self.data_vec.T_init;
+            operating.T_winding_max = self.data_vec.T_init;
+            operating.T_winding_avg = self.data_vec.T_init;
+            operating.T_iso_max = self.data_vec.T_init;
+            
+            operating.is_valid_thermal = self.check_limit(operating);
+        end
+        
+        function operating = get_thermal(self, operating, excitation)
+            % excitation
+            T_ambient = excitation.T_ambient;
+            
+            % operating
+            P_core = operating.P_core;
+            P_winding = operating.P_winding;
+            
+            % run
+            [is_valid_tmp, fom_tmp] = self.ann_fem_obj.get_ht(P_winding, P_core);
+            
+            % assign
+            operating.T_core_max = T_ambient+fom_tmp.T_core_max;
+            operating.T_core_avg = T_ambient+fom_tmp.T_core_avg;
+            operating.T_winding_max = T_ambient+fom_tmp.T_winding_max;
+            operating.T_winding_avg = T_ambient+fom_tmp.T_winding_avg;
+            operating.T_iso_max = T_ambient+fom_tmp.T_iso_max;
+            
+            operating.is_valid_thermal = is_valid_tmp&self.check_limit(operating);
+        end
+        
+        function [T_vec, is_valid] = get_thermal_vec(self, operating)
+            T_vec = [...
+                operating.T_core_max;...
+                operating.T_core_avg;...
+                operating.T_winding_max;...
+                operating.T_winding_avg;...
+                operating.T_iso_max;...
+                ];
+            is_valid = all(isfinite(T_vec), 1);
+        end
+        
+        function [P_vec, is_valid] = get_losses_vec(self, operating)
+            P_vec = [...
+                operating.P_core;...
+                operating.P_winding;...
+                operating.P_offset;...
+                operating.P_tot;...
+                ];
+            is_valid = all(isfinite(P_vec), 1);
+        end
+        
+        function operating = get_losses(self, operating, excitation)
+            keyboard
+            
+        end
+        
+        function is_valid_thermal = check_limit(self, operating)
+            % check
+            T_core_max = self.core_obj.get_temperature();
+            T_winding_max = self.winding_obj.get_temperature();
+            T_iso_max = self.iso_obj.get_temperature();
+            
+            is_valid_core = (operating.T_core_max<=T_core_max)&(operating.T_core_avg<=T_core_max);
+            is_valid_winding = (operating.T_winding_max<=T_winding_max)&(operating.T_winding_avg<=T_winding_max);
+            is_valid_iso = operating.T_iso_max<=T_iso_max;
+            
+            % assign
+            is_valid_thermal = is_valid_core&is_valid_winding&is_valid_iso;
+        end
+        
+        function init_data(self)
             % filter input
             geom_data = utils.input_struct(self.data.geom_data, self.n_sol);
             winding = utils.input_struct(self.data.winding, self.n_sol);
