@@ -6,19 +6,18 @@ rho = [1500 1600];
 kappa = [0.5 0.4];
 
 %% parse
-data_tmp = {};
+data = {};
 for i=1:length(id)
    material = get_data(rho(i), kappa(i));
    
-   data_tmp{end+1} = struct('id', id(i), 'material', material);
+   data{end+1} = struct('id', id(i), 'material', material);
 end
 
 %% assign
-data.n = length(id);
-data.data = data_tmp;
+type = 'iso';
 
 %% save
-save('data/iso_data.mat', '-struct', 'data')
+save('data/iso_data.mat', 'data', 'type')
 
 end
 

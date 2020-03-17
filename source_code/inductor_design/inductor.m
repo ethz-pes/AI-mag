@@ -10,6 +10,9 @@ classdef inductor < handle
     properties (SetAccess = private, GetAccess = private)        
         is_valid        
         fom
+core_obj
+winding_obj
+iso_obj
     end
     
     %% init
@@ -22,12 +25,18 @@ classdef inductor < handle
             self.data_const = data_const;            
             self.ann_fem_obj = ann_fem_obj;
             
+
+            self.core_obj = CoreData(self.data_material.core, self.data_vec.core_id);
+            self.winding_obj = WindingData(self.data_material.winding, self.data_vec.winding_id);
+            self.iso_obj = IsoData(self.data_material.iso, self.data_vec.iso_id);
+
+
             % init
             self.data_vec = get_struct_size(self.data_vec, self.n_sol);
             self.is_valid = true(1, self.n_sol);
             
             % set
-            self.ann_fem_obj.set_geom(self.n_sol, self.data.geom);
+            self.ann_fem_obj.set_geom(self.n_sol, self.data_vec.geom);
             [is_valid_tmp, geom] = self.ann_fem_obj.get_geom();
             self.is_valid = self.is_valid&is_valid_tmp;
             
@@ -47,34 +56,34 @@ classdef inductor < handle
             self.fom.volume.V_core = geom.V_core;
             self.fom.volume.V_winding = geom.V_winding;
             self.fom.volume.V_box = geom.V_box;
-            
-            self.fom.mass.m_iso = self.data.iso.rho.*self.fom.volume.V_iso;
-            self.fom.mass.m_core = self.data.core.rho.*self.fom.volume.V_core;
-            self.fom.mass.m_winding = self.data.winding.rho.*self.fom.volume.V_winding;
+           
+            self.fom.mass.m_iso = self.fom.volume.V_iso.*self.iso_obj.get_mass();
+            self.fom.mass.m_core = self.fom.volume.V_core.*self.core_obj.get_mass();
+            self.fom.mass.m_winding = self.fom.volume.V_winding.*self.winding_obj.get_mass();
             self.fom.mass.m_box = self.fom.mass.m_iso+self.fom.mass.m_core+self.fom.mass.m_winding;
 
-            self.fom.cost.c_iso = self.data.iso.lambda.*self.fom.volume.V_iso;
-            self.fom.cost.c_core = self.data.core.lambda.*self.fom.volume.V_core;
-            self.fom.cost.c_winding = self.data.winding.lambda.*self.fom.volume.V_winding;
+            self.fom.cost.c_iso = self.fom.volume.V_iso.*self.iso_obj.get_cost();
+            self.fom.cost.c_core = self.fom.volume.V_core.*self.core_obj.get_cost();
+            self.fom.cost.c_winding = self.fom.volume.V_winding.*self.winding_obj.get_cost();
             self.fom.cost.c_box = self.fom.cost.c_iso+self.fom.cost.c_core+self.fom.cost.c_winding;
+            
+            self.fom.n_turn = self.data_vec.n_turn;
 
-            self.fom.n_turn = self.data.n_turn;
-
-            I_winding = self.data.n_turn.*self.data.I_test;
+            I_winding = self.data_vec.n_turn.*self.data_vec.I_test;
             [is_valid_tmp, fom] = self.ann_fem_obj.get_mf(I_winding);
             self.is_valid = self.is_valid&is_valid_tmp;
             
-            self.fom.circuit.L = self.data.n_turn.^2.*fom.L_norm;
-            self.fom.circuit.I_peak = self.data.core.B_peak_max./(self.data.n_turn.*fom.B_norm);
-            self.fom.circuit.I_rms = (self.data.winding.fill.*self.data.winding.J_rms_max)./(self.data.n_turn.*fom.J_norm);
+            self.fom.circuit.L = self.data_vec.n_turn.^2.*fom.L_norm;
+            self.fom.circuit.I_peak = self.core_obj.get_flux_density()./(self.data_vec.n_turn.*fom.B_norm);
+            self.fom.circuit.I_rms = (self.winding_obj.get_current_density())./(self.data_vec.n_turn.*fom.J_norm);
             
-            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.volume.V_box, self.data.fom_limit.V_box);
-            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.cost.c_box, self.data.fom_limit.c_box);
-            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.mass.m_box, self.data.fom_limit.m_box);
+            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.volume.V_box, self.data_vec.fom_limit.V_box);
+            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.cost.c_box, self.data_vec.fom_limit.c_box);
+            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.mass.m_box, self.data_vec.fom_limit.m_box);
             
-            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.L, self.data.fom_limit.L);
-            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.I_peak, self.data.fom_limit.I_peak);
-            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.I_rms, self.data.fom_limit.I_rms);
+            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.L, self.data_vec.fom_limit.L);
+            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.I_peak, self.data_vec.fom_limit.I_peak);
+            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.I_rms, self.data_vec.fom_limit.I_rms);
         end
         
         function [is_valid, fom] = get_fom(self)
@@ -91,11 +100,11 @@ classdef inductor < handle
             fig = get_plot_inductor(name, self.fom.geom, is_select);
         end
 
-        function operating = get_operating(self, excitation)     
+        function operating = get_operating(self, excitation)
             % parse
-            excitation = utils.input_struct(excitation, self.n_sol);
-            excitation = utils.filter_struct(excitation, self.is_valid);
-            
+            excitation = get_struct_size(excitation, self.n_sol);
+            excitation = get_struct_filter(excitation, self.is_valid);
+                        
             % iter
             [operating, is_valid_iter] = self.iter_thermal_losses_obj.get_iter(excitation);
             operating.is_valid_iter = is_valid_iter;

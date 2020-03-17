@@ -8,14 +8,16 @@ classdef CoreData < handle
     
     %% init
     methods (Access = public)
-        function self = CoreData(data, id)
+        function self = CoreData(material, id)
+            assert(strcmp(material.type, 'core'), 'invalid length')
+
             % assign input
-            for i=1:length(data)
+            for i=1:length(material.data)
                 ix_vec(i) = i;
-                id_vec(i) = data{i}.id;
+                id_vec(i) = material.data{i}.id;
                 
-                param_tmp{i} = data{i}.material.param;
-                interp_tmp{i} = self.parse_interp(data{i}.material.interp);
+                param_tmp{i} = material.data{i}.material.param;
+                interp_tmp{i} = self.parse_interp(material.data{i}.material.interp);
             end
             
             self.parse_data(ix_vec, id_vec, id, param_tmp, interp_tmp);

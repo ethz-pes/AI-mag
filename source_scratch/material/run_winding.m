@@ -8,19 +8,18 @@ d_skin_min = [50e-6 71e-6 100e-6];
 kappa_copper = [32.5 23.5 21.5];
 
 %% parse
-data_tmp = {};
+data = {};
 for i=1:length(id)
    material = get_data(fill(i), d_strand(i), d_skin_min(i), kappa_copper(i));
    
-   data_tmp{end+1} = struct('id', id(i), 'material', material);
+   data{end+1} = struct('id', id(i), 'material', material);
 end
 
 %% assign
-data.n = length(id);
-data.data = data_tmp;
+type = 'winding';
 
 %% save
-save('data/winding_data.mat', '-struct', 'data')
+save('data/winding_data.mat', 'data', 'type')
 
 end
 

@@ -6,13 +6,15 @@ classdef IsoData < handle
     
     %% init
     methods (Access = public)
-        function self = IsoData(data, id)
+        function self = IsoData(material, id)
+            assert(strcmp(material.type, 'iso'), 'invalid length')
+
             % assign input
-            for i=1:length(data)
+            for i=1:length(material.data)
                 ix_vec(i) = i;
-                id_vec(i) = data{i}.id;
+                id_vec(i) = material.data{i}.id;
                 
-                param_tmp{i} = data{i}.material;
+                param_tmp{i} = material.data{i}.material;
             end
 
             idx = get_integer_map(id_vec, ix_vec, id);

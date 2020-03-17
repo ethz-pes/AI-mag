@@ -9,7 +9,7 @@ rho = [4850 4850 4750 4900];
 kappa = [7.5 7.0 12.5 9.5];
 
 %% parse
-data_tmp = {};
+data = {};
 for i=1:length(id)
    [tol, add, material] = get_data(rho(i), kappa(i));
    
@@ -20,15 +20,14 @@ for i=1:length(id)
    
    material = get_material(data_map, data_bias, material);
 
-   data_tmp{end+1} = struct('id', id(i), 'material', material);
+   data{end+1} = struct('id', id(i), 'material', material);
 end
 
 %% assign
-data.n = length(id);
-data.data = data_tmp;
+type = 'core';
 
 %% save
-save('data/core_data.mat', '-struct', 'data')
+save('data/core_data.mat', 'data', 'type')
 
 end
 
