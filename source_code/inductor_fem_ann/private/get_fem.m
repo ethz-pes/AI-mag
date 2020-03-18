@@ -3,7 +3,7 @@ function get_fem(file_model, folder_fem, model_type, geom_type, n_sol, inp, cons
 % compute
 for i=1:n_sol
     fprintf('    %d / %d\n', i, n_sol)
-    inp_tmp =  get_struct_idx(inp, i);
+    inp_tmp =  get_struct_filter(inp, i);
 
     get_out_sub(file_model, folder_fem, model_type, geom_type, inp_tmp, const);
 end

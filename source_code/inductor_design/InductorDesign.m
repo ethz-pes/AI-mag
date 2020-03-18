@@ -13,7 +13,7 @@ classdef InductorDesign < handle
         core_obj
         winding_obj
         iso_obj
-        iter_thermal_losses_obj
+        thermal_losses_obj
     end
     
     %% init
@@ -95,7 +95,7 @@ classdef InductorDesign < handle
             fct.get_losses = @(operating, excitation) self.get_losses(operating, excitation);
             fct.get_thermal_vec = @(operating) self.get_thermal_vec(operating);
             fct.get_losses_vec = @(operating) self.get_losses_vec(operating);
-            self.iter_thermal_losses_obj = iter_thermal_losses(self.data_const.iter, fct);
+            self.thermal_losses_obj = ThermalLoss(self.data_const.iter, fct);
 
         end
         
@@ -119,7 +119,7 @@ classdef InductorDesign < handle
             excitation = get_struct_filter(excitation, self.is_valid);
                                     
             % iter
-            [operating, is_valid_iter] = self.iter_thermal_losses_obj.get_iter(excitation);
+            [operating, is_valid_iter] = self.thermal_losses_obj.get_iter(excitation);
             
             is_valid_thermal = operating.thermal.is_valid_thermal;
             is_valid_core = operating.losses.is_valid_core;

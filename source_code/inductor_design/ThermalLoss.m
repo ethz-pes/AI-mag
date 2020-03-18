@@ -1,4 +1,4 @@
-classdef iter_thermal_losses < handle
+classdef ThermalLoss < handle
     %% init
     properties (SetAccess = immutable, GetAccess = private)
         iter
@@ -7,7 +7,7 @@ classdef iter_thermal_losses < handle
     
     %% init
     methods (Access = public)
-        function self = iter_thermal_losses(iter, fct)
+        function self = ThermalLoss(iter, fct)
             % parse the data
             self.iter = iter;
             validateattributes(self.iter.n_iter, {'double', 'logical'},{'scalar', 'row', 'nonempty', 'nonnan', 'real','finite'});

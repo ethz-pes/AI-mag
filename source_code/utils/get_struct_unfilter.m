@@ -17,8 +17,6 @@ for i=1:length(field)
         struct_in_tmp_new = false(1, length(idx));
         struct_in_tmp_new(idx) = struct_in_tmp;
         struct_out.(field{i}) = struct_in_tmp_new;
-    elseif isa(struct_in_tmp, 'char')||isa(struct_in_tmp, 'function_handle')
-        struct_out.(field{i}) = struct_in_tmp;
     end
 end
 
