@@ -171,7 +171,7 @@ classdef AnnManager < handle
         end
     end
     
-    methods (Access = public)
+    methods (Access = private)
         function init_engine(self)
             switch self.ann_info.type
                 case 'matlab_ann'
@@ -254,7 +254,7 @@ classdef AnnManager < handle
         end
     end
     
-    methods (Access = public)
+    methods (Access = private)
         function display_ann_input(self)
             disp_data('var_inp', self.var_inp);
             disp_data('var_out', self.var_out);

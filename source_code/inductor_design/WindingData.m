@@ -4,11 +4,12 @@ classdef WindingData < handle
         idx
         param
         interp
+        volume
     end
     
     %% init
     methods (Access = public)
-        function self = WindingData(material, id)
+        function self = WindingData(material, id, volume)
             assert(strcmp(material.type, 'winding'), 'invalid length')
 
             % assign input
@@ -21,14 +22,15 @@ classdef WindingData < handle
             end
             
             self.parse_data(ix_vec, id_vec, id, param_tmp, interp_tmp);
+            self.volume = volume;
         end
         
         function m = get_mass(self)
-            m = self.param.rho;
+            m = self.volume.*self.param.rho;
         end
         
         function cost = get_cost(self)
-            cost = self.param.lambda;
+            cost = self.volume.*self.param.lambda;
         end
         
         function T_max = get_temperature(self)
@@ -83,6 +85,11 @@ classdef WindingData < handle
             P = P_dc+P_ac_lf+P_ac_hf;
             J_rms_tot = hypot(J_ac_peak.*fact_lf, J_dc);
             is_valid = self.parse_losses(is_valid, P, J_rms_tot, delta);
+            
+            P = self.volume.*P;
+            P_dc = self.volume.*P_dc;
+            P_ac_lf = self.volume.*P_ac_lf;
+            P_ac_hf = self.volume.*P_ac_hf;
         end
 
         function is_valid = parse_losses(self, is_valid, P, J_rms_tot, delta)

@@ -12,7 +12,7 @@ data_material = get_material();
 data_vec = get_data();
 data_const = get_data_const();
 
-obj = inductor(n_sol, data_vec, data_material, data_const, ann_fem_obj);
+obj = InductorDesign(n_sol, data_vec, data_material, data_const, ann_fem_obj);
 obj.get_plot('test', 1)
 [is_valid, fom] = obj.get_fom();
 

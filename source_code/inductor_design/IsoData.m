@@ -2,11 +2,12 @@ classdef IsoData < handle
     %% properties
     properties (SetAccess = private, GetAccess = public)
         param
+        volume
     end
     
     %% init
     methods (Access = public)
-        function self = IsoData(material, id)
+        function self = IsoData(material, id, volume)
             assert(strcmp(material.type, 'iso'), 'invalid length')
 
             % assign input
@@ -21,14 +22,15 @@ classdef IsoData < handle
             param_tmp = [param_tmp{:}];
             param_tmp = get_struct_assemble(param_tmp);
             self.param = get_struct_filter(param_tmp, idx);
+            self.volume = volume;
         end
         
         function m = get_mass(self)
-            m = self.param.rho;
+            m = self.volume.*self.param.rho;
         end
         
         function cost = get_cost(self)
-            cost = self.param.lambda;
+            cost = self.volume.*self.param.lambda;
         end
         
         function T_max = get_temperature(self)

@@ -1,4 +1,4 @@
-classdef inductor < handle
+classdef InductorDesign < handle
     %% init
     properties (SetAccess = immutable, GetAccess = private)
         n_sol
@@ -18,7 +18,7 @@ classdef inductor < handle
     
     %% init
     methods (Access = public)
-        function self = inductor(n_sol, data_vec, data_material, data_const, ann_fem_obj)
+        function self = InductorDesign(n_sol, data_vec, data_material, data_const, ann_fem_obj)
             % parse the data
             self.n_sol = n_sol;
             self.data_vec = data_vec;            
@@ -26,12 +26,6 @@ classdef inductor < handle
             self.data_const = data_const;            
             self.ann_fem_obj = ann_fem_obj;
             
-
-            self.core_obj = CoreData(self.data_material.core, self.data_vec.core_id);
-            self.winding_obj = WindingData(self.data_material.winding, self.data_vec.winding_id);
-            self.iso_obj = IsoData(self.data_material.iso, self.data_vec.iso_id);
-
-
             % init
             self.data_vec = get_struct_size(self.data_vec, self.n_sol);
             self.is_valid = true(1, self.n_sol);
@@ -41,6 +35,11 @@ classdef inductor < handle
             [is_valid_tmp, geom] = self.ann_fem_obj.get_geom();
             self.is_valid = self.is_valid&is_valid_tmp;
             
+            self.core_obj = CoreData(self.data_material.core, self.data_vec.core_id, geom.V_core);
+            self.winding_obj = WindingData(self.data_material.winding, self.data_vec.winding_id, geom.V_winding);
+            self.iso_obj = IsoData(self.data_material.iso, self.data_vec.iso_id, geom.V_iso);
+            
+
             self.fom.geom.z_core = geom.z_core;
             self.fom.geom.t_core = geom.t_core;
             self.fom.geom.x_window = geom.x_window;
@@ -58,14 +57,14 @@ classdef inductor < handle
             self.fom.volume.V_winding = geom.V_winding;
             self.fom.volume.V_box = geom.V_box;
            
-            self.fom.mass.m_iso = self.fom.volume.V_iso.*self.iso_obj.get_mass();
-            self.fom.mass.m_core = self.fom.volume.V_core.*self.core_obj.get_mass();
-            self.fom.mass.m_winding = self.fom.volume.V_winding.*self.winding_obj.get_mass();
+            self.fom.mass.m_iso = self.iso_obj.get_mass();
+            self.fom.mass.m_core = self.core_obj.get_mass();
+            self.fom.mass.m_winding = self.winding_obj.get_mass();
             self.fom.mass.m_box = self.fom.mass.m_iso+self.fom.mass.m_core+self.fom.mass.m_winding;
 
-            self.fom.cost.c_iso = self.fom.volume.V_iso.*self.iso_obj.get_cost();
-            self.fom.cost.c_core = self.fom.volume.V_core.*self.core_obj.get_cost();
-            self.fom.cost.c_winding = self.fom.volume.V_winding.*self.winding_obj.get_cost();
+            self.fom.cost.c_iso = self.iso_obj.get_cost();
+            self.fom.cost.c_core = self.core_obj.get_cost();
+            self.fom.cost.c_winding = self.winding_obj.get_cost();
             self.fom.cost.c_box = self.fom.cost.c_iso+self.fom.cost.c_core+self.fom.cost.c_winding;
             
             self.fom.n_turn = self.data_vec.n_turn;
@@ -74,6 +73,9 @@ classdef inductor < handle
             [is_valid_tmp, fom] = self.ann_fem_obj.get_mf(I_winding);
             self.is_valid = self.is_valid&is_valid_tmp;
             
+            self.fom.circuit.B_norm = self.data_vec.n_turn.*fom.B_norm;
+            self.fom.circuit.J_norm = self.data_vec.n_turn.*fom.J_norm;
+            self.fom.circuit.H_norm = self.data_vec.n_turn.*fom.H_norm;
             self.fom.circuit.L = self.data_vec.n_turn.^2.*fom.L_norm;
             self.fom.circuit.I_peak = self.core_obj.get_flux_density()./(self.data_vec.n_turn.*fom.B_norm);
             self.fom.circuit.I_rms = (self.winding_obj.get_current_density())./(self.data_vec.n_turn.*fom.J_norm);
@@ -118,26 +120,30 @@ classdef inductor < handle
                                     
             % iter
             [operating, is_valid_iter] = self.iter_thermal_losses_obj.get_iter(excitation);
-            operating.is_valid_iter = is_valid_iter;
-            operating.is_valid = is_valid_iter&operating.is_valid_thermal&operating.is_valid_losses;
             
+            is_valid_thermal = operating.thermal.is_valid_thermal;
+            is_valid_core = operating.losses.is_valid_core;
+            is_valid_winding = operating.losses.is_valid_winding;
+            
+            operating.is_valid_iter = is_valid_iter;
+            operating.is_valid = is_valid_iter&is_valid_thermal&is_valid_core&is_valid_winding;
+                        
             % parse
-            operating = utils.unfilter_struct(operating, self.is_valid);
-            is_valid_tmp = utils.valid_struct(operating, self.n_sol);
-            operating.is_valid = operating.is_valid&is_valid_tmp;
+            operating = get_struct_unfilter(operating, self.is_valid);            
         end
     end
     
     %% private api / init
     methods (Access = private)
         function operating = get_thermal_init(self)
-            operating.T_core_max = self.data_vec.T_init;
-            operating.T_core_avg = self.data_vec.T_init;
-            operating.T_winding_max = self.data_vec.T_init;
-            operating.T_winding_avg = self.data_vec.T_init;
-            operating.T_iso_max = self.data_vec.T_init;
+            thermal.T_core_max = self.data_vec.T_init;
+            thermal.T_core_avg = self.data_vec.T_init;
+            thermal.T_winding_max = self.data_vec.T_init;
+            thermal.T_winding_avg = self.data_vec.T_init;
+            thermal.T_iso_max = self.data_vec.T_init;
+            thermal.is_valid_thermal = self.check_thermal_limit(thermal);
             
-            operating.is_valid_thermal = self.check_limit(operating);
+            operating.thermal = thermal;
         end
         
         function operating = get_thermal(self, operating, excitation)
@@ -145,49 +151,98 @@ classdef inductor < handle
             T_ambient = excitation.T_ambient;
             
             % operating
-            P_core = operating.P_core;
-            P_winding = operating.P_winding;
+            P_core = operating.losses.P_core;
+            P_winding = operating.losses.P_winding;
             
             % run
             [is_valid_tmp, fom_tmp] = self.ann_fem_obj.get_ht(P_winding, P_core);
             
             % assign
-            operating.T_core_max = T_ambient+fom_tmp.T_core_max;
-            operating.T_core_avg = T_ambient+fom_tmp.T_core_avg;
-            operating.T_winding_max = T_ambient+fom_tmp.T_winding_max;
-            operating.T_winding_avg = T_ambient+fom_tmp.T_winding_avg;
-            operating.T_iso_max = T_ambient+fom_tmp.T_iso_max;
+            thermal.T_core_max = T_ambient+fom_tmp.T_core_max;
+            thermal.T_core_avg = T_ambient+fom_tmp.T_core_avg;
+            thermal.T_winding_max = T_ambient+fom_tmp.T_winding_max;
+            thermal.T_winding_avg = T_ambient+fom_tmp.T_winding_avg;
+            thermal.T_iso_max = T_ambient+fom_tmp.T_iso_max;
+            thermal.is_valid_thermal = is_valid_tmp&self.check_thermal_limit(thermal);
             
-            operating.is_valid_thermal = is_valid_tmp&self.check_limit(operating);
+            operating.thermal = thermal;
         end
         
         function [T_vec, is_valid] = get_thermal_vec(self, operating)
             T_vec = [...
-                operating.T_core_max;...
-                operating.T_core_avg;...
-                operating.T_winding_max;...
-                operating.T_winding_avg;...
-                operating.T_iso_max;...
+                operating.thermal.T_core_max;...
+                operating.thermal.T_core_avg;...
+                operating.thermal.T_winding_max;...
+                operating.thermal.T_winding_avg;...
+                operating.thermal.T_iso_max;...
                 ];
             is_valid = all(isfinite(T_vec), 1);
         end
         
         function [P_vec, is_valid] = get_losses_vec(self, operating)
             P_vec = [...
-                operating.P_core;...
-                operating.P_winding;...
-                operating.P_offset;...
-                operating.P_tot;...
+                operating.losses.P_core;...
+                operating.losses.P_winding;...
+                operating.losses.P_add;...
+                operating.losses.P_tot;...
                 ];
             is_valid = all(isfinite(P_vec), 1);
         end
         
-        function operating = get_losses(self, operating, excitation)
-            keyboard
+        function operating = get_losses(self, operating, excitation)            
+            I_dc = excitation.I_dc;
+            I_ac_peak = excitation.I_ac_peak;
+            B_norm = self.fom.circuit.B_norm;
+            J_norm = self.fom.circuit.J_norm;
+            H_norm = self.fom.circuit.H_norm;
             
+            T_core_avg = operating.thermal.T_core_avg;
+            T_winding_avg = operating.thermal.T_winding_avg;
+            
+            J_dc = J_norm.*I_dc;
+            B_dc = B_norm.*I_dc;
+            J_ac_peak = J_norm.*I_ac_peak;
+            H_ac_peak = H_norm.*I_ac_peak;
+            B_ac_peak = B_norm.*I_ac_peak;
+            
+            switch self.data_const.waveform_type
+                case 'sin'
+                    f = excitation.f;
+                    
+                    [is_valid_core, P_core] = self.core_obj.get_losses_sin(f, B_ac_peak, B_dc, T_core_avg);
+                    [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_sin(f, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);
+                case 'tri'
+                    f = excitation.f;
+                    d_c = excitation.d_c;
+                    
+                    [is_valid_core, P_core] = self.core_obj.get_losses_tri(f, d_c, B_ac_peak, B_dc, T_core_avg);
+                    [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_tri(f, d_c, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);
+                otherwise
+                    error('invalid data')
+            end
+            
+            P_fraction = self.data_vec.losses_add.P_fraction;
+            P_offset = self.data_vec.losses_add.P_offset;
+           P_add = P_offset+P_fraction.*(P_core+P_winding);
+            
+            operating.losses.is_valid_core = is_valid_core;
+            operating.losses.is_valid_winding = is_valid_winding;
+            operating.losses.P_core = P_core;
+            operating.losses.P_winding = P_winding;
+            operating.losses.P_winding_dc = P_dc;
+            operating.losses.P_winding_ac_lf = P_ac_lf;
+            operating.losses.P_winding_ac_hf = P_ac_hf;
+            operating.losses.P_add = P_add;
+            operating.losses.P_tot = P_add+P_core+P_winding;
+
+            operating.field.J_dc = J_dc;
+            operating.field.B_dc = B_dc;
+            operating.field.J_ac_peak = J_ac_peak;
+            operating.field.H_ac_peak = H_ac_peak;
+            operating.field.B_ac_peak = B_ac_peak;
         end
         
-        function is_valid_thermal = check_limit(self, operating)
+        function is_valid_thermal = check_thermal_limit(self, operating)
             % check
             T_core_max = self.core_obj.get_temperature();
             T_winding_max = self.winding_obj.get_temperature();
@@ -201,71 +256,6 @@ classdef inductor < handle
             is_valid_thermal = is_valid_core&is_valid_winding&is_valid_iso;
         end
         
-        function init_data(self)
-            % filter input
-            geom_data = utils.input_struct(self.data.geom_data, self.n_sol);
-            winding = utils.input_struct(self.data.winding, self.n_sol);
-            iso = utils.input_struct(self.data.iso, self.n_sol);
-            core = utils.input_struct(self.data.core, self.n_sol);
-            fom_data = utils.input_struct(self.data.fom_data, self.n_sol);
-            fom_limit = utils.input_struct(self.data.fom_limit, self.n_sol);
-            thermal = utils.input_struct(self.data.thermal, self.n_sol);
-            offset = self.data.offset;
-            iter = self.data.iter;
-
-            % is_valid
-            is_valid_tmp = true(1, self.n_sol);
-            
-            % get the size
-            obj = transformer_size(geom_data, winding, iso, core, is_valid_tmp);
-            is_valid_tmp = is_valid_tmp&obj.get_is_valid();
-            size = obj.get_size();
-            
-            % get the geom
-            obj = transformer_geom(geom_data, winding, iso, core, size, is_valid_tmp);
-            is_valid_tmp = is_valid_tmp&obj.get_is_valid();
-            geom_tmp = obj.get_geom();
-                        
-            % get the fom and circuit
-            obj = transformer_fom(geom_tmp, winding, iso, core, fom_data, fom_limit);
-            is_valid_tmp = is_valid_tmp&obj.get_is_valid();
-            fom_tmp = obj.get_fom();
-            
-            % check data
-            is_valid_tmp = is_valid_tmp&utils.valid_struct(geom_tmp, self.n_sol);
-            is_valid_tmp = is_valid_tmp&utils.valid_struct(winding, self.n_sol);
-            is_valid_tmp = is_valid_tmp&utils.valid_struct(iso, self.n_sol);
-            is_valid_tmp = is_valid_tmp&utils.valid_struct(core, self.n_sol);
-            is_valid_tmp = is_valid_tmp&utils.valid_struct(thermal, self.n_sol);
-            is_valid_tmp = is_valid_tmp&utils.valid_struct(fom_tmp, self.n_sol);
-            is_valid_tmp = is_valid_tmp&utils.valid_struct(geom_tmp, self.n_sol);
-            
-            % filter data
-            geom_tmp = utils.filter_struct(geom_tmp, is_valid_tmp);
-            winding = utils.filter_struct(winding, is_valid_tmp);
-            iso = utils.filter_struct(iso, is_valid_tmp);
-            core = utils.filter_struct(core, is_valid_tmp);
-            thermal = utils.filter_struct(thermal, is_valid_tmp);
-            fom_tmp = utils.filter_struct(fom_tmp, is_valid_tmp);
-
-            % create the object
-            n_valid = nnz(is_valid_tmp);
-            self.transformer_plot_obj = transformer_plot(n_valid, geom_tmp);
-            self.transformer_losses_obj = transformer_losses(n_valid, geom_tmp, winding, iso, core, offset);
-            self.transformer_thermal_obj = transformer_thermal(n_valid, geom_tmp, winding, iso, core, thermal);
-            
-            % iter
-            fct.operating_init = self.transformer_thermal_obj.get_thermal_init();
-            fct.get_thermal = @(operating, excitation) self.transformer_thermal_obj.get_thermal(operating, excitation);
-            fct.get_losses = @(operating, excitation) self.transformer_losses_obj.get_losses(operating, excitation);
-            fct.get_thermal_vec = @(operating) self.transformer_thermal_obj.get_thermal_vec(operating);
-            fct.get_losses_vec = @(operating) self.transformer_losses_obj.get_losses_vec(operating);          
-            self.iter_thermal_losses_obj = iter_thermal_losses(iter, fct);
-            
-            % assign
-            self.is_valid = is_valid_tmp;
-            self.fom = fom_tmp;
-        end
         
         function is_valid_tmp = init_is_valid_check(self, vec, limit)
             % check the validity

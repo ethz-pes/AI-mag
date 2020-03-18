@@ -4,11 +4,12 @@ classdef CoreData < handle
         idx
         param
         interp
+        volume
     end
     
     %% init
     methods (Access = public)
-        function self = CoreData(material, id)
+        function self = CoreData(material, id, volume)
             assert(strcmp(material.type, 'core'), 'invalid length')
 
             % assign input
@@ -21,14 +22,15 @@ classdef CoreData < handle
             end
             
             self.parse_data(ix_vec, id_vec, id, param_tmp, interp_tmp);
+                        self.volume = volume;
         end
         
         function m = get_mass(self)
-            m = self.param.rho;
+            m = self.volume.*self.param.rho;
         end
         
         function cost = get_cost(self)
-            cost = self.param.lambda;
+            cost = self.volume.*self.param.lambda;
         end
         
         function T_max = get_temperature(self)
@@ -42,16 +44,16 @@ classdef CoreData < handle
         function [is_valid, P] = get_losses_sin(self, f, B_ac_peak, B_dc, T)
             [is_valid, P] = self.get_interp(f, B_ac_peak, B_dc, T);
             
-            B_ac_peak_tot = B_ac_peak+B_dc;
-            is_valid = self.parse_losses(is_valid, P, B_ac_peak_tot);
+            is_valid = self.parse_losses(is_valid, P, B_ac_peak+B_dc);
+            P = self.volume.*P;
         end
         
         function [is_valid, P] = get_losses_tri(self, f, d_c, B_ac_peak, B_dc, T)
             [is_valid, k, alpha, beta] = compute_steinmetz(self, f, B_ac_peak, B_dc, T);
             P = self.compute_steinmetz_losses(k, alpha, beta, f, d_c, B_ac_peak);
             
-            B_ac_peak_tot = B_ac_peak+B_dc;
-            is_valid = self.parse_losses(is_valid, P, B_ac_peak_tot);
+            is_valid = self.parse_losses(is_valid, P, B_ac_peak+B_dc);
+            P = self.volume.*P;
         end
     end
     
@@ -80,7 +82,7 @@ classdef CoreData < handle
             self.param = get_struct_filter(param_tmp, self.idx);
             self.interp = interp_tmp;
         end
-                
+        
         function is_valid = parse_losses(self, is_valid, P, B_ac_peak_tot)
             P_max = self.param.P_max;
             B_sat = self.param.B_sat;
@@ -93,10 +95,10 @@ classdef CoreData < handle
             is_valid = true(1, length(self.idx));
             
             fact_igse = self.param.fact_igse;
-            f_1 = (1-fact_igse).*f;
-            f_2 = (1+fact_igse).*f;
-            B_ac_peak_1 = (1-fact_igse).*B_ac_peak;
-            B_ac_peak_2 = (1+fact_igse).*B_ac_peak;
+            f_1 = f.*(1+fact_igse);
+            f_2 = f./(1+fact_igse);
+            B_ac_peak_1 = B_ac_peak.*(1+fact_igse);
+            B_ac_peak_2 = B_ac_peak./(1+fact_igse);
             
             [is_valid_tmp, P_ref] = self.get_interp(f, B_ac_peak, B_dc, T);
             is_valid = is_valid&is_valid_tmp;
