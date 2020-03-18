@@ -1,29 +1,35 @@
 function hash = get_struct_hash(data)
 
 engine = java.security.MessageDigest.getInstance('MD5');
-hash = get_hash_sub(data, engine);
+hash = double(typecast(engine.digest, 'uint8'));
+hash = get_hash_struct(hash, engine, data);
 hash = sprintf('%.2x', hash);
 
 end
 
-function hash = get_hash_sub(data, engine)
+function hash = get_hash_struct(hash, engine, data)
 
-% init hash
-hash = double(typecast(engine.digest, 'uint8'));
+assert(isstruct(data), 'invalid data')
+assert(numel(data)==1, 'invalid data')
 
 % hash felds
-assert(isstruct(data), 'invalid data')
 field = sort(fieldnames(data));  % ignore order of fields
 for i=1:length(field)    
-    hash = get_value(hash, engine, field{i});
-    hash = get_value(hash, engine, data.(field{i}));
+    hash = get_hash_value(hash, engine, field{i});
+    
+    value = data.(field{i});
+    if isstruct(value)
+        assert(numel(value)==1, 'invalid data')
+        hash = get_hash_struct(hash, engine, value);
+    elseif isnumeric(value)||islogical(value)
+        assert(size(value, 1)==1, 'invalid data')
+        hash = get_hash_value(hash, engine, value);
+    end
 end
 
 end
 
-function hash = get_value(hash, engine, data)
-
-assert(isnumeric(data)||islogical(data)||ischar(data), 'invalid data')
+function hash = get_hash_value(hash, engine, data)
 
 data = double(data);
 engine.update(typecast(data(:), 'uint8'));

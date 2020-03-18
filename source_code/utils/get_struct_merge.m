@@ -1,5 +1,8 @@
 function struct_out = get_struct_merge(struct_in_1, struct_in_2)
 
+assert(numel(struct_in_1)==1, 'invalid data')
+assert(numel(struct_in_2)==1, 'invalid data')
+
 field_1 = fieldnames(struct_in_1);
 field_2 = fieldnames(struct_in_2);
 data_1 = struct2cell(struct_in_1);
@@ -23,8 +26,6 @@ if numel(data_in)==1
     data_out = data_in{:};
     if isnumeric(data_out)||islogical(data_out)
         assert(size(data_out, 1)==1, 'invalid data')
-    elseif isa(data_out, 'char')||isa(data_out, 'function_handle')
-        % pass
     else
         error('invalid size')
     end
