@@ -48,11 +48,11 @@ T_winding_max = (-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1
 T_core_max = (-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1).*((-1).*P_core.*R_core.*R_extract_core+(-1).*P_core.*R_core.*R_extract_winding+(-1).*P_core.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_core.*R_extract_winding+(-1).*P_core.*R_core.*R_iso_core_winding+(-1).*P_core.*R_extract_core.*R_iso_core_winding+(-1).*R_extract_core.*T_ambient+(-1).*R_extract_winding.*T_ambient+(-1).*R_iso_core_winding.*T_ambient);
 
 % assign
-out_approx.T_core_max = T_core_max-T_ambient;
-out_approx.T_core_avg = ((T_core_max+T_core_min)./2)-T_ambient;
-out_approx.T_winding_max = T_winding_max-T_ambient;
-out_approx.T_winding_avg = ((T_winding_max+T_winding_min)./2)-T_ambient;
-out_approx.T_iso_max = max(T_winding_min, T_core_min)-T_ambient;
+out_approx.dT_core_max = T_core_max-T_ambient;
+out_approx.dT_core_avg = ((T_core_max+T_core_min)./2)-T_ambient;
+out_approx.dT_winding_max = T_winding_max-T_ambient;
+out_approx.dT_winding_avg = ((T_winding_max+T_winding_min)./2)-T_ambient;
+out_approx.dT_iso_max = max(T_winding_min, T_core_min)-T_ambient;
 
 end
 

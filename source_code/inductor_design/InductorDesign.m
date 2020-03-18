@@ -158,11 +158,11 @@ classdef InductorDesign < handle
             [is_valid_tmp, fom_tmp] = self.ann_fem_obj.get_ht(P_winding, P_core);
             
             % assign
-            thermal.T_core_max = T_ambient+fom_tmp.T_core_max;
-            thermal.T_core_avg = T_ambient+fom_tmp.T_core_avg;
-            thermal.T_winding_max = T_ambient+fom_tmp.T_winding_max;
-            thermal.T_winding_avg = T_ambient+fom_tmp.T_winding_avg;
-            thermal.T_iso_max = T_ambient+fom_tmp.T_iso_max;
+            thermal.T_core_max = T_ambient+fom_tmp.dT_core_max;
+            thermal.T_core_avg = T_ambient+fom_tmp.dT_core_avg;
+            thermal.T_winding_max = T_ambient+fom_tmp.dT_winding_max;
+            thermal.T_winding_avg = T_ambient+fom_tmp.dT_winding_avg;
+            thermal.T_iso_max = T_ambient+fom_tmp.dT_iso_max;
             thermal.is_valid_thermal = is_valid_tmp&self.check_thermal_limit(thermal);
             
             operating.thermal = thermal;

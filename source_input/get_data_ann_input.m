@@ -28,11 +28,11 @@ if strcmp(model_type, 'mf')
     var_out{end+1} = struct('name', 'H_norm', 'var_trf', 'lin', 'var_norm', 'min_max', 'use_nrm', true);
 end
 if strcmp(model_type, 'ht')
-    var_out{end+1} = struct('name', 'T_core_max', 'var_trf', 'lin', 'var_norm', 'min_max', 'use_nrm', true);
-    var_out{end+1} = struct('name', 'T_core_avg', 'var_trf', 'lin', 'var_norm', 'min_max', 'use_nrm', true);
-    var_out{end+1} = struct('name', 'T_winding_max', 'var_trf', 'lin', 'var_norm', 'min_max', 'use_nrm', true);
-    var_out{end+1} = struct('name', 'T_winding_avg', 'var_trf', 'lin', 'var_norm', 'min_max', 'use_nrm', true);
-    var_out{end+1} = struct('name', 'T_iso_max', 'var_trf', 'lin', 'var_norm', 'min_max', 'use_nrm', true);
+    var_out{end+1} = struct('name', 'dT_core_max', 'var_trf', 'lin', 'var_norm', 'min_max', 'use_nrm', true);
+    var_out{end+1} = struct('name', 'dT_core_avg', 'var_trf', 'lin', 'var_norm', 'min_max', 'use_nrm', true);
+    var_out{end+1} = struct('name', 'dT_winding_max', 'var_trf', 'lin', 'var_norm', 'min_max', 'use_nrm', true);
+    var_out{end+1} = struct('name', 'dT_winding_avg', 'var_trf', 'lin', 'var_norm', 'min_max', 'use_nrm', true);
+    var_out{end+1} = struct('name', 'dT_iso_max', 'var_trf', 'lin', 'var_norm', 'min_max', 'use_nrm', true);
 end
 
 % split_train_test

@@ -5,7 +5,7 @@ switch model_type
     case 'mf'
         expr = {'L_norm', 'B_norm', 'J_norm', 'H_norm'};
     case 'ht'
-        expr = {'T_core_max', 'T_core_avg', 'T_winding_max', 'T_winding_avg', 'T_iso_max'};
+        expr = {'dT_core_max', 'dT_core_avg', 'dT_winding_max', 'dT_winding_avg', 'dT_iso_max'};
     otherwise
         error('invalid type')
 end
