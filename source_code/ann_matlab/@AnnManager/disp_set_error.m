@@ -1,4 +1,4 @@
-function disp_set_error(tag, var, data_cmp, data_ref, idx_train, idx_test)
+function disp_set_error(self, tag, var, data_cmp, data_ref)
 
 % disp
 fprintf('%s\n', tag);
@@ -12,7 +12,7 @@ for i=1:length(var)
     vec = abs(vec_cmp-vec_ref)./vec_ref;
     
     subplot(length(var), 1, i)
-    disp_var(name_tmp, vec, idx_train, idx_test)
+    disp_var(name_tmp, vec, self.idx_train, self.idx_test)
 end
 
 end

@@ -89,47 +89,64 @@ classdef AnnManager < handle
             self.out_nrm = out_nrm;
                         
             % check range
-            is_valid = get_range_inp(self.var_inp, self.inp);
+            is_valid = self.get_range_inp(self.inp);
             assert(all(is_valid==true), 'invalid inp')
             
             % split the data
-            [self.idx_train, self.idx_test] = get_idx_split(self.n_sol, self.split_train_test);
+            self.get_idx_split();
             
             % extract training data
-            inp_train = get_struct_idx(self.inp, self.idx_train);
-            out_ref_train = get_struct_idx(self.out_ref, self.idx_train);
-            out_nrm_train = get_struct_idx(self.out_nrm, self.idx_train);
+            inp_train = AnnManager.get_struct_idx(self.inp, self.idx_train);
+            out_ref_train = AnnManager.get_struct_idx(self.out_ref, self.idx_train);
+            out_nrm_train = AnnManager.get_struct_idx(self.out_nrm, self.idx_train);
             
             % get normalization
-            self.norm_param_inp = get_norm_var_inp(self.var_inp, inp_train);
-            self.norm_param_out = get_norm_var_out(self.var_out, out_ref_train, out_nrm_train);
+            self.get_norm_var_inp();
+            self.get_norm_var_out();
             
             % get training matrices
-            inp_mat_train = get_scale_inp(self.var_inp, self.norm_param_inp, inp_train);
-            out_mat_train = get_scale_out(self.var_out, self.norm_param_out, out_ref_train, out_nrm_train);
+            inp_mat_train = self.get_scale_inp(inp_train);
+            out_mat_train = self.get_scale_out(out_ref_train, out_nrm_train);
             
             % train the network
             self.train_engine(inp_mat_train, out_mat_train, tag_train);
             self.load_engine();
             
             % run the network
-            inp_mat = get_scale_inp(self.var_inp, self.norm_param_inp, self.inp);
+            inp_mat = self.get_scale_inp(self.inp);
             out_mat = self.predict_engine(inp_mat);
                         
             % unscale the result
-            self.out_ann = get_unscale_out(self.var_out, self.norm_param_out, self.out_nrm, out_mat);
+            self.out_ann = self.get_unscale_out(self.out_nrm, out_mat);
             
             % check set
-            check_set(self.n_sol, self.var_inp, self.inp)
-            check_set(self.n_sol, self.var_out, self.out_ref)
-            check_set(self.n_sol, self.var_out, self.out_nrm)
-            check_set(self.n_sol, self.var_out, self.out_ann)
+            AnnManager.check_set(self.n_sol, self.var_inp, self.inp)
+            AnnManager.check_set(self.n_sol, self.var_out, self.out_ref)
+            AnnManager.check_set(self.n_sol, self.var_out, self.out_nrm)
+            AnnManager.check_set(self.n_sol, self.var_out, self.out_ann)
             self.is_train = true;
         end
         
         function disp(self)
-            self.display_ann_input();
-            self.display_properties();
+            AnnManager.disp_data('var_inp', self.var_inp);
+            AnnManager.disp_data('var_out', self.var_out);
+            AnnManager.disp_data('split_train_test', self.split_train_test);
+            AnnManager.disp_data('split_var', self.split_var);
+            AnnManager.disp_data('ann_info', self.ann_info);
+            
+            if self.is_train==true
+                AnnManager.disp_data('norm_param_inp', self.norm_param_inp);
+                AnnManager.disp_data('norm_param_out', self.norm_param_out);
+                AnnManager.disp_data('n_train', nnz(self.idx_train));
+                AnnManager.disp_data('n_test', nnz(self.idx_test));
+                
+                self.disp_set_data('inp', self.var_inp, self.inp)
+                self.disp_set_data('out_ref', self.var_out, self.out_ref)
+                self.disp_set_data('out_nrm', self.var_out, self.out_nrm)
+                self.disp_set_data('out_ann', self.var_out, self.out_ann)
+                self.disp_set_error('out_nrm / out_ref', self.var_out, self.out_nrm, self.out_ref);
+                self.disp_set_error('out_ann / out_ref', self.var_out, self.out_ann, self.out_ref);
+            end
         end
         
         function [is_valid_tmp, out_nrm_tmp] = predict_nrm(self, n_sol_tmp, inp_tmp, out_nrm_tmp)
@@ -137,11 +154,11 @@ classdef AnnManager < handle
             assert(self.is_train==true, 'invalid state')
                                                 
             % check validity
-            is_valid_tmp = get_range_inp(self.var_inp, inp_tmp);
+            is_valid_tmp = self.get_range_inp(inp_tmp);
             
             % check set
-            check_set(n_sol_tmp, self.var_inp, inp_tmp)
-            check_set(n_sol_tmp, self.var_out, out_nrm_tmp)
+            AnnManager.check_set(n_sol_tmp, self.var_inp, inp_tmp)
+            AnnManager.check_set(n_sol_tmp, self.var_out, out_nrm_tmp)
         end
 
         function [is_valid_tmp, out_ann_tmp] = predict_ann(self, n_sol_tmp, inp_tmp, out_nrm_tmp)
@@ -149,19 +166,19 @@ classdef AnnManager < handle
             assert(self.is_train==true, 'invalid state')
                         
             % run the network
-            inp_mat_tmp = get_scale_inp(self.var_inp, self.norm_param_inp, inp_tmp);
+            inp_mat_tmp = self.get_scale_inp(inp_tmp);
             out_mat_tmp = self.predict_engine(inp_mat_tmp);
             
             % unscale the result
-            out_ann_tmp = get_unscale_out(self.var_out, self.norm_param_out, out_nrm_tmp, out_mat_tmp);
+            out_ann_tmp = self.get_unscale_out(out_nrm_tmp, out_mat_tmp);
             
             % check validity
-            is_valid_tmp = get_range_inp(self.var_inp, inp_tmp);
+            is_valid_tmp = self.get_range_inp(inp_tmp);
             
             % check set
-            check_set(n_sol_tmp, self.var_inp, inp_tmp)
-            check_set(n_sol_tmp, self.var_out, out_nrm_tmp)
-            check_set(n_sol_tmp, self.var_out, out_ann_tmp)
+            AnnManager.check_set(n_sol_tmp, self.var_inp, inp_tmp)
+            AnnManager.check_set(n_sol_tmp, self.var_out, out_nrm_tmp)
+            AnnManager.check_set(n_sol_tmp, self.var_out, out_ann_tmp)
         end
         
         function delete(self)
@@ -254,31 +271,24 @@ classdef AnnManager < handle
         end
     end
     
+    methods (Static, Access = private)
+        check_set(n_sol, var, data)
+        disp_data(name, data)
+        data = get_struct_idx(data, idx)
+        norm_param = get_var_norm_param(x, type)
+        y = get_var_norm_value(x, norm_param, scale_unscale)
+        y = get_var_trf(x, type, scale_unscale)
+    end
+    
     methods (Access = private)
-        function display_ann_input(self)
-            disp_data('var_inp', self.var_inp);
-            disp_data('var_out', self.var_out);
-            disp_data('split_train_test', self.split_train_test);
-            disp_data('split_var', self.split_var);
-            disp_data('ann_info', self.ann_info);
-        end
-        
-        function display_properties(self)
-            disp_data('is_train', self.is_train);
-            
-            if self.is_train==true
-                disp_data('norm_param_inp', self.norm_param_inp);
-                disp_data('norm_param_out', self.norm_param_out);
-                disp_data('n_train', nnz(self.idx_train));
-                disp_data('n_test', nnz(self.idx_test));
-                
-                disp_set_data('inp', self.var_inp, self.inp, self.idx_train, self.idx_test)
-                disp_set_data('out_ref', self.var_out, self.out_ref, self.idx_train, self.idx_test)
-                disp_set_data('out_nrm', self.var_out, self.out_nrm, self.idx_train, self.idx_test)
-                disp_set_data('out_ann', self.var_out, self.out_ann, self.idx_train, self.idx_test)
-                disp_set_error('out_nrm / out_ref', self.var_out, self.out_nrm, self.out_ref, self.idx_train, self.idx_test);
-                disp_set_error('out_ann / out_ref', self.var_out, self.out_ann, self.out_ref, self.idx_train, self.idx_test);
-            end
-        end
+        is_valid = get_range_inp(self, inp)
+        get_idx_split(self)
+        get_norm_var_inp(self)
+        get_norm_var_out(self)
+        inp_mat = get_scale_inp(self, inp)
+        out_mat = get_scale_out(self, out_ref, out_nrm)
+        out_ann = get_unscale_out(self, out_nrm, out_mat)
+        disp_set_data(self, tag, var, data)
+        disp_set_error(self, tag, var, data_cmp, data_ref)
     end
 end

@@ -1,4 +1,4 @@
-function disp_set_data(tag, var, data, idx_train, idx_test)
+function disp_set_data(self, tag, var, data)
 
 % disp
 fprintf('%s\n', tag);
@@ -10,7 +10,7 @@ for i=1:length(var)
     vec = data.(name_tmp);
     
     subplot(length(var), 1, i)
-    disp_var(name_tmp, vec, idx_train, idx_test)
+    disp_var(name_tmp, vec, self.idx_train, self.idx_test)
 end
 
 end

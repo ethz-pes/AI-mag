@@ -27,7 +27,7 @@ classdef MatlabPythonClient < handle
     methods (Access = private)
         function send(self, data)
             % dump the data
-            byte = self.get_serialize(data);
+            byte = MatlabPythonClient.get_serialize(data);
             
             % get the length
             n = length(byte);
@@ -45,7 +45,7 @@ classdef MatlabPythonClient < handle
             
             % load the data
             byte = self.tcp.read(n);
-            data = self.get_deserialize(byte);
+            data = MatlabPythonClient.get_deserialize(byte);
         end
     end
     
