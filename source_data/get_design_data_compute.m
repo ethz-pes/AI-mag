@@ -1,21 +1,32 @@
-function get_inductor
+function [sweep, n_split, data_ann, data_compute] = get_design_data_compute(sweep_type, n)
 
-addpath(genpath('source_code'))
-addpath(genpath('source_data'))
-close all;
+% sweep
+sweep = get_sweep(sweep_type, n);
 
-n_sol = 3;
+% n_split
+n_split = 50e3;
 
-ann_fem_obj = get_ann_fem();
+% data_ann
+data_ann.geom_type = 'abs';
+data_ann.eval_type = 'ann';
 
-data_vec = get_data();
-data_const = get_data_const();
+% data_compute
+data_compute.data_vec = get_data();
+data_compute.data_const = get_data_const();
+data_compute.excitation = get_excitation();
 
-obj = InductorCompute(n_sol, data_vec, data_const, ann_fem_obj);
-[is_valid, fom] = obj.get_fom();
+end
 
-excitation = get_excitation();
-operating = obj.get_operating(excitation);
+function sweep = get_sweep(sweep_type, n)
+
+sweep.type = sweep_type;
+sweep.n_sol = n;
+sweep.var.fact_window = struct('var_trf', 'log', 'type', 'float', 'lb', 2.0, 'ub', 4.0, 'n', n);
+sweep.var.fact_core = struct('var_trf', 'log', 'type', 'float', 'lb', 1.0,  'ub', 3.0, 'n', n);
+sweep.var.fact_core_window = struct('var_trf', 'log', 'type', 'float', 'lb', 0.3,  'ub', 3.0, 'n', n);
+sweep.var.fact_gap = struct('var_trf', 'log', 'type', 'float', 'lb', 0.01,  'ub', 0.2, 'n', n);
+sweep.var.V_box = struct('var_trf', 'log', 'type', 'float', 'lb', 0.01e-3,  'ub', 1e-3, 'n', n);
+sweep.var.n_turn = struct('var_trf', 'log', 'type', 'int', 'lb', 3,  'ub', 50, 'n', n);
 
 end
 
@@ -25,7 +36,6 @@ excitation.T_ambient = [40.0 40.0 400.0];
 excitation.T_ambient = 40.0;
 excitation.I_dc = 10.0;
 excitation.f = 500e3;
-
 excitation.I_ac_peak = 8.0;
 excitation.d_c = 0.4;
 
@@ -33,6 +43,7 @@ end
 
 function  data_vec = get_data()
 
+% geom
 geom.z_core = 25e-3;
 geom.t_core = 20e-3;
 geom.x_window = 15e-3;
@@ -40,6 +51,7 @@ geom.y_window = 45e-3;
 geom.d_gap = [1e-3 1e-3 50e-3];
 geom.n_turn = 6;
 
+% other
 other.I_test = 60;
 other.T_init = 80;
 
@@ -73,17 +85,6 @@ data_vec.material = material;
 data_vec.geom = geom;
 data_vec.fom_data = fom_data;
 data_vec.fom_limit = fom_limit;
-
-end
-
-function ann_fem_obj = get_ann_fem()
-
-data_fem_ann = load('data\export.mat');
-
-geom_type = 'abs';
-eval_type = 'ann';
-
-ann_fem_obj = AnnFem(data_fem_ann, geom_type, eval_type);
 
 end
 

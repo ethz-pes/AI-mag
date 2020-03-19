@@ -1,4 +1,4 @@
-classdef InductorDesign < handle
+classdef InductorCompute < handle
     %% init
     properties (SetAccess = immutable, GetAccess = private)
         n_sol
@@ -17,7 +17,7 @@ classdef InductorDesign < handle
     
     %% init
     methods (Access = public)
-        function self = InductorDesign(n_sol, data_vec, data_const, ann_fem_obj)
+        function self = InductorCompute(n_sol, data_vec, data_const, ann_fem_obj)
             % parse the data
             self.n_sol = n_sol;
             self.data_vec = data_vec;            

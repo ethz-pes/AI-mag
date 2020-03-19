@@ -65,6 +65,7 @@ else
     ub = get_var_trf(var.ub, var.var_trf, 'scale');
     vec = lb+(ub-lb).*rand(1, n);
     vec = get_var_trf(vec, var.var_trf, 'unscale');
+    vec = get_type(vec, var.type);
 end
 
 end
@@ -82,6 +83,7 @@ else
     ub = get_var_trf(var.ub, var.var_trf, 'scale');
     vec = linspace(lb, ub, n);
     vec = get_var_trf(vec, var.var_trf, 'unscale');
+    vec = get_type(vec, var.type);
 end
 
 end
@@ -96,6 +98,7 @@ else
     ub = get_var_trf(var.ub, var.var_trf, 'scale');
     vec = linspace(lb, ub, var.n);
     vec = get_var_trf(vec, var.var_trf, 'unscale');
+    vec = get_type(vec, var.type);
 end
 
 end
@@ -150,6 +153,19 @@ switch scale_unscale
         y = y_scale;
     case 'unscale'
         y = y_unscale;
+    otherwise
+        error('invalid data')
+end
+
+end
+
+function y = get_type(x, type)
+
+switch type
+    case 'float'
+        y = x;
+    case 'int'
+        y = round(x);
     otherwise
         error('invalid data')
 end
