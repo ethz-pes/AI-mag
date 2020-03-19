@@ -6,7 +6,7 @@ close('all')
 
 %% run
 run_sub('ht');
-% run_sub('mf');
+run_sub('mf');
 
 end
 

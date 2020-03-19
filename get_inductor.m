@@ -39,22 +39,20 @@ geom.t_core = 20e-3;
 geom.x_window = 15e-3;
 geom.y_window = 45e-3;
 geom.d_gap = 1e-3;
+geom.n_turn = 6;
 
-n_turn = 6;
-I_test = 60;
-T_init = 80;
+other.I_test = 60;
+other.T_init = 80;
 
 %% fom_data
 fom_data.m_scale = 1.0;
 fom_data.m_offset = 0.0;
 fom_data.V_scale = 1.0;
 fom_data.V_offset = 0.0;
-fom_data.cost_scale = 1.0;
-fom_data.cost_offset = 0.0;
-
-%% losses
-losses_add.P_fraction = 1.0;
-losses_add.P_offset = 0.0;
+fom_data.c_scale = 1.0;
+fom_data.c_offset = 0.0;
+fom_data.P_fraction = 0.0;
+fom_data.P_offset = 0.0;
 
 %% fom_limit
 fom_limit.L = struct('min', 0.0, 'max', 1e9);
@@ -65,18 +63,17 @@ fom_limit.c_box = struct('min', 0.0, 'max', 1e9);
 fom_limit.m_box = struct('min', 0.0, 'max', 1e9);
 fom_limit.V_box = struct('min', 0.0, 'max', 1e9);
 
-%% assign
-data_vec.winding_id = 71;
-data_vec.core_id = 95;
-data_vec.iso_id = 1;
+%% material
+material.winding_id = 71;
+material.core_id = 95;
+material.iso_id = 1;
 
-data_vec.n_turn = n_turn;
-data_vec.I_test = I_test;
+%% assign
+data_vec.other = other;
+data_vec.material = material;
 data_vec.geom = geom;
 data_vec.fom_data = fom_data;
 data_vec.fom_limit = fom_limit;
-data_vec.losses_add = losses_add;
-data_vec.T_init = T_init;
 
 end
 

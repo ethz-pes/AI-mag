@@ -35,9 +35,9 @@ classdef InductorDesign < handle
             [is_valid_tmp, geom] = self.ann_fem_obj.get_geom();
             self.is_valid = self.is_valid&is_valid_tmp;
             
-            self.core_obj = CoreData(self.data_material.core, self.data_vec.core_id, geom.V_core);
-            self.winding_obj = WindingData(self.data_material.winding, self.data_vec.winding_id, geom.V_winding);
-            self.iso_obj = IsoData(self.data_material.iso, self.data_vec.iso_id, geom.V_iso);
+            self.core_obj = CoreData(self.data_material.core, self.data_vec.material.core_id, geom.V_core);
+            self.winding_obj = WindingData(self.data_material.winding, self.data_vec.material.winding_id, geom.V_winding);
+            self.iso_obj = IsoData(self.data_material.iso, self.data_vec.material.iso_id, geom.V_iso);
             
 
             self.fom.geom.z_core = geom.z_core;
@@ -47,7 +47,8 @@ classdef InductorDesign < handle
             self.fom.geom.d_gap = geom.d_gap;
             self.fom.geom.d_iso = geom.d_iso;
             self.fom.geom.r_curve = geom.r_curve;
-            
+            self.fom.geom.n_turn = geom.n_turn;
+
             self.fom.area.A_core = geom.A_core;
             self.fom.area.A_winding = geom.A_winding;
             self.fom.area.A_box = geom.A_box;
@@ -55,30 +56,28 @@ classdef InductorDesign < handle
             self.fom.volume.V_iso = geom.V_iso;
             self.fom.volume.V_core = geom.V_core;
             self.fom.volume.V_winding = geom.V_winding;
-            self.fom.volume.V_box = geom.V_box;
-           
+            self.fom.volume.V_box = self.data_vec.fom_data.V_offset+self.data_vec.fom_data.V_scale.*geom.V_box;
+                        
             self.fom.mass.m_iso = self.iso_obj.get_mass();
             self.fom.mass.m_core = self.core_obj.get_mass();
             self.fom.mass.m_winding = self.winding_obj.get_mass();
-            self.fom.mass.m_box = self.fom.mass.m_iso+self.fom.mass.m_core+self.fom.mass.m_winding;
+            self.fom.mass.m_box = self.data_vec.fom_data.m_offset+self.data_vec.fom_data.m_scale.*(self.fom.mass.m_iso+self.fom.mass.m_core+self.fom.mass.m_winding);
 
             self.fom.cost.c_iso = self.iso_obj.get_cost();
             self.fom.cost.c_core = self.core_obj.get_cost();
             self.fom.cost.c_winding = self.winding_obj.get_cost();
-            self.fom.cost.c_box = self.fom.cost.c_iso+self.fom.cost.c_core+self.fom.cost.c_winding;
+            self.fom.cost.c_box = self.data_vec.fom_data.c_offset+self.data_vec.fom_data.c_scale.*(self.fom.cost.c_iso+self.fom.cost.c_core+self.fom.cost.c_winding);
             
-            self.fom.n_turn = self.data_vec.n_turn;
-
-            I_winding = self.data_vec.n_turn.*self.data_vec.I_test;
+            I_winding = self.fom.geom.n_turn.*self.data_vec.other.I_test;
             [is_valid_tmp, fom] = self.ann_fem_obj.get_mf(I_winding);
             self.is_valid = self.is_valid&is_valid_tmp;
             
-            self.fom.circuit.B_norm = self.data_vec.n_turn.*fom.B_norm;
-            self.fom.circuit.J_norm = self.data_vec.n_turn.*fom.J_norm;
-            self.fom.circuit.H_norm = self.data_vec.n_turn.*fom.H_norm;
-            self.fom.circuit.L = self.data_vec.n_turn.^2.*fom.L_norm;
-            self.fom.circuit.I_peak = self.core_obj.get_flux_density()./(self.data_vec.n_turn.*fom.B_norm);
-            self.fom.circuit.I_rms = (self.winding_obj.get_current_density())./(self.data_vec.n_turn.*fom.J_norm);
+            self.fom.circuit.B_norm = self.fom.geom.n_turn.*fom.B_norm;
+            self.fom.circuit.J_norm = self.fom.geom.n_turn.*fom.J_norm;
+            self.fom.circuit.H_norm = self.fom.geom.n_turn.*fom.H_norm;
+            self.fom.circuit.L = self.fom.geom.n_turn.^2.*fom.L_norm;
+            self.fom.circuit.I_peak = self.core_obj.get_flux_density()./(self.fom.geom.n_turn.*fom.B_norm);
+            self.fom.circuit.I_rms = (self.winding_obj.get_current_density())./(self.fom.geom.n_turn.*fom.J_norm);
             
             self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.volume.V_box, self.data_vec.fom_limit.V_box);
             self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.cost.c_box, self.data_vec.fom_limit.c_box);
@@ -136,11 +135,11 @@ classdef InductorDesign < handle
     %% private api / init
     methods (Access = private)
         function operating = get_thermal_init(self)
-            thermal.T_core_max = self.data_vec.T_init;
-            thermal.T_core_avg = self.data_vec.T_init;
-            thermal.T_winding_max = self.data_vec.T_init;
-            thermal.T_winding_avg = self.data_vec.T_init;
-            thermal.T_iso_max = self.data_vec.T_init;
+            thermal.T_core_max = self.data_vec.other.T_init;
+            thermal.T_core_avg = self.data_vec.other.T_init;
+            thermal.T_winding_max = self.data_vec.other.T_init;
+            thermal.T_winding_avg = self.data_vec.other.T_init;
+            thermal.T_iso_max = self.data_vec.other.T_init;
             thermal.is_valid_thermal = self.check_thermal_limit(thermal);
             
             operating.thermal = thermal;
@@ -221,8 +220,8 @@ classdef InductorDesign < handle
                     error('invalid data')
             end
             
-            P_fraction = self.data_vec.losses_add.P_fraction;
-            P_offset = self.data_vec.losses_add.P_offset;
+            P_fraction = self.data_vec.fom_data.P_fraction;
+            P_offset = self.data_vec.fom_data.P_offset;
            P_add = P_offset+P_fraction.*(P_core+P_winding);
             
             operating.losses.is_valid_core = is_valid_core;

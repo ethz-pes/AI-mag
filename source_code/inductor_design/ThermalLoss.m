@@ -9,20 +9,8 @@ classdef ThermalLoss < handle
     methods (Access = public)
         function self = ThermalLoss(iter, fct)
             % parse the data
-            self.iter = iter;
-            validateattributes(self.iter.n_iter, {'double', 'logical'},{'scalar', 'row', 'nonempty', 'nonnan', 'real','finite'});
-            validateattributes(self.iter.tol_losses, {'double', 'logical'},{'scalar', 'row', 'nonempty', 'nonnan', 'real','finite'});
-            validateattributes(self.iter.tol_thermal, {'double', 'logical'},{'scalar', 'row', 'nonempty', 'nonnan', 'real','finite'});
-            validateattributes(self.iter.relax_losses, {'double', 'logical'},{'scalar', 'row', 'nonempty', 'nonnan', 'real','finite'});
-            validateattributes(self.iter.relax_thermal, {'double', 'logical'},{'scalar', 'row', 'nonempty', 'nonnan', 'real','finite'});
-            validateattributes(self.iter.relax_thermal, {'double', 'logical'},{'scalar', 'row', 'nonempty', 'nonnan', 'real','finite'});
-            
+            self.iter = iter;            
             self.fct = fct;
-            validateattributes(self.fct.operating_init, {'struct'}, {'scalar'});
-            validateattributes(self.fct.get_thermal, {'function_handle'}, {'scalar'});
-            validateattributes(self.fct.get_losses, {'function_handle'}, {'scalar'});
-            validateattributes(self.fct.get_thermal_vec, {'function_handle'}, {'scalar'});
-            validateattributes(self.fct.get_losses_vec, {'function_handle'}, {'scalar'});
         end
         
         function [operating, is_valid] = get_iter(self, excitation)
