@@ -1,4 +1,4 @@
-function sweep = get_data_sweep(model_type, sweep_type, n)
+function sweep = get_fem_ann_data_sweep(model_type, sweep_type, n)
 
 sweep.type = sweep_type;
 sweep.n_sol = n;

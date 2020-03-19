@@ -4,7 +4,6 @@ classdef InductorDesign < handle
         n_sol
         data_vec
         data_const
-        data_material
         ann_fem_obj
     end
     properties (SetAccess = private, GetAccess = private)
@@ -18,11 +17,10 @@ classdef InductorDesign < handle
     
     %% init
     methods (Access = public)
-        function self = InductorDesign(n_sol, data_vec, data_material, data_const, ann_fem_obj)
+        function self = InductorDesign(n_sol, data_vec, data_const, ann_fem_obj)
             % parse the data
             self.n_sol = n_sol;
             self.data_vec = data_vec;            
-            self.data_material = data_material;            
             self.data_const = data_const;            
             self.ann_fem_obj = ann_fem_obj;
             
@@ -35,9 +33,9 @@ classdef InductorDesign < handle
             [is_valid_tmp, geom] = self.ann_fem_obj.get_geom();
             self.is_valid = self.is_valid&is_valid_tmp;
             
-            self.core_obj = CoreData(self.data_material.core, self.data_vec.material.core_id, geom.V_core);
-            self.winding_obj = WindingData(self.data_material.winding, self.data_vec.material.winding_id, geom.V_winding);
-            self.iso_obj = IsoData(self.data_material.iso, self.data_vec.material.iso_id, geom.V_iso);
+            self.core_obj = CoreData(self.data_const.material_core, self.data_vec.material.core_id, geom.V_core);
+            self.winding_obj = WindingData(self.data_const.material_winding, self.data_vec.material.winding_id, geom.V_winding);
+            self.iso_obj = IsoData(self.data_const.material_iso, self.data_vec.material.iso_id, geom.V_iso);
             
 
             self.fom.geom.z_core = geom.z_core;
@@ -103,14 +101,6 @@ classdef InductorDesign < handle
             is_valid = self.is_valid;
         end
 
-        function fig = get_plot(self, name, idx)
-            validateattributes(name, {'char'}, {'nonempty'})
-            validateattributes(idx, {'double', 'logical'},{'scalar', 'nonnegative', 'nonempty', 'nonnan', 'real','finite'});
-            assert(any(idx==(1:self.n_sol)), 'invalid data')
-
-            is_select = find(self.is_valid)==idx;
-            fig = get_plot_inductor(name, self.fom.geom, is_select);
-        end
 
         function operating = get_operating(self, excitation)
             % parse

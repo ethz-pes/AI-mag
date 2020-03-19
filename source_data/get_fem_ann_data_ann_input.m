@@ -1,4 +1,4 @@
-function ann_input = get_data_ann_input(model_type, ann_type)
+function ann_input = get_fem_ann_data_ann_input(model_type, ann_type)
 
 assert(any(strcmp(model_type, {'ht', 'mf'})), 'invalid model_type')
 
@@ -41,7 +41,7 @@ split_train_test.n_min = 4;
 split_train_test.type = 'no_overlap';
 
 % split the variable
-        split_var = false;
+split_var = false;
 
 % ann_info
 switch ann_type

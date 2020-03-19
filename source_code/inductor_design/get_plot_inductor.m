@@ -1,3 +1,13 @@
+        function fig = get_plot(self, name, idx)
+            validateattributes(name, {'char'}, {'nonempty'})
+            validateattributes(idx, {'double', 'logical'},{'scalar', 'nonnegative', 'nonempty', 'nonnan', 'real','finite'});
+            assert(any(idx==(1:self.n_sol)), 'invalid data')
+
+            is_select = find(self.is_valid)==idx;
+            fig = get_plot_inductor(name, self.fom.geom, is_select);
+        end
+
+
 function fig = get_plot_inductor(name, geom, is_select)
 
 fig = [];

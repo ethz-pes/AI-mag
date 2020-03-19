@@ -1,7 +1,7 @@
 function run_4_export()
 
 addpath(genpath('source_code'))
-addpath(genpath('source_input'))
+addpath(genpath('source_data'))
 close('all')
 
 %% file

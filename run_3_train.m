@@ -1,7 +1,7 @@
 function run_3_train()
 
 addpath(genpath('source_code'))
-addpath(genpath('source_input'))
+addpath(genpath('source_data'))
 close('all')
 
 %% run
@@ -18,7 +18,7 @@ file_ann = ['data/fem_ann/' model_type '_ann.mat'];
 
 % data
 tag_train = 'none';
-ann_input = get_data_ann_input(model_type, 'matlab_ann');
+ann_input = get_fem_ann_data_ann_input(model_type, 'matlab_ann');
 
 % master_train
 master_train(file_ann, file_assemble, ann_input, tag_train)

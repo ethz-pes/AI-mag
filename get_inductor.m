@@ -1,19 +1,17 @@
 function get_inductor
 
 addpath(genpath('source_code'))
-addpath(genpath('source_input'))
+addpath(genpath('source_data'))
 close all;
 
 n_sol = 1;
 
 ann_fem_obj = get_ann_fem();
 
-data_material = get_material();
 data_vec = get_data();
 data_const = get_data_const();
 
-obj = InductorDesign(n_sol, data_vec, data_material, data_const, ann_fem_obj);
-obj.get_plot('test', 1)
+obj = InductorDesign(n_sol, data_vec, data_const, ann_fem_obj);
 [is_valid, fom] = obj.get_fom();
 
 excitation = get_excitation();
@@ -99,17 +97,8 @@ data_const.iter.relax_thermal = 1.0;
 
 data_const.waveform_type = 'sin';
 
-end
-
-function data_material = get_material()
-
-%% core
-data_material.core = load('data\material\core_data.mat');
-
-%% winding
-data_material.winding = load('data\material\winding_data.mat');
-
-%% iso
-data_material.iso = load('data\material\iso_data.mat');
+data_const.material_core = load('source_data\material\core_data.mat');
+data_const.material_winding = load('source_data\material\winding_data.mat');
+data_const.material_iso = load('source_data\material\iso_data.mat');
 
 end
