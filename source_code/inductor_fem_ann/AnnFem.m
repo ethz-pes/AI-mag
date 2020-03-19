@@ -52,7 +52,7 @@ classdef AnnFem < handle
             inp = get_struct_merge(self.geom, excitation);
             
             [is_valid, inp] = self.get_extend_inp_wrapper('mf', inp);
-            [is_valid, fom] = self.get_fom('mf', is_valid, inp);
+            [is_valid, fom] = self.get_fom_wapper('mf', is_valid, inp);
         end
         
         function [is_valid, fom] = get_ht(self, P_winding, P_core)
@@ -64,7 +64,7 @@ classdef AnnFem < handle
             inp = get_struct_merge(self.geom, excitation);
             
             [is_valid, inp] = self.get_extend_inp_wrapper('ht', inp);
-            [is_valid, fom] = self.get_fom('ht', is_valid, inp);
+            [is_valid, fom] = self.get_fom_wapper('ht', is_valid, inp);
         end
     end
     
@@ -89,7 +89,7 @@ classdef AnnFem < handle
             [is_valid, inp] = get_extend_inp(self.data_fem_ann.const, model_type, var_type, self.n_sol, inp);
         end
         
-        function [is_valid, fom] = get_fom(self, model_type, is_valid, inp)
+        function [is_valid, fom] = get_fom_wapper(self, model_type, is_valid, inp)
             switch model_type
                 case 'mf'
                     ann_manager_obj = self.ann_manager_mf_obj;

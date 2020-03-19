@@ -78,7 +78,7 @@ material.interp.B_dc_vec = 0e-3:10e-3:250e-3;
 material.interp.T_vec = 20:10:140;
 
 material.param.fact_igse = 0.1;
-material.param.B_sat = 300e-3;
+material.param.B_sat_max = 300e-3;
 material.param.P_max = 1000e3;
 material.param.P_scale = 1.3;
 material.param.T_max = 130.0;

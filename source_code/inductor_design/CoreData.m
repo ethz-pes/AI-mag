@@ -37,8 +37,8 @@ classdef CoreData < handle
             T_max = self.param.T_max;
         end
 
-        function B_sat = get_flux_density(self)
-            B_sat = self.param.B_sat;
+        function B_sat_max = get_flux_density(self)
+            B_sat_max = self.param.B_sat_max;
         end
 
         function [is_valid, P] = get_losses_sin(self, f, B_ac_peak, B_dc, T)
@@ -85,10 +85,10 @@ classdef CoreData < handle
         
         function is_valid = parse_losses(self, is_valid, P, B_ac_peak_tot)
             P_max = self.param.P_max;
-            B_sat = self.param.B_sat;
+            B_sat_max = self.param.B_sat_max;
             
             is_valid = is_valid&(P<=P_max);
-            is_valid = is_valid&(B_ac_peak_tot<=B_sat);
+            is_valid = is_valid&(B_ac_peak_tot<=B_sat_max);
         end
         
         function [is_valid, k, alpha, beta] = compute_steinmetz(self, f, B_ac_peak, B_dc, T)

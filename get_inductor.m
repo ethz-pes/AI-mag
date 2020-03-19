@@ -4,7 +4,7 @@ addpath(genpath('source_code'))
 addpath(genpath('source_data'))
 close all;
 
-n_sol = 1;
+n_sol = 3;
 
 ann_fem_obj = get_ann_fem();
 
@@ -21,11 +21,12 @@ end
 
 function excitation = get_excitation()
 
+excitation.T_ambient = [40.0 40.0 400.0];
 excitation.T_ambient = 40.0;
 excitation.I_dc = 10.0;
 excitation.f = 500e3;
 
-excitation.I_ac_peak = 3.0;
+excitation.I_ac_peak = 8.0;
 excitation.d_c = 0.4;
 
 end
@@ -36,7 +37,7 @@ geom.z_core = 25e-3;
 geom.t_core = 20e-3;
 geom.x_window = 15e-3;
 geom.y_window = 45e-3;
-geom.d_gap = 1e-3;
+geom.d_gap = [1e-3 1e-3 50e-3];
 geom.n_turn = 6;
 
 other.I_test = 60;
@@ -54,7 +55,7 @@ fom_data.P_offset = 0.0;
 
 %% fom_limit
 fom_limit.L = struct('min', 0.0, 'max', 1e9);
-fom_limit.I_peak = struct('min', 0.0, 'max', 1e9);
+fom_limit.I_sat = struct('min', 0.0, 'max', 1e9);
 fom_limit.I_rms = struct('min', 0.0, 'max', 1e9);
 
 fom_limit.c_box = struct('min', 0.0, 'max', 1e9);
