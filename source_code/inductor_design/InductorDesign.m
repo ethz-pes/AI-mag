@@ -252,6 +252,5 @@ classdef InductorDesign < handle
             is_valid_max = vec<=limit.max;
             is_valid_tmp = is_valid_min&is_valid_max;
         end
-        
     end
 end
