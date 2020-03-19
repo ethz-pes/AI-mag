@@ -43,28 +43,16 @@ classdef AnnFem < handle
             [is_valid, geom] = self.get_extend_inp_wrapper('none', self.geom);
         end
         
-        function [is_valid, fom] = get_mf(self, I_winding)
+        function [is_valid, fom] = get_mf(self, excitation)
             % check state
             assert(self.is_geom==true, 'invalid state')
-                        
-            % get data
-            excitation = struct('I_winding', I_winding);
-            inp = get_struct_merge(self.geom, excitation);
-            
-            [is_valid, inp] = self.get_extend_inp_wrapper('mf', inp);
-            [is_valid, fom] = self.get_fom_wapper('mf', is_valid, inp);
+            [is_valid, fom] = self.get_model_type(excitation, 'mf');
         end
         
-        function [is_valid, fom] = get_ht(self, P_winding, P_core)
+        function [is_valid, fom] = get_ht(self, excitation)
             % check state
             assert(self.is_geom==true, 'invalid state')
-                        
-            % get data
-            excitation = struct('P_winding', P_winding, 'P_core', P_core);
-            inp = get_struct_merge(self.geom, excitation);
-            
-            [is_valid, inp] = self.get_extend_inp_wrapper('ht', inp);
-            [is_valid, fom] = self.get_fom_wapper('ht', is_valid, inp);
+            [is_valid, fom] = self.get_model_type(excitation, 'ht');
         end
     end
     
@@ -73,6 +61,14 @@ classdef AnnFem < handle
             assert(strcmp(data.model_type, model_type), 'invalid type')
             ann_manager_obj = AnnManager(data.ann_input);
             ann_manager_obj.load(data.ann_data);
+        end
+
+        function [is_valid, fom] = get_model_type(self, excitation, model_type)
+            % get data
+            inp = get_struct_merge(self.geom, excitation);
+            
+            [is_valid, inp] = self.get_extend_inp_wrapper(model_type, inp);
+            [is_valid, fom] = self.get_fom_wapper(model_type, is_valid, inp);
         end
         
         function [is_valid, inp] = get_extend_inp_wrapper(self, model_type, inp)

@@ -78,7 +78,7 @@ end
 
 function ann_fem_obj = get_ann_fem()
 
-data_fem_ann = load('data\fem_ann\export.mat');
+data_fem_ann = load('data\export.mat');
 
 geom_type = 'abs';
 eval_type = 'ann';

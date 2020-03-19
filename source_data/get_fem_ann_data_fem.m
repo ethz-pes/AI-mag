@@ -1,11 +1,10 @@
-function sweep = get_fem_ann_data_sweep(model_type, sweep_type, n)
-
-sweep.type = sweep_type;
-sweep.n_sol = n;
+function [file_model, var_type, sweep] = get_fem_ann_data_fem(model_type, sweep_type, n)
 
 assert(any(strcmp(model_type, {'ht', 'mf'})), 'invalid model_type')
 
-% var_inp
+% sweep
+sweep.type = sweep_type;
+sweep.n_sol = n;
 if any(strcmp(model_type, {'ht', 'mf'}))
     sweep.var.fact_window = struct('var_trf', 'log', 'lb', 2.0, 'ub', 4.0, 'n', n);
     sweep.var.fact_core = struct('var_trf', 'log', 'lb', 1.0,  'ub', 3.0, 'n', n);
@@ -20,5 +19,12 @@ if strcmp(model_type, 'ht')
     sweep.var.p_density_tot = struct('var_trf', 'log', 'lb', 0.01e4,  'ub', 0.6e4, 'n', n);
     sweep.var.p_ratio_winding_core = struct('var_trf', 'log', 'lb', 0.1,  'ub', 10.0, 'n', n);
 end
+
+% file model
+file_model = ['source_data/model/model_' model_type '.mph'];
+
+% type
+var_type.geom_type = 'rel';
+var_type.excitation_type = 'rel';
 
 end

@@ -104,8 +104,8 @@ classdef InductorDesign < handle
         end
         
         function init_magnetic(self)
-            I_winding = self.fom.geom.n_turn.*self.data_vec.other.I_test;
-            [is_valid_tmp, fom_mf] = self.ann_fem_obj.get_mf(I_winding);
+            excitation_tmp = struct('I_winding', self.fom.geom.n_turn.*self.data_vec.other.I_test);
+            [is_valid_tmp, fom_mf] = self.ann_fem_obj.get_mf(excitation_tmp);
             self.is_valid = self.is_valid&is_valid_tmp;
             
             self.fom.circuit.B_norm = self.fom.geom.n_turn.*fom_mf.B_norm;
@@ -165,7 +165,8 @@ classdef InductorDesign < handle
             P_winding = operating.losses.P_winding;
             
             % run
-            [is_valid_tmp, fom_tmp] = self.ann_fem_obj.get_ht(P_winding, P_core);
+            excitation_tmp = struct('P_winding', P_winding, 'P_core', P_core);
+            [is_valid_tmp, fom_tmp] = self.ann_fem_obj.get_ht(excitation_tmp);
             
             % assign
             thermal.T_core_max = T_ambient+fom_tmp.dT_core_max;

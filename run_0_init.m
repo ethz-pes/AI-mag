@@ -6,7 +6,7 @@ addpath(genpath('source_data'))
 close('all')
 
 %% file
-file_init = 'data/fem_ann/init.mat';
+file_init = 'data/init.mat';
 
 %% run
 const = get_fem_ann_data_const();

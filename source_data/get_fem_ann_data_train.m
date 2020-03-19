@@ -1,4 +1,4 @@
-function ann_input = get_fem_ann_data_ann_input(model_type, ann_type)
+function [ann_input, tag_train] = get_fem_ann_data_train(model_type, ann_type)
 
 assert(any(strcmp(model_type, {'ht', 'mf'})), 'invalid model_type')
 
@@ -64,6 +64,9 @@ ann_input.var_out = var_out;
 ann_input.split_train_test = split_train_test;
 ann_input.split_var = split_var;
 ann_input.ann_info = ann_info;
+
+% gdfg
+tag_train = 'none';
 
 end
 

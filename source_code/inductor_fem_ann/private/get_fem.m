@@ -1,4 +1,4 @@
-function get_fem(file_model, folder_fem, model_type, geom_type, n_sol, inp, const)
+function get_fem(folder_fem, file_model, model_type, geom_type, n_sol, inp, const)
 
 % compute
 for i=1:n_sol

@@ -1,4 +1,4 @@
-function master_fem(file_init, file_model, folder_fem, model_type, var_type, sweep)
+function master_fem(file_init, folder_fem, file_model, model_type, var_type, sweep)
 
 % name
 fprintf('################## master_fem\n')
@@ -13,7 +13,7 @@ fprintf('sweep\n')
 
 % fem
 fprintf('fem\n')
-get_fem(file_model, folder_fem, model_type, var_type, n_sol, inp, const);
+get_fem(folder_fem, file_model, model_type, var_type, n_sol, inp, const);
 
 fprintf('################## master_fem\n')
 

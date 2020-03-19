@@ -1,4 +1,4 @@
-function const = get_fem_ann_data_const()
+function const = get_fem_ann_data_init()
 
 % mf
 const.mu_core = 2200;
