@@ -40,10 +40,10 @@ classdef InductorCompute < handle
 
         function [is_valid, operating] = get_operating(self, excitation)
             % parse
-            excitation = get_struct_size(excitation, self.n_sol);
+            operating.excitation = get_struct_size(excitation, self.n_sol);
                                     
             % iter
-            [operating, is_valid_iter] = self.thermal_losses_obj.get_iter(excitation);
+            [operating, is_valid_iter] = self.thermal_losses_obj.get_iter(operating);
             
             is_valid_thermal = operating.thermal.is_valid_thermal;
             is_valid_core = operating.losses.is_valid_core;
@@ -128,9 +128,9 @@ classdef InductorCompute < handle
         end
         
         function init_thermal_loss(self)
-            fct.operating_init = self.get_thermal_init();
-            fct.get_thermal = @(operating, excitation) self.get_thermal(operating, excitation);
-            fct.get_losses = @(operating, excitation) self.get_losses(operating, excitation);
+            fct.fct_init = @(operating) self.get_thermal_init(operating);
+            fct.get_thermal = @(operating) self.get_thermal(operating);
+            fct.get_losses = @(operating) self.get_losses(operating);
             fct.get_thermal_vec = @(operating) self.get_thermal_vec(operating);
             fct.get_losses_vec = @(operating) self.get_losses_vec(operating);
             self.thermal_losses_obj = ThermalLoss(self.data_const.iter, fct);
@@ -145,7 +145,7 @@ classdef InductorCompute < handle
     end
     
     methods (Access = private)
-        function operating = get_thermal_init(self)
+        function operating = get_thermal_init(self, operating)
             thermal.T_core_max = self.data_vec.other.T_init;
             thermal.T_core_avg = self.data_vec.other.T_init;
             thermal.T_winding_max = self.data_vec.other.T_init;
@@ -157,11 +157,9 @@ classdef InductorCompute < handle
             operating.thermal = thermal;
         end
         
-        function operating = get_thermal(self, operating, excitation)
-            % excitation
-            T_ambient = excitation.T_ambient;
-            
+        function operating = get_thermal(self, operating)            
             % operating
+            T_ambient = operating.excitation.T_ambient;
             P_core = operating.losses.P_core;
             P_winding = operating.losses.P_winding;
             
@@ -209,13 +207,13 @@ classdef InductorCompute < handle
             is_valid = all(isfinite(P_vec), 1);
         end
         
-        function operating = get_losses(self, operating, excitation)            
-            I_dc = excitation.I_dc;
-            I_ac_peak = excitation.I_ac_peak;
+        function operating = get_losses(self, operating)            
             B_norm = self.fom.circuit.B_norm;
             J_norm = self.fom.circuit.J_norm;
             H_norm = self.fom.circuit.H_norm;
             
+            I_dc = operating.excitation.I_dc;
+            I_ac_peak = operating.excitation.I_ac_peak;
             T_core_avg = operating.thermal.T_core_avg;
             T_winding_avg = operating.thermal.T_winding_avg;
             
@@ -227,13 +225,13 @@ classdef InductorCompute < handle
             
             switch self.data_const.waveform_type
                 case 'sin'
-                    f = excitation.f;
+                    f = operating.excitation.f;
                     
                     [is_valid_core, P_core] = self.core_obj.get_losses_sin(f, B_ac_peak, B_dc, T_core_avg);
                     [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_sin(f, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);
                 case 'tri'
-                    f = excitation.f;
-                    d_c = excitation.d_c;
+                    f = operating.excitation.f;
+                    d_c = operating.excitation.d_c;
                     
                     [is_valid_core, P_core] = self.core_obj.get_losses_tri(f, d_c, B_ac_peak, B_dc, T_core_avg);
                     [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_tri(f, d_c, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);

@@ -13,15 +13,15 @@ classdef ThermalLoss < handle
             self.fct = fct;
         end
         
-        function [operating, is_valid] = get_iter(self, excitation)
+        function [operating, is_valid] = get_iter(self, operating)
             % find the consistent solution with iterations
             i_iter = 1;
             should_stop = false;
             P_vec = [];
             T_vec = [];
-            operating = self.fct.operating_init;
+            operating = self.fct.fct_init(operating);
             while should_stop==false
-                operating = self.get_iter_single(operating, excitation, i_iter);
+                operating = self.get_iter_single(operating, i_iter);
                 [T_new_vec, is_valid_T] = self.fct.get_thermal_vec(operating);
                 [P_new_vec, is_valid_P] = self.fct.get_losses_vec(operating);
                 
@@ -48,11 +48,11 @@ classdef ThermalLoss < handle
                 
     %% private api / iter
     methods (Access = private)
-        function operating = get_iter_single(self, operating, excitation, i_iter)
+        function operating = get_iter_single(self, operating, i_iter)
             if i_iter>1
-                operating = self.fct.get_thermal(operating, excitation);
+                operating = self.fct.get_thermal(operating);
             end
-            operating = self.fct.get_losses(operating, excitation);
+            operating = self.fct.get_losses(operating);
         end
         
         function [vec, ok_tol] = check_convergence(self, i_iter, vec, new_vec, tol, relax)

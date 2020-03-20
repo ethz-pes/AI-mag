@@ -4,10 +4,10 @@ function [sweep, n_split, data_ann, data_compute] = get_design_data_compute(swee
 sweep = get_sweep(sweep_type, n);
 
 % n_split
-n_split = 50e3;
+n_split = 5e3;
 
 % data_ann
-data_ann.geom_type = 'abs';
+data_ann.geom_type = 'rel';
 data_ann.eval_type = 'ann';
 
 % data_compute

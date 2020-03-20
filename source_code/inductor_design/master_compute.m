@@ -7,31 +7,52 @@ fprintf('################## master_compute\n')
 fprintf('load\n')
 data_fem_ann = load(file_export);
 
-keyboard
+% ann_fem
+fprintf('ann fem\n')
+ann_fem_obj = AnnFem(data_fem_ann, data_ann.geom_type, data_ann.eval_type);
 
+fprintf('sweep\n')
+[n_sol, var] = get_sweep(sweep);
 
+fprintf('split\n')
+[n_chunk, idx_chunk] = get_chunk(n_split, n_sol);
 
-% init
-fprintf('create ann\n')
-obj = AnnManager(ann_input);
+fprintf('run\n')
+for i=1:n_chunk
+    fprintf('    %d / %d\n', i, n_chunk)
+    
+    var_tmp =  get_struct_filter(var, idx_chunk{i});
+    n_sol_tmp = length(idx_chunk{i});
+    
+    data_const = data_compute.data_const;
+    data_vec = data_compute.fct_data_vec(var_tmp);
+    
+    inductor_compute_obj = InductorCompute(n_sol_tmp, data_vec, data_const, ann_fem_obj);
+    
+    [is_valid_fom, fom_tmp] = inductor_compute_obj.get_fom();
+    
+    excitation = data_compute.fct_excitation(var_tmp, fom_tmp);
+    [is_valid_operating, operating_tmp] = inductor_compute_obj.get_operating(excitation);
+    
+    is_valid = is_valid_fom&is_valid_operating;
+    n_valid(i) = nnz(is_valid);
+    fom(i) = get_struct_filter(fom_tmp, is_valid);
+    operating(i) = get_struct_filter(operating_tmp, is_valid);
+end
 
-% train
-fprintf('train ann\n')
-obj.train(tag_train, n_sol, inp, out_fem, out_approx);
+fprintf('assemble\n')
+n_valid = sum(n_valid);
+fom = get_struct_assemble(fom);
+operating = get_struct_assemble(operating);
 
 % disp
-obj.disp();
-
-% dump
-fprintf('dump ann\n')
-[ann_input, ann_data] = obj.dump();
-
-fprintf('delete ann\n')
-obj.delete();
+fprintf('size\n')
+fprintf('    n_sol = %d\n', n_sol)
+fprintf('    n_valid = %d\n', n_valid)
 
 % save
 fprintf('save\n')
-save(file_compute, 'ann_input', 'ann_data', 'model_type')
+save(file_compute, 'n_valid', 'n_sol', 'fom', 'operating')
 
 fprintf('################## master_compute\n')
 
