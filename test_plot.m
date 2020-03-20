@@ -11,7 +11,9 @@ load('data/compute.mat')
 fom = get_struct_filter(fom, 25);
 operating = get_struct_filter(operating, 25);
 
-keyboard
+is_valid = true;
+
+InductorDisplay(is_valid, fom)
 
 
 

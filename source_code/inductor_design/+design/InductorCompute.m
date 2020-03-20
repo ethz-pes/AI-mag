@@ -41,7 +41,7 @@ classdef InductorCompute < handle
         function [is_valid, operating] = get_operating(self, excitation)
             % parse
             operating.excitation = get_struct_size(excitation, self.n_sol);
-                                    
+            
             % iter
             [operating, is_valid_iter] = self.thermal_losses_obj.get_iter(operating);
             
@@ -207,7 +207,7 @@ classdef InductorCompute < handle
             is_valid = all(isfinite(P_vec), 1);
         end
         
-        function operating = get_losses(self, operating)            
+        function operating = get_losses(self, operating)
             B_norm = self.fom.circuit.B_norm;
             J_norm = self.fom.circuit.J_norm;
             H_norm = self.fom.circuit.H_norm;

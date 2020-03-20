@@ -31,17 +31,21 @@ for i=1:n_chunk
     
     % inductor
     inductor_compute_obj = design.InductorCompute(n_sol_tmp, data_vec, data_const, ann_fem_obj);
-    [is_valid_fom, fom_tmp] = inductor_compute_obj.get_fom();
+    [is_valid, fom_tmp] = inductor_compute_obj.get_fom();
     
     % operating
     excitation = data_compute.fct_excitation(var_tmp, fom_tmp);
-    [is_valid_operating, operating_tmp] = inductor_compute_obj.get_operating(excitation);
+    field = fieldnames(excitation);
+    for j=1:length(field)
+        excitation_pts = excitation.(field{j});
+        [is_valid_pts, operating_pts] = inductor_compute_obj.get_operating(excitation_pts);
+        operating_tmp.(field{j}) = struct('is_valid', is_valid_pts, 'operating', operating_pts);
+    end
     
     % assign
-    is_valid_tmp = is_valid_fom&is_valid_operating;
-    n_valid(i) = nnz(is_valid_tmp);
-    fom(i) = get_struct_filter(fom_tmp, is_valid_tmp);
-    operating(i) = get_struct_filter(operating_tmp, is_valid_tmp);
+    n_valid(i) = nnz(is_valid);
+    fom(i) = get_struct_filter(fom_tmp, is_valid);
+    operating(i) = get_struct_filter(operating_tmp, is_valid);
 end
 
 fprintf('assemble\n')

@@ -33,11 +33,16 @@ end
 
 function excitation = get_excitation(var, fom)
 
-excitation.T_ambient = 40.0;
-excitation.I_dc = 10.0;
-excitation.d_c = 0.5;
-excitation.f = var.f;
-excitation.I_ac_peak = 400./(4.*var.f.*fom.circuit.L);
+excitation_tmp.T_ambient = 40.0;
+excitation_tmp.d_c = 0.5;
+excitation_tmp.f = var.f;
+excitation_tmp.I_ac_peak = 400./(4.*var.f.*fom.circuit.L);
+
+excitation_tmp.I_dc = 10.0;
+excitation.full = excitation_tmp;
+
+excitation_tmp.I_dc = 5.0;
+excitation.half = excitation_tmp;
 
 end
 
