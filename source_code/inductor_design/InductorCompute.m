@@ -151,6 +151,7 @@ classdef InductorCompute < handle
             thermal.T_winding_max = self.data_vec.other.T_init;
             thermal.T_winding_avg = self.data_vec.other.T_init;
             thermal.T_iso_max = self.data_vec.other.T_init;
+            thermal.T_max = self.data_vec.other.T_init;
             thermal.is_valid_thermal = self.check_thermal_limit(thermal);
             
             operating.thermal = thermal;
@@ -168,14 +169,21 @@ classdef InductorCompute < handle
             excitation_tmp = struct('P_winding', P_winding, 'P_core', P_core);
             [is_valid_tmp, fom_tmp] = self.ann_fem_obj.get_ht(excitation_tmp);
             
+            % max
+            dT_mat = [fom_tmp.dT_core_max ; fom_tmp.dT_core_avg ; fom_tmp.dT_winding_max ; fom_tmp.dT_winding_avg ; fom_tmp.dT_iso_max];
+            dT_max = max(dT_mat, [], 1);
+            
             % assign
             thermal.T_core_max = T_ambient+fom_tmp.dT_core_max;
             thermal.T_core_avg = T_ambient+fom_tmp.dT_core_avg;
             thermal.T_winding_max = T_ambient+fom_tmp.dT_winding_max;
             thermal.T_winding_avg = T_ambient+fom_tmp.dT_winding_avg;
             thermal.T_iso_max = T_ambient+fom_tmp.dT_iso_max;
-            thermal.is_valid_thermal = is_valid_tmp&self.check_thermal_limit(thermal);
+            thermal.T_max = T_ambient+dT_max;
             
+            % check
+            thermal.is_valid_thermal = is_valid_tmp&self.check_thermal_limit(thermal);
+
             operating.thermal = thermal;
         end
         
@@ -186,6 +194,7 @@ classdef InductorCompute < handle
                 operating.thermal.T_winding_max;...
                 operating.thermal.T_winding_avg;...
                 operating.thermal.T_iso_max;...
+                operating.thermal.T_max;...
                 ];
             is_valid = all(isfinite(T_vec), 1);
         end

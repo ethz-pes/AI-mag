@@ -11,9 +11,9 @@ data_ann.geom_type = 'abs';
 data_ann.eval_type = 'ann';
 
 % data_compute
-data_compute.data_vec = get_data();
 data_compute.data_const = get_data_const();
-data_compute.excitation = get_excitation();
+data_compute.fct_data_vec = @(var) get_data(var);
+data_compute.fct_excitation = @(var, fom) get_excitation(var, fom);
 
 end
 
@@ -26,30 +26,30 @@ sweep.var.fact_core = struct('var_trf', 'log', 'type', 'float', 'lb', 1.0,  'ub'
 sweep.var.fact_core_window = struct('var_trf', 'log', 'type', 'float', 'lb', 0.3,  'ub', 3.0, 'n', n);
 sweep.var.fact_gap = struct('var_trf', 'log', 'type', 'float', 'lb', 0.01,  'ub', 0.2, 'n', n);
 sweep.var.V_box = struct('var_trf', 'log', 'type', 'float', 'lb', 0.01e-3,  'ub', 1e-3, 'n', n);
+sweep.var.f = struct('var_trf', 'log', 'type', 'float', 'lb', 50e3,  'ub', 150e3, 'n', n);
 sweep.var.n_turn = struct('var_trf', 'log', 'type', 'int', 'lb', 3,  'ub', 50, 'n', n);
 
 end
 
-function excitation = get_excitation()
+function excitation = get_excitation(var, fom)
 
-excitation.T_ambient = [40.0 40.0 400.0];
 excitation.T_ambient = 40.0;
 excitation.I_dc = 10.0;
-excitation.f = 500e3;
-excitation.I_ac_peak = 8.0;
-excitation.d_c = 0.4;
+excitation.d_c = 0.5;
+excitation.f = var.f;
+excitation.I_ac_peak = 400./(4.*var.f.*fom.circuit.L);
 
 end
 
-function  data_vec = get_data()
+function data_vec = get_data(var)
 
 % geom
-geom.z_core = 25e-3;
-geom.t_core = 20e-3;
-geom.x_window = 15e-3;
-geom.y_window = 45e-3;
-geom.d_gap = [1e-3 1e-3 50e-3];
-geom.n_turn = 6;
+geom.fact_window = var.fact_window;
+geom.fact_core = var.fact_core;
+geom.fact_core_window = var.fact_core_window;
+geom.fact_gap = var.fact_gap;
+geom.V_box = var.V_box;
+geom.n_turn = var.n_turn;
 
 % other
 other.I_test = 60;

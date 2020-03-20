@@ -1,16 +1,15 @@
-function master_compute(file_ann, file_assemble, ann_input, tag_train)
+function master_compute(file_compute, file_export, sweep, n_split, data_ann, data_compute)
 
 % name
-fprintf('################## master_train\n')
+fprintf('################## master_compute\n')
 
 % load
 fprintf('load\n')
-data_tmp = load(file_assemble);
-n_sol = data_tmp.n_sol;
-inp = data_tmp.inp;
-out_fem = data_tmp.out_fem;
-out_approx = data_tmp.out_approx;
-model_type = data_tmp.model_type;
+data_fem_ann = load(file_export);
+
+keyboard
+
+
 
 % init
 fprintf('create ann\n')
@@ -32,8 +31,8 @@ obj.delete();
 
 % save
 fprintf('save\n')
-save(file_ann, 'ann_input', 'ann_data', 'model_type')
+save(file_compute, 'ann_input', 'ann_data', 'model_type')
 
-fprintf('################## master_train\n')
+fprintf('################## master_compute\n')
 
 end

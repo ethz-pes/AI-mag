@@ -25,7 +25,6 @@ excitation.T_ambient = [40.0 40.0 400.0];
 excitation.T_ambient = 40.0;
 excitation.I_dc = 10.0;
 excitation.f = 500e3;
-
 excitation.I_ac_peak = 8.0;
 excitation.d_c = 0.4;
 
