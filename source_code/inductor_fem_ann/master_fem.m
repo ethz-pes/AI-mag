@@ -13,7 +13,7 @@ fprintf('sweep\n')
 
 % fem
 fprintf('fem\n')
-get_fem(folder_fem, file_model, model_type, var_type, n_sol, inp, const);
+fem_ann.get_fem(folder_fem, file_model, model_type, var_type, n_sol, inp, const);
 
 fprintf('################## master_fem\n')
 

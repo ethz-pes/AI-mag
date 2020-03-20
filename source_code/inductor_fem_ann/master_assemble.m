@@ -5,10 +5,10 @@ fprintf('################## master_assemble\n')
 
 % run
 fprintf('assemble\n')
-[n_tot, n_sol, model_type, inp, out_fem] = get_assemble(folder_fem);
+[n_tot, n_sol, model_type, inp, out_fem] = fem_ann.get_assemble(folder_fem);
 
 fprintf('approx\n')
-out_approx = get_out_approx(model_type, inp);
+out_approx = fem_ann.get_out_approx(model_type, inp);
 
 % disp
 fprintf('size\n')

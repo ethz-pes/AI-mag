@@ -24,12 +24,12 @@ if make_computation==true
     
     % merge
     n_sol = 1;
-    [is_valid, inp] = get_extend_inp(const, model_type, var_type, n_sol, inp);
+    [is_valid, inp] = fem_ann.get_extend_inp(const, model_type, var_type, n_sol, inp);
         
     % disp
     if is_valid==true
         fprintf('        compute: valid\n')
-        out_fem = get_out_fem(file_model, model_type, inp);
+        out_fem = fem_ann.get_out_fem(file_model, model_type, inp);
     else
         fprintf('        compute: invalid\n')
         out_fem = struct();

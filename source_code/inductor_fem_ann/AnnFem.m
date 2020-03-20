@@ -82,7 +82,7 @@ classdef AnnFem < handle
             end
             
             var_type = struct('geom_type', self.geom_type, 'excitation_type', excitation_type);
-            [is_valid, inp] = get_extend_inp(self.data_fem_ann.const, model_type, var_type, self.n_sol, inp);
+            [is_valid, inp] = fem_ann.get_extend_inp(self.data_fem_ann.const, model_type, var_type, self.n_sol, inp);
         end
         
         function [is_valid, fom] = get_fom_wapper(self, model_type, is_valid, inp)
@@ -95,7 +95,7 @@ classdef AnnFem < handle
                     error('invalid type')
             end
 
-            [is_valid, fom] = get_fom(ann_manager_obj, model_type, self.n_sol, is_valid, inp, self.eval_type);
+            [is_valid, fom] = fem_ann.get_fom(ann_manager_obj, model_type, self.n_sol, is_valid, inp, self.eval_type);
         end
     end
 end

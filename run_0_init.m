@@ -9,7 +9,7 @@ close('all')
 file_init = 'data/init.mat';
 
 %% run
-const = get_fem_ann_data_const();
+const = get_fem_ann_data_init();
 
 %% save
 save(file_init, '-struct', 'const')
