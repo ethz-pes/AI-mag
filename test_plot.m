@@ -8,19 +8,10 @@ close('all')
 %% file
 load('data/compute.mat')
 
-fom = get_struct_filter(fom, 25);
-operating = get_struct_filter(operating, 25);
+is_valid = true(1, n_valid);
 
-is_valid = true;
+obj = design.InductorDisplay(is_valid, fom, operating);
 
-InductorDisplay(is_valid, fom)
-
-
-
-%% data
-[sweep, n_split, data_ann, data_compute] = get_design_data_compute('random', 10e3);
-
-%% save
-master_compute(file_compute, file_export, sweep, n_split, data_ann, data_compute)
+obj.get_gui(45, 3);
 
 end

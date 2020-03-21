@@ -1,32 +1,55 @@
 classdef InductorDisplay < handle
     %% init
     properties (SetAccess = immutable, GetAccess = private)
-        is_valid_fom
+        is_valid
         fom
-    end
-    properties (SetAccess = private, GetAccess = private)
-        is_operating
-        is_valid_operating
         operating
     end
     
     %% init
     methods (Access = public)
-        function self = InductorDisplay(is_valid_fom, fom)
-            self.is_valid_fom = is_valid_fom;
+        function self = InductorDisplay(is_valid, fom, operating)
+            self.is_valid = is_valid;
             self.fom = fom;
-            self.is_operating = false;
+            self.operating = operating;
             
-            self.fom = get_struct_size(self.fom, length(self.is_valid_fom));
+            self.fom = get_struct_size(self.fom, length(self.is_valid));
+            self.operating = get_struct_size(self.operating, length(self.is_valid));
         end
         
-        function self = set_operating(is_valid_operating, operating)
-            self.is_valid_operating = is_valid_operating;
-            self.operating = operating;
-            self.is_operating = true;
+        function get_gui(self, idx, id)
+            is_valid_tmp = self.is_valid( idx);
+            fom_tmp = get_struct_filter(self.fom, idx);
+            operating_tmp = get_struct_filter(self.operating, idx);
             
-            assert(length(self.is_valid_operating)==length(self.is_valid_fom), 'invalid data')
-            self.operating = get_struct_size(self.operating, length(self.is_valid_operating));
+            fig = figure(id);
+            clf(id)
+            
+            set(fig, 'Position', [200 200 1200 700])
+            set(fig, 'name', 'InductorDisplay')
+            set(fig, 'MenuBar', 'none')
+            set(fig, 'ToolBar', 'none')
+            set(fig, 'Resize','off')
+
+            self.set_title(sprintf('idx = %d', idx))
+            
+            if is_valid_tmp==false
+                ax = axes(fig, 'Units', 'normalized', 'position',[0, 0, 1.0, 0.85]);
+                axis(ax, 'off')
+                hold(ax, 'on');
+                plot(ax, [-1 +1], [-1 +1], 'r', 'LineWidth', 2)
+                plot(ax, [-1 +1], [+1 -1], 'r', 'LineWidth', 2)
+            else
+                self.display_inductor(fig, fom_tmp, operating_tmp)
+            end
+        end
+    end
+    
+    methods (Access = private)
+        function display_inductor(self, fig, fom_tmp, operating_tmp)
+            
+            keyboard
+            
         end
         
         function fig = get_plot_inductor(name, geom, is_select)
@@ -172,4 +195,11 @@ classdef InductorDisplay < handle
             
         end
     end
+    
+    methods (Access = public)
+        function set_title(self, txt)
+            uicontrol('Style','text', 'units','normalized', 'FontWeight', 'bold', 'FontSize', 16, 'position', [0 0.85 1 0.1],'String', txt);
+        end
+    end
+    
 end

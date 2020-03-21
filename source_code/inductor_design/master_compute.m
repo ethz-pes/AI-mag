@@ -18,34 +18,9 @@ fprintf('split\n')
 [n_chunk, idx_chunk] = get_chunk(n_split, n_sol);
 
 fprintf('run\n')
-for i=1:n_chunk
+parfor i=1:n_chunk
     fprintf('    %d / %d\n', i, n_chunk)
-    
-    % slice
-    var_tmp =  get_struct_filter(var, idx_chunk{i});
-    n_sol_tmp = length(idx_chunk{i});
-    
-    % get data
-    data_const = data_compute.data_const;
-    data_vec = data_compute.fct_data_vec(var_tmp);
-    
-    % inductor
-    inductor_compute_obj = design.InductorCompute(n_sol_tmp, data_vec, data_const, ann_fem_obj);
-    [is_valid, fom_tmp] = inductor_compute_obj.get_fom();
-    
-    % operating
-    excitation = data_compute.fct_excitation(var_tmp, fom_tmp);
-    field = fieldnames(excitation);
-    for j=1:length(field)
-        excitation_pts = excitation.(field{j});
-        [is_valid_pts, operating_pts] = inductor_compute_obj.get_operating(excitation_pts);
-        operating_tmp.(field{j}) = struct('is_valid', is_valid_pts, 'operating', operating_pts);
-    end
-    
-    % assign
-    n_valid(i) = nnz(is_valid);
-    fom(i) = get_struct_filter(fom_tmp, is_valid);
-    operating(i) = get_struct_filter(operating_tmp, is_valid);
+    [n_valid(i), fom(i), operating(i)] = compute_chunk(var, idx_chunk{i}, ann_fem_obj, data_compute);
 end
 
 fprintf('assemble\n')
@@ -63,5 +38,35 @@ fprintf('save\n')
 save(file_compute, 'n_valid', 'n_sol', 'fom', 'operating')
 
 fprintf('################## master_compute\n')
+
+end
+
+function [n_valid, fom, operating] = compute_chunk(var, idx_chunk, ann_fem_obj, data_compute)
+
+% slice
+var_tmp =  get_struct_filter(var, idx_chunk);
+n_sol_tmp = length(idx_chunk);
+
+% get data
+data_const = data_compute.data_const;
+data_vec = data_compute.fct_data_vec(var_tmp);
+
+% inductor
+inductor_compute_obj = design.InductorCompute(n_sol_tmp, data_vec, data_const, ann_fem_obj);
+[is_valid, fom] = inductor_compute_obj.get_fom();
+
+% operating
+excitation = data_compute.fct_excitation(var_tmp, fom);
+field = fieldnames(excitation);
+for j=1:length(field)
+    excitation_pts = excitation.(field{j});
+    [is_valid_pts, operating_pts] = inductor_compute_obj.get_operating(excitation_pts);
+    operating.(field{j}) = struct('is_valid', is_valid_pts, 'operating', operating_pts);
+end
+
+% assign
+n_valid = nnz(is_valid);
+fom = get_struct_filter(fom, is_valid);
+operating = get_struct_filter(operating, is_valid);
 
 end
