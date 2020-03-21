@@ -216,27 +216,23 @@ classdef InductorCompute < handle
             I_ac_peak = operating.excitation.I_ac_peak;
             T_core_avg = operating.thermal.T_core_avg;
             T_winding_avg = operating.thermal.T_winding_avg;
-            
+            f = operating.excitation.f;
+            is_pwm = operating.excitation.is_pwm;
+            d_c = operating.excitation.d_c;
+
             J_dc = J_norm.*I_dc;
             B_dc = B_norm.*I_dc;
+            H_dc = H_norm.*I_dc;
             J_ac_peak = J_norm.*I_ac_peak;
             H_ac_peak = H_norm.*I_ac_peak;
             B_ac_peak = B_norm.*I_ac_peak;
             
-            switch self.data_const.waveform_type
-                case 'sin'
-                    f = operating.excitation.f;
-                    
-                    [is_valid_core, P_core] = self.core_obj.get_losses_sin(f, B_ac_peak, B_dc, T_core_avg);
-                    [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_sin(f, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);
-                case 'tri'
-                    f = operating.excitation.f;
-                    d_c = operating.excitation.d_c;
-                    
-                    [is_valid_core, P_core] = self.core_obj.get_losses_tri(f, d_c, B_ac_peak, B_dc, T_core_avg);
-                    [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_tri(f, d_c, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);
-                otherwise
-                    error('invalid data')
+            if is_pwm==true
+                [is_valid_core, P_core] = self.core_obj.get_losses_tri(f, d_c, B_ac_peak, B_dc, T_core_avg);
+                [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_tri(f, d_c, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);
+            else
+                [is_valid_core, P_core] = self.core_obj.get_losses_sin(f, B_ac_peak, B_dc, T_core_avg);
+                [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_sin(f, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);
             end
             
             P_fraction = self.data_vec.fom_data.P_fraction;
@@ -255,6 +251,7 @@ classdef InductorCompute < handle
 
             operating.field.J_dc = J_dc;
             operating.field.B_dc = B_dc;
+            operating.field.H_dc = H_dc;
             operating.field.J_ac_peak = J_ac_peak;
             operating.field.H_ac_peak = H_ac_peak;
             operating.field.B_ac_peak = B_ac_peak;

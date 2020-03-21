@@ -34,15 +34,16 @@ end
 function excitation = get_excitation(var, fom)
 
 excitation_tmp.T_ambient = 40.0;
+excitation_tmp.is_pwm = true;
 excitation_tmp.d_c = 0.5;
 excitation_tmp.f = var.f;
 excitation_tmp.I_ac_peak = 400./(4.*var.f.*fom.circuit.L);
 
 excitation_tmp.I_dc = 10.0;
-excitation.full = excitation_tmp;
+excitation.full_load = excitation_tmp;
 
 excitation_tmp.I_dc = 5.0;
-excitation.half = excitation_tmp;
+excitation.half_load = excitation_tmp;
 
 end
 
@@ -101,8 +102,6 @@ data_const.iter.tol_losses = 5.0;
 data_const.iter.tol_thermal = 2.0;
 data_const.iter.relax_losses = 1.0;
 data_const.iter.relax_thermal = 1.0;
-
-data_const.waveform_type = 'sin';
 
 data_const.material_core = load('source_data\material\core_data.mat');
 data_const.material_winding = load('source_data\material\winding_data.mat');
