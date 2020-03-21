@@ -33,12 +33,17 @@ classdef InductorDisplay < handle
             set(fig, 'Resize','off')
             
             panel_plot = uipanel('Title','Plot', 'Units', 'pixels', 'FontSize', 12, 'Position',[10 10 450 680]);
-            panel_inductor = uipanel('Title','Inductor', 'Units', 'pixels', 'FontSize', 12, 'Position',[470 140 450 550]);
-            panel_operating = uipanel('Title','Operating', 'Units', 'pixels', 'FontSize', 12, 'Position',[930 140 450 550]);
-            panel_button = uipanel('Units', 'pixels', 'FontSize', 12, 'Position',[470 10 450 120]);
-            panel_logo = uipanel('Units', 'pixels', 'FontSize', 12, 'Position',[930 10 450 120]);
+            panel_inductor = uipanel('Title','Inductor', 'Units', 'pixels', 'FontSize', 12, 'Position',[470 80 450 610]);
+            panel_operating = uipanel('Title','Operating', 'Units', 'pixels', 'FontSize', 12, 'Position',[930 80 450 610]);
+            panel_button = uipanel('Units', 'pixels', 'FontSize', 12, 'Position',[470 10 450 60]);
+            panel_logo = uipanel('Units', 'pixels', 'FontSize', 12, 'Position',[930 10 450 60]);
             
             self.logo_pannel(panel_logo, 'test.png');
+
+
+            button_1 = uicontrol(panel_button, 'Units', 'normalized', 'Style', 'pushbutton', 'FontSize', 12, 'String', 'Save Data', 'Position', [0.02 0.1 0.3 0.8]);
+            button_1 = uicontrol(panel_button, 'Units', 'normalized', 'Style', 'pushbutton', 'FontSize', 12, 'String', 'Save Image', 'Position', [0.35 0.1 0.3 0.8]);
+            button_1 = uicontrol(panel_button, 'Units', 'normalized', 'Style', 'pushbutton', 'FontSize', 12, 'String', 'Copy Data', 'Position', [0.68 0.1 0.3 0.8]);
 
             if is_valid_tmp==false
                 self.cross_panel(panel_plot);
@@ -57,35 +62,26 @@ classdef InductorDisplay < handle
         function display_operating(self, operating_tmp, panel_operating)            
             field = fieldnames(operating_tmp);
             for i=1:length(field)
-                panel_vec(i) = uipanel(panel_operating, 'Units', 'pixels', 'BorderType', 'none', 'Visible', 'off', 'Position', [0 0 450 480]);
+                panel_vec(i) = uipanel(panel_operating, 'Units', 'pixels', 'BorderType', 'none', 'Visible', 'off', 'Position', [0 0 450 540]);
                 is_valid_vec(i) = operating_tmp.(field{i}).is_valid;
                 
                 operating_tmp_tmp = operating_tmp.(field{i}).operating;
                 text_data = self.get_text_data_operating(operating_tmp_tmp);
-                self.set_text(panel_vec(i), 470, text_data);
+                self.set_text(panel_vec(i), 540, text_data);
             end
             
-            status = uicontrol(panel_operating, 'Style', 'pushbutton', 'Enable', 'inactive', 'FontSize', 12, 'Position', [340 490 100 27]);
+            status = uicontrol(panel_operating, 'Style', 'pushbutton', 'Enable', 'inactive', 'FontSize', 12, 'Position', [340 550 100 27]);
 
             select_operating = @(src,event) self.get_menu(status, is_valid_vec, panel_vec, src.Value);
-            menu = uicontrol(panel_operating, 'Style', 'popupmenu', 'FontSize', 12, 'String', field, 'Position', [10 490 320 27], 'CallBack', select_operating);
+            menu = uicontrol(panel_operating, 'Style', 'popupmenu', 'FontSize', 12, 'String', field, 'Position', [10 550 320 27], 'CallBack', select_operating);
             self.get_menu(status, is_valid_vec, panel_vec, menu.Value);
-            
-            %             tab2 = uitab(tab_group,'Title','Options');
-
-
-
-
-            
-            
-            
-            
+                        
         end
         
         function get_menu(self, status, is_valid_vec, panel_vec, idx)
 
 
-            set(panel_vec(1), 'Visible', 'off');
+            set(panel_vec, 'Visible', 'off');
             set(panel_vec(idx), 'Visible', 'on');
 
             is_valid_tmp = is_valid_vec(idx);
@@ -100,7 +96,7 @@ classdef InductorDisplay < handle
         
         function display_inductor(self, fom_tmp, panel_inductor)
             text_data = self.get_text_data_fom(fom_tmp);
-            self.set_text(panel_inductor, 550-30, text_data);
+            self.set_text(panel_inductor, 580, text_data);
         end
         
         function display_plot(self, fom_tmp, panel_plot)
@@ -117,7 +113,6 @@ classdef InductorDisplay < handle
         function text_data = get_text_data_operating(self, operating_tmp)
             text_data = {};
                        
-
             text = {{}, {}};
             text{1}{end+1} = sprintf('T_ambient = %.2f C', operating_tmp.excitation.T_ambient);
             text{2}{end+1} = sprintf('is_pwm = %d', operating_tmp.excitation.is_pwm);
@@ -142,7 +137,7 @@ classdef InductorDisplay < handle
             text{1}{end+1} = sprintf('T_winding_max = %.2f C', operating_tmp.thermal.T_winding_max);
             text{2}{end+1} = sprintf('T_winding_avg = %.2f C', operating_tmp.thermal.T_winding_avg);
             text{1}{end+1} = sprintf('T_iso_max = %.2f C', operating_tmp.thermal.T_iso_max);
-            text{2}{end+1} = sprintf('T_max = %.2f C', operating_tmp.thermal.T_max);
+            text{1}{end+1} = sprintf('T_max = %.2f C', operating_tmp.thermal.T_max);
             text{1}{end+1} = sprintf('is_valid_thermal = %d', operating_tmp.thermal.is_valid_thermal);
             text_data{end+1} = struct('title', 'thermal', 'text', {text});
 
@@ -156,7 +151,7 @@ classdef InductorDisplay < handle
             text{2}{end+1} = sprintf('P_add = %.2f W', operating_tmp.losses.P_add);
             text{1}{end+1} = sprintf('P_tot = %.2f W', operating_tmp.losses.P_tot);
             text{1}{end+1} = sprintf('is_valid_core = %d', operating_tmp.losses.is_valid_core);
-            text{2}{end+1} = sprintf('is_valid_winding = %d', operating_tmp.losses.is_valid_winding);
+            text{1}{end+1} = sprintf('is_valid_winding = %d', operating_tmp.losses.is_valid_winding);
             text_data{end+1} = struct('title', 'losses', 'text', {text});
 
 
@@ -314,7 +309,7 @@ classdef InductorDisplay < handle
                 offset = offset-h;
 
                 h_1 = self.set_text_matrix(panel, 25, offset, text{1});
-                h_2 = self.set_text_matrix(panel, 250, offset, text{2});
+                h_2 = self.set_text_matrix(panel, 240, offset, text{2});
                 offset = offset-max(h_1, h_2);
             end
         end
