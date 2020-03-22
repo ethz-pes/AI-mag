@@ -37,18 +37,14 @@ classdef InductorCompute < handle
             is_valid = self.is_valid;
             fom = self.fom;
         end
-
-        function [is_valid, operating] = get_operating(self, excitation)
-            % parse
-            operating.excitation = get_struct_size(excitation, self.n_sol);
-            
-            % iter
-            [operating, is_valid_iter] = self.thermal_losses_obj.get_iter(operating);
-            
-            is_valid_thermal = operating.thermal.is_valid_thermal;
-            is_valid_core = operating.losses.is_valid_core;
-            is_valid_winding = operating.losses.is_valid_winding;
-            is_valid = is_valid_iter&is_valid_thermal&is_valid_core&is_valid_winding;
+        
+        function operating = get_operating(self, excitation)
+            field = fieldnames(excitation);
+            for j=1:length(field)
+                excitation_pts = excitation.(field{j});                
+                [is_valid_pts, operating_pts] = self.get_operating_pts(excitation_pts);
+                operating.(field{j}) = struct('is_valid', is_valid_pts, 'operating', operating_pts);
+            end
         end
     end
     
@@ -147,6 +143,19 @@ classdef InductorCompute < handle
     end
     
     methods (Access = private)
+        function [is_valid, operating] = get_operating_pts(self, excitation)
+            % parse
+            operating.excitation = get_struct_size(excitation, self.n_sol);
+            
+            % iter
+            [operating, is_valid_iter] = self.thermal_losses_obj.get_iter(operating);
+            
+            is_valid_thermal = operating.thermal.is_valid_thermal;
+            is_valid_core = operating.losses.is_valid_core;
+            is_valid_winding = operating.losses.is_valid_winding;
+            is_valid = is_valid_iter&is_valid_thermal&is_valid_core&is_valid_winding;
+        end
+        
         function operating = get_thermal_init(self, operating)
             thermal.T_core_max = self.data_vec.other.T_init;
             thermal.T_core_avg = self.data_vec.other.T_init;

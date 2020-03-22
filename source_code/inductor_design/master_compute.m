@@ -57,12 +57,7 @@ inductor_compute_obj = design.InductorCompute(n_sol_tmp, data_vec, data_const, a
 
 % operating
 excitation = data_compute.fct_excitation(var_tmp, fom);
-field = fieldnames(excitation);
-for j=1:length(field)
-    excitation_pts = excitation.(field{j});
-    [is_valid_pts, operating_pts] = inductor_compute_obj.get_operating(excitation_pts);
-    operating.(field{j}) = struct('is_valid', is_valid_pts, 'operating', operating_pts);
-end
+operating = inductor_compute_obj.get_operating(excitation);
 
 % assign
 n_valid = nnz(is_valid);
