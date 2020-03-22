@@ -200,9 +200,10 @@ classdef InductorDisplay < handle
             
             text = {{}, {}};
             text{1}{end+1} = sprintf('L = %.2f uH', 1e6.*fom_tmp.circuit.L);
-            text{1}{end+1} = sprintf('I_sat = %.2f A', fom_tmp.circuit.I_sat);
+            text{2}{end+1} = sprintf('I_sat = %.2f A', fom_tmp.circuit.I_sat);
             text{1}{end+1} = sprintf('I_rms = %.2f A', fom_tmp.circuit.I_rms);
-            text_data{end+1} = struct('title', 'circuit', 'text', {text});                      
+            text{2}{end+1} = sprintf('V_t_area = %.2f Vms', 1e3.*fom_tmp.circuit.V_t_area);
+            text_data{end+1} = struct('title', 'circuit', 'text', {text});
         end
         
         function plot_data = get_plot_data_front(self, geom_tmp)

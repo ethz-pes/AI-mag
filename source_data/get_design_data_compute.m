@@ -75,6 +75,7 @@ fom_data.P_offset = 0.0;
 fom_limit.L = struct('min', 0.0, 'max', 1e9);
 fom_limit.I_sat = struct('min', 0.0, 'max', 1e9);
 fom_limit.I_rms = struct('min', 0.0, 'max', 1e9);
+fom_limit.V_t_area = struct('min', 0.0, 'max', 1e9);
 
 fom_limit.c_box = struct('min', 0.0, 'max', 1e9);
 fom_limit.m_box = struct('min', 0.0, 'max', 1e9);

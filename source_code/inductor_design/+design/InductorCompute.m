@@ -117,6 +117,7 @@ classdef InductorCompute < handle
             J_rms_max = self.winding_obj.get_current_density();
             self.fom.circuit.I_sat = B_sat_max./self.fom.circuit.B_norm;
             self.fom.circuit.I_rms = J_rms_max./self.fom.circuit.J_norm;
+            self.fom.circuit.V_t_area = self.fom.circuit.L.*self.fom.circuit.I_sat;
             
             self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.volume.V_box, self.data_vec.fom_limit.V_box);
             self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.cost.c_box, self.data_vec.fom_limit.c_box);
@@ -125,6 +126,7 @@ classdef InductorCompute < handle
             self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.L, self.data_vec.fom_limit.L);
             self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.I_sat, self.data_vec.fom_limit.I_sat);
             self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.I_rms, self.data_vec.fom_limit.I_rms);
+            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.V_t_area, self.data_vec.fom_limit.V_t_area);
         end
         
         function init_thermal_loss(self)
