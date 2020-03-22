@@ -9,10 +9,7 @@ close('all')
 load('data/compute.mat')
 
 
-obj = design.InductorDisplay(fom, operating);
-obj.get_gui(45);
-obj.get_data(45);
-obj.get_text(45);
-
+obj = design.InductorGui(fom, operating);
+obj.get_gui(45, 25);
 
 end

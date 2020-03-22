@@ -11,47 +11,38 @@ classdef InductorDisplay < handle
             self.fom = fom;
             self.operating = operating;
         end
-        
-        function is_valid_tmp = get_is_valid(self, idx)
-            is_valid_tmp = self.is_valid(idx);
-        end
-        
-        function data = get_data(self, idx)
-            data.idx = idx;
-            data.fom = get_struct_filter(self.fom, idx);
-            data.operating = get_struct_filter(self.operating, idx);
-        end
-        
-        function txt = get_text(self, idx)
+
+        function [gui, data, txt] = get_idx(self, idx)
             fom_tmp = get_struct_filter(self.fom, idx);
             operating_tmp = get_struct_filter(self.operating, idx);
-                         
+            
+            % txt
             txt = [];
             txt = self.add_title(txt, 'idx = %d', idx);
             
-            fom_data = self.get_text_data_fom(fom_tmp);
-            txt = self.disp_block(txt, 'fom', fom_data);
-
+            % parse
+            plot_gui = self.get_plot_data(fom_tmp);
+            fom_gui = self.get_text_data_fom(fom_tmp);
+            txt = self.disp_block(txt, 'fom', fom_gui);
+            
             field = fieldnames(operating_tmp);
             for i=1:length(field)
-                operating_data = self.get_text_data_operating(operating_tmp.(field{i}));
-                txt = self.disp_block(txt, field{i}, operating_data);
+                operating_gui_tmp = self.get_text_data_operating(operating_tmp.(field{i}));
+                txt = self.disp_block(txt, field{i}, operating_gui_tmp);
+                operating_gui.(field{i}) = operating_gui_tmp;
             end
             
+            % data
+            data.idx = idx;
+            data.fom = fom_tmp;
+            data.operating = operating_tmp;
+            
+            % gui
+            gui.plot_gui = plot_gui;
+            gui.fom_gui = fom_gui;
+            gui.operating_gui = operating_gui;
+            % txt
             txt = strtrim(txt);
-        end
-        
-        function [plot_data, fom_data, operating_data] = get_gui(self, idx)
-            fom_tmp = get_struct_filter(self.fom, idx);
-            operating_tmp = get_struct_filter(self.operating, idx);
-                        
-            plot_data = self.get_plot_data(fom_tmp);
-            fom_data = self.get_text_data_fom(fom_tmp);
-
-            field = fieldnames(operating_tmp);
-            for i=1:length(field)
-                operating_data.(field{i}) = self.get_text_data_operating(operating_tmp.(field{i}));
-            end
         end
     end
     
@@ -204,11 +195,12 @@ classdef InductorDisplay < handle
         function data = get_plot_data(self, fom_tmp)
             is_valid = fom_tmp.is_valid_geom;
             
-            plot_data.front = self.get_plot_data_front(fom_tmp.geom);
-            plot_data.top = self.get_plot_data_top(fom_tmp.geom);
+            plot_data_front = self.get_plot_data_front(fom_tmp.geom);
+            plot_data_top = self.get_plot_data_top(fom_tmp.geom);
             
             data.is_valid = is_valid;
-            data.plot_data = plot_data;
+            data.plot_data_front = plot_data_front;
+            data.plot_data_top = plot_data_top;
         end
         
         function plot_data = get_plot_data_front(self, geom_tmp)
