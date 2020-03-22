@@ -152,10 +152,13 @@ classdef InductorCompute < handle
             % iter
             [operating, is_valid_iter] = self.thermal_losses_obj.get_iter(operating);
             
-            is_valid_thermal = operating.thermal.is_valid_thermal;
-            is_valid_core = operating.losses.is_valid_core;
-            is_valid_winding = operating.losses.is_valid_winding;
-            operating.is_valid = is_valid_iter&is_valid_thermal&is_valid_core&is_valid_winding;
+            is_valid_fom = self.fom.is_valid;
+            is_valid_thermal = operating.is_valid_thermal;
+            is_valid_core = operating.is_valid_core;
+            is_valid_winding = operating.is_valid_winding;
+            
+            operating.is_valid_iter = is_valid_iter;
+            operating.is_valid = is_valid_fom&is_valid_iter&is_valid_thermal&is_valid_core&is_valid_winding;
         end
         
         function operating = get_thermal_init(self, operating)
@@ -165,9 +168,9 @@ classdef InductorCompute < handle
             thermal.T_winding_avg = self.data_vec.other.T_init;
             thermal.T_iso_max = self.data_vec.other.T_init;
             thermal.T_max = self.data_vec.other.T_init;
-            thermal.is_valid_thermal = self.check_thermal_limit(thermal);
             
             operating.thermal = thermal;
+            operating.is_valid_thermal = self.check_thermal_limit(thermal);;
         end
         
         function operating = get_thermal(self, operating)            
@@ -193,9 +196,8 @@ classdef InductorCompute < handle
             thermal.T_max = T_ambient+dT_max;
             
             % check
-            thermal.is_valid_thermal = is_valid_tmp&self.check_thermal_limit(thermal);
-
             operating.thermal = thermal;
+            operating.is_valid_thermal = is_valid_tmp&self.check_thermal_limit(thermal);
         end
         
         function [T_vec, is_valid] = get_thermal_vec(self, operating)
@@ -252,8 +254,6 @@ classdef InductorCompute < handle
             P_offset = self.data_vec.fom_data.P_offset;
             P_add = P_offset+P_fraction.*(P_core+P_winding);
             
-            operating.losses.is_valid_core = is_valid_core;
-            operating.losses.is_valid_winding = is_valid_winding;
             operating.losses.P_core = P_core;
             operating.losses.P_winding = P_winding;
             operating.losses.P_winding_dc = P_dc;
@@ -268,6 +268,9 @@ classdef InductorCompute < handle
             operating.field.J_ac_peak = J_ac_peak;
             operating.field.H_ac_peak = H_ac_peak;
             operating.field.B_ac_peak = B_ac_peak;
+            
+            operating.is_valid_core = is_valid_core;
+            operating.is_valid_winding = is_valid_winding;
         end
         
         function is_valid_thermal = check_thermal_limit(self, operating)
