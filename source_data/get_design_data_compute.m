@@ -1,10 +1,13 @@
-function [sweep, n_split, data_ann, data_compute] = get_design_data_compute(sweep_type, n)
+function [sweep, n_split, fct_filter, data_ann, data_compute] = get_design_data_compute(sweep_type, n)
 
 % sweep
 sweep = get_sweep(sweep_type, n);
 
 % n_split
 n_split = 5e3;
+
+% filter
+fct_filter = @(fom, operating, n_sol) true(1, n_sol);
 
 % data_ann
 data_ann.geom_type = 'rel';

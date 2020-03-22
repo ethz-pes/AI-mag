@@ -7,7 +7,6 @@ classdef InductorCompute < handle
         ann_fem_obj
     end
     properties (SetAccess = private, GetAccess = private)
-        is_valid
         fom
         core_obj
         winding_obj
@@ -26,15 +25,13 @@ classdef InductorCompute < handle
             
             % init
             self.data_vec = get_struct_size(self.data_vec, self.n_sol);
-            self.is_valid = true(1, self.n_sol);
             
             self.init_geom_material()
             self.init_magnetic()
             self.init_thermal_loss()            
         end
         
-        function [is_valid, fom] = get_fom(self)
-            is_valid = self.is_valid;
+        function fom = get_fom(self)
             fom = self.fom;
         end
         
@@ -42,8 +39,8 @@ classdef InductorCompute < handle
             field = fieldnames(excitation);
             for j=1:length(field)
                 excitation_pts = excitation.(field{j});                
-                [is_valid_pts, operating_pts] = self.get_operating_pts(excitation_pts);
-                operating.(field{j}) = struct('is_valid', is_valid_pts, 'operating', operating_pts);
+                operating_pts = self.get_operating_pts(excitation_pts);
+                operating.(field{j}) = operating_pts;
             end
         end
     end
@@ -53,8 +50,9 @@ classdef InductorCompute < handle
         function init_geom_material(self)
             % set
             self.ann_fem_obj.set_geom(self.n_sol, self.data_vec.geom);
-            [is_valid_tmp, geom] = self.ann_fem_obj.get_geom();
-            self.is_valid = self.is_valid&is_valid_tmp;
+            [is_valid_geom, geom] = self.ann_fem_obj.get_geom();
+            
+            self.fom.is_valid_geom = is_valid_geom;
             
             self.core_obj = design.CoreData(self.data_const.material_core, self.data_vec.material.core_id, geom.V_core);
             self.winding_obj = design.WindingData(self.data_const.material_winding, self.data_vec.material.winding_id, geom.V_winding);
@@ -101,8 +99,9 @@ classdef InductorCompute < handle
         
         function init_magnetic(self)
             excitation_tmp = struct('I_winding', self.fom.geom.n_turn.*self.data_vec.other.I_test);
-            [is_valid_tmp, fom_mf] = self.ann_fem_obj.get_mf(excitation_tmp);
-            self.is_valid = self.is_valid&is_valid_tmp;
+            [is_valid_mf, fom_mf] = self.ann_fem_obj.get_mf(excitation_tmp);
+            
+            self.fom.is_valid_mf = is_valid_mf;
             
             self.fom.circuit.B_norm = self.fom.geom.n_turn.*fom_mf.B_norm;
             self.fom.circuit.J_norm = self.fom.geom.n_turn.*fom_mf.J_norm;
@@ -115,14 +114,17 @@ classdef InductorCompute < handle
             self.fom.circuit.I_rms = J_rms_max./self.fom.circuit.J_norm;
             self.fom.circuit.V_t_area = self.fom.circuit.L.*self.fom.circuit.I_sat;
             
-            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.volume.V_box, self.data_vec.fom_limit.V_box);
-            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.cost.c_box, self.data_vec.fom_limit.c_box);
-            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.mass.m_box, self.data_vec.fom_limit.m_box);
+            is_valid_limit = true(1, self.n_sol);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.volume.V_box, self.data_vec.fom_limit.V_box);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.cost.c_box, self.data_vec.fom_limit.c_box);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.mass.m_box, self.data_vec.fom_limit.m_box);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.L, self.data_vec.fom_limit.L);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.I_sat, self.data_vec.fom_limit.I_sat);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.I_rms, self.data_vec.fom_limit.I_rms);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.V_t_area, self.data_vec.fom_limit.V_t_area);
+            self.fom.is_valid_limit = is_valid_limit;
             
-            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.L, self.data_vec.fom_limit.L);
-            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.I_sat, self.data_vec.fom_limit.I_sat);
-            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.I_rms, self.data_vec.fom_limit.I_rms);
-            self.is_valid = self.is_valid&self.init_is_valid_check(self.fom.circuit.V_t_area, self.data_vec.fom_limit.V_t_area);
+            self.fom.is_valid = self.fom.is_valid_geom&self.fom.is_valid_mf&self.fom.is_valid_limit;
         end
         
         function init_thermal_loss(self)
@@ -143,7 +145,7 @@ classdef InductorCompute < handle
     end
     
     methods (Access = private)
-        function [is_valid, operating] = get_operating_pts(self, excitation)
+        function operating = get_operating_pts(self, excitation)
             % parse
             operating.excitation = get_struct_size(excitation, self.n_sol);
             
@@ -153,7 +155,7 @@ classdef InductorCompute < handle
             is_valid_thermal = operating.thermal.is_valid_thermal;
             is_valid_core = operating.losses.is_valid_core;
             is_valid_winding = operating.losses.is_valid_winding;
-            is_valid = is_valid_iter&is_valid_thermal&is_valid_core&is_valid_winding;
+            operating.is_valid = is_valid_iter&is_valid_thermal&is_valid_core&is_valid_winding;
         end
         
         function operating = get_thermal_init(self, operating)
