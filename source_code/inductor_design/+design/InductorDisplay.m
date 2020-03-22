@@ -111,8 +111,8 @@ classdef InductorDisplay < handle
             text_data{end+1} = struct('title', 'field', 'text', {text});
             
             text = {};
-            text{end+1} = sprintf('T_core_max = %.2f W', operating_tmp.thermal.T_core_max);
-            text{end+1} = sprintf('T_core_avg = %.2f W', operating_tmp.thermal.T_core_avg);
+            text{end+1} = sprintf('T_core_max = %.2f C', operating_tmp.thermal.T_core_max);
+            text{end+1} = sprintf('T_core_avg = %.2f C', operating_tmp.thermal.T_core_avg);
             text{end+1} = sprintf('T_winding_max = %.2f C', operating_tmp.thermal.T_winding_max);
             text{end+1} = sprintf('T_winding_avg = %.2f C', operating_tmp.thermal.T_winding_avg);
             text{end+1} = sprintf('T_iso_max = %.2f C', operating_tmp.thermal.T_iso_max);
@@ -128,6 +128,12 @@ classdef InductorDisplay < handle
             text{end+1} = sprintf('P_add = %.2f W', operating_tmp.losses.P_add);
             text{end+1} = sprintf('P_tot = %.2f W', operating_tmp.losses.P_tot);
             text_data{end+1} = struct('title', 'losses', 'text', {text});
+
+                        text = {};
+            text{end+1} = sprintf('fact_hf_winding = %.2f', operating_tmp.fact.fact_hf_winding);
+            text{end+1} = sprintf('fact_core_winding = %.2f', operating_tmp.fact.fact_core_winding);
+            text{end+1} = sprintf('fact_ac_dc = %.2f', operating_tmp.fact.fact_ac_dc);
+            text_data{end+1} = struct('title', 'fact', 'text', {text});
             
             data.is_valid = is_valid;
             data.text_data = text_data;
@@ -163,22 +169,22 @@ classdef InductorDisplay < handle
                        
             text = {};
             text{end+1} = sprintf('A_core = %.2f cm2', 1e4.*fom_tmp.area.A_core);
-            text{end+1} = sprintf('V_core = %.2f dm3', 1e3.*fom_tmp.volume.V_core);
+            text{end+1} = sprintf('V_core = %.2f cm3', 1e6.*fom_tmp.volume.V_core);
             text{end+1} = sprintf('A_winding = %.2f cm2', 1e4.*fom_tmp.area.A_winding);
-            text{end+1} = sprintf('V_winding = %.2f dm3', 1e3.*fom_tmp.volume.V_winding);
+            text{end+1} = sprintf('V_winding = %.2f cm3', 1e6.*fom_tmp.volume.V_winding);
             text{end+1} = sprintf('A_box = %.2f cm2', 1e4.*fom_tmp.area.A_box);
-            text{end+1} = sprintf('V_box = %.2f dm3', 1e3.*fom_tmp.volume.V_box);
+            text{end+1} = sprintf('V_box = %.2f cm3', 1e6.*fom_tmp.volume.V_box);
             text_data{end+1} = struct('title', 'area / volume', 'text', {text});
             
             text = {};
-            text{end+1} = sprintf('m_core = %.2f kg', fom_tmp.mass.m_core);
+            text{end+1} = sprintf('m_core = %.2f g', 1e3.*fom_tmp.mass.m_core);
             text{end+1} = sprintf('c_core = %.2f $', fom_tmp.cost.c_core);
-            text{end+1} = sprintf('m_winding = %.2f kg', fom_tmp.mass.m_winding);
+            text{end+1} = sprintf('m_winding = %.2f g', 1e3.*fom_tmp.mass.m_winding);
             text{end+1} = sprintf('c_winding = %.2f $', fom_tmp.cost.c_winding);
-            text{end+1} = sprintf('m_iso = %.2f kg', fom_tmp.mass.m_iso);
+            text{end+1} = sprintf('m_iso = %.2f g', 1e3.*fom_tmp.mass.m_iso);
             text{end+1} = sprintf('c_iso = %.2f $', fom_tmp.cost.c_iso);
-            text{end+1} = sprintf('m_box = %.2f kg', fom_tmp.mass.m_box);
-            text{end+1} = sprintf('c_box = %.2f $', fom_tmp.cost.c_box);
+            text{end+1} = sprintf('m_tot = %.2f g', 1e3.*fom_tmp.mass.m_tot);
+            text{end+1} = sprintf('c_tot = %.2f $', fom_tmp.cost.c_tot);
             text_data{end+1} = struct('title', 'mass / cost', 'text', {text});
             
             text = {};

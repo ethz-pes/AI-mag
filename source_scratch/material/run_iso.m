@@ -26,5 +26,6 @@ function material = get_data(rho, kappa)
 material.rho = rho;
 material.lambda = rho.*kappa;
 material.T_max = 130.0;
+material.c_offset = 0.3;
 
 end

@@ -30,7 +30,7 @@ classdef CoreData < handle
         end
         
         function cost = get_cost(self)
-            cost = self.volume.*self.param.lambda;
+            cost = self.param.c_offset+self.volume.*self.param.lambda;
         end
         
         function T_max = get_temperature(self)

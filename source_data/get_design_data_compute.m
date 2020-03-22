@@ -80,8 +80,8 @@ fom_limit.I_sat = struct('min', 0.0, 'max', 1e9);
 fom_limit.I_rms = struct('min', 0.0, 'max', 1e9);
 fom_limit.V_t_area = struct('min', 0.0, 'max', 1e9);
 
-fom_limit.c_box = struct('min', 0.0, 'max', 1e9);
-fom_limit.m_box = struct('min', 0.0, 'max', 1e9);
+fom_limit.c_tot = struct('min', 0.0, 'max', 1e9);
+fom_limit.m_tot = struct('min', 0.0, 'max', 1e9);
 fom_limit.V_box = struct('min', 0.0, 'max', 1e9);
 
 %% material

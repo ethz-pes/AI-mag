@@ -48,5 +48,6 @@ material.param.J_rms_max = 20e6;
 material.param.P_scale_lf = 1.3;
 material.param.P_scale_hf = 1.4;
 material.param.T_max = 140.0;
+material.param.c_offset = 0.3;
 
 end

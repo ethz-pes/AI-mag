@@ -87,14 +87,14 @@ classdef InductorCompute < handle
             self.fom.mass.m_iso = self.iso_obj.get_mass();
             self.fom.mass.m_core = self.core_obj.get_mass();
             self.fom.mass.m_winding = self.winding_obj.get_mass();
-            self.fom.mass.m_box = m_offset+m_scale.*(self.fom.mass.m_iso+self.fom.mass.m_core+self.fom.mass.m_winding);
+            self.fom.mass.m_tot = m_offset+m_scale.*(self.fom.mass.m_iso+self.fom.mass.m_core+self.fom.mass.m_winding);
             
             c_offset = self.data_vec.fom_data.c_offset;
             c_scale = self.data_vec.fom_data.c_scale;
             self.fom.cost.c_iso = self.iso_obj.get_cost();
             self.fom.cost.c_core = self.core_obj.get_cost();
             self.fom.cost.c_winding = self.winding_obj.get_cost();
-            self.fom.cost.c_box = c_offset+c_scale.*(self.fom.cost.c_iso+self.fom.cost.c_core+self.fom.cost.c_winding);
+            self.fom.cost.c_tot = c_offset+c_scale.*(self.fom.cost.c_iso+self.fom.cost.c_core+self.fom.cost.c_winding);
         end
         
         function init_magnetic(self)
@@ -116,8 +116,8 @@ classdef InductorCompute < handle
             
             is_valid_limit = true(1, self.n_sol);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.volume.V_box, self.data_vec.fom_limit.V_box);
-            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.cost.c_box, self.data_vec.fom_limit.c_box);
-            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.mass.m_box, self.data_vec.fom_limit.m_box);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.cost.c_tot, self.data_vec.fom_limit.c_tot);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.mass.m_tot, self.data_vec.fom_limit.m_tot);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.L, self.data_vec.fom_limit.L);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.I_sat, self.data_vec.fom_limit.I_sat);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.I_rms, self.data_vec.fom_limit.I_rms);
@@ -269,6 +269,10 @@ classdef InductorCompute < handle
             operating.field.H_ac_peak = H_ac_peak;
             operating.field.B_ac_peak = B_ac_peak;
             
+            operating.fact.fact_hf_winding = P_ac_hf./P_ac_lf;
+            operating.fact.fact_core_winding = P_core./P_winding;
+            operating.fact.fact_ac_dc = I_ac_peak./I_dc;
+                        
             operating.is_valid_core = is_valid_core;
             operating.is_valid_winding = is_valid_winding;
         end

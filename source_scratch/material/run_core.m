@@ -84,5 +84,6 @@ material.param.P_scale = 1.3;
 material.param.T_max = 130.0;
 material.param.rho = rho;
 material.param.lambda = rho.*kappa;
+material.param.c_offset = 0.3;
 
 end

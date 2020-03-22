@@ -40,7 +40,7 @@ classdef InductorGui < handle
             self.display_operating(panel_operating, gui.operating_gui);
 
             panel_logo = uipanel('Units', 'pixels', 'FontSize', 12, 'Position',[930 10 450 60]);
-            self.display_logo(panel_logo, 'test.png');
+            self.display_logo(panel_logo, 'logo_pes_ethz.png');
             
             panel_button = uipanel('Units', 'pixels', 'FontSize', 12, 'Position',[470 10 450 60]);
             self.display_button(panel_button, data, fig, txt);
@@ -243,9 +243,12 @@ classdef InductorGui < handle
         end
         
         function display_logo(self, panel, filename)
+            path = fileparts(mfilename('fullpath'));
+            filename = [path filesep() filename];
+            [img, map, alphachannel] = imread(filename);
+            
             ax = axes(panel, 'Units', 'normalized', 'Position',[0 0 1 1]);
-            img = imread(filename);
-            image(ax, img);
+            image(ax, img, 'AlphaData', alphachannel);
             axis(ax, 'off');
             axis(ax, 'image');
         end
