@@ -12,30 +12,30 @@ fprintf('ann fem\n')
 ann_fem_obj = AnnFem(data_fem_ann, data_ann.geom_type, data_ann.eval_type);
 
 fprintf('sweep\n')
-[n_sol, var] = get_sweep(sweep);
+[n_tot, var] = get_sweep(sweep);
 
 fprintf('split\n')
-[n_chunk, idx_chunk] = get_chunk(n_split, n_sol);
+[n_chunk, idx_chunk] = get_chunk(n_split, n_tot);
 
 fprintf('run\n')
 parfor i=1:n_chunk
     fprintf('    %d / %d\n', i, n_chunk)
-    [n_filter(i), fom(i), operating(i)] = compute_chunk(var, idx_chunk{i}, fct_filter, ann_fem_obj, data_compute);
+    [n_sol(i), fom(i), operating(i)] = compute_chunk(var, idx_chunk{i}, fct_filter, ann_fem_obj, data_compute);
 end
 
 fprintf('assemble\n')
-n_filter = sum(n_filter);
+n_sol = sum(n_sol);
 fom = get_struct_assemble(fom);
 operating = get_struct_assemble(operating);
 
 % disp
 fprintf('size\n')
+fprintf('    n_tot = %d\n', n_tot)
 fprintf('    n_sol = %d\n', n_sol)
-fprintf('    n_filter = %d\n', n_filter)
 
 % save
 fprintf('save\n')
-save(file_compute, 'n_filter', 'n_sol', 'fom', 'operating')
+save(file_compute, 'n_tot', 'n_sol', 'fom', 'operating')
 
 fprintf('################## master_compute\n')
 
@@ -60,11 +60,11 @@ excitation = data_compute.fct_excitation(var, fom);
 operating = inductor_compute_obj.get_operating(excitation);
 
 % filter
-idx = fct_filter(fom, operating, n_sol);
+is_valid = fct_filter(fom, operating, n_sol);
 
 % assign
-n_filter = nnz(idx);
-fom = get_struct_filter(fom, idx);
-operating = get_struct_filter(operating, idx);
+n_filter = nnz(is_valid);
+fom = get_struct_filter(fom, is_valid);
+operating = get_struct_filter(operating, is_valid);
 
 end

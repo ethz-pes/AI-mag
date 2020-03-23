@@ -1,9 +1,5 @@
 classdef InductorGui < handle
     %% init
-    properties (SetAccess = immutable, GetAccess = private)
-        fom
-        operating
-    end
     properties (SetAccess = private, GetAccess = private)
         inductor_display_obj
     end
@@ -11,18 +7,15 @@ classdef InductorGui < handle
     %% init
     methods (Access = public)
         function self = InductorGui(fom, operating)
-            self.fom = fom;
-            self.operating = operating;
-            
-            self.inductor_display_obj = design.InductorDisplay(self.fom, self.operating);
+            self.inductor_display_obj = design.InductorDisplay(fom, operating);
         end
         
         function get_gui(self, idx, id)            
             fig = figure(id);
-            clf(id)
             
+            clf(fig)
             set(fig, 'Position', [200 200 1390 700])
-            set(fig, 'name', sprintf('InductorDisplay : idx = %d', idx))
+            set(fig, 'Name', sprintf('InductorDisplay : idx = %d', idx))
             set(fig, 'NumberTitle', 'off')
             set(fig, 'MenuBar', 'none')
             set(fig, 'ToolBar', 'none')

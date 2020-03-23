@@ -1,6 +1,6 @@
 classdef InductorDisplay < handle
     %% init
-    properties (SetAccess = immutable, GetAccess = private)
+    properties (SetAccess = private, GetAccess = private)
         fom
         operating
     end
