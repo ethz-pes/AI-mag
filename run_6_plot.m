@@ -9,9 +9,9 @@ close('all')
 file_compute = 'data/compute.mat';
 
 %% data
-[plot_id, fct_data, plot_data] = get_design_data_plot();
+[plot_param, fct_data, plot_data] = get_design_data_plot();
 
 %% save
-master_plot(file_compute, plot_id, fct_data, plot_data)
+master_plot(file_compute, plot_param, fct_data, plot_data)
 
 end

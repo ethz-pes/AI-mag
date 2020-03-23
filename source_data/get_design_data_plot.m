@@ -1,7 +1,10 @@
-function [plot_id, fct_data, plot_data] = get_design_data_plot()
+function [plot_param, fct_data, plot_data] = get_design_data_plot()
 
-plot_id.pareto = 1;
-plot_id.inductor = 2;
+plot_param.fig_id_pareto = 1;
+plot_param.fig_id_inductor = 2;
+plot_param.marker_pts_size = 10;
+plot_param.marker_select_size = 20;
+plot_param.marker_select_color = 'r';
 
 
 fct_data = @(fom, operating, n_sol) get_data(fom, operating, n_sol);

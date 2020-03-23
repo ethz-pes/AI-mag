@@ -8,8 +8,8 @@ close('all')
 %% file
 load('data/compute.mat')
 
-
 obj = design.InductorGui(fom, operating);
-obj.get_gui(45, 25);
+obj.get_gui(56, 25);
+
 
 end
