@@ -1,21 +1,22 @@
 classdef InductorPareto < handle
     %% init
     properties (SetAccess = private, GetAccess = private)
+        id
         n_sol
         n_plot
         data_add
-        plot_param
+        plot_data
         inductor_gui_obj
     end
     
     %% init
     methods (Access = public)
-        function self = InductorPareto(n_sol, fom, operating, plot_param, fct_data)
+        function self = InductorPareto(n_sol, fom, operating, fct_data, plot_data)
             [is_valid, data_add] = fct_data(fom, operating, n_sol);
 
+            self.id = randi(1e9);
             self.n_sol = n_sol;
             self.n_plot = nnz(is_valid);
-            self.plot_param = plot_param;
             
             fom = get_struct_filter(fom, is_valid);
             operating = get_struct_filter(operating, is_valid);
@@ -27,106 +28,118 @@ classdef InductorPareto < handle
             end
             
             self.data_add = data_add;
+            self.plot_data = plot_data;
         end
-        
-        function n_sol = get_n_sol(self)
-            n_sol = self.n_sol;
-        end
-        
-        function n_plot = get_n_plot(self)
-            n_plot = self.n_plot;
-        end
-        
-        function get_plot(self, plot_data)            
-            fig = figure(self.plot_param.fig_id_pareto);
-            name = plot_data.name;
-            subplot_data = plot_data.subplot_data;
-            
-            clf(fig)
-            addToolbarExplorationButtons(fig)
-            set(fig, 'Name', sprintf('InductorPareto : %s', name))
-            set(fig, 'NumberTitle', 'off')
-            set(fig, 'MenuBar', 'none')
+      
 
-            for i=1:length(subplot_data)
-                ax = subplot(length(subplot_data), 1, i);
-                plt(i) = self.get_subplot(ax, subplot_data{i});
-            end
+        function fig = get_gui(self)
+            name = sprintf('InductorPareto');
+            fig = design.GuiUtils.get_gui(self.id, [200 200 1390 500], name);
+           
+            panel_plot = design.GuiUtils.get_panel(fig, [10 10 450 480], 'Plot');
+%             self.display_plot(panel_plot, gui.plot_gui);
             
-                        update_fct = @(none, event_obj) self.callback_update(none, event_obj);
-
-%             set(points(i),'HitTest','on','ButtonDownFcn',{'myFunction',i};
-
+            panel_inductor = design.GuiUtils.get_panel(fig, [470 10 450 480], 'Inductor');
+%             self.display_inductor(panel_inductor, gui.fom_gui);
             
-%             dcm_obj = datacursormode(fig);
-%             set(dcm_obj,'Interpreter', 'none')
-%             set(dcm_obj,'UpdateFcn', update_fct)
-            
+            panel_number = design.GuiUtils.get_panel(fig, [930 390 450 100], 'Inductor');
 
+            panel_operating = design.GuiUtils.get_panel(fig, [930 150 450 230], 'Operating');
+%             self.display_operating(panel_operating, gui.operating_gui);
+            
+            panel_logo = design.GuiUtils.get_panel(fig, [930 10 450 60], []);
+            self.display_logo(panel_logo);
+            
+            panel_button = design.GuiUtils.get_panel(fig, [930 80 450 60], []);
+            self.display_button(panel_button, fig);
         end
     end
     
     methods (Access = private)
-        function plt = get_subplot(self, ax, subplot_data)            
-            x = self.get_value(subplot_data.x_var);
-            y = self.get_value(subplot_data.y_var);
-            color = self.get_value(subplot_data.color_var);
-            plt = scatter(x, y, self.plot_param.marker_pts_size, color, 'filled');
+        function display_logo(self, panel_logo)
+            filename = 'logo_pes_ethz.png';
+            path = fileparts(mfilename('fullpath'));
+            filename = [path filesep() filename];
+            design.GuiUtils.set_logo(panel_logo, filename);
+        end
+        
+        function display_button(self, panel_button, data, fig, txt)
+            callback = @(src,event) self.callback_save_data(data);
+            callback = [];
+            design.GuiUtils.get_button(panel_button, [0.02 0.1 0.21 0.8], 'Save', callback)
+            
+%             callback = @(src,event) self.callback_save_image(fig);
+            design.GuiUtils.get_button(panel_button, [0.27 0.1 0.21 0.8], 'Copy', callback)
+            
+%             callback = @(src,event) self.callback_copy_data(txt);
+            design.GuiUtils.get_button(panel_button, [0.52 0.1 0.21 0.8], 'Clear', callback)
+            
+            design.GuiUtils.get_button(panel_button, [0.77 0.1 0.21 0.8], 'Details', callback)
+        end
+        
+        function callback_save_data(self, data)
+           [file, path, indx] = uiputfile('*.mat');
+           if indx~=0
+               save([path file], 'data')
+           end
+        end
+        
+        function callback_save_image(self, fig)
+           [file, path, indx] = uiputfile('*.png');
+           if indx~=0
+               img = getframe(fig);
+               imwrite(img.cdata, [path file])
+           end
+        end
 
-            title(ax, subplot_data.title, 'interpreter', 'none')
-            
-%             tbar = get(ax, 'Toolbar');
-            tb = axtoolbar(ax, {'pan', 'zoomin','zoomout','restoreview'}, 'Visible', 'on');
+        function callback_copy_data(self, txt)
+            clipboard('copy', txt)
+        end
+        
+        function callback_menu(self, status, is_valid_vec, panel_vec, idx)            
+            design.GuiUtils.set_panel_hidden(panel_vec, 'off');
+            design.GuiUtils.set_panel_hidden(panel_vec(idx), 'on');
 
-            
-            color_label = self.get_label(subplot_data.color_var);
-            cbar = colorbar(ax);
-            text = get(cbar, 'Label');
-            set(text, 'interpreter', 'none')
-            set(text, 'String', color_label)
-            
-            x_label = self.get_label(subplot_data.x_var);
-            y_label = self.get_label(subplot_data.y_var);
-            xlabel(ax, x_label, 'interpreter', 'none');
-            ylabel(ax, y_label, 'interpreter', 'none');
-            
-            set(ax, 'Box', 'on');
-            set(ax, 'XScale', subplot_data.x_axis);
-            set(ax, 'YScale', subplot_data.y_axis);
-            set(gca,'ColorScale', subplot_data.color_axis)
-            
-            if length(subplot_data.x_lim)==2
-                set(ax, 'XLim', subplot_data.x_lim);
+            is_valid_tmp = is_valid_vec(idx);
+            design.GuiUtils.set_status(status, is_valid_tmp);
+        end
+
+        function display_operating(self, panel_operating, operating_gui)
+            field = fieldnames(operating_gui);
+            for i=1:length(field)
+                is_valid_tmp = operating_gui.(field{i}).is_valid;
+                text_data_tmp = operating_gui.(field{i}).text_data;
+
+                panel_tmp = design.GuiUtils.get_panel_hidden(panel_operating, [0 0 450 540]);
+                design.GuiUtils.set_text(panel_tmp, 540, 10, [25 240], text_data_tmp);
+
+                panel_vec(i) = panel_tmp;
+                is_valid_vec(i) = is_valid_tmp;
             end
-            if length(subplot_data.y_lim)==2
-                set(ax, 'YLim', subplot_data.y_lim);
-            end
-            if length(subplot_data.color_lim)==2
-                set(ax, 'CLim', subplot_data.color_lim);
-            end
-                                    
-            grid(ax, 'on')
-       
-        end
-        
-        function label = get_label(self, var)
-            data_add_tmp = self.data_add.(var);
-            label = sprintf('%s [%s]', data_add_tmp.name, data_add_tmp.unit);
-        end
-        
-        function value = get_value(self, var)
-            data_add_tmp = self.data_add.(var);
-            value = data_add_tmp.scale.*data_add_tmp.value;
-        end
-        
-        function txt = callback_update(self, none, event_obj)
-%             idx = get(event_obj, 'DataIndex');
             
-keyboard
-            txt = {};
-            txt{end+1} = 'test1';
-            txt{end+1} = 'test2';
+            status = design.GuiUtils.get_status(panel_operating, [340 550 100 27]);
+            callback = @(src, event) self.callback_menu(status, is_valid_vec, panel_vec, src.Value);
+            menu = design.GuiUtils.get_list(panel_operating, [10 550 320 27], field, callback);
+            callback(menu, []);
         end
         
+        function display_inductor(self, panel_inductor, fom_gui)
+            status = design.GuiUtils.get_status(panel_inductor, [10 550 430 27]);
+            design.GuiUtils.set_status(status, fom_gui.is_valid);
+            design.GuiUtils.set_text(panel_inductor, 540, 10, [25 240], fom_gui.text_data);
+        end
+        
+        function display_plot(self, panel_plot, plot_gui)
+            ax_front = design.GuiUtils.get_plot_geom(panel_plot, [60 60 370 250]);
+            ax_top = design.GuiUtils.get_plot_geom(panel_plot, [60 380 370 250]);
+
+            if plot_gui.is_valid==true
+                design.GuiUtils.set_plot_geom_data(ax_front, plot_gui.plot_data_front, 0.1);
+                design.GuiUtils.set_plot_geom_data(ax_top, plot_gui.plot_data_top, 0.1);
+            else
+                design.GuiUtils.set_plot_geom_cross(ax_front)
+                design.GuiUtils.set_plot_geom_cross(ax_top)
+            end
+        end
     end
 end

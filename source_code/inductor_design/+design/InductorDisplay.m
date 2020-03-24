@@ -12,7 +12,7 @@ classdef InductorDisplay < handle
             self.operating = operating;
         end
 
-        function [gui, data, txt] = get_idx(self, idx)
+        function [gui, txt] = get_idx(self, idx)
             fom_tmp = get_struct_filter(self.fom, idx);
             operating_tmp = get_struct_filter(self.operating, idx);
             
@@ -31,12 +31,7 @@ classdef InductorDisplay < handle
                 txt = self.disp_block(txt, field{i}, operating_gui_tmp);
                 operating_gui.(field{i}) = operating_gui_tmp;
             end
-            
-            % data
-            data.idx = idx;
-            data.fom = fom_tmp;
-            data.operating = operating_tmp;
-            
+                        
             % gui
             gui.plot_gui = plot_gui;
             gui.fom_gui = fom_gui;

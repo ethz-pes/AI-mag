@@ -20,11 +20,12 @@ fprintf('split\n')
 fprintf('run\n')
 parfor i=1:n_chunk
     fprintf('    %d / %d\n', i, n_chunk)
-    [n_sol(i), fom(i), operating(i)] = compute_chunk(var, idx_chunk{i}, fct_filter, ann_fem_obj, data_compute);
+    [id_design{i}, fom(i), operating(i)] = compute_chunk(var, idx_chunk{i}, fct_filter, ann_fem_obj, data_compute);
 end
 
 fprintf('assemble\n')
-n_sol = sum(n_sol);
+id_design = [id_design{:}];
+n_sol = length(id_design);
 fom = get_struct_assemble(fom);
 operating = get_struct_assemble(operating);
 
@@ -35,13 +36,13 @@ fprintf('    n_sol = %d\n', n_sol)
 
 % save
 fprintf('save\n')
-save(file_compute, 'n_tot', 'n_sol', 'fom', 'operating')
+save(file_compute, 'n_tot', 'n_sol', 'id_design', 'fom', 'operating')
 
 fprintf('################## master_compute\n')
 
 end
 
-function [n_filter, fom, operating] = compute_chunk(var, idx_chunk, fct_filter, ann_fem_obj, data_compute)
+function [id_design, fom, operating] = compute_chunk(var, idx_chunk, fct_filter, ann_fem_obj, data_compute)
 
 % slice
 var =  get_struct_filter(var, idx_chunk);
@@ -63,7 +64,7 @@ operating = inductor_compute_obj.get_operating(excitation);
 is_valid = fct_filter(fom, operating, n_sol);
 
 % assign
-n_filter = nnz(is_valid);
+id_design = idx_chunk(is_valid);
 fom = get_struct_filter(fom, is_valid);
 operating = get_struct_filter(operating, is_valid);
 

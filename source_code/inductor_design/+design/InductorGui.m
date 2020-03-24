@@ -1,20 +1,22 @@
 classdef InductorGui < handle
     %% init
     properties (SetAccess = private, GetAccess = private)
+        id
         inductor_display_obj
     end
     
     %% init
     methods (Access = public)
         function self = InductorGui(fom, operating)
+            self.id = randi(1e9);
             self.inductor_display_obj = design.InductorDisplay(fom, operating);
         end
         
-        function fig = get_gui(self, idx, id)
+        function fig = get_gui(self, idx)
             name = sprintf('InductorDisplay : idx = %d', idx);
-            fig = design.GuiUtils.get_gui(id, [200 200 1390 700], name);
+            fig = design.GuiUtils.get_gui(self.id, [200 200 1390 700], name);
            
-            [gui, data, txt] = self.inductor_display_obj.get_idx(idx);
+            [gui, txt] = self.inductor_display_obj.get_idx(idx);
 
             panel_plot = design.GuiUtils.get_panel(fig, [10 10 450 680], 'Plot');
             self.display_plot(panel_plot, gui.plot_gui);
@@ -29,7 +31,7 @@ classdef InductorGui < handle
             self.display_logo(panel_logo);
             
             panel_button = design.GuiUtils.get_panel(fig, [470 10 450 60], []);
-            self.display_button(panel_button, data, fig, txt);
+            self.display_button(panel_button, fig, txt);
         end
     end
     
@@ -41,24 +43,14 @@ classdef InductorGui < handle
             design.GuiUtils.set_logo(panel_logo, filename);
         end
         
-        function display_button(self, panel_button, data, fig, txt)
-            callback = @(src,event) self.callback_save_data(data);
-            design.GuiUtils.get_button(panel_button, [0.02 0.1 0.3 0.8], 'Save Data', callback)
-            
+        function display_button(self, panel_button, fig, txt)            
             callback = @(src,event) self.callback_save_image(fig);
-            design.GuiUtils.get_button(panel_button, [0.35 0.1 0.3 0.8], 'Save Image', callback)
+            design.GuiUtils.get_button(panel_button, [0.02 0.1 0.46 0.8], 'Save', callback)
             
             callback = @(src,event) self.callback_copy_data(txt);
-            design.GuiUtils.get_button(panel_button, [0.68 0.1 0.3 0.8], 'Copy Data', callback)
+            design.GuiUtils.get_button(panel_button, [0.52 0.1 0.46 0.8], 'Copy', callback)
         end
-        
-        function callback_save_data(self, data)
-           [file, path, indx] = uiputfile('*.mat');
-           if indx~=0
-               save([path file], 'data')
-           end
-        end
-        
+                
         function callback_save_image(self, fig)
            [file, path, indx] = uiputfile('*.png');
            if indx~=0

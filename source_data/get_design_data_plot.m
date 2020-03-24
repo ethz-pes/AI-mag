@@ -1,15 +1,10 @@
-function [plot_param, fct_data, plot_data] = get_design_data_plot()
-
-plot_param.fig_id_pareto = 1;
-plot_param.fig_id_inductor = 2;
-plot_param.marker_pts_size = 10;
-plot_param.marker_select_size = 20;
-plot_param.marker_select_color = 'r';
-
+function [fct_data, plot_data] = get_design_data_plot()
 
 fct_data = @(fom, operating, n_sol) get_data(fom, operating, n_sol);
 
-plot_data.name = 'Inductor / Pareto';
+plot_data.marker_pts_size = 10;
+plot_data.marker_select_size = 20;
+plot_data.marker_select_color = 'r';
 plot_data.subplot_data = {};
 plot_data.subplot_data{1} = get_plot_data('V_box', 'P_tot', 'f', 'Weighted Losses');
 plot_data.subplot_data{2} = get_plot_data('V_box', 'm_tot', 'f', 'Mass Correlation');
