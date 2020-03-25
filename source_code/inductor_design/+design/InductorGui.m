@@ -70,7 +70,7 @@ classdef InductorGui < handle
             design.GuiUtils.set_visible(panel_vec(idx), 'on');
             
             is_valid_tmp = is_valid_vec(idx);
-            design.GuiUtils.set_list(src, is_valid_tmp);
+            design.GuiUtils.set_menu(src, is_valid_tmp);
         end
 
         function display_operating(self, panel_header, panel_data, operating_gui)
@@ -80,35 +80,35 @@ classdef InductorGui < handle
                 text_data_tmp = operating_gui.(field{i}).text_data;
 
                 panel_tmp = design.GuiUtils.get_panel_hidden(panel_data, [0 0 1 1]);
-                design.GuiUtils.set_text(panel_tmp, 10, 10, [25 240], text_data_tmp);
+                design.GuiText.set_text(panel_tmp, 10, 10, [25 240], text_data_tmp);
 
                 panel_vec(i) = panel_tmp;
                 is_valid_vec(i) = is_valid_tmp;
             end
                    
             callback = @(src, event) self.callback_menu(is_valid_vec, panel_vec, src);
-            menu = design.GuiUtils.get_menu(panel_header, [0.02 0.1 0.96 0.6], field, callback);
+            menu = design.GuiUtils.get_menu(panel_header, [0.02 0.75 0.96 0.0], field, callback);
             callback(menu, []);
         end
         
         function display_inductor(self, panel_header, panel_data, fom_gui)
             
-            status = design.GuiUtils.get_status(panel_header, [0.02 0.1 0.96 0.6]);
+            status = design.GuiUtils.get_status(panel_header, [0.02 0.13 0.96 0.62]);
             design.GuiUtils.set_status(status, fom_gui.is_valid);
 
-            design.GuiUtils.set_text(panel_data, 10, 10, [25 240], fom_gui.text_data);
+            design.GuiText.set_text(panel_data, 10, 10, [25 240], fom_gui.text_data);
         end
         
         function display_plot(self, panel, plot_gui)
-            ax_front = design.GuiUtils.get_plot_geom(panel, [70 60 350 250]);
-            ax_top = design.GuiUtils.get_plot_geom(panel, [70 380 350 250]);
+            ax_front = design.GuiGeom.get_plot_geom(panel, [70 60 350 250]);
+            ax_top = design.GuiGeom.get_plot_geom(panel, [70 380 350 250]);
 
             if plot_gui.is_valid==true
-                design.GuiUtils.set_plot_geom_data(ax_front, plot_gui.plot_data_front, 0.1);
-                design.GuiUtils.set_plot_geom_data(ax_top, plot_gui.plot_data_top, 0.1);
+                design.GuiGeom.set_plot_geom_data(ax_front, plot_gui.plot_data_front, 0.1);
+                design.GuiGeom.set_plot_geom_data(ax_top, plot_gui.plot_data_top, 0.1);
             else
-                design.GuiUtils.set_plot_geom_cross(ax_front)
-                design.GuiUtils.set_plot_geom_cross(ax_top)
+                design.GuiGeom.set_plot_geom_cross(ax_front)
+                design.GuiGeom.set_plot_geom_cross(ax_top)
             end
         end
     end
