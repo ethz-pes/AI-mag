@@ -21,11 +21,13 @@ classdef InductorGui < handle
             panel_plot = design.GuiUtils.get_panel(fig, [10 10 450 680], 'Plot');
             self.display_plot(panel_plot, gui.plot_gui);
             
-            panel_inductor = design.GuiUtils.get_panel(fig, [470 80 450 610], 'Inductor');
-            self.display_inductor(panel_inductor, gui.fom_gui);
-            
-            panel_operating = design.GuiUtils.get_panel(fig, [930 80 450 610], 'Operating');
-            self.display_operating(panel_operating, gui.operating_gui);
+            panel_inductor_header = design.GuiUtils.get_panel(fig, [470 620 450 70], 'Inductor');
+            panel_inductor_data = design.GuiUtils.get_panel(fig, [470 80 450 530], []);
+            self.display_inductor(panel_inductor_header, panel_inductor_data, gui.fom_gui);
+
+            panel_operating_header = design.GuiUtils.get_panel(fig, [930 620 450 70], 'Operating');
+            panel_operating_data = design.GuiUtils.get_panel(fig, [930 80 450 530], []);
+            self.display_operating(panel_operating_header, panel_operating_data, gui.operating_gui);
             
             panel_logo = design.GuiUtils.get_panel(fig, [930 10 450 60], []);
             self.display_logo(panel_logo, 'logo_pes_ethz.png');
@@ -62,42 +64,44 @@ classdef InductorGui < handle
             clipboard('copy', txt)
         end
         
-        function callback_menu(self, status, is_valid_vec, panel_vec, idx)            
-            design.GuiUtils.set_panel_hidden(panel_vec, 'off');
-            design.GuiUtils.set_panel_hidden(panel_vec(idx), 'on');
-
+        function callback_menu(self, is_valid_vec, panel_vec, src)      
+            idx = src.Value;
+            design.GuiUtils.set_visible(panel_vec, 'off');
+            design.GuiUtils.set_visible(panel_vec(idx), 'on');
+            
             is_valid_tmp = is_valid_vec(idx);
-            design.GuiUtils.set_status(status, is_valid_tmp);
+            design.GuiUtils.set_list(src, is_valid_tmp);
         end
 
-        function display_operating(self, panel_operating, operating_gui)
+        function display_operating(self, panel_header, panel_data, operating_gui)
             field = fieldnames(operating_gui);
             for i=1:length(field)
                 is_valid_tmp = operating_gui.(field{i}).is_valid;
                 text_data_tmp = operating_gui.(field{i}).text_data;
 
-                panel_tmp = design.GuiUtils.get_panel_hidden(panel_operating, [0 0 450 540]);
-                design.GuiUtils.set_text(panel_tmp, 540, 10, [25 240], text_data_tmp);
+                panel_tmp = design.GuiUtils.get_panel_hidden(panel_data, [0 0 1 1]);
+                design.GuiUtils.set_text(panel_tmp, 10, 10, [25 240], text_data_tmp);
 
                 panel_vec(i) = panel_tmp;
                 is_valid_vec(i) = is_valid_tmp;
             end
-            
-            status = design.GuiUtils.get_status(panel_operating, [340 550 100 27]);
-            callback = @(src, event) self.callback_menu(status, is_valid_vec, panel_vec, src.Value);
-            menu = design.GuiUtils.get_list(panel_operating, [10 550 320 27], field, callback);
+                   
+            callback = @(src, event) self.callback_menu(is_valid_vec, panel_vec, src);
+            menu = design.GuiUtils.get_menu(panel_header, [0.02 0.1 0.96 0.6], field, callback);
             callback(menu, []);
         end
         
-        function display_inductor(self, panel_inductor, fom_gui)
-            status = design.GuiUtils.get_status(panel_inductor, [10 550 430 27]);
+        function display_inductor(self, panel_header, panel_data, fom_gui)
+            
+            status = design.GuiUtils.get_status(panel_header, [0.02 0.1 0.96 0.6]);
             design.GuiUtils.set_status(status, fom_gui.is_valid);
-            design.GuiUtils.set_text(panel_inductor, 540, 10, [25 240], fom_gui.text_data);
+
+            design.GuiUtils.set_text(panel_data, 10, 10, [25 240], fom_gui.text_data);
         end
         
-        function display_plot(self, panel_plot, plot_gui)
-            ax_front = design.GuiUtils.get_plot_geom(panel_plot, [70 60 350 250]);
-            ax_top = design.GuiUtils.get_plot_geom(panel_plot, [70 380 350 250]);
+        function display_plot(self, panel, plot_gui)
+            ax_front = design.GuiUtils.get_plot_geom(panel, [70 60 350 250]);
+            ax_top = design.GuiUtils.get_plot_geom(panel, [70 380 350 250]);
 
             if plot_gui.is_valid==true
                 design.GuiUtils.set_plot_geom_data(ax_front, plot_gui.plot_data_front, 0.1);

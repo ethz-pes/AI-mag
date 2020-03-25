@@ -46,10 +46,6 @@ classdef GuiUtils < handle
             obj = uipanel(parent, 'BorderType', 'none', 'Visible', 'off');
             design.GuiUtils.set_position(obj, position)
         end
-        
-        function set_panel_hidden(obj, visible)
-            set(obj, 'Visible', visible);
-        end
     end
     methods (Static, Access = public)
         function get_button(parent, position, name, callback)
@@ -57,14 +53,14 @@ classdef GuiUtils < handle
             design.GuiUtils.set_position(obj, position)
         end
         
-        function obj = get_list(parent, position, name, callback)
+        function obj = get_menu(parent, position, name, callback)
             obj = uicontrol(parent, 'Style', 'popupmenu', 'FontSize', 12, 'String', name, 'CallBack', callback);
-            design.GuiUtils.set_position(obj, position)
+            design.GuiUtils.set_outer_position(obj, position)
         end
         
         function obj = get_status(parent, position)
             obj = uicontrol(parent, 'Style', 'pushbutton', 'Enable', 'inactive', 'FontSize', 12);
-            design.GuiUtils.set_position(obj, position)
+            design.GuiUtils.set_outer_position(obj, position)
         end
         
         function set_status(obj, is_valid)
@@ -74,6 +70,14 @@ classdef GuiUtils < handle
             else
                 set(obj, 'BackgroundColor', 'r')
                 set(obj, 'String', 'invalid')
+            end
+        end
+        
+        function set_list(obj, is_valid)
+            if is_valid==true
+                set(obj, 'BackgroundColor', 'g')
+            else
+                set(obj, 'BackgroundColor', 'r')
             end
         end
     end
@@ -144,6 +148,9 @@ classdef GuiUtils < handle
     
     methods (Static, Access = public)
         function set_text(panel, offset, margin_title, margin_text, txt_data)
+            pos = getpixelposition(panel);
+            offset = pos(4)-offset;
+            
             for i=1:length(txt_data)
                 title = txt_data{i}.title;
                 text = txt_data{i}.text;
@@ -160,7 +167,7 @@ classdef GuiUtils < handle
         end
     end
     
-    methods (Static, Access = private)
+    methods (Static, Access = public)
         function set_position(obj, position)
             if all(position>=0)&&all(position<=1)
                 set(obj, 'Units', 'normalized');
@@ -171,6 +178,22 @@ classdef GuiUtils < handle
             end
         end
         
+        function set_outer_position(obj, position)
+            if all(position>=0)&&all(position<=1)
+                set(obj, 'Units', 'normalized');
+                set(obj, 'OuterPosition', position);
+            else
+                set(obj, 'Units', 'pixels');
+                set(obj, 'OuterPosition', position);
+            end
+        end
+        
+        function set_visible(obj, visible)
+            set(obj, 'Visible', visible);
+        end
+    end
+    
+    methods (Static, Access = private)
         function set_plot_geom_axis(ax, dx, dy, fact)
             dx_ax = max(xlim(ax))-min(xlim(ax));
             dy_ax = max(ylim(ax))-min(ylim(ax));
