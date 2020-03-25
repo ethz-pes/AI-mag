@@ -14,8 +14,24 @@ classdef GuiUtils < handle
         
         function set_logo(parent, filename)
             [img, map, alphachannel] = imread(filename);
+            n_img_x = size(img, 2);
+            n_img_y = size(img, 1);
             
             ax = axes(parent, 'Units', 'normalized', 'Position',[0 0 1 1]);
+            
+            pos = getpixelposition(ax);
+            n_ax_x = pos(3);
+            n_ax_y = pos(4);
+            
+            n_img_x_new = n_ax_y.*(n_img_x./n_img_y);
+            n_img_y_new = n_ax_x.*(n_img_y./n_img_x);
+            
+            n_img_x_new = min(n_img_x_new, n_ax_x);
+            n_img_y_new = min(n_img_y_new, n_ax_y);
+            
+            img = imresize(img, [n_img_y_new n_img_x_new]);
+            alphachannel = imresize(alphachannel, [n_img_y_new n_img_x_new]);
+            
             image(ax, img, 'AlphaData', alphachannel);
             axis(ax, 'off');
             axis(ax, 'image');
@@ -64,14 +80,18 @@ classdef GuiUtils < handle
     
     methods (Static, Access = public)
         function ax = get_plot_geom(panel, position)
-            ax = axes(panel, 'box','on');
+            ax = axes(panel);
+            set(ax, 'Box','on');
+            set(ax, 'FontSize', 10);
             design.GuiUtils.set_position(ax, position)
             
             axtoolbar(ax, {'pan', 'zoomin','zoomout','restoreview'}, 'Visible', 'on');
             hold(ax, 'on');
             axis(ax, 'equal');
-            xlabel(ax, '[mm]');
-            ylabel(ax, '[mm]');
+            xlabel(ax, '[mm]', 'FontSize', 11);
+            ylabel(ax, '[mm]', 'FontSize', 11);
+            xtickformat('%+.1f')
+            ytickformat('%+.1f')
         end
         
         function set_plot_geom_cross(ax)

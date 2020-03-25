@@ -1,24 +1,27 @@
 classdef InductorDisplay < handle
     %% init
     properties (SetAccess = private, GetAccess = private)
+        id_design
         fom
         operating
     end
     
     %% init
     methods (Access = public)
-        function self = InductorDisplay(fom, operating)
+        function self = InductorDisplay(id_design, fom, operating)
+            self.id_design = id_design;
             self.fom = fom;
             self.operating = operating;
         end
 
         function [gui, txt] = get_idx(self, idx)
+            id_design_tmp = self.id_design(idx);
             fom_tmp = get_struct_filter(self.fom, idx);
             operating_tmp = get_struct_filter(self.operating, idx);
             
             % txt
             txt = [];
-            txt = self.add_title(txt, 'idx = %d', idx);
+            txt = self.add_title(txt, 'id_design = %d', id_design_tmp);
             
             % parse
             plot_gui = self.get_plot_data(fom_tmp);
@@ -33,9 +36,11 @@ classdef InductorDisplay < handle
             end
                         
             % gui
+            gui.id_design = id_design_tmp;
             gui.plot_gui = plot_gui;
             gui.fom_gui = fom_gui;
             gui.operating_gui = operating_gui;
+            
             % txt
             txt = strtrim(txt);
         end

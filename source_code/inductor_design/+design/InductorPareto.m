@@ -1,7 +1,8 @@
 classdef InductorPareto < handle
     %% init
     properties (SetAccess = private, GetAccess = private)
-        id
+        id_fig
+        id_design
         n_sol
         n_plot
         data_add
@@ -11,17 +12,20 @@ classdef InductorPareto < handle
     
     %% init
     methods (Access = public)
-        function self = InductorPareto(n_sol, fom, operating, fct_data, plot_data)
-            [is_valid, data_add] = fct_data(fom, operating, n_sol);
+        function self = InductorPareto(id_design, fom, operating, fct_data, plot_data)
+            [is_valid, data_add] = fct_data(fom, operating, length(id_design));
 
-            self.id = randi(1e9);
-            self.n_sol = n_sol;
+            self.id_fig = randi(1e9);
+            self.n_sol = length(id_design);
             self.n_plot = nnz(is_valid);
             
+            id_design = id_design(is_valid);
             fom = get_struct_filter(fom, is_valid);
             operating = get_struct_filter(operating, is_valid);
-            self.inductor_gui_obj = design.InductorGui(fom, operating);
-
+            
+            self.inductor_gui_obj = design.InductorGui(id_design, fom, operating);
+            self.id_design = id_design;
+            
             field = fieldnames(data_add);
             for i=1:length(field)
                 data_add.(field{i}).value = data_add.(field{i}).value(is_valid);
@@ -34,21 +38,22 @@ classdef InductorPareto < handle
 
         function fig = get_gui(self)
             name = sprintf('InductorPareto');
-            fig = design.GuiUtils.get_gui(self.id, [200 200 1390 500], name);
+            fig = design.GuiUtils.get_gui(self.id_fig, [200 200 1390 600], name);
            
-            panel_plot = design.GuiUtils.get_panel(fig, [10 10 450 480], 'Plot');
-%             self.display_plot(panel_plot, gui.plot_gui);
+            panel_plot_1 = design.GuiUtils.get_panel(fig, [10 10 450 580], 'Plot 1');
+            self.display_plot(panel_plot_1);
             
-            panel_inductor = design.GuiUtils.get_panel(fig, [470 10 450 480], 'Inductor');
-%             self.display_inductor(panel_inductor, gui.fom_gui);
+            panel_plot_2 = design.GuiUtils.get_panel(fig, [470 10 450 580], 'Plot 2');
+            self.display_plot(panel_plot_2);
             
-            panel_number = design.GuiUtils.get_panel(fig, [930 390 450 100], 'Inductor');
+            panel_number = design.GuiUtils.get_panel(fig, [930 490 450 100], 'Pareto Data');
 
-            panel_operating = design.GuiUtils.get_panel(fig, [930 150 450 230], 'Operating');
+            panel_data = design.GuiUtils.get_panel(fig, [930 150 450 330], 'Design Data');
 %             self.display_operating(panel_operating, gui.operating_gui);
-            
+                        self.display_logo(panel_data, 'logo_fem_ann.png');
+
             panel_logo = design.GuiUtils.get_panel(fig, [930 10 450 60], []);
-            self.display_logo(panel_logo);
+            self.display_logo(panel_logo, 'logo_pes_ethz.png');
             
             panel_button = design.GuiUtils.get_panel(fig, [930 80 450 60], []);
             self.display_button(panel_button, fig);
@@ -56,8 +61,7 @@ classdef InductorPareto < handle
     end
     
     methods (Access = private)
-        function display_logo(self, panel_logo)
-            filename = 'logo_pes_ethz.png';
+        function display_logo(self, panel_logo, filename)
             path = fileparts(mfilename('fullpath'));
             filename = [path filesep() filename];
             design.GuiUtils.set_logo(panel_logo, filename);
@@ -129,17 +133,35 @@ classdef InductorPareto < handle
             design.GuiUtils.set_text(panel_inductor, 540, 10, [25 240], fom_gui.text_data);
         end
         
-        function display_plot(self, panel_plot, plot_gui)
-            ax_front = design.GuiUtils.get_plot_geom(panel_plot, [60 60 370 250]);
-            ax_top = design.GuiUtils.get_plot_geom(panel_plot, [60 380 370 250]);
+        function display_plot(self, panel_plot)
+            callback = [];
+            field = {'yolo', 'yolo'};
+            
+            menu = design.GuiUtils.get_list(panel_plot, [70 520 350 27], field, callback);
+            
+            ax = axes(panel_plot);
+            set(ax, 'Box', 'on');
+            set(ax, 'FontSize', 10);
 
-            if plot_gui.is_valid==true
-                design.GuiUtils.set_plot_geom_data(ax_front, plot_gui.plot_data_front, 0.1);
-                design.GuiUtils.set_plot_geom_data(ax_top, plot_gui.plot_data_top, 0.1);
-            else
-                design.GuiUtils.set_plot_geom_cross(ax_front)
-                design.GuiUtils.set_plot_geom_cross(ax_top)
-            end
+            set(ax, 'Units', 'pixels')
+%             set(ax, 'Position', [70 150 350 340])
+            set(ax, 'OuterPosition', [70 150 350 340])
+             
+            cbar = colorbar(ax);
+            set(cbar, 'Location', 'southoutside')
+                        set(cbar, 'Units', 'pixels')
+            set(cbar, 'Position', [70 60 350 20])
+            set(cbar, 'FontSize', 10)
+            text = get(cbar, 'Label');
+            set(text, 'interpreter', 'none')
+            set(text, 'String', 'sdfsd')
+            set(text, 'FontSize', 11)
+
+            hold(ax, 'on')
+            plot(ax, [1001 1002], [1001 1002])
+            
+            xlabel(ax, 'dfsdfs', 'FontSize', 11)
+            ylabel(ax, 'dfsdfs', 'FontSize', 11)
         end
     end
 end

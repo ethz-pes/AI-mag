@@ -1,22 +1,22 @@
 classdef InductorGui < handle
     %% init
     properties (SetAccess = private, GetAccess = private)
-        id
+        id_fig
         inductor_display_obj
     end
     
     %% init
     methods (Access = public)
-        function self = InductorGui(fom, operating)
-            self.id = randi(1e9);
-            self.inductor_display_obj = design.InductorDisplay(fom, operating);
+        function self = InductorGui(id_design, fom, operating)
+            self.id_fig = randi(1e9);
+            self.inductor_display_obj = design.InductorDisplay(id_design, fom, operating);
         end
         
         function fig = get_gui(self, idx)
-            name = sprintf('InductorDisplay : idx = %d', idx);
-            fig = design.GuiUtils.get_gui(self.id, [200 200 1390 700], name);
-           
             [gui, txt] = self.inductor_display_obj.get_idx(idx);
+
+            name = sprintf('InductorDisplay : id_design = %d', gui.id_design);
+            fig = design.GuiUtils.get_gui(self.id_fig, [200 200 1390 700], name);
 
             panel_plot = design.GuiUtils.get_panel(fig, [10 10 450 680], 'Plot');
             self.display_plot(panel_plot, gui.plot_gui);
@@ -28,7 +28,7 @@ classdef InductorGui < handle
             self.display_operating(panel_operating, gui.operating_gui);
             
             panel_logo = design.GuiUtils.get_panel(fig, [930 10 450 60], []);
-            self.display_logo(panel_logo);
+            self.display_logo(panel_logo, 'logo_pes_ethz.png');
             
             panel_button = design.GuiUtils.get_panel(fig, [470 10 450 60], []);
             self.display_button(panel_button, fig, txt);
@@ -36,8 +36,7 @@ classdef InductorGui < handle
     end
     
     methods (Access = private)
-        function display_logo(self, panel_logo)
-            filename = 'logo_pes_ethz.png';
+        function display_logo(self, panel_logo, filename)
             path = fileparts(mfilename('fullpath'));
             filename = [path filesep() filename];
             design.GuiUtils.set_logo(panel_logo, filename);
@@ -97,8 +96,8 @@ classdef InductorGui < handle
         end
         
         function display_plot(self, panel_plot, plot_gui)
-            ax_front = design.GuiUtils.get_plot_geom(panel_plot, [60 60 370 250]);
-            ax_top = design.GuiUtils.get_plot_geom(panel_plot, [60 380 370 250]);
+            ax_front = design.GuiUtils.get_plot_geom(panel_plot, [70 60 350 250]);
+            ax_top = design.GuiUtils.get_plot_geom(panel_plot, [70 380 350 250]);
 
             if plot_gui.is_valid==true
                 design.GuiUtils.set_plot_geom_data(ax_front, plot_gui.plot_data_front, 0.1);
