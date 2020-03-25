@@ -138,20 +138,19 @@ classdef InductorPareto < handle
         
         function display_number(self, panel)
                         
-            handle = design.GuiUtils.get_text(panel, [0.03 0.10 0.94 0.65], 'yolo');
+            handle = design.GuiUtils.get_text(panel, [0.03 0.10 0.94 0.65], 'n_sol = 1000 / n_plot = 12025 / id_design = None');
 
             
         end
         
         function display_data(self, panel)
-            obj = uitable(panel, 'Units', 'pixels', 'Position', [10 10 430 340]);
+            for i=1:9
+               txt_data{i, 1} = 'dsfgdsg'; 
+               txt_data{i, 2} = 'dsfgdsg'; 
+               txt_data{i, 3} = 'dsfgdsg'; 
+            end
             
-            set(obj, 'ColumnName', [])
-            set(obj, 'RowName', [])
-            set(obj, 'FontSize', 12) 
-            set(obj, 'RowStriping', 'off') 
-            set(obj, 'Data', {'Gender','Age','Authorized' ; 'Gender','Age','Authorized'})
-                        set(obj, 'ColumnWidth', {150, 150, 128}) 
+            design.GuiText.set_table(panel, 10, [10 180 310], {'Name', 'Value', 'Units'}, txt_data)
         end
         
         function display_plot(self, panel_header, panel_data)

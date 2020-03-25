@@ -79,8 +79,7 @@ classdef InductorGui < handle
                 is_valid_tmp = operating_gui.(field{i}).is_valid;
                 text_data_tmp = operating_gui.(field{i}).text_data;
 
-                panel_tmp = design.GuiUtils.get_panel_hidden(panel_data, [0 0 1 1]);
-                design.GuiText.set_text(panel_tmp, 10, 10, [25 240], text_data_tmp);
+                panel_tmp = design.GuiText.get_text_field(panel_data, 10, 10, [25 240], text_data_tmp);
 
                 panel_vec(i) = panel_tmp;
                 is_valid_vec(i) = is_valid_tmp;
@@ -96,7 +95,7 @@ classdef InductorGui < handle
             status = design.GuiUtils.get_status(panel_header, [0.02 0.13 0.96 0.62]);
             design.GuiUtils.set_status(status, fom_gui.is_valid);
 
-            design.GuiText.set_text(panel_data, 10, 10, [25 240], fom_gui.text_data);
+            design.GuiText.get_text_field(panel_data, 10, 10, [25 240], fom_gui.text_data);
         end
         
         function display_plot(self, panel, plot_gui)

@@ -31,6 +31,7 @@ end
 
 function [is_valid, data_ctrl] = get_data(fom, operating, n_sol)
 
+A_box = fom.area.A_box;
 V_box = fom.volume.V_box;
 m_tot = fom.mass.m_tot;
 c_tot = fom.cost.c_tot;
@@ -49,6 +50,7 @@ f = (f_fl+f_hl)./2;
 P_tot = 0.5.*P_fl+0.5.*P_hl;
 
 data_ctrl.V_box = struct('value', V_box, 'name', 'V_box', 'scale', 1e6, 'unit', 'cm3');
+data_ctrl.A_box = struct('value', A_box, 'name', 'A_box', 'scale', 1e4, 'unit', 'cm2');
 data_ctrl.m_tot = struct('value', m_tot, 'name', 'm_tot', 'scale', 1e3, 'unit', 'g');
 data_ctrl.c_tot = struct('value', c_tot, 'name', 'c_tot', 'scale', 1.0, 'unit', '$');
 data_ctrl.L = struct('value', L, 'name', 'L', 'scale', 1e6, 'unit', 'uH');
