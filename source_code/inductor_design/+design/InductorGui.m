@@ -99,15 +99,15 @@ classdef InductorGui < handle
         end
         
         function display_plot(self, panel, plot_gui)
-            ax_front = design.GuiGeom.get_plot_geom(panel, [70 60 350 250]);
-            ax_top = design.GuiGeom.get_plot_geom(panel, [70 380 350 250]);
+            gui_geom_front_obj = design.GuiGeom(panel, [0.0 0.02 1.0 0.48]);
+            gui_geom_top_obj = design.GuiGeom(panel, [0.0 0.52 1.0 0.48]);
 
             if plot_gui.is_valid==true
-                design.GuiGeom.set_plot_geom_data(ax_front, plot_gui.plot_data_front, 0.1);
-                design.GuiGeom.set_plot_geom_data(ax_top, plot_gui.plot_data_top, 0.1);
+                gui_geom_front_obj.set_plot_geom_data(plot_gui.plot_data_front, 0.1);
+                gui_geom_top_obj.set_plot_geom_data(plot_gui.plot_data_top, 0.1);
             else
-                design.GuiGeom.set_plot_geom_cross(ax_front)
-                design.GuiGeom.set_plot_geom_cross(ax_top)
+                gui_geom_front_obj.set_plot_geom_cross()
+                gui_geom_top_obj.set_plot_geom_cross()
             end
         end
     end

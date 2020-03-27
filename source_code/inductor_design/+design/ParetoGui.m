@@ -25,11 +25,11 @@ classdef ParetoGui < handle
             
             panel_plot_header_1 = design.GuiUtils.get_panel(fig, [10 520 450 70], 'Plot A');
             panel_plot_data_1 = design.GuiUtils.get_panel(fig, [10 10 450 500], []);
-            self.display_plot(panel_plot_header_1, panel_plot_data_1);
+            self.display_plot(panel_plot_header_1, panel_plot_data_1, self.gui_base.plot_gui);
             
             panel_plot_header_2 = design.GuiUtils.get_panel(fig, [470 520 450 70], 'Plot B');
             panel_plot_data_2 = design.GuiUtils.get_panel(fig, [470 10 450 500], []);
-            self.display_plot(panel_plot_header_2, panel_plot_data_2);
+            self.display_plot(panel_plot_header_2, panel_plot_data_2, self.gui_base.plot_gui);
             
             panel_number = design.GuiUtils.get_panel(fig, [930 520 450 70], 'Pareto Data');
             self.display_number(panel_number);
@@ -136,7 +136,10 @@ classdef ParetoGui < handle
             design.GuiText.set_table(panel, 10, [10 180 310], {'Name', 'Value', 'Units'}, txt_data);
         end
         
-        function display_plot(self, panel_header, panel_data)
+        function display_plot(self, panel_header, panel_data, plot_gui)
+            keyboard
+            
+            
             callback = [];
             field = {'yolo', 'yolo'};
             

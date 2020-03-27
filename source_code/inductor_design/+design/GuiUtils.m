@@ -41,11 +41,6 @@ classdef GuiUtils < handle
             obj = uipanel(parent, 'Title', name, 'FontSize', 12);
             design.GuiUtils.set_position(obj, position)
         end
-        
-        function obj = get_panel_hidden(parent, position)
-            obj = uipanel(parent, 'BorderType', 'none', 'Visible', 'off');
-            design.GuiUtils.set_position(obj, position)
-        end
     end
     methods (Static, Access = public)
         function get_button(parent, position, name, callback)
@@ -102,9 +97,6 @@ classdef GuiUtils < handle
             set(obj, 'Visible', visible);
         end
 
-    end
-    
-    methods (Static, Access = private)
                 function set_position(obj, position)
             if all(position>=0)&&all(position<=1)
                 set(obj, 'Units', 'normalized');

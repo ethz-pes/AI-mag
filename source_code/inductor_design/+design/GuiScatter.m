@@ -1,7 +1,8 @@
-classdef GuiPareto < handle
+classdef GuiScatter < handle
     %% init
     properties (SetAccess = private, GetAccess = private)
         ax
+        panel
         plot_data
         callback
         h_pts
@@ -10,8 +11,13 @@ classdef GuiPareto < handle
     
     %% init
     methods (Access = public)
-        function self = GuiPareto(ax, plot_data, callback)
-            self.ax = ax;
+        function self = GuiScatter(parent, position)
+            self.panel = uipanel(parent, 'BorderType', 'none', 'Units', 'normalized');
+            self.ax = axes(self.panel);
+            design.GuiUtils.set_position(self.panel, position)
+        end
+        
+        function set_data(self, plot_data, callback)
             self.plot_data = plot_data;
             self.callback = callback;
             
@@ -107,6 +113,7 @@ classdef GuiPareto < handle
 
             x_vec = self.plot_data.x_data;
             y_vec = self.plot_data.y_data;
+            id_vec = self.plot_data.id_data;
             
             x_lim = get(self.ax, 'XLim');
             y_lim = get(self.ax, 'YLim');
@@ -120,7 +127,8 @@ classdef GuiPareto < handle
             [d_px, idx] = min(d_px_vec);
             assert(isfinite(d_px), 'invalid click')
             
-            self.callback(idx);
+            id = id_vec(idx);
+            self.callback(id);
         end
         
         function d_px_vec = get_deviation(self, v_select, v_vec, v_lim, d_px, scale)

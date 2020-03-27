@@ -14,12 +14,6 @@ classdef InductorDisplay < handle
             self.operating = operating;
         end
         
-        function [gui, txt] = get_base(self)
-            
-            keyboard
-            
-        end
-
         function [gui, txt] = get_idx(self, id_select)
             idx = self.id_design==id_select;
             assert(nnz(idx)==1, 'invalid data')
@@ -29,18 +23,21 @@ classdef InductorDisplay < handle
             operating_tmp = get_struct_filter(self.operating, idx);
             
             % txt
-            txt = [];
-            txt = self.add_title(txt, 'id_design = %d', id_design_tmp);
+            gui_clipboard_obj = design.GuiClipboard([]);
+            gui_clipboard_obj.add_title('id_design = %d', id_design_tmp);
             
-            % parse
+            % plot_gui
             plot_gui = self.get_plot_data(fom_tmp);
-            fom_gui = self.get_text_data_fom(fom_tmp);
-            txt = self.disp_block(txt, 'fom', fom_gui);
             
+            % fom fom_gui
+            fom_gui = self.get_text_data_fom(fom_tmp);
+            self.disp_block(gui_clipboard_obj, 'fom', fom_gui);
+            
+            % operating_gui
             field = fieldnames(operating_tmp);
             for i=1:length(field)
                 operating_gui_tmp = self.get_text_data_operating(operating_tmp.(field{i}));
-                txt = self.disp_block(txt, field{i}, operating_gui_tmp);
+                self.disp_block(gui_clipboard_obj, field{i}, operating_gui_tmp);
                 operating_gui.(field{i}) = operating_gui_tmp;
             end
                         
@@ -50,45 +47,27 @@ classdef InductorDisplay < handle
             gui.operating_gui = operating_gui;
             
             % txt
-            txt = strtrim(txt);
+            txt = gui_clipboard_obj.get_txt();
         end
     end
     
     methods (Access = private)             
-        function txt = disp_block(self, txt, name, data)
+        function disp_block(self, gui_clipboard_obj, name, data)
             is_valid = data.is_valid;
             text_data = data.text_data;
-            
-                        txt = self.add_text(txt, '');
-            txt = self.add_text(txt, '======================================');
-            txt = self.add_text(txt, '%s / is_valid = %d', name, is_valid);
-            txt = self.add_text(txt, '======================================');
-            txt = self.add_text(txt, '');
-            
+                        
+            gui_clipboard_obj.add_title('%s / is_valid = %d', name, is_valid)
             for i=1:length(text_data)
                 title = text_data{i}.title;
                 text = text_data{i}.text;
                 
-                txt = self.add_text(txt, '======== %s', title);
+                gui_clipboard_obj.add_text('======== %s', title);
                 for j=1:length(text)
-                    txt = self.add_text(txt, '    %s', text{j});
+                    gui_clipboard_obj.add_text('    %s', text{j});
                 end
             end
         end
         
-        function txt = add_title(self, txt, varargin)
-            txt = self.add_text(txt, '');
-            txt = self.add_text(txt, '======================================');
-            txt = self.add_text(txt, varargin{:});
-            txt = self.add_text(txt, '======================================');
-            txt = self.add_text(txt, '');
-        end
-        
-                function txt = add_text(self, txt, varargin)
-            txt = [txt sprintf(varargin{:})];
-            txt = [txt newline()];
-        end
-
         function data = get_text_data_operating(self, operating_tmp)
             is_valid = operating_tmp.is_valid;
             
@@ -137,8 +116,8 @@ classdef InductorDisplay < handle
             text{end+1} = sprintf('P_add = %.2f W', operating_tmp.losses.P_add);
             text{end+1} = sprintf('P_tot = %.2f W', operating_tmp.losses.P_tot);
             text_data{end+1} = struct('title', 'losses', 'text', {text});
-
-                        text = {};
+            
+            text = {};
             text{end+1} = sprintf('fact_hf_winding = %.2f', operating_tmp.fact.fact_hf_winding);
             text{end+1} = sprintf('fact_core_winding = %.2f', operating_tmp.fact.fact_core_winding);
             text{end+1} = sprintf('fact_ac_dc = %.2f', operating_tmp.fact.fact_ac_dc);
