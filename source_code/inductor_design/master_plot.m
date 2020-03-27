@@ -11,7 +11,7 @@ fom = data_compute.fom;
 operating = data_compute.operating;
 
 fprintf('init\n')
-inductor_pareto_obj = design.InductorPareto(id_design, fom, operating, fct_data, plot_data);
+inductor_pareto_obj = design.ParetoGui(id_design, fom, operating, fct_data, plot_data);
 
 fprintf('plot\n')
 

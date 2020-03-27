@@ -13,8 +13,17 @@ classdef InductorDisplay < handle
             self.fom = fom;
             self.operating = operating;
         end
+        
+        function [gui, txt] = get_base(self)
+            
+            keyboard
+            
+        end
 
-        function [gui, txt] = get_idx(self, idx)
+        function [gui, txt] = get_idx(self, id_select)
+            idx = self.id_design==id_select;
+            assert(nnz(idx)==1, 'invalid data')
+            
             id_design_tmp = self.id_design(idx);
             fom_tmp = get_struct_filter(self.fom, idx);
             operating_tmp = get_struct_filter(self.operating, idx);
@@ -36,7 +45,6 @@ classdef InductorDisplay < handle
             end
                         
             % gui
-            gui.id_design = id_design_tmp;
             gui.plot_gui = plot_gui;
             gui.fom_gui = fom_gui;
             gui.operating_gui = operating_gui;
@@ -51,6 +59,7 @@ classdef InductorDisplay < handle
             is_valid = data.is_valid;
             text_data = data.text_data;
             
+                        txt = self.add_text(txt, '');
             txt = self.add_text(txt, '======================================');
             txt = self.add_text(txt, '%s / is_valid = %d', name, is_valid);
             txt = self.add_text(txt, '======================================');

@@ -1,30 +1,39 @@
-classdef InductorPareto < handle
+classdef ParetoDisplay < handle
     %% init
     properties (SetAccess = private, GetAccess = private)
-        id_fig
         id_design
-        n_sol
-        n_plot
-        data_add
+        fom
+        operating
+        fct_data
         plot_data
-        inductor_gui_obj
     end
     
     %% init
     methods (Access = public)
-        function self = InductorPareto(id_design, fom, operating, fct_data, plot_data)
-            [is_valid, data_add] = fct_data(fom, operating, length(id_design));
-
-            self.id_fig = randi(1e9);
-            self.n_sol = length(id_design);
-            self.n_plot = nnz(is_valid);
+        function self = ParetoDisplay(id_design, fom, operating, fct_data, plot_data)
+            self.id_design = id_design;
+            self.fom = fom;
+            self.operating = operating;
+            self.fct_data = fct_data;
+            self.plot_data = plot_data;
             
+            [is_valid, data_add] = fct_data(fom, operating, length(id_design));
             id_design = id_design(is_valid);
             fom = get_struct_filter(fom, is_valid);
             operating = get_struct_filter(operating, is_valid);
             
-            self.inductor_gui_obj = design.InductorGui(id_design, fom, operating);
+            self.n_sol = length(id_design);
+            self.n_plot = nnz(is_valid);
             self.id_design = id_design;
+        end
+        
+        function [gui_base, txt_base] = get_base(self)
+            gui_base = struct();
+            txt_base = [];
+            
+        end
+        
+        function get_idx(self, idx)
             
             field = fieldnames(data_add);
             for i=1:length(field)
@@ -150,7 +159,7 @@ classdef InductorPareto < handle
                txt_data{i, 3} = 'dsfgdsg'; 
             end
             
-            design.GuiText.set_table(panel, 10, [10 180 310], {'Name', 'Value', 'Units'}, txt_data)
+            design.GuiText.set_table(panel, 10, [10 180 310], {'Name', 'Value', 'Units'}, txt_data);
         end
         
         function display_plot(self, panel_header, panel_data)

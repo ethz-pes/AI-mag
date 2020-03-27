@@ -22,8 +22,6 @@ plot_data.marker_pts_size = 20;
 plot_data.marker_select_size = 10;
 plot_data.marker_select_color = 'r';
 
-plot_data.marker_select_color = 'r';
-
 figure()
 
 ax = subplot(2,1,1);
@@ -34,5 +32,7 @@ obj.set_select(4);
 ax = subplot(2,1,2);
 callback = @(idx) fprintf('callback 2: %d\n', idx);
 design.GuiPareto(ax, plot_data, callback);
+
+keyboard
 
 end

@@ -12,10 +12,10 @@ classdef InductorGui < handle
             self.inductor_display_obj = design.InductorDisplay(id_design, fom, operating);
         end
         
-        function fig = get_gui(self, idx)
-            [gui, txt] = self.inductor_display_obj.get_idx(idx);
+        function fig = get_gui(self, id_select)
+            [gui, txt] = self.inductor_display_obj.get_idx(id_select);
 
-            name = sprintf('InductorDisplay : id_design = %d', gui.id_design);
+            name = sprintf('InductorDisplay : id_design = %d', id_select);
             fig = design.GuiUtils.get_gui(self.id_fig, [200 200 1390 700], name);
 
             panel_plot = design.GuiUtils.get_panel(fig, [10 10 450 680], 'Plot');
