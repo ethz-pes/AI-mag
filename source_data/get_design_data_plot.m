@@ -1,10 +1,10 @@
-function [fct_data, plot_data] = get_design_data_plot()
+function [fct_data, plot_param] = get_design_data_plot()
 
 fct_data = @(fom, operating, n_sol) get_data(fom, operating, n_sol);
 
-plot_data.weighted_losses = get_plot_data('V_box', 'P_tot', 'f');
-plot_data.mass_correlation = get_plot_data('V_box', 'm_tot', 'f');
-plot_data.cost_correlation = get_plot_data('V_box', 'c_tot', 'f');
+plot_param.weighted_losses = get_plot_data('V_box', 'P_tot', 'f');
+plot_param.mass_correlation = get_plot_data('V_box', 'm_tot', 'f');
+plot_param.cost_correlation = get_plot_data('V_box', 'c_tot', 'f');
 
 end
 

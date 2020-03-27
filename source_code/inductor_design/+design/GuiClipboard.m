@@ -6,8 +6,8 @@ classdef GuiClipboard < handle
     
     %% init
     methods (Access = public)
-        function self = GuiClipboard(txt)
-            self.txt = txt;
+        function self = GuiClipboard()
+            self.txt = [];
         end
         
         function txt = get_txt(self)            

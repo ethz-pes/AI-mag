@@ -58,21 +58,20 @@ classdef GuiUtils < handle
             design.GuiUtils.set_position(obj, position)
         end
         
-        function obj = get_text(parent, position, name)
+        function obj = get_text(parent, position)
             obj = uicontrol(parent, ...
                 'Style','text',...
                 'FontSize', 12,...
                 'FontWeight', 'bold',...
-                'HorizontalAlignment', 'left',...
-                'String', name...
+                'HorizontalAlignment', 'left'...
                 );
             design.GuiUtils.set_position(obj, position)
         end
         
-        function obj = set_text_todo(obj, name)
-                set(obj, 'String', name)
+        function set_text(obj, name)
+            set(obj, 'String', name)
         end
-
+        
         function set_status(obj, is_valid)
             if is_valid==true
                 set(obj, 'BackgroundColor', 'g')
@@ -83,6 +82,10 @@ classdef GuiUtils < handle
             end
         end
         
+        function idx = get_menu_idx(obj)
+            idx = obj.Value;
+        end
+
         function set_menu(obj, is_valid)
             if is_valid==true
                 set(obj, 'BackgroundColor', 'g')

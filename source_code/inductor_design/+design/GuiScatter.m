@@ -3,6 +3,7 @@ classdef GuiScatter < handle
     properties (SetAccess = private, GetAccess = private)
         ax
         panel
+        position
         plot_data
         callback
         h_pts
@@ -13,8 +14,12 @@ classdef GuiScatter < handle
     methods (Access = public)
         function self = GuiScatter(parent, position)
             self.panel = uipanel(parent, 'BorderType', 'none', 'Units', 'normalized');
-            self.ax = axes(self.panel);
-            design.GuiUtils.set_position(self.panel, position)
+            self.position = position;
+            self.ax = [];
+            self.plot_data = [];
+            self.callback = [];
+            self.h_pts = [];
+            self.h_select = [];
         end
         
         function set_data(self, plot_data, callback)
@@ -24,11 +29,27 @@ classdef GuiScatter < handle
             self.init_plot();
             self.make_plot();
         end
-                
-        function set_select(self, idx)
-            x = self.plot_data.x_data(idx);
-            y = self.plot_data.y_data(idx);
-
+        
+        function panel = get_panel(self)
+            panel = self.panel;
+        end
+        
+        function delete_panel(self)
+            if ishandle(self.ax)
+                delete(self.ax);
+            end
+        end
+        
+        function set_select(self, id)
+            id_vec = self.plot_data.id_data;
+            x_vec = self.plot_data.x_data;
+            y_vec = self.plot_data.y_data;
+            
+            idx = id_vec==id;
+            assert(nnz(idx)==1, 'invalid data')
+            x = x_vec(idx);
+            y = y_vec(idx);
+            
             set(self.h_select, 'XData', x);
             set(self.h_select, 'YData', y);
         end
@@ -40,6 +61,9 @@ classdef GuiScatter < handle
     end
     methods (Access = private)
         function init_plot(self)
+            self.ax = axes(self.panel);
+            self.set_position()
+            
             set(self.ax, 'Box', 'on');
             set(self.ax, 'FontSize', 10);
             axtoolbar(self.ax, {'pan', 'zoomin','zoomout','restoreview'}, 'Visible', 'on');
@@ -53,16 +77,16 @@ classdef GuiScatter < handle
             set(text, 'interpreter', 'none')
             set(text, 'String', self.plot_data.c_label)
             set(text, 'FontSize', 11)
-
+            
             xlabel(self.ax, self.plot_data.x_label, 'FontSize', 11, 'interpreter', 'none')
             ylabel(self.ax, self.plot_data.y_label, 'FontSize', 11, 'interpreter', 'none')
             hold(self.ax, 'on')
             
-                        
+            
             set(self.ax, 'XScale', self.plot_data.x_scale);
             set(self.ax, 'YScale', self.plot_data.y_scale);
             set(self.ax,'ColorScale', self.plot_data.c_scale)
-
+            
             if length(self.plot_data.x_lim)==2
                 set(self.ax, 'XLim', self.plot_data.x_lim);
             end
@@ -84,7 +108,7 @@ classdef GuiScatter < handle
             marker_pts_size = self.plot_data.marker_pts_size;
             marker_select_size = self.plot_data.marker_select_size;
             marker_select_color = self.plot_data.marker_select_color;
-           
+            
             callback_tmp = @(obj, event) self.get_callback_idx(obj, event);
             self.h_pts = scatter(self.ax, x_vec, y_vec, marker_pts_size, c_vec,...
                 'filled',...
@@ -102,7 +126,7 @@ classdef GuiScatter < handle
         function get_callback_idx(self, obj, event)
             assert(isa(obj, 'matlab.graphics.chart.primitive.Scatter'), 'invalid click')
             assert(isa(event, 'matlab.graphics.eventdata.Hit'), 'invalid click')
-
+            
             currentPoint = get(self.ax, 'CurrentPoint');
             x_select = currentPoint(1,1);
             y_select = currentPoint(1,2);
@@ -110,7 +134,7 @@ classdef GuiScatter < handle
             pos = getpixelposition(self.ax);
             px_x = pos(3);
             px_y = pos(4);
-
+            
             x_vec = self.plot_data.x_data;
             y_vec = self.plot_data.y_data;
             id_vec = self.plot_data.id_data;
@@ -144,6 +168,16 @@ classdef GuiScatter < handle
             end
             
             d_px_vec = (d_vec./d_lim).*d_px;
+        end
+        
+        function set_position(self)
+            if all(self.position>=0)&&all(self.position<=1)
+                set(self.panel, 'Units', 'normalized');
+                set(self.panel, 'Position', self.position);
+            else
+                set(self.panel, 'Units', 'pixels');
+                set(self.panel, 'Position', self.position);
+            end
         end
     end
 end

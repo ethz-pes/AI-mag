@@ -7,12 +7,18 @@ classdef GuiGeom < handle
     methods (Access = public)
         function self = GuiGeom(parent, position)
             self.panel = uipanel(parent, 'BorderType', 'none', 'Units', 'normalized');
-            self.ax = axes(self.panel);
-            design.GuiUtils.set_position(self.panel, position)
+            self.set_position(position)
+            self.ax = [];
         end
         
         function panel = get_panel(self)
             panel = self.panel;
+        end
+        
+        function delete_panel(self)
+            if ishandle(self.ax)
+                delete(self.ax);
+            end
         end
         
         function set_plot_geom_cross(self)
@@ -37,11 +43,12 @@ classdef GuiGeom < handle
                 [x_vec, y_vec] = self.set_element(x_vec, y_vec, plot_data{i});
             end
             
-            self.set_lim(x_vec, x_vec, fact);
+            self.set_lim(x_vec, y_vec, fact);
         end
     end
     methods (Access = private)
-        function set_axis(self)            
+        function set_axis(self)
+            self.ax = axes(self.panel);
             set(self.ax, 'Box','on');
             set(self.ax, 'FontSize', 10);
             
@@ -54,7 +61,7 @@ classdef GuiGeom < handle
             ytickformat('%+.1f')
         end
         
-        function [x_vec, y_vec] = set_element(self, x_vec, y_vec, plot_data)            
+        function [x_vec, y_vec] = set_element(self, x_vec, y_vec, plot_data)
             x_min = plot_data.pos(1)-plot_data.size(1)./2;
             x_max = plot_data.pos(1)+plot_data.size(1)./2;
             y_min = plot_data.pos(2)-plot_data.size(2)./2;
@@ -82,7 +89,7 @@ classdef GuiGeom < handle
         function set_lim(self, x_vec, y_vec, fact)
             dx = 1e3.*max(abs(x_vec));
             dy = 1e3.*max(abs(y_vec));
-
+            
             dx_ax = max(xlim(self.ax))-min(xlim(self.ax));
             dy_ax = max(ylim(self.ax))-min(ylim(self.ax));
             
@@ -97,6 +104,16 @@ classdef GuiGeom < handle
             
             xlim(self.ax, [-dx_new +dx_new]);
             ylim(self.ax, [-dy_new +dy_new]);
+        end
+        
+        function set_position(self, position)
+            if all(position>=0)&&all(position<=1)
+                set(self.panel, 'Units', 'normalized');
+                set(self.panel, 'Position', position);
+            else
+                set(self.panel, 'Units', 'pixels');
+                set(self.panel, 'Position', position);
+            end
         end
     end
 end

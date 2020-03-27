@@ -1,4 +1,4 @@
-function master_plot(file_compute, fct_data, plot_data)
+function master_plot(file_compute, fct_data, plot_param)
 
 % name
 fprintf('################## master_plot\n')
@@ -11,7 +11,7 @@ fom = data_compute.fom;
 operating = data_compute.operating;
 
 fprintf('init\n')
-inductor_pareto_obj = design.ParetoGui(id_design, fom, operating, fct_data, plot_data);
+inductor_pareto_obj = design.ParetoGui(id_design, fom, operating, fct_data, plot_param);
 
 fprintf('plot\n')
 

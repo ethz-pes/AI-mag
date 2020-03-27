@@ -14,7 +14,7 @@ classdef InductorDisplay < handle
             self.operating = operating;
         end
         
-        function [gui, txt] = get_idx(self, id_select)
+        function [plot_data, fom_data, operating_data, txt] = get_idx(self, id_select)
             idx = self.id_design==id_select;
             assert(nnz(idx)==1, 'invalid data')
             
@@ -23,29 +23,25 @@ classdef InductorDisplay < handle
             operating_tmp = get_struct_filter(self.operating, idx);
             
             % txt
-            gui_clipboard_obj = design.GuiClipboard([]);
-            gui_clipboard_obj.add_title('id_design = %d', id_design_tmp);
+            gui_clipboard_obj = design.GuiClipboard();
+            gui_clipboard_obj.add_title('InductorDisplay');
+            gui_clipboard_obj.add_text('id_design = %d', id_design_tmp);
             
             % plot_gui
-            plot_gui = self.get_plot_data(fom_tmp);
+            plot_data = self.get_plot_data(fom_tmp);
             
             % fom fom_gui
-            fom_gui = self.get_text_data_fom(fom_tmp);
-            self.disp_block(gui_clipboard_obj, 'fom', fom_gui);
+            fom_data = self.get_text_data_fom(fom_tmp);
+            self.disp_block(gui_clipboard_obj, 'fom', fom_data);
             
             % operating_gui
             field = fieldnames(operating_tmp);
             for i=1:length(field)
-                operating_gui_tmp = self.get_text_data_operating(operating_tmp.(field{i}));
-                self.disp_block(gui_clipboard_obj, field{i}, operating_gui_tmp);
-                operating_gui.(field{i}) = operating_gui_tmp;
+                operating_data_tmp = self.get_text_data_operating(operating_tmp.(field{i}));
+                self.disp_block(gui_clipboard_obj, field{i}, operating_data_tmp);
+                operating_data.(field{i}) = operating_data_tmp;
             end
-                        
-            % gui
-            gui.plot_gui = plot_gui;
-            gui.fom_gui = fom_gui;
-            gui.operating_gui = operating_gui;
-            
+                                    
             % txt
             txt = gui_clipboard_obj.get_txt();
         end

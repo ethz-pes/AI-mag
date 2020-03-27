@@ -4,17 +4,29 @@ classdef ParetoGui < handle
         id_fig
         pareto_display_obj
         inductor_gui_obj
-        gui_base
+        plot_data
+        size_data
         txt_base
+    end
+    properties (SetAccess = private, GetAccess = private)
+        text_obj
+        gui_table_obj
+        gui_scatter_obj_vec
+        id_select
     end
     
     %% init
     methods (Access = public)
-        function self = ParetoGui(id_design, fom, operating, fct_data, plot_data)
+        function self = ParetoGui(id_design, fom, operating, fct_data, plot_param)
             self.id_fig = randi(1e9);
             
-            self.pareto_display_obj = design.ParetoDisplay(id_design, fom, operating, fct_data, plot_data);
-            [self.gui_base, self.txt_base] = self.pareto_display_obj.get_base();
+            self.pareto_display_obj = design.ParetoDisplay(id_design, fom, operating, fct_data, plot_param);
+            [self.plot_data, self.size_data, self.txt_base] = self.pareto_display_obj.get_base();
+            
+            self.gui_scatter_obj_vec = [];
+            self.id_select = [];
+            self.panel = [];
+            self.text = [];
             
             self.inductor_gui_obj = design.InductorGui(id_design, fom, operating);
         end
@@ -25,18 +37,16 @@ classdef ParetoGui < handle
             
             panel_plot_header_1 = design.GuiUtils.get_panel(fig, [10 520 450 70], 'Plot A');
             panel_plot_data_1 = design.GuiUtils.get_panel(fig, [10 10 450 500], []);
-            self.display_plot(panel_plot_header_1, panel_plot_data_1, self.gui_base.plot_gui);
+            self.display_plot(panel_plot_header_1, panel_plot_data_1);
             
             panel_plot_header_2 = design.GuiUtils.get_panel(fig, [470 520 450 70], 'Plot B');
             panel_plot_data_2 = design.GuiUtils.get_panel(fig, [470 10 450 500], []);
-            self.display_plot(panel_plot_header_2, panel_plot_data_2, self.gui_base.plot_gui);
+            self.display_plot(panel_plot_header_2, panel_plot_data_2);
             
-            panel_number = design.GuiUtils.get_panel(fig, [930 520 450 70], 'Pareto Data');
-            self.display_number(panel_number);
+            panel_size = design.GuiUtils.get_panel(fig, [930 520 450 70], 'Pareto Data');
 
             panel_data = design.GuiUtils.get_panel(fig, [930 150 450 360], []);
             self.display_logo(panel_data, 'logo_fem_ann.png');
-            self.display_data(panel_data);
 
             panel_logo = design.GuiUtils.get_panel(fig, [930 10 450 60], []);
             self.display_logo(panel_logo, 'logo_pes_ethz.png');
@@ -74,9 +84,10 @@ classdef ParetoGui < handle
            end
         end
         
-        function callback_save_image(self, fig)
+        function callback_save_image(self)
            [file, path, indx] = uiputfile('*.png');
            if indx~=0
+               fig = figure(self.id_fig);
                img = getframe(fig);
                imwrite(img.cdata, [path file])
            end
@@ -86,84 +97,50 @@ classdef ParetoGui < handle
             clipboard('copy', txt)
         end
         
-        function callback_menu(self, status, is_valid_vec, panel_vec, idx)            
-            design.GuiUtils.set_panel_hidden(panel_vec, 'off');
-            design.GuiUtils.set_panel_hidden(panel_vec(idx), 'on');
-
-            is_valid_tmp = is_valid_vec(idx);
-            design.GuiUtils.set_status(status, is_valid_tmp);
+        function callback_menu(self, panel_vec, src)
+            idx = src.Value;
+            design.GuiUtils.set_visible(panel_vec, 'off');
+            design.GuiUtils.set_visible(panel_vec(idx), 'on');
         end
-
-        function display_operating(self, panel_operating, operating_gui)
-            field = fieldnames(operating_gui);
-            for i=1:length(field)
-                is_valid_tmp = operating_gui.(field{i}).is_valid;
-                text_data_tmp = operating_gui.(field{i}).text_data;
-
-                panel_tmp = design.GuiUtils.get_panel_hidden(panel_operating, [0 0 450 540]);
-                design.GuiUtils.set_text(panel_tmp, 540, 10, [25 240], text_data_tmp);
-
-                panel_vec(i) = panel_tmp;
-                is_valid_vec(i) = is_valid_tmp;
-            end
+        
+        function callback_select(self, idx)
             
-            status = design.GuiUtils.get_status(panel_operating, [340 550 100 27]);
-            callback = @(src, event) self.callback_menu(status, is_valid_vec, panel_vec, src.Value);
-            menu = design.GuiUtils.get_list(panel_operating, [10 550 320 27], field, callback);
-            callback(menu, []);
-        end
-        
-        function display_inductor(self, panel_inductor, fom_gui)
-            status = design.GuiUtils.get_status(panel_inductor, [10 550 430 27]);
-            design.GuiUtils.set_status(status, fom_gui.is_valid);
-            design.GuiUtils.set_text(panel_inductor, 540, 10, [25 240], fom_gui.text_data);
-        end
-        
-        function display_number(self, panel)
-                        
-            handle = design.GuiUtils.get_text(panel, [0.03 0.10 0.94 0.65], 'n_sol = 1000 / n_plot = 12025 / id_design = None');
-
             
         end
         
-        function display_data(self, panel)
-            for i=1:9
+        function callback_display()
+            %             self.text = design.GuiUtils.get_text(panel, [0.03 0.10 0.94 0.65], 'n_sol = 1000 / n_plot = 12025 / id_design = None');
+
+                        for i=1:9
                txt_data{i, 1} = 'dsfgdsg'; 
                txt_data{i, 2} = 'dsfgdsg'; 
                txt_data{i, 3} = 'dsfgdsg'; 
             end
             
             design.GuiText.set_table(panel, 10, [10 180 310], {'Name', 'Value', 'Units'}, txt_data);
-        end
-        
-        function display_plot(self, panel_header, panel_data, plot_gui)
-            keyboard
-            
-            
-            callback = [];
-            field = {'yolo', 'yolo'};
-            
-            menu = design.GuiUtils.get_menu(panel_header, [0.02 0.75 0.96 0.0], field, callback);
-            
-            ax = axes(panel_data);
-            set(ax, 'Box', 'on');
-            set(ax, 'FontSize', 10);
-            axtoolbar(ax, {'pan', 'zoomin','zoomout','restoreview'}, 'Visible', 'on');
-            
-            cbar = colorbar(ax);
-            set(cbar, 'Location', 'southoutside')
-            set(cbar, 'Units', 'pixels')
-            set(cbar, 'FontSize', 10)
-            text = get(cbar, 'Label');
-            set(text, 'interpreter', 'none')
-            set(text, 'String', 'sdfsd')
-            set(text, 'FontSize', 11)
 
-            hold(ax, 'on')
-            plot(ax, [1001 1002], [2001 3002])
+        end
+                                
+        function display_plot(self, panel_header, panel_data)
             
-            xlabel(ax, 'dfsdfs', 'FontSize', 11)
-            ylabel(ax, 'dfsdfs', 'FontSize', 11)
+            callback = @(src, event) self.callback_select(idx);
+            field = fieldnames(self.plot_data);
+            for i=1:length(field)
+                plot_data_tmp = self.plot_data.(field{i});
+
+                gui_scatter_obj_tmp = design.GuiScatter(panel_data, [0 0 1 1]);
+                gui_scatter_obj_tmp.set_data(plot_data_tmp, callback);
+                panel_tmp = gui_scatter_obj_tmp.get_panel();
+
+                panel_vec(i) = panel_tmp;
+                obj_vec(i) = gui_scatter_obj_tmp;
+            end
+                               
+            callback = @(src, event) self.callback_menu(panel_vec, src);
+            menu = design.GuiUtils.get_menu(panel_header, [0.02 0.75 0.96 0.0], field, callback);
+            callback(menu, []);
+            
+            self.gui_scatter_obj_vec = [self.gui_scatter_obj_vec, obj_vec];
         end
     end
 end
