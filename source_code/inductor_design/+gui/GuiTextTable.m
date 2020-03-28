@@ -24,41 +24,49 @@ classdef GuiTextTable < handle
             self.h_vec = [];
         end
         
-        function set_table(self, offset, margin_col, txt_header, txt_data)
+        function set_visible(self, visible)
+            if visible==true
+                set(self.panel, 'Visible', 'on');
+            else
+                set(self.panel, 'Visible', 'off');
+            end
+        end
+        
+        function set_table(self, txt_header, txt_data)
             pos = getpixelposition(self.panel);
-            self.offset = pos(4)-self.offset;
+            offset_tmp = pos(4)-self.offset;
             
             n_col = length(self.margin_col);
             for i=1:n_col
-                y_vec(i) = self.set_text_col(txt_header{i}, i, 'bold');
+                y_vec(i) = self.set_text_col(txt_header{i}, offset_tmp, i, 'bold');
             end
-            self.offset = self.offset-max(y_vec);
+            offset_tmp = offset_tmp-max(y_vec);
             for i=1:n_col
-                self.set_text_col(txt_data(:,i), i, 'normal');
+                self.set_text_col(txt_data(:,i), offset_tmp, i, 'normal');
             end
         end
         
         function set_text(self, txt_data)
             pos = getpixelposition(self.panel);
-            self.offset = pos(4)-self.offset;
+            offset_tmp = pos(4)-self.offset;
             
             for i=1:length(txt_data)
                 title = txt_data{i}.title;
                 text = txt_data{i}.text;
                 
-                y = self.set_text_col(title, 1, 'bold');
-                self.offset = self.offset-y;
+                y = self.set_text_col(title, offset_tmp, 1, 'bold');
+                offset_tmp = offset_tmp-y;
                 
                 n_col = length(self.margin_col)-1;
                 for j=1:n_col
                     text_tmp = text(j:n_col:end);
-                    y_vec(j) = self.set_text_col(text_tmp, j+1, 'normal');
+                    y_vec(j) = self.set_text_col(text_tmp, offset_tmp, j+1, 'normal');
                 end
-                self.offset = self.offset-max(y_vec);
+                offset_tmp = offset_tmp-max(y_vec);
             end
         end
                 
-        function y = set_text_col(self, data, idx, font)
+        function y = set_text_col(self, data, offset, idx, font)
             obj = uicontrol(self.panel, ...
                 'Style','text',...
                 'FontSize', 11,...
@@ -70,7 +78,7 @@ classdef GuiTextTable < handle
 
             x = obj.Extent(3);
             y = obj.Extent(4);
-            set(obj, 'Position', [self.margin_col(idx) self.offset-y x y]);
+            set(obj, 'Position', [self.margin_col(idx) offset-y x y]);
         end
     end
 end

@@ -27,7 +27,7 @@ plot_data.order = 'random';
 fig = figure();
 
 callback = @(idx) fprintf('callback 1: %d\n', idx);
-obj = design.GuiScatter(fig, [0 0 1 1]);
+obj = gui.GuiScatter(fig, [0 0 1 1]);
 obj.set_data(plot_data, callback);
 obj.set_select(4);
 

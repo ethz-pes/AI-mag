@@ -21,6 +21,14 @@ classdef GuiGeom < handle
             end
         end
         
+        function set_visible(self, visible)
+            if visible==true
+                set(self.panel, 'Visible', 'on');
+            else
+                set(self.panel, 'Visible', 'off');
+            end
+        end
+
         function set_plot_geom_cross(self)
             self.set_axis();
             

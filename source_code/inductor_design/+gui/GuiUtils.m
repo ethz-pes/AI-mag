@@ -54,23 +54,27 @@ classdef GuiUtils < handle
         
         function obj = get_panel(parent, position, name)
             obj = uipanel(parent, 'Title', name, 'FontSize', 12);
-            design.GuiUtils.set_position(obj, position)
+            gui.GuiUtils.set_position(obj, position)
         end
     end
     methods (Static, Access = public)
         function obj = get_button(parent, position, name, callback)
             obj = uicontrol(parent, 'Style', 'pushbutton', 'FontSize', 12, 'String', name, 'CallBack', callback);
-            design.GuiUtils.set_position(obj, position)
+            gui.GuiUtils.set_position(obj, position)
         end
         
+        function set_button(obj, enable)
+            set(obj, 'Enable', enable);
+        end
+
         function obj = get_menu(parent, position, name, callback)
             obj = uicontrol(parent, 'Style', 'popupmenu', 'FontSize', 12, 'String', name, 'CallBack', callback);
-            design.GuiUtils.set_position(obj, position)
+            gui.GuiUtils.set_position(obj, position)
         end
         
         function obj = get_status(parent, position)
             obj = uicontrol(parent, 'Style', 'pushbutton', 'Enable', 'inactive', 'FontSize', 12);
-            design.GuiUtils.set_position(obj, position)
+            gui.GuiUtils.set_position(obj, position)
         end
         
         function obj = get_text(parent, position)
@@ -80,7 +84,7 @@ classdef GuiUtils < handle
                 'FontWeight', 'bold',...
                 'HorizontalAlignment', 'left'...
                 );
-            design.GuiUtils.set_position(obj, position)
+            gui.GuiUtils.set_position(obj, position)
         end
         
         function set_text(obj, name)
@@ -110,15 +114,7 @@ classdef GuiUtils < handle
         end
     end
         
-    methods (Static, Access = public)
-                function set_visible(obj, visible)
-            set(obj, 'Visible', visible);
-                end
-                
-                function set_enable(obj, enable)
-                    set(obj, 'Enable', enable);
-                end
-
+    methods (Static, Access = public)                
                 function set_position(obj, position)
             if all(position>=0)&&all(position<=1)
                 set(obj, 'Units', 'normalized');

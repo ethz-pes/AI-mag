@@ -24,12 +24,12 @@ classdef ParetoDisplay < handle
             self.plot_param = plot_param;
         end
         
-        function [plot_data, size_data, txt_base] = get_base(self)            
-            gui_clipboard_obj = design.GuiClipboard();
+        function [plot_data, size_data, txt_size] = get_data_base(self)            
+            gui_clipboard_obj = gui.GuiClipboard();
             gui_clipboard_obj.add_title('size')
             gui_clipboard_obj.add_text('n_sol = %d', self.n_sol)
             gui_clipboard_obj.add_text('n_plot = %d', self.n_plot)
-            txt_base = gui_clipboard_obj.get_txt();
+            txt_size = gui_clipboard_obj.get_txt();
             
             field = fieldnames(self.plot_param);
             for i=1:length(field)
@@ -42,11 +42,16 @@ classdef ParetoDisplay < handle
             size_data.n_plot = self.n_plot;
         end
         
-        function get_idx(self, idx)
+        function [fom_data, txt_sub] = get_data_id(self, id_select)
             
             
-            self.data_add = data_add;
-            self.plot_data = plot_data;
+            for i=1:9
+                fom_data{i, 1} = 'dsfgdsg';
+                fom_data{i, 2} = 'dsfgdsg';
+                fom_data{i, 3} = 'dsfgdsg';
+            end
+            
+            txt_sub = 'yolo';
         end
     end
     

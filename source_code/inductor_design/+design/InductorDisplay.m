@@ -14,7 +14,7 @@ classdef InductorDisplay < handle
             self.operating = operating;
         end
         
-        function [plot_data, fom_data, operating_data, txt] = get_idx(self, id_select)
+        function [plot_data, fom_data, operating_data, txt] = get_data_id(self, id_select)
             idx = self.id_design==id_select;
             assert(nnz(idx)==1, 'invalid data')
             
@@ -23,7 +23,7 @@ classdef InductorDisplay < handle
             operating_tmp = get_struct_filter(self.operating, idx);
             
             % txt
-            gui_clipboard_obj = design.GuiClipboard();
+            gui_clipboard_obj = gui.GuiClipboard();
             gui_clipboard_obj.add_title('InductorDisplay');
             gui_clipboard_obj.add_text('id_design = %d', id_design_tmp);
             

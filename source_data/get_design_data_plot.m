@@ -14,8 +14,8 @@ plot_data.x_var = x_var;
 plot_data.y_var = y_var;
 plot_data.c_var = c_var;
 
-plot_data.marker_pts_size = 10;
-plot_data.marker_select_size = 20;
+plot_data.marker_pts_size = 20;
+plot_data.marker_select_size = 15;
 plot_data.marker_select_color = 'r';
 plot_data.order = 'random';
 

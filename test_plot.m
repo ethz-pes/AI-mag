@@ -9,12 +9,5 @@ close('all')
 load('data/compute.mat')
 
 obj = design.InductorGui(id_design, fom, operating);
-
-% obj.open_gui(56);
-
-% pause(3)
-% 
-% obj.open_gui(57);
-
-
-end
+obj.set_id_select(56);
+obj.open_gui();

@@ -10,12 +10,8 @@ id_design = data_compute.id_design;
 fom = data_compute.fom;
 operating = data_compute.operating;
 
-fprintf('init\n')
-inductor_pareto_obj = design.ParetoGui(id_design, fom, operating, fct_data, plot_param);
-
-fprintf('plot\n')
-
-inductor_pareto_obj.get_gui();
+fprintf('gui\n')
+design.ParetoGui(id_design, fom, operating, fct_data, plot_param);
 
 fprintf('################## master_plot\n')
 

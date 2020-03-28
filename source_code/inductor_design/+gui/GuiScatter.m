@@ -32,6 +32,14 @@ classdef GuiScatter < handle
             self.make_plot();
         end
         
+        function set_visible(self, visible)
+            if visible==true
+                set(self.panel, 'Visible', 'on');
+            else
+                set(self.panel, 'Visible', 'off');
+            end
+        end
+        
         function panel = get_panel(self)
             panel = self.panel;
         end
