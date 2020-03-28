@@ -17,11 +17,12 @@ plot_data.c_scale = 'log';
 plot_data.x_data = rand(1, 100);
 plot_data.y_data = rand(1, 100);
 plot_data.c_data = rand(1, 100);
-plot_data.id_data = rand(1, 100);
+plot_data.id_data = 1:100;
 
 plot_data.marker_pts_size = 20;
 plot_data.marker_select_size = 10;
 plot_data.marker_select_color = 'r';
+plot_data.order = 'random';
 
 fig = figure();
 

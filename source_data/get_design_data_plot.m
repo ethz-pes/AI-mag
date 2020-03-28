@@ -17,6 +17,7 @@ plot_data.c_var = c_var;
 plot_data.marker_pts_size = 10;
 plot_data.marker_select_size = 20;
 plot_data.marker_select_color = 'r';
+plot_data.order = 'random';
 
 plot_data.x_scale = 'lin';
 plot_data.y_scale = 'lin';

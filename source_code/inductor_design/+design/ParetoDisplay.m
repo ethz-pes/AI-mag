@@ -75,6 +75,7 @@ classdef ParetoDisplay < handle
             plot_data.marker_pts_size = plot_param.marker_pts_size;
             plot_data.marker_select_size = plot_param.marker_select_size;
             plot_data.marker_select_color = plot_param.marker_select_color;
+            plot_data.order = plot_param.order;
         end
         
         function [label, data] = get_axis(self, var)

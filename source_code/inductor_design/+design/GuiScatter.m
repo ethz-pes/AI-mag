@@ -8,6 +8,7 @@ classdef GuiScatter < handle
         callback
         h_pts
         h_select
+        idx_perm
     end
     
     %% init
@@ -26,6 +27,7 @@ classdef GuiScatter < handle
             self.plot_data = plot_data;
             self.callback = callback;
             
+            self.init_perm();
             self.init_plot();
             self.make_plot();
         end
@@ -60,6 +62,22 @@ classdef GuiScatter < handle
         end
     end
     methods (Access = private)
+        function init_perm(self)
+            c_vec = self.plot_data.c_data;
+            order = self.plot_data.order;
+            
+            switch order
+                case 'random'
+                    self.idx_perm = randperm(length(c_vec));
+                case 'ascend'
+                    [v, self.idx_perm] = sort(c_vec, 'ascend');
+                case 'descend'
+                    [v, self.idx_perm] = sort(c_vec, 'descend');
+                otherwise
+                    error('invalid data')
+            end
+        end
+        
         function init_plot(self)
             self.ax = axes(self.panel);
             self.set_position()
@@ -82,7 +100,6 @@ classdef GuiScatter < handle
             ylabel(self.ax, self.plot_data.y_label, 'FontSize', 11, 'interpreter', 'none')
             hold(self.ax, 'on')
             
-            
             set(self.ax, 'XScale', self.plot_data.x_scale);
             set(self.ax, 'YScale', self.plot_data.y_scale);
             set(self.ax,'ColorScale', self.plot_data.c_scale)
@@ -102,9 +119,9 @@ classdef GuiScatter < handle
         end
         
         function make_plot(self)
-            x_vec = self.plot_data.x_data;
-            y_vec = self.plot_data.y_data;
-            c_vec = self.plot_data.c_data;
+            x_vec = self.plot_data.x_data(self.idx_perm);
+            y_vec = self.plot_data.y_data(self.idx_perm);
+            c_vec = self.plot_data.c_data(self.idx_perm);
             marker_pts_size = self.plot_data.marker_pts_size;
             marker_select_size = self.plot_data.marker_select_size;
             marker_select_color = self.plot_data.marker_select_color;
@@ -135,9 +152,9 @@ classdef GuiScatter < handle
             px_x = pos(3);
             px_y = pos(4);
             
-            x_vec = self.plot_data.x_data;
-            y_vec = self.plot_data.y_data;
-            id_vec = self.plot_data.id_data;
+            x_vec = self.plot_data.x_data(self.idx_perm);
+            y_vec = self.plot_data.y_data(self.idx_perm);
+            id_vec = self.plot_data.id_data(self.idx_perm);
             
             x_lim = get(self.ax, 'XLim');
             y_lim = get(self.ax, 'YLim');
