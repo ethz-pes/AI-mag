@@ -147,32 +147,31 @@ classdef ParetoGui < handle
         
         function callback_display(self)
             if self.is_select==true
+                for i=1:length(self.gui_scatter_obj_vec)
+                    self.gui_scatter_obj_vec(i).set_select(self.id_select);
+                end
+
                 str = sprintf('n_sol = %d / n_plot = %d / id_design = %d', self.size_data.n_sol, self.size_data.n_plot, self.id_select);
                 gui.GuiUtils.set_text(self.text_obj, str);
 
                 [text_data, self.txt_fom] = self.pareto_display_obj.get_data_id(self.id_select);
-
                 self.gui_table_obj.delete_panel();
                 self.gui_table_obj.set_text(text_data);
                 self.gui_table_obj.set_visible(true);
-
-                for i=1:length(self.gui_scatter_obj_vec)
-                    self.gui_scatter_obj_vec(i).set_select(self.id_select);
-                end
 
                 gui.GuiUtils.set_button(self.clear_obj, 'on');
                 gui.GuiUtils.set_button(self.details_obj, 'on');
                 
                 self.inductor_gui_obj.set_id_select(self.id_select);
             else
+                for i=1:length(self.gui_scatter_obj_vec)
+                    self.gui_scatter_obj_vec(i).clear_select();
+                end
+
                 str = sprintf('n_sol = %d / n_plot = %d / id_design = None', self.size_data.n_sol, self.size_data.n_plot);
                 gui.GuiUtils.set_text(self.text_obj, str);
                 
                 self.gui_table_obj.set_visible(false);
-                
-                for i=1:length(self.gui_scatter_obj_vec)
-                    self.gui_scatter_obj_vec(i).clear_select();
-                end
 
                 gui.GuiUtils.set_button(self.clear_obj, 'off');
                 gui.GuiUtils.set_button(self.details_obj, 'off');
