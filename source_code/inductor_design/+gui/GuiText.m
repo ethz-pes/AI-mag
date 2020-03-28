@@ -1,4 +1,4 @@
-classdef GuiTextTable < handle
+classdef GuiText < handle
     properties (SetAccess = private, GetAccess = private)
         panel
         offset
@@ -8,7 +8,7 @@ classdef GuiTextTable < handle
 
     %% init
     methods (Access = public)
-        function self = GuiTextTable(parent, offset, margin_col)
+        function self = GuiText(parent, offset, margin_col)
             self.panel = uipanel(parent, 'BorderType', 'none', 'Units', 'normalized', 'Position', [0 0 1 1]);
             self.offset = offset;
             self.margin_col = margin_col;
@@ -31,21 +31,7 @@ classdef GuiTextTable < handle
                 set(self.panel, 'Visible', 'off');
             end
         end
-        
-        function set_table(self, txt_header, txt_data)
-            pos = getpixelposition(self.panel);
-            offset_tmp = pos(4)-self.offset;
-            
-            n_col = length(self.margin_col);
-            for i=1:n_col
-                y_vec(i) = self.set_text_col(txt_header{i}, offset_tmp, i, 'bold');
-            end
-            offset_tmp = offset_tmp-max(y_vec);
-            for i=1:n_col
-                self.set_text_col(txt_data(:,i), offset_tmp, i, 'normal');
-            end
-        end
-        
+                
         function set_text(self, txt_data)
             pos = getpixelposition(self.panel);
             offset_tmp = pos(4)-self.offset;

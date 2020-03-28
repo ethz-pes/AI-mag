@@ -111,7 +111,7 @@ classdef InductorGui < handle
                 is_valid_tmp = self.operating_data.(field{i}).is_valid;
                 text_data_tmp = self.operating_data.(field{i}).text_data;
 
-                gui_text_obj_tmp = gui.GuiTextTable(panel_data, 10, [10, 25, 240]);
+                gui_text_obj_tmp = gui.GuiText(panel_data, 10, [10, 25, 240]);
                 gui_text_obj_tmp.set_text(text_data_tmp);
                 
                 obj_vec(i) = gui_text_obj_tmp;
@@ -128,7 +128,7 @@ classdef InductorGui < handle
             status = gui.GuiUtils.get_status(panel_header, [0.02 0.13 0.96 0.62]);
             gui.GuiUtils.set_status(status, self.fom_data.is_valid);
 
-            gui_text_obj = gui.GuiTextTable(panel_data, 10, [10, 25, 240]);
+            gui_text_obj = gui.GuiText(panel_data, 10, [10, 25, 240]);
             gui_text_obj.set_text(self.fom_data.text_data);
         end
         

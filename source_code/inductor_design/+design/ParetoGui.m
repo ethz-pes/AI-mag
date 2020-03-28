@@ -9,7 +9,6 @@ classdef ParetoGui < handle
         txt_size
     end
     properties (SetAccess = private, GetAccess = private)
-        fom_data
         txt_fom
         id_select
         is_select
@@ -22,14 +21,14 @@ classdef ParetoGui < handle
     
     %% init
     methods (Access = public)
-        function self = ParetoGui(id_design, fom, operating, fct_data, plot_param)
-            self.init_data(id_design, fom, operating, fct_data, plot_param);
+        function self = ParetoGui(id_design, fom, operating, fct_data, plot_param, fom_param)
+            self.init_data(id_design, fom, operating, fct_data, plot_param, fom_param);
             self.init_gui();
         end
     end
     methods (Access = private)
-        function init_data(self, id_design, fom, operating, fct_data, plot_param)
-            self.pareto_display_obj = design.ParetoDisplay(id_design, fom, operating, fct_data, plot_param);
+        function init_data(self, id_design, fom, operating, fct_data, plot_param, fom_param)
+            self.pareto_display_obj = design.ParetoDisplay(id_design, fom, operating, fct_data, plot_param, fom_param);
             [self.plot_data, self.size_data, self.txt_size] = self.pareto_display_obj.get_data_base();
                         
             self.inductor_gui_obj = design.InductorGui(id_design, fom, operating);
@@ -75,7 +74,7 @@ classdef ParetoGui < handle
             filename = [path filesep() filename];
             gui.GuiUtils.set_logo(panel, filename);
             
-            self.gui_table_obj = gui.GuiTextTable(panel, 10, [10 150 290]);
+            self.gui_table_obj = gui.GuiText(panel, 10, [10, 25, 240]);
         end
         
         function display_logo(self, panel)
@@ -151,10 +150,10 @@ classdef ParetoGui < handle
                 str = sprintf('n_sol = %d / n_plot = %d / id_design = %d', self.size_data.n_sol, self.size_data.n_plot, self.id_select);
                 gui.GuiUtils.set_text(self.text_obj, str);
 
-                [self.fom_data, self.txt_fom] = self.pareto_display_obj.get_data_id(self.id_select);
+                [text_data, self.txt_fom] = self.pareto_display_obj.get_data_id(self.id_select);
 
                 self.gui_table_obj.delete_panel();
-                self.gui_table_obj.set_table({'Name', 'Value', 'Units'}, self.fom_data);
+                self.gui_table_obj.set_text(text_data);
                 self.gui_table_obj.set_visible(true);
 
                 for i=1:length(self.gui_scatter_obj_vec)
@@ -181,11 +180,6 @@ classdef ParetoGui < handle
                 self.inductor_gui_obj.close_gui();
             end
             
-            %             self.text = gui.GuiUtils.get_text(panel, [0.03 0.10 0.94 0.65], ;
-
-%             
-%             gui.GuiText.set_table(panel, 10, [10 180 310], , txt_data);
-
         end
                                 
         function display_size(self, panel)

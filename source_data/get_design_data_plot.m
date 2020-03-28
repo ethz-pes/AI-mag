@@ -1,31 +1,35 @@
-function [fct_data, plot_param] = get_design_data_plot()
+function [fct_data, plot_param, fom_param] = get_design_data_plot()
 
 fct_data = @(fom, operating, n_sol) get_data(fom, operating, n_sol);
 
-plot_param.weighted_losses = get_plot_data('V_box', 'P_tot', 'f');
-plot_param.mass_correlation = get_plot_data('V_box', 'm_tot', 'f');
-plot_param.cost_correlation = get_plot_data('V_box', 'c_tot', 'f');
+plot_param.weighted_losses = get_plot_param('V_box', 'P_tot', 'f');
+plot_param.mass_correlation = get_plot_param('V_box', 'm_tot', 'f');
+plot_param.cost_correlation = get_plot_param('V_box', 'c_tot', 'f');
+
+fom_param{1} = struct('title', 'fom', 'var', {{'V_box', 'A_box', 'm_tot', 'c_tot'}});
+fom_param{2} = struct('title', 'operating', 'var', {{'L', 'f'}});
+fom_param{3} = struct('title', 'losses', 'var', {{'P_fl', 'P_hl', 'P_tot'}});
 
 end
 
-function plot_data = get_plot_data(x_var, y_var, c_var)
+function plot_param = get_plot_param(x_var, y_var, c_var)
 
-plot_data.x_var = x_var;
-plot_data.y_var = y_var;
-plot_data.c_var = c_var;
+plot_param.x_var = x_var;
+plot_param.y_var = y_var;
+plot_param.c_var = c_var;
 
-plot_data.marker_pts_size = 20;
-plot_data.marker_select_size = 15;
-plot_data.marker_select_color = 'r';
-plot_data.order = 'random';
+plot_param.marker_pts_size = 20;
+plot_param.marker_select_size = 15;
+plot_param.marker_select_color = 'r';
+plot_param.order = 'random';
 
-plot_data.x_scale = 'lin';
-plot_data.y_scale = 'lin';
-plot_data.c_scale = 'lin';
+plot_param.x_scale = 'lin';
+plot_param.y_scale = 'lin';
+plot_param.c_scale = 'lin';
 
-plot_data.x_lim = [];
-plot_data.y_lim = [];
-plot_data.c_lim = [];
+plot_param.x_lim = [];
+plot_param.y_lim = [];
+plot_param.c_lim = [];
 
 end
 

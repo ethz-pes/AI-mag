@@ -53,15 +53,7 @@ classdef InductorDisplay < handle
             text_data = data.text_data;
                         
             gui_clipboard_obj.add_title('%s / is_valid = %d', name, is_valid)
-            for i=1:length(text_data)
-                title = text_data{i}.title;
-                text = text_data{i}.text;
-                
-                gui_clipboard_obj.add_text('======== %s', title);
-                for j=1:length(text)
-                    gui_clipboard_obj.add_text('    %s', text{j});
-                end
-            end
+            gui_clipboard_obj.add_text_data(text_data);
         end
         
         function data = get_text_data_operating(self, operating_tmp)

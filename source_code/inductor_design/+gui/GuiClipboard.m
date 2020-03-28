@@ -14,6 +14,18 @@ classdef GuiClipboard < handle
             txt = strtrim(self.txt);
         end
         
+        function add_text_data(self, text_data)
+            for i=1:length(text_data)
+                title = text_data{i}.title;
+                text = text_data{i}.text;
+                
+                self.add_text('======== %s', title);
+                for j=1:length(text)
+                    self.add_text('    %s', text{j});
+                end
+            end
+        end
+        
         function add_title(self, varargin)
             self.add_text('');
             self.add_text('======================================');
