@@ -42,16 +42,20 @@ classdef ParetoDisplay < handle
             size_data.n_plot = self.n_plot;
         end
         
-        function [fom_data, txt_sub] = get_data_id(self, id_select)
-            
-            
-            for i=1:9
-                fom_data{i, 1} = 'dsfgdsg';
-                fom_data{i, 2} = 'dsfgdsg';
-                fom_data{i, 3} = 'dsfgdsg';
+        function [fom_data, txt_sub] = get_data_id(self, id_select)            
+            idx = self.get_get_idx(id_select);
+            gui_clipboard_obj = gui.GuiClipboard();
+            gui_clipboard_obj.add_title('fom / id_design = %d', id_select)
+
+            field = fieldnames(self.data_add);
+            for i=1:length(field)
+                [data, txt] = self.get_fom(field{i}, idx);
+                
+                fom_data(i, :) = data;
+                gui_clipboard_obj.add_text(txt)
             end
             
-            txt_sub = 'yolo';
+            txt_sub = gui_clipboard_obj.get_txt();
         end
     end
     
@@ -81,6 +85,21 @@ classdef ParetoDisplay < handle
             
             data = data_add_tmp.scale.*data_add_tmp.value(self.is_valid);
             label = sprintf('%s [%s]', data_add_tmp.name, data_add_tmp.unit);
+        end
+        
+        function idx = get_get_idx(self, id_select)
+            idx = self.id_design==id_select;
+            assert(nnz(idx)==1, 'invalid data')
+        end
+        
+        function [data, txt] = get_fom(self, var, idx)
+            data_add_tmp = self.data_add.(var);
+            
+            value = data_add_tmp.scale.*data_add_tmp.value(idx);
+            value = sprintf('%.3f', value);
+            
+            data = {data_add_tmp.name, value, data_add_tmp.unit};
+            txt = sprintf('%s = %s %s', data_add_tmp.name, value, data_add_tmp.unit);
         end
     end
 end

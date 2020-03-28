@@ -75,7 +75,7 @@ classdef ParetoGui < handle
             filename = [path filesep() filename];
             gui.GuiUtils.set_logo(panel, filename);
             
-            self.gui_table_obj = gui.GuiTextTable(panel, 10, [10 180 310]);
+            self.gui_table_obj = gui.GuiTextTable(panel, 10, [10 150 290]);
         end
         
         function display_logo(self, panel)

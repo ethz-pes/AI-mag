@@ -41,7 +41,7 @@ classdef InductorGui < handle
     
     methods (Access = private)
         function fig = update_gui(self)
-            name = sprintf('InductorDisplay : id_design = %d', self.id_select);
+            name = sprintf('InductorDisplay / id_design = %d', self.id_select);
             fig = gui.GuiUtils.get_gui(self.id_fig, [200 200 1390 700], name);
 
             panel_plot = gui.GuiUtils.get_panel(fig, [10 10 450 680], 'Plot');
