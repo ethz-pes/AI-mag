@@ -5,6 +5,7 @@ classdef InductorGui < handle
         inductor_display_obj
     end
     properties (SetAccess = private, GetAccess = private)
+        id_select
         plot_data
         fom_data
         operating_data
@@ -16,12 +17,32 @@ classdef InductorGui < handle
         function self = InductorGui(id_design, fom, operating)
             self.id_fig = randi(1e9);
             self.inductor_display_obj = design.InductorDisplay(id_design, fom, operating);
+            self.id_select = [];
         end
         
-        function fig = get_gui(self, id_select)
+        function set_id_select(self, id_select)
+            assert(length(id_select)==1, 'invalid data');
             [self.plot_data, self.fom_data, self.operating_data, self.txt] = self.inductor_display_obj.get_idx(id_select);
-
-            name = sprintf('InductorDisplay : id_design = %d', id_select);
+            self.id_select = id_select;
+            
+            is_found = design.GuiUtils.find_gui(self.id_fig);
+            if is_found==true
+                self.update_gui();
+            end
+        end
+        
+        function close_gui(self)
+            design.GuiUtils.close_gui(self.id_fig);
+        end
+        
+        function open_gui(self)
+            self.update_gui();
+        end
+    end
+    
+    methods (Access = private)
+        function fig = update_gui(self)
+            name = sprintf('InductorDisplay : id_design = %d', self.id_select);
             fig = design.GuiUtils.get_gui(self.id_fig, [200 200 1390 700], name);
 
             panel_plot = design.GuiUtils.get_panel(fig, [10 10 450 680], 'Plot');
@@ -36,29 +57,28 @@ classdef InductorGui < handle
             self.display_operating(panel_operating_header, panel_operating_data);
             
             panel_logo = design.GuiUtils.get_panel(fig, [930 10 450 60], []);
-            self.display_logo(panel_logo, 'logo_pes_ethz.png');
+            self.display_logo(panel_logo);
             
             panel_button = design.GuiUtils.get_panel(fig, [470 10 450 60], []);
             self.display_button(panel_button);
         end
-    end
-    
-    methods (Access = private)
-        function display_logo(self, panel_logo, filename)
+
+        function display_logo(self, panel)
+            filename = 'logo_pes_ethz.png';
             path = fileparts(mfilename('fullpath'));
             filename = [path filesep() filename];
-            design.GuiUtils.set_logo(panel_logo, filename);
+            design.GuiUtils.set_logo(panel, filename);
         end
         
-        function display_button(self, panel_button)            
-            callback = @(src,event) self.callback_save_image();
-            design.GuiUtils.get_button(panel_button, [0.02 0.1 0.46 0.8], 'Save', callback)
+        function display_button(self, panel)            
+            callback = @(src,event) self.callback_save();
+            design.GuiUtils.get_button(panel, [0.02 0.1 0.46 0.8], 'Save', callback);
             
-            callback = @(src,event) self.callback_copy_data();
-            design.GuiUtils.get_button(panel_button, [0.52 0.1 0.46 0.8], 'Copy', callback)
+            callback = @(src,event) self.callback_copy();
+            design.GuiUtils.get_button(panel, [0.52 0.1 0.46 0.8], 'Copy', callback);
         end
                 
-        function callback_save_image(self)
+        function callback_save(self)
            [file, path, indx] = uiputfile('*.png');
            if indx~=0
                fig = figure(self.id_fig);
@@ -67,7 +87,7 @@ classdef InductorGui < handle
            end
         end
 
-        function callback_copy_data(self)
+        function callback_copy(self)
             clipboard('copy', self.txt)
         end
         

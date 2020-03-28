@@ -2,14 +2,29 @@ classdef GuiUtils < handle
     %% init
     methods (Static, Access = public)
         function fig = get_gui(id, position, name)
-            fig = figure(id);
+            fig = findobj(0, 'Number', id);
             
-            clf(fig)
-            set(fig, 'Position', position)
-            set(fig, 'Name', name)
-            set(fig, 'NumberTitle', 'off')
-            set(fig, 'MenuBar', 'none')
-            set(fig, 'Resize','off')
+            if isempty(fig)
+                fig = figure(id);
+                set(fig, 'Position', position)
+                set(fig, 'NumberTitle', 'off')
+                set(fig, 'MenuBar', 'none')
+                set(fig, 'Resize','off')
+                set(fig, 'Name', name)
+            else
+                set(fig, 'Name', name)
+                clf(fig)
+            end
+        end
+                
+        function is_found = find_gui(id)
+            fig = findobj(0, 'Number', id);
+            is_found = isempty(fig)==false;
+        end
+        
+        function close_gui(id)
+            fig = findobj(0, 'Number', id);
+            close(fig);
         end
         
         function set_logo(parent, filename)
@@ -43,7 +58,7 @@ classdef GuiUtils < handle
         end
     end
     methods (Static, Access = public)
-        function get_button(parent, position, name, callback)
+        function obj = get_button(parent, position, name, callback)
             obj = uicontrol(parent, 'Style', 'pushbutton', 'FontSize', 12, 'String', name, 'CallBack', callback);
             design.GuiUtils.set_position(obj, position)
         end
@@ -98,7 +113,11 @@ classdef GuiUtils < handle
     methods (Static, Access = public)
                 function set_visible(obj, visible)
             set(obj, 'Visible', visible);
-        end
+                end
+                
+                function set_enable(obj, enable)
+                    set(obj, 'Enable', enable);
+                end
 
                 function set_position(obj, position)
             if all(position>=0)&&all(position<=1)

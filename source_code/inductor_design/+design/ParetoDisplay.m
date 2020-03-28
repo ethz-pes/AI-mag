@@ -8,13 +8,6 @@ classdef ParetoDisplay < handle
         data_add
         plot_param
     end
-    properties (SetAccess = private, GetAccess = private)
-        panel_vec
-        is_valid_vec
-        menu_obj
-        gui
-        txt
-    end
 
     %% init
     methods (Access = public)
