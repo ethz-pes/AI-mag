@@ -11,6 +11,9 @@ const = load(file_init);
 fprintf('sweep\n')
 [n_sol, inp] = get_sweep(sweep);
 
+fprintf('folder\n')
+[s, m] = mkdir(folder_fem);
+
 % fem
 fprintf('fem\n')
 fem_ann.get_fem(folder_fem, file_model, model_type, var_type, n_sol, inp, const);
