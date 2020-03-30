@@ -2,9 +2,9 @@ function [fct_data, plot_param, fom_param] = get_design_data_plot()
 
 fct_data = @(fom, operating, n_sol) get_data(fom, operating, n_sol);
 
-plot_param.weighted_losses = get_plot_param('V_box', 'P_tot', 'f');
-plot_param.mass_correlation = get_plot_param('V_box', 'm_tot', 'f');
-plot_param.cost_correlation = get_plot_param('V_box', 'c_tot', 'f');
+plot_param.weighted_losses = get_plot_param('V_box', 'P_tot', 'f', [50 500]);
+plot_param.mass_correlation = get_plot_param('V_box', 'm_tot', 'f', [50 500]);
+plot_param.cost_correlation = get_plot_param('V_box', 'c_tot', 'f', [50 500]);
 
 fom_param{1} = struct('title', 'fom', 'var', {{'V_box', 'A_box', 'm_tot', 'c_tot'}});
 fom_param{2} = struct('title', 'circuit', 'var', {{'L', 'f', 'I_sat', 'I_rms'}});
@@ -13,7 +13,7 @@ fom_param{4} = struct('title', 'utilization', 'var', {{'I_peak_tot', 'I_rms_tot'
 
 end
 
-function plot_param = get_plot_param(x_var, y_var, c_var)
+function plot_param = get_plot_param(x_var, y_var, c_var, c_lim)
 
 plot_param.x_var = x_var;
 plot_param.y_var = y_var;
@@ -30,7 +30,7 @@ plot_param.c_scale = 'lin';
 
 plot_param.x_lim = [];
 plot_param.y_lim = [];
-plot_param.c_lim = [50 500];
+plot_param.c_lim = c_lim;
 
 end
 

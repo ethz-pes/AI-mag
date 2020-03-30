@@ -177,6 +177,9 @@ classdef GuiScatter < handle
             assert(isfinite(d_px), 'invalid click')
             
             id = id_vec(idx);
+            
+            self.set_select(id);
+            drawnow()
             self.callback(id);
         end
         
