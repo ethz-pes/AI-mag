@@ -4,10 +4,10 @@ function [sweep, n_split, fct_filter, data_ann, data_compute] = get_design_data_
 sweep = get_sweep(sweep_type, n);
 
 % n_split
-n_split = 5e3;
+n_split = 25e3;
 
 % filter
-fct_filter = @(fom, operating, n_sol) true(1, n_sol);
+fct_filter = @(fom, operating, n_sol) fom.is_valid;
 
 % data_ann
 data_ann.geom_type = 'rel';
@@ -28,8 +28,8 @@ sweep.var.fact_window = struct('var_trf', 'log', 'type', 'float', 'lb', 2.0, 'ub
 sweep.var.fact_core = struct('var_trf', 'log', 'type', 'float', 'lb', 1.0,  'ub', 3.0, 'n', n);
 sweep.var.fact_core_window = struct('var_trf', 'log', 'type', 'float', 'lb', 0.3,  'ub', 3.0, 'n', n);
 sweep.var.fact_gap = struct('var_trf', 'log', 'type', 'float', 'lb', 0.01,  'ub', 0.2, 'n', n);
-sweep.var.V_box = struct('var_trf', 'log', 'type', 'float', 'lb', 0.01e-3,  'ub', 1e-3, 'n', n);
-sweep.var.f = struct('var_trf', 'log', 'type', 'float', 'lb', 50e3,  'ub', 150e3, 'n', n);
+sweep.var.V_box = struct('var_trf', 'log', 'type', 'float', 'lb', 20e-6,  'ub', 200e-6, 'n', n);
+sweep.var.f = struct('var_trf', 'log', 'type', 'float', 'lb', 50e3,  'ub', 500e3, 'n', n);
 sweep.var.n_turn = struct('var_trf', 'log', 'type', 'int', 'lb', 3,  'ub', 50, 'n', n);
 
 end
@@ -40,7 +40,7 @@ excitation_tmp.T_ambient = 40.0;
 excitation_tmp.is_pwm = true;
 excitation_tmp.d_c = 0.5;
 excitation_tmp.f = var.f;
-excitation_tmp.I_ac_peak = 400./(4.*var.f.*fom.circuit.L);
+excitation_tmp.I_ac_peak = 200./(4.*var.f.*fom.circuit.L);
 
 excitation_tmp.I_dc = 10.0;
 excitation.full_load = excitation_tmp;
@@ -61,8 +61,8 @@ geom.V_box = var.V_box;
 geom.n_turn = var.n_turn;
 
 % other
-other.I_test = 60;
-other.T_init = 80;
+other.I_test = 10.0;
+other.T_init = 80.0;
 
 %% fom_data
 fom_data.m_scale = 1.0;
@@ -71,18 +71,23 @@ fom_data.V_scale = 1.0;
 fom_data.V_offset = 0.0;
 fom_data.c_scale = 1.0;
 fom_data.c_offset = 0.0;
-fom_data.P_fraction = 0.0;
+fom_data.P_scale = 1.0;
 fom_data.P_offset = 0.0;
 
 %% fom_limit
-fom_limit.L = struct('min', 0.0, 'max', 1e9);
-fom_limit.I_sat = struct('min', 0.0, 'max', 1e9);
-fom_limit.I_rms = struct('min', 0.0, 'max', 1e9);
-fom_limit.V_t_area = struct('min', 0.0, 'max', 1e9);
+fom_limit.L = struct('min', 2e-6, 'max', 20e-3);
+fom_limit.I_sat = struct('min', 10.0, 'max', 25.*10.0);
+fom_limit.I_rms = struct('min', 10.0, 'max', 25.*10.0);
+fom_limit.V_t_area = struct('min', 200./(2.*var.f), 'max', 25.*200./(2.*var.f));
 
-fom_limit.c_tot = struct('min', 0.0, 'max', 1e9);
-fom_limit.m_tot = struct('min', 0.0, 'max', 1e9);
-fom_limit.V_box = struct('min', 0.0, 'max', 1e9);
+fom_limit.stress = struct('I_dc', 10.0, 'V_t_area', 200./(2.*var.f), 'fact_rms', 1./sqrt(3));
+fom_limit.r_peak_peak = struct('min', 0.02, 'max', 0.3);
+fom_limit.fact_sat = struct('min', 0.01, 'max', 0.9);
+fom_limit.fact_rms = struct('min', 0.01, 'max', 0.9);
+
+fom_limit.c_tot = struct('min', 0.0, 'max', 20.0);
+fom_limit.m_tot = struct('min', 0e-3, 'max', 500e-3);
+fom_limit.V_box = struct('min', 0e-6, 'max', 200e-6);
 
 %% material
 material.winding_id = 71;

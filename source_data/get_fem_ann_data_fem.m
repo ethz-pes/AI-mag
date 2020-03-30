@@ -10,7 +10,7 @@ if any(strcmp(model_type, {'ht', 'mf'}))
     sweep.var.fact_core = struct('var_trf', 'log', 'type', 'float', 'lb', 1.0,  'ub', 3.0, 'n', n);
     sweep.var.fact_core_window = struct('var_trf', 'log', 'type', 'float', 'lb', 0.3,  'ub', 3.0, 'n', n);
     sweep.var.fact_gap = struct('var_trf', 'log', 'type', 'float', 'lb', 0.01,  'ub', 0.2, 'n', n);
-    sweep.var.V_box = struct('var_trf', 'log', 'type', 'float', 'lb', 0.01e-3,  'ub', 1e-3, 'n', n);
+    sweep.var.V_box = struct('var_trf', 'log', 'type', 'float', 'lb', 10e-6,  'ub', 1000e-6, 'n', n);
 end
 if strcmp(model_type, 'mf')
     sweep.var.J_winding = struct('var_trf', 'log', 'type', 'float', 'lb', 0.01e6,  'ub', 20e6, 'n', n);

@@ -114,6 +114,11 @@ classdef InductorCompute < handle
             self.fom.circuit.I_rms = J_rms_max./self.fom.circuit.J_norm;
             self.fom.circuit.V_t_area = self.fom.circuit.L.*self.fom.circuit.I_sat;
             
+            [r_peak_peak, fact_sat, fact_rms] = self.get_current(self.data_vec.fom_limit.stress, self.fom.circuit);
+            self.fom.circuit.r_peak_peak = r_peak_peak;
+            self.fom.circuit.fact_sat = fact_sat;
+            self.fom.circuit.fact_rms = fact_rms;
+                        
             is_valid_limit = true(1, self.n_sol);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.volume.V_box, self.data_vec.fom_limit.V_box);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.cost.c_tot, self.data_vec.fom_limit.c_tot);
@@ -122,6 +127,9 @@ classdef InductorCompute < handle
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.I_sat, self.data_vec.fom_limit.I_sat);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.I_rms, self.data_vec.fom_limit.I_rms);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.V_t_area, self.data_vec.fom_limit.V_t_area);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.r_peak_peak, self.data_vec.fom_limit.r_peak_peak);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.fact_sat, self.data_vec.fom_limit.fact_sat);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.fact_rms, self.data_vec.fom_limit.fact_rms);
             self.fom.is_valid_limit = is_valid_limit;
             
             self.fom.is_valid = self.fom.is_valid_geom&self.fom.is_valid_mf&self.fom.is_valid_limit;
@@ -141,6 +149,26 @@ classdef InductorCompute < handle
             is_valid_min = vec>=limit.min;
             is_valid_max = vec<=limit.max;
             is_valid_tmp = is_valid_min&is_valid_max;
+        end
+        
+        function [r_peak_peak, fact_sat, fact_rms] = get_current(self, stress, circuit)
+            V_t_area = stress.V_t_area;
+            I_dc = stress.I_dc;
+            fact_rms = stress.fact_rms;
+            
+            L = circuit.L;
+            I_sat = circuit.I_sat;
+            I_rms = circuit.I_rms;
+            
+            I_ac_peak = (1./(2.*L)).*V_t_area;
+            I_ac_rms = I_ac_peak.*fact_rms;
+            
+            I_peak_tot = I_dc+I_ac_peak;
+            I_rms_tot = hypot(I_dc, I_ac_rms);
+            
+            r_peak_peak = (2.*I_ac_peak)./I_dc;
+            fact_sat = I_peak_tot./I_sat;
+            fact_rms = I_rms_tot./I_rms;
         end
     end
     
@@ -250,9 +278,9 @@ classdef InductorCompute < handle
                 [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_sin(f, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);
             end
             
-            P_fraction = self.data_vec.fom_data.P_fraction;
+            P_scale = self.data_vec.fom_data.P_scale;
             P_offset = self.data_vec.fom_data.P_offset;
-            P_add = P_offset+P_fraction.*(P_core+P_winding);
+            P_add = P_offset+(1-P_scale).*(P_core+P_winding);
             
             operating.losses.P_core = P_core;
             operating.losses.P_winding = P_winding;

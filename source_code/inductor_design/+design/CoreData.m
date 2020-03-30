@@ -83,12 +83,12 @@ classdef CoreData < handle
             self.interp = interp_tmp;
         end
         
-        function is_valid = parse_losses(self, is_valid, P, B_ac_peak_tot)
+        function is_valid = parse_losses(self, is_valid, P, B_peak_tot)
             P_max = self.param.P_max;
             B_sat_max = self.param.B_sat_max;
             
             is_valid = is_valid&(P<=P_max);
-            is_valid = is_valid&(B_ac_peak_tot<=B_sat_max);
+            is_valid = is_valid&(B_peak_tot<=B_sat_max);
         end
         
         function [is_valid, k, alpha, beta] = compute_steinmetz(self, f, B_ac_peak, B_dc, T)
