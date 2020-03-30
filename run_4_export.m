@@ -1,9 +1,6 @@
 function run_4_export()
 
-addpath(genpath('source_ann'))
-addpath(genpath('source_code'))
-addpath(genpath('source_data'))
-close('all')
+init_toolbox();
 
 %% file
 file_init = 'data/init.mat';

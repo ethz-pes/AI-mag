@@ -1,9 +1,6 @@
 function run_5_compute()
 
-addpath(genpath('source_ann'))
-addpath(genpath('source_code'))
-addpath(genpath('source_data'))
-close('all')
+init_toolbox();
 
 %% file
 file_export = 'data/export.mat';

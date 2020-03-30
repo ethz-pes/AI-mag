@@ -1,9 +1,6 @@
 function run_2_assemble()
 
-addpath(genpath('source_ann'))
-addpath(genpath('source_code'))
-addpath(genpath('source_data'))
-close('all')
+init_toolbox();
 
 %% run
 run_sub('ht');
