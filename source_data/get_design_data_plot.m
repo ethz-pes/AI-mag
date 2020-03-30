@@ -89,7 +89,6 @@ data_ctrl.P_tot = struct('value', P_tot, 'name', 'P_tot', 'scale', 1.0, 'unit', 
 data_ctrl.T_max = struct('value', T_max, 'name', 'T_max', 'scale', 1.0, 'unit', 'C');
 
 is_valid = true(1, n_sol);
-is_valid = is_valid&(P_tot<4.0);
 is_valid = is_valid&is_valid_fom;
 is_valid = is_valid&is_valid_fl;
 is_valid = is_valid&is_valid_hl;

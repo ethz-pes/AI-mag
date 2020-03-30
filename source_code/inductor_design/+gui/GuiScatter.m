@@ -175,11 +175,10 @@ classdef GuiScatter < handle
             d_px_vec = hypot(d_px_x_vec, d_px_y_vec);
             [d_px, idx] = min(d_px_vec);
             assert(isfinite(d_px), 'invalid click')
-            
             id = id_vec(idx);
             
             self.set_select(id);
-            drawnow()
+            drawnow();
             self.callback(id);
         end
         

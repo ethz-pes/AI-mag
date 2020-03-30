@@ -28,25 +28,23 @@ classdef GuiUtils < handle
         end
         
         function set_logo(parent, filename)
+            % img
             [img, map, alphachannel] = imread(filename);
             n_img_x = size(img, 2);
             n_img_y = size(img, 1);
             
             ax = axes(parent, 'Units', 'normalized', 'Position',[0 0 1 1]);
-            
             pos = getpixelposition(ax);
-            n_ax_x = pos(3);
-            n_ax_y = pos(4);
-            
-            n_img_x_new = n_ax_y.*(n_img_x./n_img_y);
-            n_img_y_new = n_ax_x.*(n_img_y./n_img_x);
-            
-            n_img_x_new = min(n_img_x_new, n_ax_x);
-            n_img_y_new = min(n_img_y_new, n_ax_y);
-            
-            img = imresize(img, [n_img_y_new n_img_x_new]);
-            alphachannel = imresize(alphachannel, [n_img_y_new n_img_x_new]);
-            
+            n_parent_x = pos(3);
+            n_parent_y = pos(4);
+           
+            % margin
+            n_margin_x = round((n_parent_x-n_img_x)./2);
+            n_margin_y = round((n_parent_y-n_img_y)./2);
+            assert(n_margin_x>=0, 'invalid data')
+            assert(n_margin_y>=0, 'invalid data')
+
+            set(ax, 'Units', 'pixels', 'Position',[n_margin_x n_margin_y n_img_x n_img_y]);
             image(ax, img, 'AlphaData', alphachannel);
             axis(ax, 'off');
             axis(ax, 'image');

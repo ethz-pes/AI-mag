@@ -80,6 +80,7 @@ classdef ParetoGui < handle
         function display_logo(self, panel)
             filename = 'logo_pes_ethz.png';
             path = fileparts(mfilename('fullpath'));
+
             filename = [path filesep() filename];
             gui.GuiUtils.set_logo(panel, filename);
         end
