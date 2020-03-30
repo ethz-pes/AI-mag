@@ -1,13 +1,14 @@
-function [sweep, n_split, fct_filter, data_ann, data_compute] = get_design_data_compute(sweep_type, n)
+function [sweep, n_split, fct, data_ann, data_compute] = get_design_data_compute(sweep_type, n)
 
 % sweep
 sweep = get_sweep(sweep_type, n);
 
 % n_split
-n_split = 25e3;
+n_split = 50e3;
 
 % filter
-fct_filter = @(fom, operating, n_sol) fom.is_valid;
+fct.fct_filter_compute = @(fom, n_sol) fom.is_valid;
+fct.fct_filter_save = @(fom, operating, n_sol) operating.half_load.is_valid&operating.full_load.is_valid;
 
 % data_ann
 data_ann.geom_type = 'rel';

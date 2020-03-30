@@ -10,9 +10,9 @@ file_export = 'data/export.mat';
 file_compute = 'data/compute.mat';
 
 %% data
-[sweep, n_split, fct_filter, data_ann, data_compute] = get_design_data_compute('random', 200e3);
+[sweep, n_split, fct, data_ann, data_compute] = get_design_data_compute('random', 10e6);
 
 %% save
-master_compute(file_compute, file_export, sweep, n_split, fct_filter, data_ann, data_compute)
+master_compute(file_compute, file_export, sweep, n_split, fct, data_ann, data_compute)
 
 end
