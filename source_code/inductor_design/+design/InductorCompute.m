@@ -115,7 +115,7 @@ classdef InductorCompute < handle
             self.fom.circuit.V_t_area = self.fom.circuit.L.*self.fom.circuit.I_sat;
             
             self.fom.utilization = self.get_utilization(self.data_vec.fom_limit.stress, self.fom.circuit);
-                        
+                                  
             is_valid_limit = true(1, self.n_sol);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.volume.V_box, self.data_vec.fom_limit.V_box);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.cost.c_tot, self.data_vec.fom_limit.c_tot);
@@ -131,7 +131,7 @@ classdef InductorCompute < handle
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.utilization.fact_rms, self.data_vec.fom_limit.fact_rms);
             self.fom.is_valid_limit = is_valid_limit;
             
-            self.fom.is_valid = self.fom.is_valid_geom&self.fom.is_valid_mf&self.fom.is_valid_limit;
+            self.fom.is_valid = self.fom.is_valid_geom&self.fom.is_valid_mf&self.fom.is_valid_limit;            
         end
         
         function init_thermal_loss(self)
@@ -215,7 +215,7 @@ classdef InductorCompute < handle
             % run
             excitation_tmp = struct('P_winding', P_winding, 'P_core', P_core);
             [is_valid_tmp, fom_tmp] = self.ann_fem_obj.get_ht(excitation_tmp);
-            
+                        
             % max
             dT_mat = [fom_tmp.dT_core_max ; fom_tmp.dT_core_avg ; fom_tmp.dT_winding_max ; fom_tmp.dT_winding_avg ; fom_tmp.dT_iso_max];
             dT_max = max(dT_mat, [], 1);

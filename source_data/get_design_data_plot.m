@@ -9,6 +9,7 @@ plot_param.cost_correlation = get_plot_param('V_box', 'c_tot', 'f');
 fom_param{1} = struct('title', 'fom', 'var', {{'V_box', 'A_box', 'm_tot', 'c_tot'}});
 fom_param{2} = struct('title', 'circuit', 'var', {{'L', 'f', 'I_sat', 'I_rms'}});
 fom_param{3} = struct('title', 'operating', 'var', {{'P_fl', 'P_hl', 'P_tot', 'T_max'}});
+fom_param{4} = struct('title', 'utilization', 'var', {{'I_peak_tot', 'I_rms_tot', 'r_peak_peak', 'fact_sat', 'fact_rms'}});
 
 end
 
@@ -19,7 +20,7 @@ plot_param.y_var = y_var;
 plot_param.c_var = c_var;
 
 plot_param.marker_pts_size = 20;
-plot_param.marker_select_size = 15;
+plot_param.marker_select_size = 10;
 plot_param.marker_select_color = 'r';
 plot_param.order = 'random';
 
@@ -29,7 +30,7 @@ plot_param.c_scale = 'lin';
 
 plot_param.x_lim = [];
 plot_param.y_lim = [];
-plot_param.c_lim = [];
+plot_param.c_lim = [50 500];
 
 end
 
@@ -43,6 +44,12 @@ c_tot = fom.cost.c_tot;
 L = fom.circuit.L;
 I_sat = fom.circuit.I_sat;
 I_rms = fom.circuit.I_rms;
+
+I_peak_tot = fom.utilization.I_peak_tot;
+I_rms_tot = fom.utilization.I_rms_tot;
+r_peak_peak = fom.utilization.r_peak_peak;
+fact_sat = fom.utilization.fact_sat;
+fact_rms = fom.utilization.fact_rms;
 
 is_valid_fom = fom.is_valid;
 
@@ -70,12 +77,19 @@ data_ctrl.f = struct('value', f, 'name', 'f', 'scale', 1e-3, 'unit', 'kHz');
 data_ctrl.I_sat = struct('value', I_sat, 'name', 'I_sat', 'scale', 1.0, 'unit', 'A');
 data_ctrl.I_rms = struct('value', I_rms, 'name', 'I_rms', 'scale', 1.0, 'unit', 'A');
 
+data_ctrl.I_peak_tot = struct('value', I_peak_tot, 'name', 'I_peak_tot', 'scale', 1.0, 'unit', 'A');
+data_ctrl.I_rms_tot = struct('value', I_rms_tot, 'name', 'I_rms_tot', 'scale', 1.0, 'unit', 'A');
+data_ctrl.r_peak_peak = struct('value', r_peak_peak, 'name', 'r_peak_peak', 'scale', 1e2, 'unit', '%');
+data_ctrl.fact_sat = struct('value', fact_sat, 'name', 'fact_sat', 'scale', 1e2, 'unit', '%');
+data_ctrl.fact_rms = struct('value', fact_rms, 'name', 'fact_rms', 'scale', 1e2, 'unit', '%');
+
 data_ctrl.P_fl = struct('value', P_fl, 'name', 'P_fl', 'scale', 1.0, 'unit', 'W');
 data_ctrl.P_hl = struct('value', P_hl, 'name', 'P_hl', 'scale', 1.0, 'unit', 'W');
 data_ctrl.P_tot = struct('value', P_tot, 'name', 'P_tot', 'scale', 1.0, 'unit', 'W');
 data_ctrl.T_max = struct('value', T_max, 'name', 'T_max', 'scale', 1.0, 'unit', 'C');
 
 is_valid = true(1, n_sol);
+is_valid = is_valid&(P_tot<4.0);
 is_valid = is_valid&is_valid_fom;
 is_valid = is_valid&is_valid_fl;
 is_valid = is_valid&is_valid_hl;

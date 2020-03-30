@@ -31,7 +31,7 @@ sweep.var.fact_core_window = struct('var_trf', 'log', 'type', 'float', 'lb', 0.3
 sweep.var.fact_gap = struct('var_trf', 'log', 'type', 'float', 'lb', 0.01,  'ub', 0.2, 'n', n);
 sweep.var.V_box = struct('var_trf', 'log', 'type', 'float', 'lb', 20e-6,  'ub', 200e-6, 'n', n);
 sweep.var.f = struct('var_trf', 'log', 'type', 'float', 'lb', 50e3,  'ub', 500e3, 'n', n);
-sweep.var.n_turn = struct('var_trf', 'log', 'type', 'int', 'lb', 3,  'ub', 50, 'n', n);
+sweep.var.n_turn = struct('var_trf', 'log', 'type', 'int', 'lb', 2, 'ub', 75, 'n', n);
 
 end
 
@@ -76,21 +76,21 @@ fom_data.P_scale = 1.0;
 fom_data.P_offset = 0.0;
 
 %% fom_limit
-fom_limit.L = struct('min', 2e-6, 'max', 20e-3);
-fom_limit.I_sat = struct('min', 10.0, 'max', 25.*10.0);
-fom_limit.I_rms = struct('min', 10.0, 'max', 25.*10.0);
-fom_limit.V_t_area = struct('min', 200./(2.*var.f), 'max', 25.*200./(2.*var.f));
+fom_limit.L = struct('min', 0, 'max', Inf);
+fom_limit.V_t_area = struct('min', 0, 'max', Inf);
+fom_limit.I_sat = struct('min', 0.0, 'max', Inf);
+fom_limit.I_rms = struct('min', 0.0, 'max', Inf);
 
 fom_limit.stress = struct('I_dc', 10.0, 'V_t_area', 200./(2.*var.f), 'fact_rms', 1./sqrt(3));
-fom_limit.I_rms_tot = struct('min', 10.0, 'max', 25.0);
-fom_limit.I_peak_tot = struct('min', 10.0, 'max', 25.0);
-fom_limit.r_peak_peak = struct('min', 0.02, 'max', 0.3);
-fom_limit.fact_sat = struct('min', 0.01, 'max', 0.9);
-fom_limit.fact_rms = struct('min', 0.01, 'max', 0.9);
+fom_limit.I_rms_tot = struct('min', 0.0, 'max', Inf);
+fom_limit.I_peak_tot = struct('min', 0.0, 'max', Inf);
+fom_limit.r_peak_peak = struct('min', 0.0, 'max', 0.3);
+fom_limit.fact_sat = struct('min', 0.0, 'max', 0.9);
+fom_limit.fact_rms = struct('min', 0.0, 'max', 0.9);
 
 fom_limit.c_tot = struct('min', 0.0, 'max', 20.0);
-fom_limit.m_tot = struct('min', 0e-3, 'max', 500e-3);
-fom_limit.V_box = struct('min', 0e-6, 'max', 200e-6);
+fom_limit.m_tot = struct('min', 0.0, 'max', 800e-3);
+fom_limit.V_box = struct('min', 0.0, 'max', 200e-6);
 
 %% material
 material.winding_id = 71;

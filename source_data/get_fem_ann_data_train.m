@@ -8,15 +8,15 @@ if any(strcmp(model_type, {'ht', 'mf'}))
     var_inp{end+1} = struct('name', 'fact_window', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*2.0, 'max', 1.01.*4.0);
     var_inp{end+1} = struct('name', 'fact_core', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*1.0, 'max', 1.01.*3.0);
     var_inp{end+1} = struct('name', 'fact_core_window', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.3, 'max', 1.01.*3.0);
-    var_inp{end+1} = struct('name', 'fact_gap', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.01, 'max', 1.01.*0.2);
+    var_inp{end+1} = struct('name', 'fact_gap', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.005, 'max', 1.01.*0.3);
     var_inp{end+1} = struct('name', 'V_box', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*10e-6, 'max', 1.01.*1000e-6);
 end
 if strcmp(model_type, 'mf')
-    var_inp{end+1} = struct('name', 'J_winding', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.01e6, 'max', 1.01.*20e6);
+    var_inp{end+1} = struct('name', 'J_winding', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.001e6, 'max', 1.01.*20e6);
 end
 if strcmp(model_type, 'ht')
-    var_inp{end+1} = struct('name', 'p_density_tot', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.01e4, 'max', 1.01.*0.6e4);
-    var_inp{end+1} = struct('name', 'p_ratio_winding_core', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.05, 'max', 1.01.*20.0);
+    var_inp{end+1} = struct('name', 'p_density_tot', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.001e4, 'max', 1e4);
+    var_inp{end+1} = struct('name', 'p_ratio_winding_core', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.02, 'max', 1.01.*50.0);
 end
 
 % var_out

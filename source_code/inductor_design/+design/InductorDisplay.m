@@ -114,9 +114,10 @@ classdef InductorDisplay < handle
             text_data{end+1} = struct('title', 'utilization', 'text', {text});
             
             text = {};
-            text{end+1} = sprintf('winding_hf_res = %.2f %%', 1e2.*operating_tmp.fact.winding_hf_res);
             text{end+1} = sprintf('core_losses = %.2f %%', 1e2.*operating_tmp.fact.core_losses);
-            text{end+1} = sprintf('winding_losses = %.2f x', operating_tmp.fact.winding_losses);
+            text{end+1} = sprintf('winding_losses = %.2f %%', 1e2.*operating_tmp.fact.winding_losses);
+            text{end+1} = sprintf('winding_hf_res = %.2f x', operating_tmp.fact.winding_hf_res);
+
             text_data{end+1} = struct('title', 'fact', 'text', {text});
             
             data.is_valid = is_valid;
