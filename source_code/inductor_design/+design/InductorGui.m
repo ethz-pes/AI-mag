@@ -42,17 +42,17 @@ classdef InductorGui < handle
     methods (Access = private)
         function fig = update_gui(self)
             name = sprintf('InductorDisplay / id_design = %d', self.id_select);
-            fig = gui.GuiUtils.get_gui(self.id_fig, [200 200 1390 700], name);
+            fig = gui.GuiUtils.get_gui(self.id_fig, [200 200 1390 800], name);
 
-            panel_plot = gui.GuiUtils.get_panel(fig, [10 10 450 680], 'Plot');
+            panel_plot = gui.GuiUtils.get_panel(fig, [10 10 450 780], 'Plot');
             self.display_plot(panel_plot);
             
-            panel_inductor_header = gui.GuiUtils.get_panel(fig, [470 620 450 70], 'Inductor');
-            panel_inductor_data = gui.GuiUtils.get_panel(fig, [470 80 450 530], []);
+            panel_inductor_header = gui.GuiUtils.get_panel(fig, [470 720 450 70], 'Inductor');
+            panel_inductor_data = gui.GuiUtils.get_panel(fig, [470 80 450 630], []);
             self.display_inductor(panel_inductor_header, panel_inductor_data);
 
-            panel_operating_header = gui.GuiUtils.get_panel(fig, [930 620 450 70], 'Operating');
-            panel_operating_data = gui.GuiUtils.get_panel(fig, [930 80 450 530], []);
+            panel_operating_header = gui.GuiUtils.get_panel(fig, [930 720 450 70], 'Operating');
+            panel_operating_data = gui.GuiUtils.get_panel(fig, [930 80 450 630], []);
             self.display_operating(panel_operating_header, panel_operating_data);
             
             panel_logo = gui.GuiUtils.get_panel(fig, [930 10 450 60], []);

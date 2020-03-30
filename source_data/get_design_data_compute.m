@@ -82,6 +82,8 @@ fom_limit.I_rms = struct('min', 10.0, 'max', 25.*10.0);
 fom_limit.V_t_area = struct('min', 200./(2.*var.f), 'max', 25.*200./(2.*var.f));
 
 fom_limit.stress = struct('I_dc', 10.0, 'V_t_area', 200./(2.*var.f), 'fact_rms', 1./sqrt(3));
+fom_limit.I_rms_tot = struct('min', 10.0, 'max', 25.0);
+fom_limit.I_peak_tot = struct('min', 10.0, 'max', 25.0);
 fom_limit.r_peak_peak = struct('min', 0.02, 'max', 0.3);
 fom_limit.fact_sat = struct('min', 0.01, 'max', 0.9);
 fom_limit.fact_rms = struct('min', 0.01, 'max', 0.9);

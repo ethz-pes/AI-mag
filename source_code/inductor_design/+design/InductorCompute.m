@@ -114,10 +114,7 @@ classdef InductorCompute < handle
             self.fom.circuit.I_rms = J_rms_max./self.fom.circuit.J_norm;
             self.fom.circuit.V_t_area = self.fom.circuit.L.*self.fom.circuit.I_sat;
             
-            [r_peak_peak, fact_sat, fact_rms] = self.get_current(self.data_vec.fom_limit.stress, self.fom.circuit);
-            self.fom.circuit.r_peak_peak = r_peak_peak;
-            self.fom.circuit.fact_sat = fact_sat;
-            self.fom.circuit.fact_rms = fact_rms;
+            self.fom.utilization = self.get_utilization(self.data_vec.fom_limit.stress, self.fom.circuit);
                         
             is_valid_limit = true(1, self.n_sol);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.volume.V_box, self.data_vec.fom_limit.V_box);
@@ -127,9 +124,11 @@ classdef InductorCompute < handle
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.I_sat, self.data_vec.fom_limit.I_sat);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.I_rms, self.data_vec.fom_limit.I_rms);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.V_t_area, self.data_vec.fom_limit.V_t_area);
-            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.r_peak_peak, self.data_vec.fom_limit.r_peak_peak);
-            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.fact_sat, self.data_vec.fom_limit.fact_sat);
-            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.fact_rms, self.data_vec.fom_limit.fact_rms);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.utilization.I_peak_tot, self.data_vec.fom_limit.I_peak_tot);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.utilization.I_rms_tot, self.data_vec.fom_limit.I_rms_tot);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.utilization.r_peak_peak, self.data_vec.fom_limit.r_peak_peak);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.utilization.fact_sat, self.data_vec.fom_limit.fact_sat);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.utilization.fact_rms, self.data_vec.fom_limit.fact_rms);
             self.fom.is_valid_limit = is_valid_limit;
             
             self.fom.is_valid = self.fom.is_valid_geom&self.fom.is_valid_mf&self.fom.is_valid_limit;
@@ -151,7 +150,7 @@ classdef InductorCompute < handle
             is_valid_tmp = is_valid_min&is_valid_max;
         end
         
-        function [r_peak_peak, fact_sat, fact_rms] = get_current(self, stress, circuit)
+        function utilization = get_utilization(self, stress, circuit)
             V_t_area = stress.V_t_area;
             I_dc = stress.I_dc;
             fact_rms = stress.fact_rms;
@@ -169,6 +168,12 @@ classdef InductorCompute < handle
             r_peak_peak = (2.*I_ac_peak)./I_dc;
             fact_sat = I_peak_tot./I_sat;
             fact_rms = I_rms_tot./I_rms;
+            
+            utilization.I_peak_tot = I_peak_tot;
+            utilization.I_rms_tot = I_rms_tot;
+            utilization.r_peak_peak = r_peak_peak;
+            utilization.fact_sat = fact_sat;
+            utilization.fact_rms = fact_rms;
         end
     end
     
@@ -254,6 +259,8 @@ classdef InductorCompute < handle
             B_norm = self.fom.circuit.B_norm;
             J_norm = self.fom.circuit.J_norm;
             H_norm = self.fom.circuit.H_norm;
+            I_sat = self.fom.circuit.I_sat;
+            I_rms = self.fom.circuit.I_rms;
             
             I_dc = operating.excitation.I_dc;
             I_ac_peak = operating.excitation.I_ac_peak;
@@ -273,14 +280,20 @@ classdef InductorCompute < handle
             if is_pwm==true
                 [is_valid_core, P_core] = self.core_obj.get_losses_tri(f, d_c, B_ac_peak, B_dc, T_core_avg);
                 [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_tri(f, d_c, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);
+                fact_rms = 1./sqrt(3);
             else
                 [is_valid_core, P_core] = self.core_obj.get_losses_sin(f, B_ac_peak, B_dc, T_core_avg);
                 [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_sin(f, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);
+                fact_rms = 1./sqrt(2);
             end
+            
+            I_peak_tot = I_dc+I_ac_peak;
+            I_rms_tot = I_dc+fact_rms.*I_ac_peak;
             
             P_scale = self.data_vec.fom_data.P_scale;
             P_offset = self.data_vec.fom_data.P_offset;
             P_add = P_offset+(1-P_scale).*(P_core+P_winding);
+            P_tot = P_add+P_core+P_winding;
             
             operating.losses.P_core = P_core;
             operating.losses.P_winding = P_winding;
@@ -288,7 +301,7 @@ classdef InductorCompute < handle
             operating.losses.P_winding_ac_lf = P_ac_lf;
             operating.losses.P_winding_ac_hf = P_ac_hf;
             operating.losses.P_add = P_add;
-            operating.losses.P_tot = P_add+P_core+P_winding;
+            operating.losses.P_tot = P_tot;
 
             operating.field.J_dc = J_dc;
             operating.field.B_dc = B_dc;
@@ -297,14 +310,20 @@ classdef InductorCompute < handle
             operating.field.H_ac_peak = H_ac_peak;
             operating.field.B_ac_peak = B_ac_peak;
             
-            operating.fact.fact_hf_winding = P_ac_hf./P_ac_lf;
-            operating.fact.fact_core_winding = P_core./P_winding;
-            operating.fact.fact_ac_dc = I_ac_peak./I_dc;
-                        
+            operating.utilization.I_peak_tot = I_peak_tot;
+            operating.utilization.I_rms_tot = I_rms_tot;
+            operating.utilization.r_peak_peak = (2.*I_ac_peak)./I_dc;
+            operating.utilization.fact_sat = I_peak_tot./I_sat;
+            operating.utilization.fact_rms = I_rms_tot./I_rms;
+            
+            operating.fact.core_losses = P_core./P_tot;
+            operating.fact.winding_losses = P_winding./P_tot;
+            operating.fact.winding_hf_res = (P_ac_lf+P_ac_hf)./P_ac_lf;
+                                    
             operating.is_valid_core = is_valid_core;
             operating.is_valid_winding = is_valid_winding;
         end
-        
+                
         function is_valid_thermal = check_thermal_limit(self, operating)
             % check
             T_core_max = self.core_obj.get_temperature();

@@ -44,7 +44,7 @@ material.param.lambda = rho_copper.*fill.*kappa_copper+rho_iso.*(1-fill).*kappa_
 %% param
 material.param.n_harm = 10;
 material.param.P_max = 1000e3;
-material.param.J_rms_max = 20e6;
+material.param.J_rms_max = 15e6;
 material.param.P_scale_lf = 1.3;
 material.param.P_scale_hf = 1.4;
 material.param.T_max = 140.0;

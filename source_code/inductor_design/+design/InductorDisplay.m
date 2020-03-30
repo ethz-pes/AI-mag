@@ -106,9 +106,17 @@ classdef InductorDisplay < handle
             text_data{end+1} = struct('title', 'losses', 'text', {text});
             
             text = {};
-            text{end+1} = sprintf('fact_hf_winding = %.2f', operating_tmp.fact.fact_hf_winding);
-            text{end+1} = sprintf('fact_core_winding = %.2f', operating_tmp.fact.fact_core_winding);
-            text{end+1} = sprintf('fact_ac_dc = %.2f', operating_tmp.fact.fact_ac_dc);
+            text{end+1} = sprintf('I_peak_tot = %.2f A', operating_tmp.utilization.I_peak_tot);
+            text{end+1} = sprintf('I_rms_tot = %.2f A', operating_tmp.utilization.I_rms_tot);
+            text{end+1} = sprintf('r_peak_peak = %.2f %%', 1e2.*operating_tmp.utilization.r_peak_peak);
+            text{end+1} = sprintf('fact_sat = %.2f %%', 1e2.*operating_tmp.utilization.fact_sat);
+            text{end+1} = sprintf('fact_rms = %.2f %%', 1e2.*operating_tmp.utilization.fact_rms);
+            text_data{end+1} = struct('title', 'utilization', 'text', {text});
+            
+            text = {};
+            text{end+1} = sprintf('winding_hf_res = %.2f %%', 1e2.*operating_tmp.fact.winding_hf_res);
+            text{end+1} = sprintf('core_losses = %.2f %%', 1e2.*operating_tmp.fact.core_losses);
+            text{end+1} = sprintf('winding_losses = %.2f x', operating_tmp.fact.winding_losses);
             text_data{end+1} = struct('title', 'fact', 'text', {text});
             
             data.is_valid = is_valid;
@@ -169,6 +177,14 @@ classdef InductorDisplay < handle
             text{end+1} = sprintf('I_rms = %.2f A', fom_tmp.circuit.I_rms);
             text{end+1} = sprintf('V_t_area = %.2f Vms', 1e3.*fom_tmp.circuit.V_t_area);
             text_data{end+1} = struct('title', 'circuit', 'text', {text});
+
+            text = {};
+            text{end+1} = sprintf('I_peak_tot = %.2f A', fom_tmp.utilization.I_peak_tot);
+            text{end+1} = sprintf('I_rms_tot = %.2f A', fom_tmp.utilization.I_rms_tot);
+            text{end+1} = sprintf('r_peak_peak = %.2f %%', 1e2.*fom_tmp.utilization.r_peak_peak);
+            text{end+1} = sprintf('fact_sat = %.2f %%', 1e2.*fom_tmp.utilization.fact_sat);
+            text{end+1} = sprintf('fact_rms = %.2f %%', 1e2.*fom_tmp.utilization.fact_rms);
+            text_data{end+1} = struct('title', 'utilization', 'text', {text});
             
             data.is_valid = is_valid;
             data.text_data = text_data;
