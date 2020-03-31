@@ -5,19 +5,20 @@ fprintf('################## master_assemble\n')
 
 % run
 fprintf('assemble\n')
-[n_tot, n_sol, model_type, inp, out_fem] = fem_ann.get_assemble(folder_fem);
+[diff, n_tot, n_sol, model_type, inp, out_fem] = fem_ann.get_assemble(folder_fem);
 
 fprintf('approx\n')
 out_approx = fem_ann.get_out_approx(model_type, inp);
 
 % disp
 fprintf('size\n')
+fprintf('    diff = %s\n', char(diff))
 fprintf('    n_tot = %d\n', n_tot)
 fprintf('    n_sol = %d\n', n_sol)
 
 % save
 fprintf('save\n')
-save(file_assemble, 'n_sol', 'n_tot', 'inp', 'out_fem', 'out_approx', 'model_type')
+save(file_assemble, 'diff', 'n_sol', 'n_tot', 'inp', 'out_fem', 'out_approx', 'model_type')
 
 fprintf('################## master_assemble\n')
 

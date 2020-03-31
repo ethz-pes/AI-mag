@@ -1,4 +1,4 @@
-function [n_tot, n_sol, model_type, inp, out_fem] = get_assemble(folder)
+function [diff, n_tot, n_sol, model_type, inp, out_fem] = get_assemble(folder)
 
 % get file
 filelist = dir([folder filesep() '*.mat']);
@@ -11,6 +11,7 @@ for i=1:length(filelist)
     filename_tmp = [filelist(i).folder filesep()  filelist(i).name];
     data_tmp = load(filename_tmp);
     
+    diff(i) = data_tmp.diff;
     is_valid(i) = data_tmp.is_valid;
     inp{i} = data_tmp.inp;
     out_fem{i} = data_tmp.out_fem;
@@ -18,6 +19,7 @@ for i=1:length(filelist)
 end
 
 % filter
+diff = sum(diff);
 n_tot = length(is_valid);
 n_sol = nnz(is_valid);
 inp = [inp{is_valid}];

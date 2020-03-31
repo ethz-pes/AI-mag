@@ -7,6 +7,9 @@ fprintf('################## master_compute\n')
 fprintf('load\n')
 data_fem_ann = load(file_export);
 
+% time start
+tic = datetime('now');
+
 % ann_fem
 fprintf('ann fem\n')
 ann_fem_obj = AnnFem(data_fem_ann, data_ann.geom_type, data_ann.eval_type);
@@ -30,15 +33,20 @@ n_compute = sum(n_compute);
 fom = get_struct_assemble(fom);
 operating = get_struct_assemble(operating);
 
+% time out
+toc = datetime('now');
+diff = toc-tic;
+
 % disp
 fprintf('size\n')
+fprintf('    diff = %s\n', char(diff))
 fprintf('    n_tot = %d\n', n_tot)
 fprintf('    n_compute = %d\n', n_compute)
 fprintf('    n_sol = %d\n', n_sol)
 
 % save
 fprintf('save\n')
-save(file_compute, 'n_tot', 'n_sol', 'id_design', 'fom', 'operating')
+save(file_compute, 'diff', 'n_tot', 'n_compute', 'n_sol', 'id_design', 'fom', 'operating')
 
 fprintf('################## master_compute\n')
 

@@ -4,7 +4,7 @@ function [sweep, n_split, fct, data_ann, data_compute] = get_design_data_compute
 sweep = get_sweep(sweep_type, n);
 
 % n_split
-n_split = 50e3;
+n_split = 100e3;
 
 % filter
 fct.fct_filter_compute = @(fom, n_sol) fom.is_valid;
