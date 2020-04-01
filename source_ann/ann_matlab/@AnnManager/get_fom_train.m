@@ -42,28 +42,28 @@ end
 
 end
 
-function var = get_var_set(vec, idx)
+function fom = get_var_set(vec, idx)
 
 vec = vec(idx);
 
-var.vec = vec;
-var.v_avg = mean(vec);
-var.v_std_dev = std(vec);
-var.v_max = max(vec);
-var.v_min = min(vec);
+fom.vec = vec;
+fom.v_avg = mean(vec);
+fom.v_std_dev = std(vec);
+fom.v_max = max(vec);
+fom.v_min = min(vec);
 
 end
 
-function var = get_var_err(vec_cmp, vec_ref, idx)
+function fom = get_var_err(vec_cmp, vec_ref, idx)
 
 vec_cmp = vec_cmp(idx);
 vec_ref = vec_ref(idx);
 vec = abs(vec_cmp-vec_ref)./vec_ref;
     
-var.vec = vec;
-var.v_mean = mean(vec);
-var.v_rms = rms(vec);
-var.v_max = max(vec);
+fom.vec = vec;
+fom.v_mean = mean(vec);
+fom.v_rms = rms(vec);
+fom.v_max = max(vec);
 
 end
 

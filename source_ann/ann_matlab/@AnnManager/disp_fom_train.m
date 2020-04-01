@@ -39,13 +39,13 @@ disp_hist(tag, fom, type)
 
 end
 
-function disp_value(tag, var, type)
+function disp_value(tag, fom, type)
 
 switch type
     case 'set'
-        fprintf('        %s / avg = %.3e / std_dev = %.3e / min = %.3e / max = %.3e\n', tag, var.v_avg, var.v_std_dev, var.v_min, var.v_max)
+        fprintf('        %s / avg = %.3e / std_dev = %.3e / min = %.3e / max = %.3e\n', tag, fom.v_avg, fom.v_std_dev, fom.v_min, fom.v_max)
     case 'err'
-        fprintf('        %s / mean = %.2f %% / rms = %.2f %% / max = %.2f %%\n', tag, 1e2.*var.v_mean, 1e2.*var.v_rms, 1e2.*var.v_max)
+        fprintf('        %s / mean = %.2f %% / rms = %.2f %% / max = %.2f %%\n', tag, 1e2.*fom.v_mean, 1e2.*fom.v_rms, 1e2.*fom.v_max)
     otherwise
         error('invalid type')
 end
