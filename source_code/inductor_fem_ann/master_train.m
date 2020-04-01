@@ -20,6 +20,9 @@ obj = AnnManager(ann_input);
 fprintf('train ann\n')
 obj.train(tag_train, n_sol, inp, out_fem, out_approx);
 
+% fom
+fom = obj.get_fom();
+
 % disp
 obj.disp();
 
@@ -32,7 +35,7 @@ obj.delete();
 
 % save
 fprintf('save\n')
-save(file_ann, 'ann_input', 'ann_data', 'model_type')
+save(file_ann, 'ann_input', 'ann_data', 'fom', 'model_type')
 
 fprintf('################## master_train\n')
 

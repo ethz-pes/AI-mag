@@ -3,7 +3,7 @@ function run_3_train()
 init_toolbox();
 
 %% run
-run_sub('ht');
+% run_sub('ht');
 run_sub('mf');
 
 end

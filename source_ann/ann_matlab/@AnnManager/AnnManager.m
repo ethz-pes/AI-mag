@@ -20,6 +20,7 @@ classdef AnnManager < handle
         idx_test
         is_train
         ann_data
+        fom
         ann_engine_obj
     end
     
@@ -60,6 +61,7 @@ classdef AnnManager < handle
             ann_data.idx_test = self.idx_test;
             ann_data.is_train = self.is_train;
             ann_data.ann_data = self.ann_data;
+            ann_data.fom = self.fom;
         end
         
         function load(self, ann_data)
@@ -74,11 +76,17 @@ classdef AnnManager < handle
             self.idx_test = ann_data.idx_test;
             self.is_train = ann_data.is_train;
             self.ann_data = ann_data.ann_data;
-            
+            self.fom = ann_data.fom;
+
             % load the engine
             if self.is_train==true
                 self.load_engine();
             end
+        end
+        
+        function fom = get_fom(self)
+            assert(self.is_train==true, 'invalid state')
+           fom = self.fom;
         end
         
         function train(self, tag_train, n_sol, inp, out_ref, out_nrm)
@@ -118,6 +126,9 @@ classdef AnnManager < handle
                         
             % unscale the result
             self.out_ann = self.get_unscale_out(self.out_nrm, out_mat);
+            
+            % fet fom
+            self.get_fom_inp_out();
             
             % check set
             AnnManager.check_set(self.n_sol, self.var_inp, self.inp)
