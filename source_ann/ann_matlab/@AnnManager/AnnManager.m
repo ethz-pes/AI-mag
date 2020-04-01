@@ -128,7 +128,7 @@ classdef AnnManager < handle
             self.out_ann = self.get_unscale_out(self.out_nrm, out_mat);
             
             % fet fom
-            self.get_fom_inp_out();
+            self.get_fom_train();
             
             % check set
             AnnManager.check_set(self.n_sol, self.var_inp, self.inp)
@@ -144,19 +144,11 @@ classdef AnnManager < handle
             AnnManager.disp_data('split_train_test', self.split_train_test);
             AnnManager.disp_data('split_var', self.split_var);
             AnnManager.disp_data('ann_info', self.ann_info);
+            AnnManager.disp_data('is_train', self.is_train);
             
             if self.is_train==true
-                AnnManager.disp_data('norm_param_inp', self.norm_param_inp);
-                AnnManager.disp_data('norm_param_out', self.norm_param_out);
-                AnnManager.disp_data('n_train', nnz(self.idx_train));
-                AnnManager.disp_data('n_test', nnz(self.idx_test));
-                
-                self.disp_set_data('inp', self.var_inp, self.inp)
-                self.disp_set_data('out_ref', self.var_out, self.out_ref)
-                self.disp_set_data('out_nrm', self.var_out, self.out_nrm)
-                self.disp_set_data('out_ann', self.var_out, self.out_ann)
-                self.disp_set_error('out_nrm / out_ref', self.var_out, self.out_nrm, self.out_ref);
-                self.disp_set_error('out_ann / out_ref', self.var_out, self.out_ann, self.out_ref);
+                AnnManager.disp_data('n_sol', self.n_sol);
+                self.disp_fom_train()
             end
         end
         

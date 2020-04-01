@@ -1,6 +1,5 @@
-function get_fom_inp_out(self)
+function get_fom_train(self)
 
-self.fom.n_sol = self.n_sol;
 self.fom.n_train = nnz(self.idx_train);
 self.fom.n_test = nnz(self.idx_test);
 
