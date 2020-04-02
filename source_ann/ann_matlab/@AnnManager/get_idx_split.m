@@ -3,9 +3,6 @@ function get_idx_split(self)
 % init generator
 rng('shuffle');
 
-% check size
-assert(self.n_sol>=self.split_train_test.n_min, 'invalid number of solutions')
-
 % get size
 n_train = round(self.n_sol.*self.split_train_test.ratio_train);
 
@@ -23,5 +20,9 @@ switch self.split_train_test.type
     otherwise
         error('invalid type')
 end
+
+% check size
+assert(nnz(self.idx_test)>=self.split_train_test.n_test_min, 'invalid number of solutions')
+assert(nnz(self.idx_train)>=self.split_train_test.n_train_min, 'invalid number of solutions')
 
 end

@@ -16,7 +16,7 @@ classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
             self.hostname = hostname;
             self.port = port;
             self.timeout = timeout;
-            self.client_obj = mat_py_bridge.MatlabPythonClient(hostname, port, timeout);
+            self.client_obj = ann_engine.MatlabPythonClient(hostname, port, timeout);
         end
                 
         function [model, history] = train(self, tag_train, inp, out)

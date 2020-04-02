@@ -1,10 +1,5 @@
 classdef MatlabPythonClient < handle
     %% properties
-    properties (SetAccess = immutable, GetAccess = private)
-        hostname
-        port
-        timeout
-    end
     properties (SetAccess = private, GetAccess = private)
         tcp
     end
@@ -12,10 +7,11 @@ classdef MatlabPythonClient < handle
     %% init
     methods (Access = public)
         function self = MatlabPythonClient(hostname, port, timeout)
-            self.hostname = hostname;
-            self.port = port;
-            self.timeout = timeout;
-            self.tcp = tcpclient(self.hostname, self.port, 'Timeout', timeout);
+            try
+                self.tcp = tcpclient(hostname, port, 'Timeout', timeout);
+            catch
+                error('Connection failure: Python server : %s / %d', hostname, port)
+            end
         end
                 
         function data_out = run(self, data_inp)
@@ -27,7 +23,7 @@ classdef MatlabPythonClient < handle
     methods (Access = private)
         function send(self, data)
             % dump the data
-            byte = MatlabPythonClient.get_serialize(data);
+            byte = self.get_serialize(data);
             
             % get the length
             n = length(byte);
@@ -45,7 +41,7 @@ classdef MatlabPythonClient < handle
             
             % load the data
             byte = self.tcp.read(n);
-            data = MatlabPythonClient.get_deserialize(byte);
+            data = self.get_deserialize(byte);
         end
     end
     

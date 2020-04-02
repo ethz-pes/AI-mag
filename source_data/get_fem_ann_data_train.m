@@ -37,7 +37,8 @@ end
 
 % split_train_test
 split_train_test.ratio_train = 0.5;
-split_train_test.n_min = 4;
+split_train_test.n_train_min = 5;
+split_train_test.n_test_min = 5;
 split_train_test.type = 'no_overlap';
 
 % split the variable
@@ -46,11 +47,11 @@ split_var = false;
 % ann_info
 switch ann_type
     case 'matlab_ann'
-        ann_info.type = 'matlab_ann';
+        ann_info.type = ann_type;
         ann_info.fct_model = @fct_model;
         ann_info.fct_train = @fct_train;
     case 'python_ann'
-        ann_info.type = 'python_ann';
+        ann_info.type = ann_type;
         ann_info.hostname = 'localhost';
         ann_info.port = 10000;
         ann_info.timeout = 240;
