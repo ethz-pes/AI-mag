@@ -23,4 +23,5 @@ switch self.split_train_test.type
     otherwise
         error('invalid type')
 end
+
 end

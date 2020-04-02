@@ -17,11 +17,12 @@ function fom = get_fom_err(var, data_cmp, data_ref, idx_train, idx_test)
 
 for i=1:length(var)
     name_tmp = var{i}.name;
+    var_err_tmp = var{i}.var_err;
     vec_cmp = data_cmp.(name_tmp);
     vec_ref = data_ref.(name_tmp);
     
-    fom_tmp.train = get_var_err(vec_cmp, vec_ref, idx_train);
-    fom_tmp.test = get_var_err(vec_cmp, vec_ref, idx_test);
+    fom_tmp.train = get_var_err(vec_cmp, vec_ref, idx_train, var_err_tmp);
+    fom_tmp.test = get_var_err(vec_cmp, vec_ref, idx_test, var_err_tmp);
     
     fom.(name_tmp) = fom_tmp;
 end
@@ -48,22 +49,33 @@ vec = vec(idx);
 
 fom.vec = vec;
 fom.v_avg = mean(vec);
+fom.v_rms = rms(vec);
 fom.v_std_dev = std(vec);
 fom.v_max = max(vec);
 fom.v_min = min(vec);
 
 end
 
-function fom = get_var_err(vec_cmp, vec_ref, idx)
+function fom = get_var_err(vec_cmp, vec_ref, idx, type)
 
 vec_cmp = vec_cmp(idx);
 vec_ref = vec_ref(idx);
-vec = abs(vec_cmp-vec_ref)./vec_ref;
-    
+
+switch type
+    case 'rel'
+        vec = abs(vec_cmp-vec_ref)./vec_ref;
+    case 'abs'
+        vec = abs(vec_cmp-vec_ref);
+    otherwise
+        error('invalid data')
+end
+
 fom.vec = vec;
-fom.v_mean = mean(vec);
+fom.v_avg = mean(vec);
 fom.v_rms = rms(vec);
+fom.v_std_dev = std(vec);
 fom.v_max = max(vec);
+fom.v_min = min(vec);
 
 end
 
