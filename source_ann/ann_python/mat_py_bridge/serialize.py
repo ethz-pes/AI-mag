@@ -1,74 +1,165 @@
 import numpy as np
 import struct
 
+
 def get(data):
-    assert isinstance(data, dict), 'invalid data'
-    byte = serialize_struct(data)
-    return byte
+    """Serialize a Python dict to be transferred to MATLAB.
+
+    This function can only serialize very specific Python data:
+        - The data has to be a dictionary
+        - The keys of the dictionary should be strings
+        - The values of the dictionary can be strings
+        - The values of the dictionary can be numpy array:
+            - Multi-dimensional arrays are supported
+            - float64, float32, bool, int8, uint8, int32, uint32, int64, uint64
+
+    The reasons of these limitation are:
+        - To keep this function as simple as possible
+        - The mismatch between the Pythpn data types and the MATLAB data types
+
+    Parameters:
+    data (dict): Data to be serialized
+
+    Returns:
+    bytes: Serialized data
+
+   """
+
+    # check the type
+    assert isinstance(data, dict), 'invalid data type'
+
+    # serialize data
+    bytes_array = serialize_struct(data)
+
+    return bytes_array
+
 
 def serialize_struct(data):
-    byte = bytearray()
+    """Serialize a Python dict.
 
-    # byte type
-    byte_add = class_encode(data)
-    byte = append_byte(byte, byte_add)
+    Parameters:
+    data (dict): Data to be serialized
 
-    # number of fields
-    byte_add = len(data)
-    byte_add = struct.pack('I', byte_add)
-    byte = append_byte(byte, byte_add)
+    Returns:
+    bytes: Serialized data
 
-    # add field and byte
+   """
+    
+    # init array
+    bytes_array = bytearray()
+
+    # encode the data type: dict
+    bytes_add = class_encode(data)
+    bytes_array = append_byte(bytes_array, bytes_add)
+
+    # encode the number of fields
+    bytes_add = len(data)
+    bytes_add = struct.pack('I', bytes_add)
+    bytes_array = append_byte(bytes_array, bytes_add)
+
+    # serialize the keys and values
     for field in data:
-        byte_add = serialize_data(field)
-        byte = append_byte(byte, byte_add)
+        bytes_add = serialize_data(field)
+        bytes_array = append_byte(bytes_array, bytes_add)
 
-        byte_add = serialize_data(data[field])
-        byte = append_byte(byte, byte_add)
+        bytes_add = serialize_data(data[field])
+        bytes_array = append_byte(bytes_array, bytes_add)
 
-    return byte
+    return bytes_array
+
 
 def serialize_data(data):
-    byte = bytearray()
+    """Serialize a Python string or a numpy array.
 
-    # byte type
-    byte_add = class_encode(data)
-    byte = append_byte(byte, byte_add)
+    Parameters:
+    data (str/array): Data to be serialized
 
+    Returns:
+    bytes: Serialized data
+
+   """
+
+    # init array
+    bytes_array = bytearray()
+
+    # encode the data type: string or numpy array
+    bytes_add = class_encode(data)
+    bytes_array = append_byte(bytes_array, bytes_add)
+
+    # encode the data
     if isinstance(data, str):
-        byte = serialize_char(byte, data)
+        bytes_array = serialize_char(bytes_array, data)
     else:
-        byte = serialize_matrix(byte, data)
+        bytes_array = serialize_matrix(bytes_array, data)
 
-    return byte
+    return bytes_array
 
 
-def serialize_char(byte, data):
+def serialize_char(bytes_array, data):
+    """Serialize a Python string.
+
+    Parameters:
+    bytes_array (bytes): Bytes array to add the new data
+    data (str): Data to be serialized
+
+    Returns:
+    bytes: Bytes array with the new serialized data
+
+   """
+    
+    # encode the length
     n_length = len(data)
+    bytes_add = struct.pack('I', n_length)
+    bytes_array = append_byte(bytes_array, bytes_add)
 
-    byte_add = struct.pack('I', n_length)
-    byte = append_byte(byte, byte_add)
+    # encode the data
+    bytes_add = bytes_array(data, 'utf-8')
+    bytes_array = append_byte(bytes_array, bytes_add)
 
-    byte_add = bytes(data, 'utf-8')
-    byte = append_byte(byte, byte_add)
+    return bytes_array
 
-    return byte
 
-def serialize_matrix(byte, data):
+def serialize_matrix(bytes_array, data):
+    """Serialize a numpy array.
+
+    Parameters:
+    bytes_array (bytes): Bytes array to add the new data
+    data (array): Data to be serialized
+
+    Returns:
+    bytes: Bytes array with the new serialized data
+
+   """
+
+    # get the shape of the array (size along dimensions)
     size_vec = data.shape
 
-    byte_add = struct.pack('I', len(size_vec))
-    byte = append_byte(byte, byte_add)
+    # encode the number of dimensions
+    bytes_add = struct.pack('I', len(size_vec))
+    bytes_array = append_byte(bytes_array, bytes_add)
 
-    byte_add = struct.pack('%sI' % len(size_vec), *size_vec)
-    byte = append_byte(byte, byte_add)
+    # encode the number of element per dimension
+    bytes_add = struct.pack('%sI' % len(size_vec), *size_vec)
+    bytes_array = append_byte(bytes_array, bytes_add)
 
-    byte_add = data.tobytes(order='F')
-    byte = append_byte(byte, byte_add)
+    # encode the data: warning MATLAB is using FORTRAN byte order, not the C one
+    bytes_add = data.tobytes(order='F')
+    bytes_array = append_byte(bytes_array, bytes_add)
 
-    return byte
+    return bytes_array
+
 
 def class_encode(data):
+    """Encode the data type with a byte.
+
+    Parameters:
+    data (dict): Data to be encoded
+
+    Returns:
+    byte: Byte with the encoded type
+
+   """
+
     if isinstance(data, dict):
         b = b'\x0c'
     elif isinstance(data, str):
@@ -93,11 +184,25 @@ def class_encode(data):
         elif data.dtype=='uint64':
             b = b'\x0b'
         else:
-            raise TypeError('invalid type')
+            raise TypeError('invalid numpy data type')
     else:
-        raise TypeError('invalid type')
+        raise TypeError('invalid data type')
+
     return b
 
-def append_byte(byte, byte_add):
-    byte += byte_add
-    return byte
+
+def append_byte(bytes_array, bytes_add):
+    """Append bytes to a byte array.
+
+    Parameters:
+    bytes_array (bytes): Byte array
+    bytes_add (bytes): Bytes to be added
+
+    Returns:
+    bytes: Resulting byte array
+
+   """
+
+    bytes_array += bytes_add
+
+    return bytes_array

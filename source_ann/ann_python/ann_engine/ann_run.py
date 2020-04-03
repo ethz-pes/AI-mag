@@ -23,7 +23,7 @@ def train(inp, out, fct_model, fct_train):
     n_sol_out = out.shape[1]
 
     # check and get the number of samples
-    assert n_sol_inp==n_sol_out, 'invalid size'
+    assert n_sol_inp==n_sol_out, 'invalid number of samples'
     n_sol = {n_sol_inp, n_sol_out}.pop()
 
     # get ANN model
@@ -65,6 +65,6 @@ def predict(model, inp):
     inp = np.swapaxes(inp, 0, 1)
 
     # check the number of samples
-    assert inp.shape[1] == out.shape[1], 'invalid size'
+    assert inp.shape[1] == out.shape[1], 'invalid number of samples'
 
     return out

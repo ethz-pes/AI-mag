@@ -1,68 +1,165 @@
 import numpy as np
 import struct
 
-def get(byte):
-    assert isinstance(byte, bytearray), 'invalid byte'
 
-    (byte, byte_tmp) = get_byte(byte, 1)
-    cls = class_decode(byte_tmp)
-    assert cls=='dict', 'invalid type'
+def get(bytes_array):
+    """Deserialize data from MATLAB into a Python dict.
 
-    (data, byte) = deserialize_struct(byte)
-    assert len(byte)==0, 'invalid byte'
+    This function can only deserialize very specific Python data:
+        - The data has to be a dictionary
+        - The keys of the dictionary should be strings
+        - The values of the dictionary can be strings
+        - The values of the dictionary can be numpy array:
+            - Multi-dimensional arrays are supported
+            - float64, float32, bool, int8, uint8, int32, uint32, int64, uint64
+
+    The reasons of these limitation are:
+        - To keep this function as simple as possible
+        - The mismatch between the Pythpn data types and the MATLAB data types
+
+    Parameters:
+    bytes_array (bytes): Data to be deserialized
+
+    Returns:
+    dict: Deserialized data
+
+   """
+
+    # check the type
+    assert isinstance(bytes_array, bytearray), 'invalid data type'
+
+    # check that the data start with a dict
+    (bytes_array, bytes_tmp) = get_byte(bytes_array, 1)
+    cls = class_decode(bytes_tmp)
+    assert cls=='dict', 'invalid data type'
+
+    # deserialize data, at the end the byte array should be empty
+    (data, bytes_array) = deserialize_struct(bytes_array)
+    assert len(bytes_array)==0, 'invalid data length'
 
     return data
 
-def deserialize_struct(byte):
-    [byte, byte_tmp] = get_byte(byte, 4)
-    n_field = struct.unpack('I', byte_tmp)[0]
 
+def deserialize_struct(bytes_array):
+    """Deserialize a Python dict.
+
+    Parameters:
+    bytes_array (bytes): Data to be deserialized
+
+    Returns:
+    dict: Deserialized data
+    bytes: Remaining data to be deserialized 
+
+   """
+    
+    # init
     data = {}
+
+    # get the number of keys
+    [bytes_array, bytes_tmp] = get_byte(bytes_array, 4)
+    n_field = struct.unpack('I', bytes_tmp)[0]
+
+    # decode the keys and values
     for i in range(n_field):
-        (v_field, byte) = deserialize_data(byte)
-        (v_value, byte) = deserialize_data(byte)
+        (v_field, bytes_array) = deserialize_data(bytes_array)
+        (v_value, bytes_array) = deserialize_data(bytes_array)
         data[v_field] = v_value
 
-    return (data, byte)
+    return (data, bytes_array)
 
-def deserialize_data(byte):
-    (byte, byte_tmp) = get_byte(byte, 1)
-    cls = class_decode(byte_tmp)
 
+def deserialize_data(bytes_array):
+    """Deserialize a Python string or a numpy array.
+
+    Parameters:
+    bytes_array (bytes): Data to be deserialized
+
+    Returns:
+    str/array: Deserialized data
+    bytes: Remaining data to be deserialized 
+
+   """
+    
+    # get the type
+    (bytes_array, bytes_tmp) = get_byte(bytes_array, 1)
+    cls = class_decode(bytes_tmp)
+
+    # decode the data
     if cls=='str':
-        (data, byte) = deserialize_char(byte, cls)
+        (data, bytes_array) = deserialize_char(bytes_array, cls)
     else:
-        (data, byte) = deserialize_matrix(byte, cls)
+        (data, bytes_array) = deserialize_matrix(bytes_array, cls)
 
-    return (data, byte)
+    return (data, bytes_array)
 
-def deserialize_char(byte, cls):
-    [byte, byte_tmp] = get_byte(byte, 4)
-    n_length = struct.unpack('I', byte_tmp)[0]
 
+def deserialize_char(bytes_array, cls):
+    """Deserialize a Python string.
+
+    Parameters:
+    bytes_array (bytes): Data to be deserialized
+
+    Returns:
+    str: Deserialized data
+    bytes: Remaining data to be deserialized
+
+   """
+
+    # get the length
+    [bytes_array, bytes_tmp] = get_byte(bytes_array, 4)
+    n_length = struct.unpack('I', bytes_tmp)[0]
+
+    # decode the data
     n_byte = class_size(cls)
-    [byte, byte_tmp] = get_byte(byte, n_length*n_byte)
-    data = byte_tmp.decode('utf-8')
+    [bytes_array, bytes_tmp] = get_byte(bytes_array, n_length*n_byte)
+    data = bytes_tmp.decode('utf-8')
 
-    return (data, byte)
+    return (data, bytes_array)
 
-def deserialize_matrix(byte, cls):
-    [byte, byte_tmp] = get_byte(byte, 4)
-    n_dim = struct.unpack('I', byte_tmp)[0]
 
-    [byte, byte_tmp] = get_byte(byte, n_dim*4)
-    size_vec = struct.unpack('%sI' % n_dim, byte_tmp)
+def deserialize_matrix(bytes_array, cls):
+    """Deserialize a numpy array.
 
+    Parameters:
+    bytes_array (bytes): Data to be deserialized
+
+    Returns:
+    array: Deserialized data
+    bytes: Remaining data to be deserialized
+
+   """
+
+    # get number of dimension
+    [bytes_array, bytes_tmp] = get_byte(bytes_array, 4)
+    n_dim = struct.unpack('I', bytes_tmp)[0]
+
+    # decode the number of element per dimension
+    [bytes_array, bytes_tmp] = get_byte(bytes_array, n_dim*4)
+    size_vec = struct.unpack('%sI' % n_dim, bytes_tmp)
+
+    # get the data
     n_byte = class_size(cls)
     n_elem = np.prod(size_vec)
-    [byte, byte_tmp] = get_byte(byte, n_elem*n_byte)
+    [bytes_array, bytes_tmp] = get_byte(bytes_array, n_elem*n_byte)
 
-    data = np.frombuffer(byte_tmp, dtype=cls)
+    # decode the data: warning MATLAB is using FORTRAN byte order, not the C one
+    data = np.frombuffer(bytes_tmp, dtype=cls)
     data = np.reshape(data, size_vec, order='F')
 
-    return (data, byte)
+    return (data, bytes_array)
+
 
 def class_size(cls):
+    """Get the number of bytes per element for a given data type.
+
+    Parameters:
+    cls (str): Name of the data type
+
+    Returns:
+    int: Number of byte per element
+
+   """
+
     if cls in ['float64', 'int64', 'uint64']:
         n_byte = 8
     elif cls in ['float32', 'int32', 'uint32']:
@@ -70,13 +167,21 @@ def class_size(cls):
     elif cls in ['bool', 'str', 'int8', 'uint8']:
         n_byte = 1
     else:
-        raise TypeError('invalid type')
+        raise TypeError('invalid data type')
 
     return n_byte
 
-
-
 def class_decode(b):
+    """Decode the data type from a byte.
+
+    Parameters:
+    b (byte): Byte with the encoded type
+
+    Returns:
+    str: Name of the decoded data type
+
+   """
+
     if b == b'\x00':
         cls = 'float64'
     elif b == b'\x01':
@@ -100,11 +205,25 @@ def class_decode(b):
     elif b == b'\x0c':
         cls = 'dict'
     else:
-        raise TypeError('invalid type')
+        raise TypeError('invalid data type')
 
     return cls
 
-def get_byte(byte, n):
-    byte_tmp = byte[0:n]
-    byte = byte[n:]
-    return (byte, byte_tmp)
+
+def get_byte(bytes_array, n):
+    """Get a number of bytes from a byte array and remove them.
+
+    Parameters:
+    bytes_array (bytes): Byte array
+    n (int): Bytes to be return and removed
+
+    Returns:
+    bytes: Resulting byte array (with n bytes less)
+    bytes: Read bytes (n bytes)
+
+   """
+
+    bytes_tmp = bytes_array[0:n]
+    bytes_array = bytes_array[n:]
+
+    return (bytes_array, bytes_tmp)
