@@ -15,7 +15,7 @@ def serialize_struct(data):
 
     # number of fields
     byte_add = len(data)
-    byte_add = struct.pack("I", byte_add)
+    byte_add = struct.pack('I', byte_add)
     byte = append_byte(byte, byte_add)
 
     # add field and byte
@@ -46,7 +46,7 @@ def serialize_data(data):
 def serialize_char(byte, data):
     n_length = len(data)
 
-    byte_add = struct.pack("I", n_length)
+    byte_add = struct.pack('I', n_length)
     byte = append_byte(byte, byte_add)
 
     byte_add = bytes(data, 'utf-8')
@@ -57,13 +57,13 @@ def serialize_char(byte, data):
 def serialize_matrix(byte, data):
     size_vec = data.shape
 
-    byte_add = struct.pack("I", len(size_vec))
+    byte_add = struct.pack('I', len(size_vec))
     byte = append_byte(byte, byte_add)
 
     byte_add = struct.pack('%sI' % len(size_vec), *size_vec)
     byte = append_byte(byte, byte_add)
 
-    byte_add = data.tobytes(order="F")
+    byte_add = data.tobytes(order='F')
     byte = append_byte(byte, byte_add)
 
     return byte

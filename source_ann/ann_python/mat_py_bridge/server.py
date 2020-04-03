@@ -33,7 +33,7 @@ class PythonMatlabConnection(Thread):
 
     def __receive(self):
         byte = self.__recv_size(4)
-        n = struct.unpack("I", byte)[0]
+        n = struct.unpack('I', byte)[0]
 
         byte = self.__recv_size(n)
         data = deserialize.get(byte)
@@ -46,7 +46,7 @@ class PythonMatlabConnection(Thread):
             size_remain = size-len(byte)
             byte_tmp = self.connection.recv(size_remain)
             if len(byte_tmp)==0:
-                raise socket.error("connection error")
+                raise socket.error('connection error')
 
             byte += bytearray(byte_tmp)
             if len(byte)==size:
@@ -56,7 +56,7 @@ class PythonMatlabConnection(Thread):
         byte = serialize.get(data)
 
         n = len(byte)
-        n = struct.pack("I", n)
+        n = struct.pack('I', n)
 
         self.connection.sendall(n)
         self.connection.sendall(byte)

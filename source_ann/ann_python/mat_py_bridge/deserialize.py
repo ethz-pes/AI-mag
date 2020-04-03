@@ -42,7 +42,7 @@ def deserialize_char(byte, cls):
 
     n_byte = class_size(cls)
     [byte, byte_tmp] = get_byte(byte, n_length*n_byte)
-    data = byte_tmp.decode("utf-8")
+    data = byte_tmp.decode('utf-8')
 
     return (data, byte)
 
@@ -51,7 +51,7 @@ def deserialize_matrix(byte, cls):
     n_dim = struct.unpack('I', byte_tmp)[0]
 
     [byte, byte_tmp] = get_byte(byte, n_dim*4)
-    size_vec = struct.unpack("%sI" % n_dim, byte_tmp)
+    size_vec = struct.unpack('%sI' % n_dim, byte_tmp)
 
     n_byte = class_size(cls)
     n_elem = np.prod(size_vec)

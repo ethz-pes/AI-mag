@@ -9,10 +9,8 @@ addpath(genpath('source_data'))
 close('all')
 
 % print copyright
-author = 'T. Guillod';
-year = '2019-2020';
-copyright = 'ETHZ PES';
-license = 'xxx License';
-fprintf('%s / (c) %s %s / %s\n', author, year, copyright, license)
+fprintf('FEM/ANN Inductor Optimization\n')
+fprintf('    T. Guillod, Power Electronic Systems Laboratory\n')
+fprintf('    Copyright 2019-2020 ETH Zurich / xxx License\n')
 
 end
