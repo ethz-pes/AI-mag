@@ -35,7 +35,7 @@ def get(bytes_array):
 
     # deserialize data, at the end the byte array should be empty
     (data, bytes_array) = deserialize_struct(bytes_array)
-    assert len(bytes_array)==0, 'invalid data length'
+    assert len(bytes_array) == 0, 'invalid data length'
 
     return data
 
@@ -223,6 +223,7 @@ def get_byte(bytes_array, n):
 
    """
 
+    assert len(bytes_array) >= n, 'invalid data length'
     bytes_tmp = bytes_array[0:n]
     bytes_array = bytes_array[n:]
 
