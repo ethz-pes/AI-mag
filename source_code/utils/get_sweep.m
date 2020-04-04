@@ -126,7 +126,7 @@ end
 function y = get_var_trf(x, type, scale_unscale)
 
 switch type
-    case 'lin'
+    case 'none'
         y_scale = x;
         y_unscale = x;
     case 'rev'

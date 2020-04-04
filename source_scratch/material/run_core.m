@@ -4,8 +4,8 @@ function run_core()
 %    Map the different materials with a unique id.
 
 % init
-close('all');
 addpath(genpath('utils'))
+close('all');
 
 % data
 id = [97 87 49 95]; % unique id
@@ -85,10 +85,10 @@ function [tol, add_pts] = get_extrapolate()
 % tolerance for considering points as duplicates
 tol = 1e-6;
 
-% add frequency and AC flux density points to make a complete grid
+% add frequency and AC flux density points to make a complete grid:
 %     - B_ac_peak and f: point to be added
 %     - B_ac_peak_other and f_other: point to used for the exterpolation
-%     - the following points are used to extrapolate
+%     - the following points are used to extrapolate:
 %         - f_other and B_ac_peak
 %         - f and B_ac_peak_other
 %         - f_other and B_ac_peak_other
