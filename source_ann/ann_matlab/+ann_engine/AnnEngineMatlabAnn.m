@@ -1,5 +1,14 @@
+% Deserialize a MATLAB string or an array.
+%
+%    Parameters:
+%        bytes_array (bytes): data to be deserialized
+%
+%    Returns:
+%        data (str/array): deserialized data
+%        bytes_array (bytes): remaining data to be deserialized
 classdef AnnEngineMatlabAnn < ann_engine.AnnEngineAbstract
-    %% properties
+
+%% properties
     properties (SetAccess = immutable, GetAccess = private)
         fct_model
         fct_train

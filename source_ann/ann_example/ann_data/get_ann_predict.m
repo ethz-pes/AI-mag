@@ -1,5 +1,5 @@
 function [n_sol, inp, out_nrm] = get_ann_predict()
-% Generate a test dataset for testing the evaluation of the regressions (2 inputs, 2 outputs).
+% Generate a dataset for evaluating the regressions (2 inputs, 2 outputs).
 %
 %    Returns:
 %        n_sol (int): number of samples

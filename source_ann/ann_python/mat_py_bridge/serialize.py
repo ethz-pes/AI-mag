@@ -9,7 +9,7 @@ def get(data):
         - The data has to be a dictionary
         - The keys of the dictionary should be strings
         - The values of the dictionary can be strings
-        - The values of the dictionary can be numpy array:
+        - The values of the dictionary can be numpy arrays:
             - Multi-dimensional arrays are supported
             - float64, float32, bool, int8, uint8, int32, uint32, int64, uint64
 
@@ -18,7 +18,7 @@ def get(data):
         - The mismatch between the Pythpn data types and the MATLAB data types
 
     Parameters:
-    data (dict): Data to be serialized
+    
 
     Returns:
     bytes: Serialized data
@@ -153,7 +153,7 @@ def class_encode(data):
     """Encode the data type with a byte.
 
     Parameters:
-    data (dict): Data to be encoded
+    data (various): Data to be encoded
 
     Returns:
     byte: Byte with the encoded type

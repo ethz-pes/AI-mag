@@ -9,7 +9,7 @@ def get(bytes_array):
         - The data has to be a dictionary
         - The keys of the dictionary should be strings
         - The values of the dictionary can be strings
-        - The values of the dictionary can be numpy array:
+        - The values of the dictionary can be numpy arrays:
             - Multi-dimensional arrays are supported
             - float64, float32, bool, int8, uint8, int32, uint32, int64, uint64
 
@@ -144,6 +144,8 @@ def deserialize_matrix(bytes_array, cls):
 
     # decode the data: warning MATLAB is using FORTRAN byte order, not the C one
     data = np.frombuffer(bytes_tmp, dtype=cls)
+
+    # reshape the data
     data = np.reshape(data, size_vec, order='F')
 
     return (data, bytes_array)

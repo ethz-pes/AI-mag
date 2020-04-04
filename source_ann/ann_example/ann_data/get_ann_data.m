@@ -1,5 +1,5 @@
 function [n_sol, inp, out_ref, out_nrm] = get_ann_data()
-% Generate a test dataset for testing regression methods (2 inputs, 2 outputs).
+% Generate a dataset for training the regression methods (2 inputs, 2 outputs).
 %
 %    Returns:
 %        n_sol (int): number of samples
