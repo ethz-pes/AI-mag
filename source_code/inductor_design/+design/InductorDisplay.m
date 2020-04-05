@@ -1,6 +1,6 @@
 classdef InductorDisplay < handle
     %% init
-    properties (SetAccess = private, GetAccess = private)
+    properties (SetAccess = private, GetAccess = public)
         id_design
         fom
         operating

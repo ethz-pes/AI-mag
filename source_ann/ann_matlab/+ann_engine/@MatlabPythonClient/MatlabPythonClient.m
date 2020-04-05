@@ -5,8 +5,8 @@ classdef MatlabPythonClient < handle
     %    Send request and get response from the server.
     
     %% properties
-    properties (SetAccess = private, GetAccess = private)
-        tcp % tcpclient object: contain the connection to the server
+    properties (SetAccess = private, GetAccess = public)
+        tcp % tcpclient: contain the connection to the server
     end
     
     %% public

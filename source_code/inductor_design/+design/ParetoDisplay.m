@@ -1,6 +1,6 @@
 classdef ParetoDisplay < handle
     %% init
-    properties (SetAccess = private, GetAccess = private)
+    properties (SetAccess = private, GetAccess = public)
         n_sol
         n_plot
         id_design

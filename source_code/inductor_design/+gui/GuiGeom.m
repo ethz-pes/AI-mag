@@ -1,6 +1,6 @@
 classdef GuiGeom < handle
     %% init
-    properties (SetAccess = private, GetAccess = private)
+    properties (SetAccess = private, GetAccess = public)
         ax
         panel
     end

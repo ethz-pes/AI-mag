@@ -1,6 +1,6 @@
 classdef ParetoGui < handle
     %% init
-    properties (SetAccess = private, GetAccess = private)
+    properties (SetAccess = private, GetAccess = public)
         id_fig
         pareto_display_obj
         inductor_gui_obj
@@ -8,7 +8,7 @@ classdef ParetoGui < handle
         size_data
         txt_size
     end
-    properties (SetAccess = private, GetAccess = private)
+    properties (SetAccess = private, GetAccess = public)
         txt_fom
         id_select
         is_select

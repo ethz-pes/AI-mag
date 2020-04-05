@@ -1,6 +1,6 @@
 classdef ThermalLoss < handle
     %% init
-    properties (SetAccess = immutable, GetAccess = private)
+    properties (SetAccess = immutable, GetAccess = public)
         iter
         fct
     end

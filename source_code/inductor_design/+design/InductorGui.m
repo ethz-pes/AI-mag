@@ -1,10 +1,10 @@
 classdef InductorGui < handle
     %% init
-    properties (SetAccess = private, GetAccess = private)
+    properties (SetAccess = private, GetAccess = public)
         id_fig
         inductor_display_obj
     end
-    properties (SetAccess = private, GetAccess = private)
+    properties (SetAccess = private, GetAccess = public)
         id_select
         plot_data
         fom_data

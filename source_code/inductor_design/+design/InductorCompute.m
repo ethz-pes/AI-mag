@@ -1,12 +1,12 @@
 classdef InductorCompute < handle
     %% init
-    properties (SetAccess = immutable, GetAccess = private)
+    properties (SetAccess = immutable, GetAccess = public)
         n_sol
         data_vec
         data_const
         ann_fem_obj
     end
-    properties (SetAccess = private, GetAccess = private)
+    properties (SetAccess = private, GetAccess = public)
         fom
         core_obj
         winding_obj

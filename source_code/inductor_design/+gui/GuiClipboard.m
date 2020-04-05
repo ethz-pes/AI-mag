@@ -1,6 +1,6 @@
 classdef GuiClipboard < handle
     %% init
-    properties (SetAccess = private, GetAccess = private)
+    properties (SetAccess = private, GetAccess = public)
         txt
     end
     

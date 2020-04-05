@@ -1,5 +1,5 @@
 classdef GuiText < handle
-    properties (SetAccess = private, GetAccess = private)
+    properties (SetAccess = private, GetAccess = public)
         panel
         offset
         margin_col
