@@ -1,10 +1,24 @@
 function disp_data(name, data)
+% Display data (on screen) in a pretty way.
+%
+%    Parameters:
+%        name (str): name of the variable to be displayed
+%        data (various): data to be displayed
 
 disp_data_sub(0, name, data)
 
 end
 
 function disp_data_sub(level, name, data)
+% Display data (on screen) in a pretty way.
+%
+%    This function is recursive for struct and cell.
+%    This function can handle a small subset of the MATLAB data types.
+%
+%    Parameters:
+%        level (int): indentation level
+%        name (str): name of the variable to be displayed
+%        data (various): data to be displayed
 
 if isa(data, 'char')
     print_indent(level, '%s : %s', name, data)
@@ -35,13 +49,16 @@ end
 
 end
 
-function print_indent(varargin)
-
-level = varargin{1};
-arg = varargin(2:end);
+function print_indent(level, str, varargin)
+% Display a string (on screen) with indentation
+%
+%    Parameters:
+%        level (int): indentation level
+%        str (str): string to be displayed (with format data)
+%        varargin (cell): data for the format fields
 
 indent = repmat(' ', 1, 4*level);
-str = sprintf(arg{:});
+str = sprintf(str, varargin{:});
 fprintf('%s%s\n', indent, str);
 
 end

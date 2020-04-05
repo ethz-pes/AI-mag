@@ -1,17 +1,22 @@
 function check_set(n_sol, var, data)
+% Check the validity of a provided dataset.
+%
+%    Parameters:
+%        n_sol (int): number of samples
+%        var (cell): description of the variables
+%        data (struct): struct with the dataset
 
+% check data type
 assert(isstruct(data), 'invalid data')
 
-field_var = cell(length(var), 1);
-for i=1:length(var)
-    field_var{i} = var{i}.name;
-end
+% check that the required variables are present
 field_data = fieldnames(data);
-field_data = intersect(field_var, field_data);
+for i=1:length(var)
+    field_var = var{i}.name;
+    assert(any(strcmp(field_var, field_data)), 'invalid data')
+end
 
-assert(length(field_var)==length(field_data), 'invalid data')
-assert(all(strcmp(sort(field_var), sort(field_data))), 'invalid data')
-
+% check the size of the data
 field = fieldnames(data);
 for i=1:length(field)
     data_tmp = data.(field{i});

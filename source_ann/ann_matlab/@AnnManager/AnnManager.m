@@ -162,7 +162,7 @@ classdef AnnManager < handle
             %
             %    Should be called when the object is not anymore required.
             %    This method override a standard MATLAB method.
-
+            
             if self.is_train==true
                 self.unload_engine();
             end
@@ -200,8 +200,8 @@ classdef AnnManager < handle
             out_nrm_train = AnnManager.get_struct_idx(self.out_nrm, self.idx_train);
             
             % get normalization over the training data
-            self.get_norm_var_inp();
-            self.get_norm_var_out();
+            self.norm_param_inp = self.get_norm_var_inp(inp_train);
+            self.norm_param_out = self.get_norm_var_out(out_ref_train, out_nrm_train);
             
             % scale, transform, normalize, and cast to matrix
             inp_mat_train = self.get_scale_inp(inp_train);
@@ -245,7 +245,7 @@ classdef AnnManager < handle
             %    Returns:
             %        is_valid_tmp (vector): validity of the different evaluated samples
             %        out_nrm_tmp (struct): evaluated data (equal to the provided normalization data)
-
+            
             % the regression has to be already trained/fitted
             assert(self.is_train==true, 'invalid state')
             
@@ -430,8 +430,8 @@ classdef AnnManager < handle
     methods (Access = private)
         is_valid = get_range_inp(self, inp)
         get_idx_split(self)
-        get_norm_var_inp(self)
-        get_norm_var_out(self)
+        norm_param = get_norm_var_inp(self, inp_train);
+        norm_param = get_norm_var_out(self, out_ref_train, out_nrm_train);
         inp_mat = get_scale_inp(self, inp)
         out_mat = get_scale_out(self, out_ref, out_nrm)
         out_ann = get_unscale_out(self, out_nrm, out_mat)
