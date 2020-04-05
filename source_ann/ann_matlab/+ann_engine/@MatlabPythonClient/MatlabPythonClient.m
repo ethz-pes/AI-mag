@@ -81,7 +81,7 @@ classdef MatlabPythonClient < handle
         end
     end
     
-    %% static
+    %% static / external
     methods(Static, Access = private)
         byte = get_serialize(data)
         data = get_deserialize(byte)

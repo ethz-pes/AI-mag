@@ -55,7 +55,7 @@ classdef AnnManager < handle
             %
             %    Parameters:
             %        ann_input (struct): input data (variables definition and algoritm parameters)
-
+            
             % assign input
             self.var_inp = ann_input.var_inp;
             self.var_out = ann_input.var_out;
@@ -135,74 +135,14 @@ classdef AnnManager < handle
             fom = self.fom;
         end
         
-        function train(self, n_sol, inp, out_ref, out_nrm)
-            % Train/fit the regression with the provided data.
-            %
-            %    Set the data.
-            %    Start and init the regression engine.
-            %    Do not make any fitting.
-            %
-            %    Parameters:
-            %        ann_input (struct): input data (variables definition and algoritm parameters)
-            
-            
-%             n_sol % int: number of samples
-%         inp % struct: input data
-%         out_ref % struct: output reference data
-%         out_nrm % struct: output normalization data
-%         out_ann % struct: output ANN/fitted data
-
-            
-            
-            % assign
-            self.n_sol = n_sol;
-            self.inp = inp;
-            self.out_ref = out_ref;
-            self.out_nrm = out_nrm;
-            
-            % check range
-            is_valid = self.get_range_inp(self.inp);
-            assert(all(is_valid==true), 'invalid inp')
-            
-            % split the data
-            self.get_idx_split();
-            
-            % extract training data
-            inp_train = AnnManager.get_struct_idx(self.inp, self.idx_train);
-            out_ref_train = AnnManager.get_struct_idx(self.out_ref, self.idx_train);
-            out_nrm_train = AnnManager.get_struct_idx(self.out_nrm, self.idx_train);
-            
-            % get normalization
-            self.get_norm_var_inp();
-            self.get_norm_var_out();
-            
-            % get training matrices
-            inp_mat_train = self.get_scale_inp(inp_train);
-            out_mat_train = self.get_scale_out(out_ref_train, out_nrm_train);
-            
-            % train the network
-            self.train_engine(inp_mat_train, out_mat_train);
-            self.load_engine();
-            
-            % run the network
-            inp_mat = self.get_scale_inp(self.inp);
-            out_mat = self.predict_engine(inp_mat);
-            
-            % unscale the result
-            self.out_ann = self.get_unscale_out(self.out_nrm, out_mat);
-            
-            % fet fom
-            self.get_fom_train();
-            
-            % check set
-            AnnManager.check_set(self.n_sol, self.var_inp, self.inp)
-            AnnManager.check_set(self.n_sol, self.var_out, self.out_ref)
-            AnnManager.check_set(self.n_sol, self.var_out, self.out_nrm)
-            AnnManager.check_set(self.n_sol, self.var_out, self.out_ann)
-            self.is_train = true;
-        end
-        
         function disp(self)
+            % Display and plot the data of the object.
+            %
+            %    Display the input data.
+            %    Display and plot the input and output datasets.
+            %    This method override a standard MATLAB method.
+            
+            % display data
             AnnManager.disp_data('var_inp', self.var_inp);
             AnnManager.disp_data('var_out', self.var_out);
             AnnManager.disp_data('split_train_test', self.split_train_test);
@@ -210,48 +150,140 @@ classdef AnnManager < handle
             AnnManager.disp_data('ann_info', self.ann_info);
             AnnManager.disp_data('is_train', self.is_train);
             
+            % display input and out datasets
             if self.is_train==true
                 AnnManager.disp_data('n_sol', self.n_sol);
                 self.disp_fom_train()
             end
         end
         
+        function delete(self)
+            % Delete the class, unload the data from the engine.
+            %
+            %    Should be called when the object is not anymore required.
+            %    This method override a standard MATLAB method.
+
+            if self.is_train==true
+                self.unload_engine();
+            end
+        end
+        
+        function train(self, n_sol, inp, out_ref, out_nrm)
+            % Train/fit the regression with the provided data.
+            %
+            %    Scale the data.
+            %    Make the regression.
+            %    Compute the error metrics.
+            %
+            %    Parameters:
+            %        n_sol (int): number of samples
+            %        inp (struct): input data
+            %        out_ref (struct): output reference data
+            %        out_nrm (struct): output normalization data
+            
+            % assign the data
+            self.n_sol = n_sol;
+            self.inp = inp;
+            self.out_ref = out_ref;
+            self.out_nrm = out_nrm;
+            
+            % check the range, the provided data should be valid
+            is_valid = self.get_range_inp(self.inp);
+            assert(all(is_valid==true), 'invalid inp')
+            
+            % split the data between training and test set
+            self.get_idx_split();
+            
+            % extract training data
+            inp_train = AnnManager.get_struct_idx(self.inp, self.idx_train);
+            out_ref_train = AnnManager.get_struct_idx(self.out_ref, self.idx_train);
+            out_nrm_train = AnnManager.get_struct_idx(self.out_nrm, self.idx_train);
+            
+            % get normalization over the training data
+            self.get_norm_var_inp();
+            self.get_norm_var_out();
+            
+            % scale, transform, normalize, and cast to matrix
+            inp_mat_train = self.get_scale_inp(inp_train);
+            out_mat_train = self.get_scale_out(out_ref_train, out_nrm_train);
+            
+            % train/fit with the training set
+            self.train_engine(inp_mat_train, out_mat_train);
+            
+            % load the regression into the engine
+            self.load_engine();
+            
+            % run the regression for all the data (training and test)
+            inp_mat = self.get_scale_inp(self.inp);
+            out_mat = self.predict_engine(inp_mat);
+            
+            % unscale the output
+            self.out_ann = self.get_unscale_out(self.out_nrm, out_mat);
+            
+            % compute the figures of merit for the errors
+            self.get_fom_train();
+            
+            % check the datasets
+            AnnManager.check_set(self.n_sol, self.var_inp, self.inp)
+            AnnManager.check_set(self.n_sol, self.var_out, self.out_ref)
+            AnnManager.check_set(self.n_sol, self.var_out, self.out_nrm)
+            AnnManager.check_set(self.n_sol, self.var_out, self.out_ann)
+            
+            % now the regression are done, set the flag
+            self.is_train = true;
+        end
+        
+        
         function [is_valid_tmp, out_nrm_tmp] = predict_nrm(self, n_sol_tmp, inp_tmp, out_nrm_tmp)
-            % check state
+            % Dummy evaluation: check the data and return the provided normalization data.
+            %
+            %    Parameters:
+            %        n_sol_tmp (int): number of samples to evaluate
+            %        inp_tmp (struct): input data to evaluate
+            %        out_nrm_tmp (struct): output normalization data to to evaluate
+            %
+            %    Returns:
+            %        is_valid_tmp (vector): validity of the different evaluated samples
+            %        out_nrm_tmp (struct): evaluated data (equal to the provided normalization data)
+
+            % the regression has to be already trained/fitted
             assert(self.is_train==true, 'invalid state')
             
-            % check validity
+            % check validity of the input data
             is_valid_tmp = self.get_range_inp(inp_tmp);
             
-            % check set
+            % check the datasets
             AnnManager.check_set(n_sol_tmp, self.var_inp, inp_tmp)
             AnnManager.check_set(n_sol_tmp, self.var_out, out_nrm_tmp)
         end
         
         function [is_valid_tmp, out_ann_tmp] = predict_ann(self, n_sol_tmp, inp_tmp, out_nrm_tmp)
-            % check state
+            % Regression evaluation: check the data, evaluate the regression, and return the fitted data.
+            %
+            %    Parameters:
+            %        n_sol_tmp (int): number of samples to evaluate
+            %        inp_tmp (struct): input data to evaluate
+            %        out_nrm_tmp (struct): output normalization data to to evaluate
+            %
+            %    Returns:
+            %        is_valid_tmp (vector): validity of the different evaluated samples
+            %        out_nrm_tmp (struct): evaluated data (obtained with the regression engine)
+            
+            % the regression has to be already trained/fitted
             assert(self.is_train==true, 'invalid state')
             
-            % run the network
+            % scale the input, run the regression, and unscale the output
             inp_mat_tmp = self.get_scale_inp(inp_tmp);
             out_mat_tmp = self.predict_engine(inp_mat_tmp);
-            
-            % unscale the result
             out_ann_tmp = self.get_unscale_out(out_nrm_tmp, out_mat_tmp);
             
-            % check validity
+            % check validity of the input data
             is_valid_tmp = self.get_range_inp(inp_tmp);
             
-            % check set
+            % check the datasets
             AnnManager.check_set(n_sol_tmp, self.var_inp, inp_tmp)
             AnnManager.check_set(n_sol_tmp, self.var_out, out_nrm_tmp)
             AnnManager.check_set(n_sol_tmp, self.var_out, out_ann_tmp)
-        end
-        
-        function delete(self)
-            if self.is_train==true
-                self.unload_engine();
-            end
         end
     end
     
@@ -262,7 +294,7 @@ classdef AnnManager < handle
             %
             %    Extract the regression parameters.
             %    Create an instance of ann_engine.AnnEngineAbstract.
-
+            
             switch self.ann_info.type
                 case 'matlab_ann'
                     fct_model = self.ann_info.fct_model;
@@ -292,20 +324,38 @@ classdef AnnManager < handle
         end
         
         function train_engine(self, inp_mat, out_mat)
+            % Train/fit the regression with given data with the engine.
+            %
+            %    Make the regression.
+            %    Store the resulting data into the memory.
+            %    Do not load the data into the object.
+            %
+            %    Parameters:
+            %        inp_mat (matrix): matrix with the input data
+            %        out_mat (matrix): matrix with the output data
+            
             if self.split_var==true
+                % separate regression for each output variable
                 self.ann_data = {};
                 for i=1:length(self.var_out)
                     [model, history] = self.ann_engine_obj.train(inp_mat, out_mat(i,:));
                     self.ann_data{i} = struct('model', model, 'history', history, 'name', ['ann_' num2str(i)]);
                 end
             else
+                % single regression with all the output at once
                 [model, history] = self.ann_engine_obj.train(inp_mat, out_mat);
                 self.ann_data = struct('model', model, 'history', history, 'name', 'ann');
             end
         end
         
         function load_engine(self)
+            % Load the trained/fitted regression in the engine.
+            %
+            %    Get the data from the object.
+            %    Load the data into the engine.
+            
             if self.split_var==true
+                % separate regression for each output variable
                 for i=1:length(self.var_out)
                     model = self.ann_data{i}.model;
                     history = self.ann_data{i}.history;
@@ -313,6 +363,7 @@ classdef AnnManager < handle
                     self.ann_engine_obj.load(name, model, history)
                 end
             else
+                % single regression with all the output at once
                 model = self.ann_data.model;
                 history = self.ann_data.history;
                 name = self.ann_data.name;
@@ -321,31 +372,51 @@ classdef AnnManager < handle
         end
         
         function unload_engine(self)
+            % Remove a trained/fitted regression from the engine.
+            %
+            %    Remove the regression.
+            %    Do not store the data in the object.
+            
             if self.split_var==true
+                % separate regression for each output variable
                 for i=1:length(self.var_out)
                     name = self.ann_data{i}.name;
                     self.ann_engine_obj.unload(name)
                 end
             else
+                % single regression with all the output at once
                 name = self.ann_data.name;
                 self.ann_engine_obj.unload(name)
             end
         end
         
         function out_mat = predict_engine(self, in_mat)
+            % Evaluate a regression with given input data with the engine.
+            %
+            %    Evaluate the regression.
+            %    The regression has to be loaded in the engine.
+            %
+            %    Parameters:
+            %        inp_mat (matrix): matrix with the input data
+            %
+            %    Returns:
+            %        out_mat (matrix): matrix with the output data
+            
             if self.split_var==true
+                % separate regression for each output variable
                 for i=1:length(self.var_out)
                     name = self.ann_data{i}.name;
                     out_mat(i,:) = self.ann_engine_obj.predict(name, in_mat);
                 end
             else
+                % single regression with all the output at once
                 name = self.ann_data.name;
                 out_mat = self.ann_engine_obj.predict(name, in_mat);
             end
         end
     end
     
-    %% static
+    %% static / external
     methods (Static, Access = private)
         check_set(n_sol, var, data)
         disp_data(name, data)
@@ -355,7 +426,7 @@ classdef AnnManager < handle
         y = get_var_trf(x, type, scale_unscale)
     end
     
-    %% private
+    %% private / external
     methods (Access = private)
         is_valid = get_range_inp(self, inp)
         get_idx_split(self)
