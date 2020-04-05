@@ -26,11 +26,10 @@ classdef AnnEngineMatlabAnn < ann_engine.AnnEngineAbstract
             self.ann_data = struct();
         end
         
-        function [model, history] = train(self, tag_train, inp, out)
+        function [model, history] = train(self, inp, out)
             % Train/fit a regression and get the corresponding model.
             %
             %    Parameters:
-            %        tag_train (str): tag for enabling different training/fitting modes
             %        inp (matrix): matrix with the input data
             %        out (matrix): matrix with the output data
             %
@@ -52,8 +51,8 @@ classdef AnnEngineMatlabAnn < ann_engine.AnnEngineAbstract
             assert(n_sol>0, 'invalid size')
             assert(n_inp>0, 'invalid size')
             assert(n_out>0, 'invalid size')
-            model = self.fct_model(tag_train, n_sol, n_inp, n_out);
-            [model, history] = self.fct_train(tag_train, model, inp, out);
+            model = self.fct_model(n_sol, n_inp, n_out);
+            [model, history] = self.fct_train(model, inp, out);
             
             % check the data type
             assert(isa(model, 'network'), 'invalid model')

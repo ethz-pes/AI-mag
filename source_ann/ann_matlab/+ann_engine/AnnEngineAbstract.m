@@ -13,11 +13,10 @@ classdef AnnEngineAbstract < handle
     
     %% public abstract
     methods (Abstract, Access=public)
-        [model, history] = train(self, tag_train, inp, out)
+        [model, history] = train(self, inp, out)
         % Train/fit a regression and get the corresponding model.
         %
         %    Parameters:
-        %        tag_train (str): tag for enabling different training/fitting modes
         %        inp (matrix): matrix with the input data
         %        out (matrix): matrix with the output data
         %

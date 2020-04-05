@@ -1,4 +1,4 @@
-function [ann_input, tag_train] = get_ann_param(ann_type)
+function ann_input = get_ann_param(ann_type)
 % Return the data for the AnnManager class for different regression types.
 %
 %    Parameters:
@@ -6,7 +6,6 @@ function [ann_input, tag_train] = get_ann_param(ann_type)
 %
 %    Returns:
 %        ann_input (struct): input data for the AnnManager class
-%        tag_train (str): tag to be passed for the training/fitting method of the AnnManager class
 
 % description of the input variables:
 %    - name: name of the variable
@@ -91,7 +90,10 @@ switch ann_type
         
         % timeout for Python ANN server requests
         ann_info.timeout = 240;
-    case 'matlab_lsq'
+
+        % tag to be passed for the training/fitting method (not used in this example)
+        ann_info.tag_train = 'none';
+case 'matlab_lsq'
         % options for the MATLAB 'lsqnonlin' function
         ann_info.options = struct(...
             'Display', 'off',...
@@ -148,16 +150,12 @@ ann_input.split_train_test = split_train_test;
 ann_input.split_var = split_var;
 ann_input.ann_info = ann_info;
 
-% tag to be passed for the training/fitting method (not used in this example) 
-tag_train = 'none';
-
 end
 
-function model = fct_model(tag_train, n_sol, n_inp, n_out)
+function model = fct_model(n_sol, n_inp, n_out)
 % Function that create and return a MATLAB ANN.
 %
 %    Parameters:
-%        tag_train (str): tag that can be used to control the algorithm
 %        n_sol (int): number of samples that will be used for training
 %        n_inp (int): number of input variables
 %        n_out (int): number of output variables
@@ -166,7 +164,6 @@ function model = fct_model(tag_train, n_sol, n_inp, n_out)
 %        model (model): creating MATLAB ANN
 
 % check the data, the tag and the size information are not used in this example
-assert(ischar(tag_train), 'invalid tag_train')
 assert(isfinite(n_sol), 'invalid number of samples')
 assert(isfinite(n_inp), 'invalid input')
 assert(isfinite(n_out), 'invalid output')
@@ -182,11 +179,10 @@ model.divideParam.testRatio = 0.0;
 
 end
 
-function [model, history] = fct_train(tag_train, model, inp_mat, out_mat)
+function [model, history] = fct_train(model, inp_mat, out_mat)
 % Function that train a MATLAB ANN with given data.
 %
 %    Parameters:
-%        tag_train (str): tag that can be used to control the algorithm
 %        model (model): MATLAB ANN (to be trained)
 %        inp_mat (matrix): input data
 %        out_mat (matrix): output data
@@ -195,27 +191,20 @@ function [model, history] = fct_train(tag_train, model, inp_mat, out_mat)
 %        model (model): MATLAB ANN (trained)
 %        history (history): training record information
 
-% check the tag, the tag is not used in this example
-assert(ischar(tag_train), 'invalid tag_train')
-
 % train the ANN
 [model, history] = train(model, inp_mat, out_mat);
 
 end
 
-function out_mat_fit = fct_fit(tag_train, x, inp_mat)
+function out_mat_fit = fct_fit(x, inp_mat)
 % Function that define the fitting function.
 %
 %    Parameters:
-%        tag_train (str): tag that can be used to control the algorithm
 %        x (vector): fitting parameters
 %        inp_mat (matrix): input data
 %
 %    Returns:
 %        out_mat_fit (matrix): fitted output data
-
-% check the tag, the tag is not used in this example
-assert(ischar(tag_train), 'invalid tag_train');
 
 % extract the input
 x_1 = inp_mat(1, :);
@@ -230,11 +219,10 @@ out_mat_fit = [y_1 ; y_2];
 
 end
 
-function err_vec = fct_err_vec(tag_train, x, inp_mat, out_mat_ref)
+function err_vec = fct_err_vec(inp_mat, out_mat_ref)
 % Function that define the error (vector) for the fitting function.
 %
 %    Parameters:
-%        tag_train (str): tag that can be used to control the algorithm
 %        x (vector): fitting parameters
 %        inp_mat (matrix): input data
 %        out_mat_ref (matrix): reference output data
@@ -242,12 +230,8 @@ function err_vec = fct_err_vec(tag_train, x, inp_mat, out_mat_ref)
 %    Returns:
 %        err_vec (vector): error vector
 
-
-% check the tag, the tag is not used in this example
-assert(ischar(tag_train), 'invalid tag_train')
-
 % get the fit
-out_mat_fit = fct_fit(tag_train, x, inp_mat);
+out_mat_fit = fct_fit(x, inp_mat);
 
 % compute the error
 err_vec = out_mat_ref-out_mat_fit;
@@ -255,11 +239,10 @@ err_vec = err_vec(:);
 
 end
 
-function err = fct_err_sum(tag_train, x, inp_mat, out_mat_ref)
+function err = fct_err_sum(x, inp_mat, out_mat_ref)
 % Function that define the error (scalar) for the fitting function.
 %
 %    Parameters:
-%        tag_train (str): tag that can be used to control the algorithm
 %        x (vector): fitting parameters
 %        inp_mat (matrix): input data
 %        out_mat_ref (matrix): reference output data
@@ -267,11 +250,8 @@ function err = fct_err_sum(tag_train, x, inp_mat, out_mat_ref)
 %    Returns:
 %        err (scalar): error vector
 
-% check the tag, the tag is not used in this example
-assert(ischar(tag_train), 'invalid tag_train')
-
 % get the error vector
-err_vec = fct_err_vec(tag_train, x, inp_mat, out_mat_ref);
+err_vec = fct_err_vec(x, inp_mat, out_mat_ref);
 
 % compute a scalar error metric, sum of square in this example
 err = sum(err_vec.^2);

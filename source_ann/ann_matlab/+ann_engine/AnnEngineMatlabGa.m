@@ -32,11 +32,10 @@ classdef AnnEngineMatlabGa < ann_engine.AnnEngineAbstract
             self.ann_data = struct();
         end
         
-        function [model, history] = train(self, tag_train, inp, out)
+        function [model, history] = train(self, inp, out)
             % Train/fit a regression and get the corresponding model.
             %
             %    Parameters:
-            %        tag_train (str): tag for enabling different training/fitting modes
             %        inp (matrix): matrix with the input data
             %        out (matrix): matrix with the output data
             %
@@ -58,14 +57,14 @@ classdef AnnEngineMatlabGa < ann_engine.AnnEngineAbstract
             assert(n_out>0, 'invalid size')
             
             % fit with genetic algoritm
-            fct_err_tmp = @(x) self.fct_err(tag_train, x, inp, out);
+            fct_err_tmp = @(x) self.fct_err(x, inp, out);
             n = self.x_value.n;
             lb = self.x_value.lb;
             ub = self.x_value.ub;
             [x, fval, exitflag, output, population, scores] = ga(fct_err_tmp, n, [], [], [], [], lb, ub, [], self.options);
             
             % assign the fit and the fitting record
-            model = struct('tag_train', tag_train, 'x', x);
+            model = x;
             history = struct('fval', fval, 'population', population, 'scores', scores, 'exitflag', exitflag, 'output', output);
         end
         
@@ -113,9 +112,8 @@ classdef AnnEngineMatlabGa < ann_engine.AnnEngineAbstract
             assert(isstruct(history), 'invalid model')
             
             % evaluate the model
-            x = model.x;
-            tag_train = model.tag_train;
-            out = self.fct_fit(tag_train, x, inp);
+            x = model;
+            out = self.fct_fit(x, inp);
             assert(size(inp, 2)==size(out, 2), 'invalid size')
         end
     end

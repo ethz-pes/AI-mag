@@ -7,28 +7,30 @@ classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
     
     %% properties
     properties (SetAccess = private, GetAccess = public)
+        tag_train % str: tag for enabling different training/fitting modes
         client_obj % ann_engine.MatlabPythonClient: manage the connection to the server
     end
     
     %% public
     methods (Access = public)
-        function self = AnnEnginePythonAnn(hostname, port, timeout)
+        function self = AnnEnginePythonAnn(hostname, port, timeout, tag_train)
             % Constructor.
             %
             %    Parameters:
             %        hostname (str): hostname of the Python server
             %        port (int): port of the Python server
             %        timeout (int): timeout for Python server requests
+            %        tag_train (str): tag for enabling different training/fitting modes
             
             self = self@ann_engine.AnnEngineAbstract();
+            self.tag_train = tag_train;
             self.client_obj = ann_engine.MatlabPythonClient(hostname, port, timeout);
         end
         
-        function [model, history] = train(self, tag_train, inp, out)
+        function [model, history] = train(self, inp, out)
             % Train/fit a regression and get the corresponding model.
             %
             %    Parameters:
-            %        tag_train (str): tag for enabling different training/fitting modes
             %        inp (matrix): matrix with the input data
             %        out (matrix): matrix with the output data
             %
@@ -38,7 +40,7 @@ classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
             
             % request data
             data_inp.type = 'train';
-            data_inp.tag_train = tag_train;
+            data_inp.tag_train = self.tag_train;
             data_inp.inp = inp;
             data_inp.out = out;
             

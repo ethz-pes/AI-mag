@@ -1,4 +1,4 @@
-function master_train(file_ann, file_assemble, ann_input, tag_train)
+function master_train(file_ann, file_assemble, ann_input)
 
 % name
 fprintf('################## master_train\n')
@@ -18,7 +18,7 @@ obj = AnnManager(ann_input);
 
 % train
 fprintf('train ann\n')
-obj.train(tag_train, n_sol, inp, out_fem, out_approx);
+obj.train(n_sol, inp, out_fem, out_approx);
 
 % fom
 fom = obj.get_fom();

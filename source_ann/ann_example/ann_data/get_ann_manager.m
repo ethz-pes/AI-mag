@@ -9,7 +9,7 @@ fprintf('################## master_train : %s\n', ann_type)
 
 % get the data
 fprintf('get data\n')
-[ann_input, tag_train] = get_ann_param(ann_type);
+ann_input = get_ann_param(ann_type);
 [n_sol, inp, out_ref, out_nrm] = get_ann_data();
 
 % create a AnnManager instance 
@@ -18,7 +18,7 @@ obj = AnnManager(ann_input);
 
 % train the ANN or fit the regression
 fprintf('train and fit\n')
-obj.train(tag_train, n_sol, inp, out_ref, out_nrm);
+obj.train(n_sol, inp, out_ref, out_nrm);
 
 % get the figures of merit of the regression
 fprintf('get figures of merit\n')

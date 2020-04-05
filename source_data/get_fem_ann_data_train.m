@@ -1,4 +1,4 @@
-function [ann_input, tag_train] = get_fem_ann_data_train(model_type, ann_type)
+function ann_input = get_fem_ann_data_train(model_type, ann_type)
 
 assert(any(strcmp(model_type, {'ht', 'mf'})), 'invalid model_type')
 
@@ -22,17 +22,17 @@ end
 % var_out
 var_out = {};
 if strcmp(model_type, 'mf')
-    var_out{end+1} = struct('name', 'L_norm', 'var_trf', 'none', 'var_norm', 'min_max', 'use_nrm', true, 'var_err', 'rel');
-    var_out{end+1} = struct('name', 'B_norm', 'var_trf', 'none', 'var_norm', 'min_max', 'use_nrm', true, 'var_err', 'rel');
-    var_out{end+1} = struct('name', 'J_norm', 'var_trf', 'none', 'var_norm', 'min_max', 'use_nrm', true, 'var_err', 'rel');
-    var_out{end+1} = struct('name', 'H_norm', 'var_trf', 'none', 'var_norm', 'min_max', 'use_nrm', true, 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'L_norm', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'B_norm', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'J_norm', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'H_norm', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
 end
 if strcmp(model_type, 'ht')
-    var_out{end+1} = struct('name', 'dT_core_max', 'var_trf', 'none', 'var_norm', 'min_max', 'use_nrm', true, 'var_err', 'rel');
-    var_out{end+1} = struct('name', 'dT_core_avg', 'var_trf', 'none', 'var_norm', 'min_max', 'use_nrm', true, 'var_err', 'rel');
-    var_out{end+1} = struct('name', 'dT_winding_max', 'var_trf', 'none', 'var_norm', 'min_max', 'use_nrm', true, 'var_err', 'rel');
-    var_out{end+1} = struct('name', 'dT_winding_avg', 'var_trf', 'none', 'var_norm', 'min_max', 'use_nrm', true, 'var_err', 'rel');
-    var_out{end+1} = struct('name', 'dT_iso_max', 'var_trf', 'none', 'var_norm', 'min_max', 'use_nrm', true, 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'dT_core_max', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'dT_core_avg', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'dT_winding_max', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'dT_winding_avg', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'dT_iso_max', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
 end
 
 % split_train_test
@@ -55,6 +55,7 @@ switch ann_type
         ann_info.hostname = 'localhost';
         ann_info.port = 10000;
         ann_info.timeout = 240;
+        ann_info.tag_train = 'none';
     otherwise
         error('invalid data')
 end
@@ -66,14 +67,10 @@ ann_input.split_train_test = split_train_test;
 ann_input.split_var = split_var;
 ann_input.ann_info = ann_info;
 
-% gdfg
-tag_train = 'none';
-
 end
 
-function model = fct_model(tag_train, n_sol, n_inp, n_out)
+function model = fct_model(n_sol, n_inp, n_out)
 
-assert(ischar(tag_train), 'invalid output')
 assert(isfinite(n_sol), 'invalid input')
 assert(isfinite(n_inp), 'invalid input')
 assert(isfinite(n_out), 'invalid output')
@@ -88,9 +85,8 @@ model.divideParam.testRatio = 0.0;
 
 end
 
-function [model, history] = fct_train(tag_train, model, inp, out)
+function [model, history] = fct_train(model, inp, out)
 
-assert(ischar(tag_train), 'invalid output')
 [model, history] = train(model, inp, out);
 
 end
