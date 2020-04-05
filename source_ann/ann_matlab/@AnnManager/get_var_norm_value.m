@@ -8,6 +8,8 @@ function vec_output = get_var_norm_value(vec_input, norm_param, scale_unscale)
 %
 %    Returns:
 %        vec_output (vector): vector with the output data
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 switch scale_unscale
     case 'scale'

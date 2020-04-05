@@ -4,7 +4,9 @@ classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
     %    Class implementing ann_engine.AnnEngineAbstract.
     %    Train, load, unload, and evaluate Python TensorFlow ANN.
     %    Use and require a running Python ANN server over TCP/IP.
-    
+    %
+    %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
+
     %% properties
     properties (SetAccess = private, GetAccess = public)
         tag_train % str: tag for enabling different training/fitting modes

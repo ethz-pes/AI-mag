@@ -3,6 +3,8 @@ function disp_fom_train(self)
 %
 %    Plot the size of the datasets (training and test).
 %    Plot the datasets and the error metrics.
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % display size
 fprintf('n_train : %d\n', self.fom.n_train)

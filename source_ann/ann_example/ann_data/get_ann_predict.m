@@ -5,6 +5,8 @@ function [n_sol, inp, out_nrm] = get_ann_predict()
 %        n_sol (int): number of samples
 %        inp (struct): input data
 %        out_nrm (struct): output normalization data
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % number of samples
 n_sol = 100000;

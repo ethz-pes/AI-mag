@@ -3,6 +3,8 @@ function get_idx_split(self)
 %
 %    Guarantee a minimum number of samples for the datasets
 %    Test dataset with or without overlap with the training dataset.
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % init random generator with random number
 rng('shuffle');

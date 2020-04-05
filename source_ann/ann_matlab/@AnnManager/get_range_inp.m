@@ -6,6 +6,8 @@ function is_valid = get_range_inp(self, inp)
 %
 %    Returns:
 %        is_valid (vector): validity of the samples
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % init, everything is valid
 is_valid = true;

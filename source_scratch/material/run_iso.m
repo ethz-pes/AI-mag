@@ -2,6 +2,8 @@ function run_iso()
 % Generate the insulation material data.
 %
 %    Map the different materials with a unique id.
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % data
 id = [1 2]; % unique id

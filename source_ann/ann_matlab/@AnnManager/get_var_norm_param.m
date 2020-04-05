@@ -7,6 +7,8 @@ function norm_param = get_var_norm_param(vec, type)
 %
 %    Returns:
 %        norm_param (struct): normalization data
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 switch type
     case 'none'

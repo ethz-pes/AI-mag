@@ -12,6 +12,8 @@ function norm_param = get_norm_var_out(self, out_ref_train, out_nrm_train)
 %
 %    Returns:
 %        norm_param (cell): normalization data
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 for i=1:length(self.var_out)
     % extract variable

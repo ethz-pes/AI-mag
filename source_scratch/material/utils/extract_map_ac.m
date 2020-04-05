@@ -8,6 +8,8 @@ function data_ac = extract_map_ac(data_ac, tol, add_pts)
 %
 %    Returns:
 %        data_ac (struct): AC loss map (parsed)
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % parse the matrix file
 data_ac = get_parse(data_ac);

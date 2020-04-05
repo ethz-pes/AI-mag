@@ -3,6 +3,8 @@ classdef AnnEngineMatlabGa < ann_engine.AnnEngineAbstract
     %
     %    Class implementing ann_engine.AnnEngineAbstract.
     %    Fit, load, unload, and evaluate MATLAB genetic algorithm.
+    %
+    %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
     
     %% properties
     properties (SetAccess = private, GetAccess = public)
@@ -88,7 +90,7 @@ classdef AnnEngineMatlabGa < ann_engine.AnnEngineAbstract
             %        history (various): regression training/fitting record
             
             % check the data type
-            assert(isstruct(model), 'invalid model')
+            assert(isnumeric(model), 'invalid model')
             assert(isstruct(history), 'invalid model')
             
             % load the data
@@ -108,7 +110,7 @@ classdef AnnEngineMatlabGa < ann_engine.AnnEngineAbstract
             % get and check the model
             model = self.ann_data.(name).model;
             history = self.ann_data.(name).history;
-            assert(isstruct(model), 'invalid model')
+            assert(isnumeric(model), 'invalid model')
             assert(isstruct(history), 'invalid model')
             
             % evaluate the model

@@ -2,10 +2,10 @@ classdef AnnManager < handle
     % Interface for regression/fitting, meant for ANN.
     %
     %    Offer many functionalities for ANN regression:
-    %        - Advanced scaling, variable transformation and normalization
+    %        - Scaling, variable transformation and normalization
     %        - Checking bounds on the datasets
     %        - Training/fitting the data
-    %        - Getting and displaying error metrics
+    %        - Displaying and plotting error metrics
     %        - Evaluating the fit for given input data
     %        - Dumping and reloading the data stored in the object
     %
@@ -15,9 +15,11 @@ classdef AnnManager < handle
     %    Several regression methods are implemented:
     %        - matlab_ann: ANN regression with MATLAB Deep Learning (ann_engine.AnnEngineMatlabAnn)
     %        - python_ann: ANN regression with Python Keras and TensorFlow (ann_engine.AnnEnginePythonAnn)
-    %        - matlab_lsq: MATLAB regression with nonlinear least-squares (ann_engine.AnnEngineMatlabLsq)
-    %        - matlab_ga regression with genetic algorithm (ann_engine.AnnEngineMatlabGa)
-    
+    %        - matlab_lsq: MATLAB regression with nonlinear least-squares, for benchmark with ANN (ann_engine.AnnEngineMatlabLsq)
+    %        - matlab_ga regression with genetic algorithm, for benchmark with ANN (ann_engine.AnnEngineMatlabGa)
+    %
+    %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
+
     %% properties / immutable
     properties (SetAccess = immutable, GetAccess = public)
         var_inp % cell: description of the input variables

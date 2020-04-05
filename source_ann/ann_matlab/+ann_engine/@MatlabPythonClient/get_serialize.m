@@ -17,6 +17,8 @@ function bytes_array = get_serialize(data)
 %
 %    Returns:
 %        bytes_array (bytes): serialized data
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % check the type
 assert(isstruct(data), 'invalid data')

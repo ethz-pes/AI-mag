@@ -6,6 +6,12 @@ function run_ann_example()
 %        - ANN regression with Python Keras and TensorFlow
 %        - MATLAB regression with nonlinear least-squares
 %        - MATLAB regression with genetic algorithm
+%
+%    For the regression with Python Keras and TensorFlow:
+%        - run_ann_server.py or start_python.bat
+%        - this will start the Python ANN server to communicate with MATLAB
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % init
 addpath('../ann_matlab');

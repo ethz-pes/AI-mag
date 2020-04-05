@@ -10,6 +10,8 @@ function inp_mat = get_scale_inp(self, inp)
 %
 %    Returns:
 %        inp_mat (matrix): scaled input data
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 for i=1:length(self.var_inp)
     % extract variable

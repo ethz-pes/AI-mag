@@ -4,6 +4,8 @@ function disp_data(name, data)
 %    Parameters:
 %        name (str): name of the variable to be displayed
 %        data (various): data to be displayed
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 disp_data_sub(0, name, data)
 

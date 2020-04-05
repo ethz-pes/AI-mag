@@ -12,6 +12,8 @@ function out_mat = get_scale_out(self, out_ref, out_nrm)
 %
 %    Returns:
 %        out_mat (matrix): scaled output data
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 for i=1:length(self.var_out)
     % extract variable

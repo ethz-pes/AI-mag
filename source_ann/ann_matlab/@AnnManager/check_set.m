@@ -5,6 +5,8 @@ function check_set(n_sol, var, data)
 %        n_sol (int): number of samples
 %        var (cell): description of the variables
 %        data (struct): struct with the dataset
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % check data type
 assert(isstruct(data), 'invalid data')

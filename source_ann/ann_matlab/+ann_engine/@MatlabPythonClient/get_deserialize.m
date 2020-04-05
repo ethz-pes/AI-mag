@@ -17,6 +17,8 @@ function data = get_deserialize(bytes_array)
 %
 %    Returns:
 %        data (struct): deserialized data
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % check the type
 assert(isa(bytes_array, 'uint8'), 'invalid data type')

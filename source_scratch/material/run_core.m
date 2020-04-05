@@ -2,6 +2,8 @@ function run_core()
 % Generate the core (ferrite) material data.
 %
 %    Map the different materials with a unique id.
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % init
 addpath(genpath('utils'))

@@ -3,6 +3,8 @@ function get_ann_manager(ann_type)
 %
 %    Parameters:
 %        ann_type (str): type of the regression method to be used
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % init
 fprintf('################## master_train : %s\n', ann_type)

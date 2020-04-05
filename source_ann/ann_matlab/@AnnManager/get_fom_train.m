@@ -3,6 +3,8 @@ function get_fom_train(self)
 %
 %    Get the size of the datasets (training and test).
 %    Compute the different dataset and error metrics.
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % get size
 self.fom.n_train = nnz(self.idx_train);

@@ -12,6 +12,8 @@ function out_ann = get_unscale_out(self, out_nrm, out_mat)
 %
 %    Returns:
 %        out_ann (struct): regression output data
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 for i=1:length(self.var_out)
     % extract variable

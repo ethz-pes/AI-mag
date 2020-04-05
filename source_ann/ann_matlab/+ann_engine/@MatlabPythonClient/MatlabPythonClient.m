@@ -3,6 +3,8 @@ classdef MatlabPythonClient < handle
     %
     %    Connect to a Python TCP/IP server.
     %    Send request and get response from the server.
+    %
+    %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
     
     %% properties
     properties (SetAccess = private, GetAccess = public)

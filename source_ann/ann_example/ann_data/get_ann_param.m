@@ -6,6 +6,8 @@ function ann_input = get_ann_param(ann_type)
 %
 %    Returns:
 %        ann_input (struct): input data for the AnnManager class
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % description of the input variables:
 %    - name: name of the variable
@@ -219,7 +221,7 @@ out_mat_fit = [y_1 ; y_2];
 
 end
 
-function err_vec = fct_err_vec(inp_mat, out_mat_ref)
+function err_vec = fct_err_vec(x, inp_mat, out_mat_ref)
 % Function that define the error (vector) for the fitting function.
 %
 %    Parameters:

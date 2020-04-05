@@ -8,6 +8,8 @@ function material = extract_map_ac_dc(data_ac, data_dc, material)
 %
 %    Returns:
 %        material (struct): material data (with losses)
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % get the grid
 f_vec = material.interp.f_vec;

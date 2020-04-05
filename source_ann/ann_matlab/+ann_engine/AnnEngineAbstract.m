@@ -3,6 +3,8 @@ classdef AnnEngineAbstract < handle
     %
     %    Define the required methods.
     %    Train, load, unload, and evaluate.
+    %
+    %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
     %% public
     methods (Access = public)

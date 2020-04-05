@@ -8,6 +8,8 @@ function vec_output = get_var_trf(vec_input, type, scale_unscale)
 %
 %    Returns:
 %        vec_output (vector): vector with the output data
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 switch type
     case 'none'
