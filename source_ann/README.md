@@ -17,7 +17,7 @@ Currently, the current regression/fitting methods are implemented:
 This toolbox is primarily meant for regression with ANN but is also useful for other methods (such as least-squares or genetic algorithm).
 This toolbox is made in order to be **easily extended** by other fitting and regression methods.
 
-## Examples
+## Example
 
 The example [run_ann_example.m](ann_example/run_ann_example.m) show the capabilities of the toolbox:
 * ANN regression with MATLAB Deep Learning
@@ -27,17 +27,21 @@ The example [run_ann_example.m](ann_example/run_ann_example.m) show the capabili
 
 ## Compatibility
 
-The toolbox requires the following MATLAB setup:
-* Tested with MATLAB R2018b (should work with newer versions)
+The toolbox was tested with the following MATLAB setup:
+* Tested with MATLAB R2018b
 * MATLAB Deep Learning Toolbox ("neural_network_toolbox")
 * MATLAB Global Optimization Toolbox ("gads_toolbox")
 * MATLAB Optimization Toolbox ("optimization_toolbox")
 * MATLAB Signal Processing Toolbox ("signal_toolbox")
 
-The toolbox requires the following Python setup:
-* Tested with Python 3.6.8 (should work with newer versions)
+The toolbox was tested with the following Python setup:
+* Tested with Python 3.6.8
 * Numpy 1.18.1
 * TensorFlow 2.1.0
+
+The toolbox was tested with the following operating system:
+* Linux Ubuntu 18.04.4 LTS
+* Microsoft Windows 10
 
 However, the toolbox can work without Python (only MATLAB), as long as the Python ANN engine is not used.
 
@@ -45,7 +49,13 @@ However, the toolbox can work without Python (only MATLAB), as long as the Pytho
 
 **Thomas Guillod, PES, ETH Zurich** - [GitHub Profile](https://github.com/otvam)
 
+## Acknowledgement
+
+* Prof. J.W. Kolar, PES, ETH Zurich
+* P. Papamanolis, PES, ETH Zurich
+* Keras and TensorFlow communities
+
 ## License
 
-This project is licensed under the **xxx License**, see [LICENSE.md](LICENSE.md).
-This project is copyrighted by: (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod.
+* This project is licensed under the **xxx License**, see [LICENSE.md](LICENSE.md).
+* This project is copyrighted by: (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod.
