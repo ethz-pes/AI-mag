@@ -1,3 +1,5 @@
+# (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
+
 import tensorflow.keras as keras
 import numpy as np
 import tempfile

@@ -1,3 +1,5 @@
+# (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
+
 import socket
 import struct
 from abc import ABC, abstractmethod

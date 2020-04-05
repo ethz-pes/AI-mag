@@ -1,3 +1,5 @@
+# (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
+
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow.keras as keras
