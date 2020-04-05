@@ -14,6 +14,7 @@ Currently, the current regression/fitting methods are implemented:
 * MATLAB regression with **nonlinear least-squares**, for benchmark with ANN
 * MATLAB regression with **genetic algorithm**, for benchmark with ANN
 
+The MATLAB and Python runtimes are communicating over TCP/IP sockets (Python is the server, MATLAB the client).
 This toolbox is primarily meant for regression with ANN but is also useful for other methods (such as least-squares or genetic algorithm).
 This toolbox is made in order to be **easily extended** by other fitting and regression methods.
 
