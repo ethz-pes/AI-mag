@@ -20,11 +20,16 @@ This toolbox is made in order to be **easily extended** by other fitting and reg
 
 ## Example
 
-The example [run_ann_example.m](ann_example/run_ann_example.m) show the capabilities of the toolbox:
+The example [ann_example](ann_example) show the capabilities of the toolbox:
 * ANN regression with MATLAB Deep Learning
 * ANN regression with Python Keras and TensorFlow
 * MATLAB regression with nonlinear least-squares
 * MATLAB regression with genetic algorithm
+
+The example contains the following main file:
+* [run_ann_example.m](ann_example/run_ann_example.m) - the MATLAB main file
+* [run_ann_server.py](ann_example/run_ann_server.py) - the Python ANN server main file
+* Shell script (Linux) and (batch) script (MS Windows) for stating the e Python ANN server
 
 ## Compatibility
 
