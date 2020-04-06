@@ -12,18 +12,18 @@ function ann_input = get_ann_param(ann_type)
 % description of the input variables:
 %    - name: name of the variable
 %    - var_trf: variable transformation applied to the variable (1st scaling)
-%         - none: no transformation
-%         - rev: '1/x' transformation
-%         - log: 'log10(x)' transformation
-%         - exp: '10^x' transformation
-%         - square: 'x^2' transformation
-%         - sqrt: 'sqrt(2)' transformation
+%        - 'none': no transformation
+%        - 'rev': '1/x' transformation
+%        - 'log': 'log10(x)' transformation
+%        - 'exp': '10^x' transformation
+%        - 'square': 'x^2' transformation
+%        - 'sqrt': 'sqrt(2)' transformation
 %    - var_norm: variable normalization applied to the variable (2nd scaling)
-%         - none: no transformation
-%         - min_max: scale the variable between 0 and 1
-%         - avg: scale the variable with a 0 mean value
-%         - std_dev: scale the variable with a 1 standard deviation
-%         - avg_std_dev: scale the variable with a 0 mean value and a 1 standard deviation
+%        - 'none': no transformation
+%        - 'min_max': scale the variable between 0 and 1
+%        - 'avg': scale the variable with a 0 mean value
+%        - 'std_dev': scale the variable with a 1 standard deviation
+%        - 'avg_std_dev': scale the variable with a 0 mean value and a 1 standard deviation
 %    - min: minimum acceptable value
 %    - max: maxmimum acceptable value
 var_inp = {};
@@ -34,21 +34,21 @@ var_inp{end+1} = struct('name', 'x_2', 'var_trf', 'none', 'var_norm', 'min_max',
 %    - name: name of the variable
 %    - use_nrm: use (or not) the provided normalization output data for scaling (1st scaling)
 %    - var_trf: variable transformation applied to the variable (2nd scaling)
-%         - none: no transformation
-%         - rev: '1/x' transformation
-%         - log: 'log10(x)' transformation
-%         - exp: '10^x' transformation
-%         - square: 'x^2' transformation
-%         - sqrt: 'sqrt(2)' transformation
+%        - 'none': no transformation
+%        - 'rev': '1/x' transformation
+%        - 'log': 'log10(x)' transformation
+%        - 'exp': '10^x' transformation
+%        - 'square': 'x^2' transformation
+%        - 'sqrt': 'sqrt(2)' transformation
 %    - var_norm: variable normalization applied to the variable (3rd scaling)
-%         - none: no transformation
-%         - min_max: scale the variable between 0 and 1
-%         - avg: scale the variable with a 0 mean value
-%         - std_dev: scale the variable with a 1 standard deviation
-%         - avg_std_dev: scale the variable with a 0 mean value and a 1 standard deviation
+%        - 'none': no transformation
+%        - 'min_max': scale the variable between 0 and 1
+%        - 'avg': scale the variable with a 0 mean value
+%        - 'std_dev': scale the variable with a 1 standard deviation
+%        - 'avg_std_dev': scale the variable with a 0 mean value and a 1 standard deviation
 %    - var_err: metric for computing the regression accuracy during post-processing
-%         - abs: absolute error
-%         - rel: relative error
+%        - 'abs': absolute error
+%        - 'rel': relative error
 var_out = {};
 var_out{end+1} = struct('name', 'y_1', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
 var_out{end+1} = struct('name', 'y_2', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');

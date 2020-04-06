@@ -122,10 +122,10 @@ classdef CoreData < handle
         
         function ki = compute_steinmetz_ki(self, k, alpha, beta)
             % get the IGSE parameter ki
-            %     - alpha - GSE parameter
-            %     - beta - GSE parameter
-            %     - k - GSE parameter
-            %     - ki - IGSE parameter
+            %    - alpha - GSE parameter
+            %    - beta - GSE parameter
+            %    - k - GSE parameter
+            %    - ki - IGSE parameter
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
             t1 = (2.*pi).^(alpha-1);

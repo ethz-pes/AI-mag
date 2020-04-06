@@ -88,12 +88,12 @@ function [tol, add_pts] = get_extrapolate()
 tol = 1e-6;
 
 % add frequency and AC flux density points to make a complete grid:
-%     - B_ac_peak and f: point to be added
-%     - B_ac_peak_other and f_other: point to used for the exterpolation
-%     - the following points are used to extrapolate:
-%         - f_other and B_ac_peak
-%         - f and B_ac_peak_other
-%         - f_other and B_ac_peak_other
+%    - B_ac_peak and f: point to be added
+%    - B_ac_peak_other and f_other: point to used for the exterpolation
+%    - the following points are used to extrapolate:
+%        - f_other and B_ac_peak
+%        - f and B_ac_peak_other
+%        - f_other and B_ac_peak_other
 add_pts = {};
 add_pts{end+1} = struct('B_ac_peak', 13e-3, 'f', 300e3, 'f_other', 500e3, 'B_ac_peak_other', 25e-3);
 add_pts{end+1} = struct('B_ac_peak', 13e-3, 'f', 200e3, 'f_other', 300e3, 'B_ac_peak_other', 25e-3);

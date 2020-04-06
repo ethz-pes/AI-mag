@@ -20,165 +20,108 @@ function [n_sol, var] = get_sweep(sweep)
 % init random generator
 rng('shuffle');
 
+% get the vector for the different variables
+var = get_vector(sweep.var);
+
 % get the sweep
 switch sweep.type
-    case 'vector'
-        [n_sol, var] = get_vector(sweep.var, sweep.n_sol);
-    case 'matrix'
-        [n_sol, var] = get_matrix(sweep.var, sweep.n_sol);
-    case 'random'
-        [n_sol, var] = get_random(sweep.var, sweep.n_sol);
+    case 'specified_combinations'
+        [n_sol, var] = get_specified(var, sweep.n_sol_max);
+    case 'all_combinations'
+        [n_sol, var] = get_all(var, sweep.n_sol_max);
     otherwise
         error('invalid sweep type')
 end
 
 end
 
-function [n_sol, var] = get_random(var, n_sol)
-% Generate random samples with a given size.
-%
-%    Parameters:
-%        var (struct): data controlling the samples generation
-%        n_sol (int): number of samples to be generated
-%
-%    Returns:
-%        n_sol (int): number of generated samples
-%        var (struct): struct of vectors with the samples
-
-field = fieldnames(var);
-for i=1:length(field)
-    tmp = var.(field{i});
-    vec = get_vec_random(tmp, n_sol);
-    var.(field{i}) = vec;
-end
-
-end
-
-function [n_sol, var] = get_vector(var, n_sol)
+function var = get_vector(var)
 % Generates samples by combining vectors with only the provided combinations.
 %
 %    Parameters:
 %        var (struct): data controlling the samples generation
-%        n_sol (int): number of samples to be generated
 %
 %    Returns:
-%        n_sol (int): number of generated samples
 %        var (struct): struct of vectors with the samples
 
 field = fieldnames(var);
 for i=1:length(field)
     tmp = var.(field{i});
-    vec = get_vec_vector(tmp, n_sol);
+    vec = get_vec_vector(tmp);
     var.(field{i}) = vec;
 end
 
 end
 
-function [n_sol, var] = get_matrix(var, n_sol)
-% Generates samples by combining vectors with all possible combinations.
-%
-%    Parameters:
-%        var (struct): data controlling the samples generation
-%        n_sol (int): maximum number of samples to be of generated
-%
-%    Returns:
-%        n_sol (int): number of generated samples
-%        var (struct): struct of vectors with the samples
-
-% get the vectors
-field = fieldnames(var);
-for i=1:length(field)
-    tmp = var.(field{i});
-    vec = get_vec_matrix(tmp);
-    var.(field{i}) = vec;
-end
-
-% combine the vectors
-[n_sol, var] = get_struct_combination(var, n_sol);
-
-end
-
-function vec = get_vec_random(var, n_sol)
-% Generates a random vector return a fixed vector.
-%
-%    Parameters:
-%        var (struct): data controlling the samples generation
-%        n_sol (int): maximum number of samples to be of generated
-%
-%    Returns:
-%        vec (vector): generated samples for the variable
-
-if strcmp(var.var_trf, 'fixed')
-    % the vector is given: has the right size or is a scalar
-    vec = var.vec;
-    if length(vec)==1
-        vec = repmat(vec, 1, n_sol);
-    end
-    assert(length(vec)==n_sol, 'invalid length')
-else
-    % random vector generation (no only in linear coordinate)
-    lb = get_var_trf(var.lb, var.var_trf, 'scale');
-    ub = get_var_trf(var.ub, var.var_trf, 'scale');
-    vec = lb+(ub-lb).*rand(1, n_sol);
-    vec = get_var_trf(vec, var.var_trf, 'unscale');
-    vec = get_type(vec, var.type);
-end
-
-end
-
-function vec = get_vec_vector(var, n_sol)
+function vec = get_vec_vector(var)
 % Generates a evenly spaced vector or return a fixed vector (size fixed).
 %
 %    Parameters:
 %        var (struct): data controlling the samples generation
-%        n_sol (int): maximum number of samples to be of generated
 %
 %    Returns:
 %        vec (vector): generated samples for the variable
 
-if strcmp(var.var_trf, 'fixed')
-    % the vector is given: has the right size or is a scalar
-    vec = var.vec;
-    if length(vec)==1
-        vec = repmat(vec, 1, n_sol);
-    end
-    assert(length(vec)==n_sol, 'invalid length')
-else
-    % evenly spaced vector (no only in linear coordinate)
-    lb = get_var_trf(var.lb, var.var_trf, 'scale');
-    ub = get_var_trf(var.ub, var.var_trf, 'scale');
-    vec = linspace(lb, ub, n_sol);
-    vec = get_var_trf(vec, var.var_trf, 'unscale');
-    vec = get_type(vec, var.type);
+switch var.type
+    case 'fixed'
+        % the vector is given: nothing to do
+        vec = var.vec;
+    case 'span'
+        % make the variable transformation of the bounds
+        lb = get_var_trf(var.lb, var.var_trf, 'scale');
+        ub = get_var_trf(var.ub, var.var_trf, 'scale');
+
+        % span the data in the transformed coordinate
+        switch var.span
+            case 'linear'
+                vec = linspace(lb, ub, var.n);
+            case 'random'
+                vec = lb+(ub-lb).*rand(1, var.n);
+            otherwise
+                error('invalid span')
+        end
+        
+        % unscale the variable (bounds were scaled)
+        vec = get_var_trf(vec, var.var_trf, 'unscale');
+        
+        % make the type casting
+        vec = get_type(vec, var.var_type);
+    otherwise
+        error('invalid type')
 end
 
 end
 
-function vec = get_vec_matrix(var)
-% Generates a evenly spaced vector or return a fixed vector (size free).
+function [n_sol, var] = get_specified(var, n_sol_max)
+% Generates generating all the specified combinations with the vectors.
+%
+%    The maximum number of samples can be controlled to:
+%        - Avoid to long simulations
+%        - Avoid memory saturation
 %
 %    Parameters:
-%        var (struct): data controlling the samples generation
+%        var (struct): struct of vectors with the variables
+%        n_sol_max (int): maximum number of samples to be of generated
 %
 %    Returns:
-%        vec (vector): generated samples for the variable
+%        n_sol (int): number of generated samples
+%        var (struct): struct of vectors with the combined variables
 
-if strcmp(var.var_trf, 'fixed')
-    % the vector is given
-    vec = var.vec;
-    assert(length(vec)>=1, 'invalid length')
-else
-    % evenly spaced vector (no only in linear coordinate)
-    lb = get_var_trf(var.lb, var.var_trf, 'scale');
-    ub = get_var_trf(var.ub, var.var_trf, 'scale');
-    vec = linspace(lb, ub, var.n);
-    vec = get_var_trf(vec, var.var_trf, 'unscale');
-    vec = get_type(vec, var.type);
+% get all the vector sizes
+field = fieldnames(var);
+for i=1:length(field)
+    vec = var.(field{i});
+    n_sol_vec(i) = length(vec);
 end
 
+% check the size
+n_sol = unique(n_sol_vec);
+assert(length(n_sol)==1, 'invalid length')
+assert(n_sol<=n_sol_max, 'invalid length')
+
 end
 
-function [n_sol, var] = get_struct_combination(var, n_sol_max)
+function [n_sol, var] = get_all(var, n_sol_max)
 % Generates generating all the possible combinations between vectors.
 %
 %    The maximum number of samples can be controlled to:
@@ -193,7 +136,7 @@ function [n_sol, var] = get_struct_combination(var, n_sol_max)
 %        n_sol (int): number of generated samples
 %        var (struct): struct of vectors with the combined variables
 
-% get all the vectorss
+% get all the vectors
 field = fieldnames(var);
 for i=1:length(field)
     vec = var.(field{i});

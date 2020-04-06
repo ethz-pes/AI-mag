@@ -72,7 +72,8 @@ function inp = get_base(geom_type, inp)
 % parse the very basic properties depending on the type
 switch geom_type
     case 'rel'
-        % the boxed volume is specified with:
+        % the geometry is specified with:
+        %    - the boxed volume
         %    - the different aspect ratios
         %    - the relative air gap length
         
@@ -92,10 +93,10 @@ switch geom_type
         % get the air gap length
         inp.d_gap = inp.fact_gap.*sqrt(inp.A_core);
     case 'abs'
-        % the absolute dimension are provided:
-        %    - core geometry
-        %    - winding geometry
-        %    - air gap length
+        % the geometry is specified with:
+        %    - core absolute geometry
+        %    - winding absolute geometry
+        %    - absolute air gap length
         
         % get the window geometry
         inp.A_window = inp.x_window.*inp.y_window;
@@ -115,7 +116,7 @@ switch geom_type
         error('invalid data')
 end
 
-% compute the corner filled radius, relative relative to the air gap length, with boundaries
+% compute the core corner fillet radius, relative relative to the air gap length, with boundaries
 inp.r_fill = inp.r_fill_fact.*inp.d_gap;
 inp.r_fill = min(inp.r_fill, inp.r_fill_max);
 inp.r_fill = max(inp.r_fill, inp.r_fill_min);
