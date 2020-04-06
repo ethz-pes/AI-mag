@@ -1,7 +1,7 @@
 classdef AnnEngineMatlabLsq < ann_engine.AnnEngineAbstract
     % Regression engine using MATLAB 'lsqnonlin'.
     %
-    %    Class implementing ann_engine.AnnEngineAbstract.
+    %    Class implementing 'ann_engine.AnnEngineAbstract'.
     %    Fit, load, unload, and evaluate MATLAB least square regression.
     %
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod

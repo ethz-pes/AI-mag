@@ -10,8 +10,8 @@ from .mat_py_bridge import server
 class AnnHandler(server.HandlerAbstract):
     """Server handler for ANN with Keras/TensorFlow.
 
-    Implementation of the abtract class server.HandlerAbstract.
-    The handler is used by server.PythonMatlabConnection.
+    Implementation of the abtract class "server.HandlerAbstract".
+    The handler is used by "server.PythonMatlabConnection".
 
     The handler responds to server requests for training and evaluating ANNs.
 
@@ -215,7 +215,7 @@ def run(hostname, port, n_connection, fct_model, fct_train):
 
    """
 
-    # lamdba to init the ann_server.AnnHandler class
+    # lamdba to init the "ann_server.AnnHandler class"
     handler_class = lambda: AnnHandler(fct_model, fct_train)
 
     # run the server

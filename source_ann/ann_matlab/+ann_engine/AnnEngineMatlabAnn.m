@@ -1,7 +1,7 @@
 classdef AnnEngineMatlabAnn < ann_engine.AnnEngineAbstract
     % Regression engine using MATLAB ANN.
     %
-    %    Class implementing ann_engine.AnnEngineAbstract.
+    %    Class implementing 'ann_engine.AnnEngineAbstract'.
     %    Train, load, unload, and evaluate MATLAB ANN.
     %
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod

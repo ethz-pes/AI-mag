@@ -8,8 +8,9 @@ function run_ann_example()
 %        - MATLAB regression with genetic algorithm
 %
 %    For the regression with Python Keras and TensorFlow:
-%        - run_ann_server.py or start_python.bat
-%        - this will start the Python ANN server to communicate with MATLAB
+%        - A running Python ANN server ('run_ann_server.py') is required
+%        - Shell script (Linux) and (batch) script (MS Windows) are provided
+%        - This will start the Python ANN server to communicate with MATLAB
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 

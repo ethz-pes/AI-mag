@@ -58,8 +58,8 @@ var_out{end+1} = struct('name', 'y_2', 'use_nrm', true, 'var_trf', 'none', 'var_
 %    - n_train_min: minimum number of training samples
 %    - n_test_min: minimum number of testing samples
 %    - type: method used for selected the testing sample:
-%        - with_overlap: all the sample are in the testing dataset
-%        - no_overlap: the training sample are not in the testing dataset
+%        - 'with_overlap': all the sample are in the testing dataset
+%        - 'no_overlap': the training sample are not in the testing dataset
 split_train_test.ratio_train = 0.5;
 split_train_test.n_train_min = 5;
 split_train_test.n_test_min = 5;
@@ -69,10 +69,10 @@ split_train_test.type = 'no_overlap';
 split_var = false;
 
 % control the choice of the regression algoritm
-%    - matlab_ann: ANN regression with MATLAB Deep Learning
-%    - python_ann: ANN regression with Python Keras and TensorFlow
-%    - matlab_lsq: MATLAB regression with nonlinear least-squares
-%    - matlab_ga regression with genetic algorithm
+%    - 'matlab_ann': ANN regression with MATLAB Deep Learning
+%    - 'python_ann': ANN regression with Python Keras and TensorFlow
+%    - 'matlab_lsq': MATLAB regression with nonlinear least-squares
+%    - 'matlab_ga': regression with genetic algorithm
 ann_info.type = ann_type;
 
 % specific data used by the different algoritms

@@ -12,14 +12,14 @@ class PythonMatlabConnection(Thread):
     """Python thread managing a specific TCP/IP connection for communicating with MATLAB.
 
     Read the requests and deserialize them.
-    Handle the request with  server.HandlerAbstract.
+    Handle the request with  "server.HandlerAbstract".
     Serialize the reponses and send them.
 
     Warning: The request read and response write do not feature a robust format.
              Each "packet" has the number of bytes_array contained as the beginning.
              No checksum, escaping, or anything fancy are done.
 
-    The different connections are manager by server.PythonMatlabServer.
+    The different connections are manager by "server.PythonMatlabServer".
 
    """
 
@@ -30,7 +30,7 @@ class PythonMatlabConnection(Thread):
         hostname (str): Server hostname
         port (int): Server port
         n_connection (int): Number of connection to accept
-        handler_class (fct): Function for creating a server.HandlerAbtract instance
+        handler_class (fct): Function for creating a "server.HandlerAbtract" instance
 
        """
 
@@ -148,7 +148,7 @@ class PythonMatlabConnection(Thread):
 class HandlerAbstract(ABC):
     """Abstract class definition for a server request handler.
 
-    The class is called by server.PythonMatlabConnection.
+    The class is called by "server.PythonMatlabConnection".
     This abstract class guarantee that the right methods are defined.
 
    """
@@ -176,8 +176,8 @@ class HandlerAbstract(ABC):
 class PythonMatlabServer():
     """Python TCP/IP server for communicating with MATLAB.
 
-    TCP/IP server, request can be customized with the abstract class server.HandlerAbstract.
-    The server accept multiple connection with the threads server.PythonMatlabConnection.
+    TCP/IP server, request can be customized with the abstract class "server.HandlerAbstract".
+    The server accept multiple connection with the threads "server.PythonMatlabConnection".
 
    """
 
@@ -188,7 +188,7 @@ class PythonMatlabServer():
         hostname (str): Server hostname
         port (int): Server port
         n_connection (int): Number of connection to accept
-        handler_class (fct): Function for creating a server.HandlerAbtract instance
+        handler_class (fct): Function for creating a "server.HandlerAbtract" instance
 
        """
 

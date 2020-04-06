@@ -182,8 +182,8 @@ function [n_sol, var] = get_struct_combination(var, n_sol_max)
 % Generates generating all the possible combinations between vectors.
 %
 %    The maximum number of samples can be controlled to:
-%        - avoid to long simulations
-%        - avoid memory saturation
+%        - Avoid to long simulations
+%        - Avoid memory saturation
 %
 %    Parameters:
 %        var (struct): struct of vectors with the variables

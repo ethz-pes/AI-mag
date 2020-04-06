@@ -29,7 +29,7 @@ The example [ann_example](ann_example) show the capabilities of the toolbox:
 The example contains the following main file:
 * [run_ann_example.m](ann_example/run_ann_example.m) - the MATLAB main file
 * [run_ann_server.py](ann_example/run_ann_server.py) - the Python ANN server main file
-* Shell script (Linux) and (batch) script (MS Windows) for stating the e Python ANN server
+* Shell script (Linux) and (batch) script (MS Windows) for starting the Python ANN server
 
 ## Compatibility
 

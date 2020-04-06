@@ -9,14 +9,14 @@ classdef AnnManager < handle
     %        - Evaluating the fit for given input data
     %        - Dumping and reloading the data stored in the object
     %
-    %    Can use different regression engine with the abtract class ann_engine.AnnEngineAbstract.
+    %    Can use different regression engine with the abtract class 'ann_engine.AnnEngineAbstract'.
     %    This class is primarily meant for regression with ANN but is also useful for other methods.
     %
     %    Several regression methods are implemented:
-    %        - matlab_ann: ANN regression with MATLAB Deep Learning (ann_engine.AnnEngineMatlabAnn)
-    %        - python_ann: ANN regression with Python Keras and TensorFlow (ann_engine.AnnEnginePythonAnn)
-    %        - matlab_lsq: MATLAB regression with nonlinear least-squares, for benchmark with ANN (ann_engine.AnnEngineMatlabLsq)
-    %        - matlab_ga regression with genetic algorithm, for benchmark with ANN (ann_engine.AnnEngineMatlabGa)
+    %        - 'matlab_ann': ANN regression with MATLAB Deep Learning ('ann_engine.AnnEngineMatlabAnn')
+    %        - 'python_ann': ANN regression with Python Keras and TensorFlow ('ann_engine.AnnEnginePythonAnn')
+    %        - 'matlab_lsq': MATLAB regression with nonlinear least-squares, for benchmark with ANN ('ann_engine.AnnEngineMatlabLsq')
+    %        - 'matlab_ga': regression with genetic algorithm, for benchmark with ANN ('ann_engine.AnnEngineMatlabGa')
     %
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
@@ -295,7 +295,7 @@ classdef AnnManager < handle
             % Init the regression engine.
             %
             %    Extract the regression parameters.
-            %    Create an instance of ann_engine.AnnEngineAbstract.
+            %    Create an instance of 'ann_engine.AnnEngineAbstract'.
             
             switch self.ann_info.type
                 case 'matlab_ann'
