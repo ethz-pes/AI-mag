@@ -1,3 +1,7 @@
+:: Start MATLAB with the COMSOL LiveLink (MS Windows)
+::
+:: (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
+
 @echo off
 
 echo:

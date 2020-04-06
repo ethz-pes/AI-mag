@@ -7,6 +7,8 @@ function out_approx = get_out_approx(model_type, inp)
 %
 %    Returns:
 %        out_approx (struct): struct of vectors with the analytical results
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 switch model_type
     case 'mf'

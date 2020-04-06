@@ -6,6 +6,8 @@ function out_approx = get_out_approx_mf(inp)
 %
 %    Returns:
 %        out_approx (struct): struct of vectors with the analytical results
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % extract required parameters
 A_core = inp.A_core;

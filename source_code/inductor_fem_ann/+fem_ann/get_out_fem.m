@@ -8,6 +8,8 @@ function out_fem = get_out_fem(file_model, model_type, inp)
 %
 %    Returns:
 %        out_fem (struct): struct of vectors with the FEM results
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % get expression to be evaluated
 switch model_type

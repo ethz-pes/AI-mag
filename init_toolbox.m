@@ -1,4 +1,11 @@
 function init_toolbox()
+% Init the MATLAB Inductor FEM/ANN toolbox.
+%
+%    Add the code to the MATLAB path.
+%    Close all figures.
+%    Display a copyright notice.
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % add path
 addpath(genpath('source_ann'))

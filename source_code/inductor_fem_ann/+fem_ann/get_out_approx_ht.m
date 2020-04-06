@@ -6,6 +6,8 @@ function out_approx = get_out_approx_ht(inp)
 %
 %    Returns:
 %        out_approx (struct): struct of vectors with the analytical results
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % compute different surface areas of the geometry
 inp = get_surface(inp);
