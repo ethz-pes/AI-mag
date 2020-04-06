@@ -159,7 +159,7 @@ classdef AnnFem < handle
             %
             %    Return:
             %        is_valid (vector): validity of the different evaluated samples
-            %        inp (struct): input data (extended)
+            %        inp (struct): merged data with additional info
 
             % set the type of the excitation
             switch model_type
@@ -198,8 +198,21 @@ classdef AnnFem < handle
                     error('invalid type')
             end
 
+            % get the analytical approximation for scaling
+            out_approx = fem_ann.get_out_approx(model_type, inp);
+            
             % evaluate the ANN/regression
-            [is_valid, fom] = fem_ann.get_fom(ann_manager_obj, model_type, self.n_sol, is_valid, inp, self.eval_type);
+            switch self.eval_type
+                case 'ann'
+                    [is_valid_tmp, fom] = ann_manager_obj.predict_ann(self.n_sol, inp, out_approx);
+                case 'approx'
+                    [is_valid_tmp, fom] = ann_manager_obj.predict_nrm(self.n_sol, inp, out_approx);
+                otherwise
+                    error('invalid data')
+            end
+            
+            % combine validity of the parameters and of the regression
+            is_valid = is_valid&is_valid_tmp;
         end
     end
 end

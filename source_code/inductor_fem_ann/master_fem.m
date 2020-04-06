@@ -8,7 +8,7 @@ function master_fem(file_init, folder_fem, file_model, model_type, var_type, swe
 %
 %    Parameters:
 %        file_init (str): path of the file containing the constant data
-%        folder_fem (str): path of the folder to stored the results
+%        folder_fem (str): path of the folder where the results are stored 
 %        file_model (str): path of the COMSOL file to be used for the simulations
 %        model_type (str): name of the physics to be solved
 %        var_type (struct): type of the different variables used in the solver
