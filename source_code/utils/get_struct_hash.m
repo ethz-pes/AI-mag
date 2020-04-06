@@ -39,7 +39,7 @@ function hash = get_hash_struct(hash, engine, data)
 %
 %    Parameters:
 %        hash (vector): computed hash (vector format)
-%        engine (object): hash engine (JAVA object)
+%        engine (java): hash engine (JAVA object)
 %        data (struct): struct of vectors to be hashed
 %
 %    Returns:
@@ -75,7 +75,7 @@ function hash = get_hash_value(hash, engine, data)
 %
 %    Parameters:
 %        hash (vector): computed hash (vector format)
-%        engine (object): hash engine (JAVA object)
+%        engine (java): hash engine (JAVA object)
 %        data (str/array): data to be hashed
 %
 %    Returns:

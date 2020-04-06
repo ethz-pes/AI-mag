@@ -4,7 +4,7 @@ function [diff, n_tot, n_sol, model_type, inp, out_fem] = get_assemble(folder_fe
 %    Parameters:
 %        folder_fem (str): path of the folder where the results are stored
 %
-%    Return:
+%    Returns:
 %        diff (duration): total duration of all te
 %        n_tot (int): total number of simulations (including invalid simulations)
 %        n_sol (int): total number of valid simulations

@@ -67,7 +67,7 @@ classdef AnnFem < handle
         function [is_valid, geom] = get_geom(self)
             % Get the figures of merit of the geometry and the validity of the designs.
             %
-            %    Return:
+            %    Returns:
             %        is_valid (vector): validity of the different evaluated samples
             %        geom (struct): data of the parsed geometry with extra data
             
@@ -84,7 +84,7 @@ classdef AnnFem < handle
             %    Parameters:
             %        excitation (struct): input data for the simulations
             %
-            %    Return:
+            %    Returns:
             %        is_valid (vector): validity of the different evaluated samples
             %        fom (struct): data with the ANN/regression simulation results
 
@@ -101,7 +101,7 @@ classdef AnnFem < handle
             %    Parameters:
             %        excitation (struct): input data for the simulations
             %
-            %    Return:
+            %    Returns:
             %        is_valid (vector): validity of the different evaluated samples
             %        fom (struct): data with the ANN/regression simulation results
 
@@ -121,7 +121,7 @@ classdef AnnFem < handle
             %        excitation (struct): input data for the simulations
             %        model_type (str): expected type of the simulation
             %
-            %    Return:
+            %    Returns:
             %        ann_manager_obj (AnnManager): object managing the ANN/regression
 
             assert(strcmp(data.model_type, model_type), 'invalid type')
@@ -136,7 +136,7 @@ classdef AnnFem < handle
             %        data (struct): input data for the ANN/regression engine
             %        model_type (str): type of the simulation
             %
-            %    Return:
+            %    Returns:
             %        is_valid (vector): validity of the different evaluated samples
             %        fom (struct): data with the ANN/regression simulation results
 
@@ -157,7 +157,7 @@ classdef AnnFem < handle
             %        model_type (str): type of the simulation
             %        inp (struct): input data (provided)
             %
-            %    Return:
+            %    Returns:
             %        is_valid (vector): validity of the different evaluated samples
             %        inp (struct): merged data with additional info
 
@@ -184,7 +184,7 @@ classdef AnnFem < handle
             %        is_valid (vector): validity of the different evaluated samples
             %        inp (struct): input data (extended)
             %
-            %    Return:
+            %    Returns:
             %        is_valid (vector): validity of the different evaluated samples
             %        fom (struct): data with the ANN/regression simulation results
 

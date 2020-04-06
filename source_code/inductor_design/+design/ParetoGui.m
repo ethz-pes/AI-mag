@@ -160,8 +160,8 @@ classdef ParetoGui < handle
                 self.gui_table_obj.set_text(text_data);
                 self.gui_table_obj.set_visible(true);
 
-                gui.GuiUtils.set_button(self.clear_obj, 'on');
-                gui.GuiUtils.set_button(self.details_obj, 'on');
+                gui.GuiUtils.set_button(self.clear_obj, true);
+                gui.GuiUtils.set_button(self.details_obj, true);
                 
                 self.inductor_gui_obj.set_id_select(self.id_select);
             else
@@ -174,8 +174,8 @@ classdef ParetoGui < handle
                 
                 self.gui_table_obj.set_visible(false);
 
-                gui.GuiUtils.set_button(self.clear_obj, 'off');
-                gui.GuiUtils.set_button(self.details_obj, 'off');
+                gui.GuiUtils.set_button(self.clear_obj, false);
+                gui.GuiUtils.set_button(self.details_obj, false);
                 
                 self.inductor_gui_obj.close_gui();
             end
