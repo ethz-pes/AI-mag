@@ -1,5 +1,5 @@
 function get_ann_manager(ann_type)
-% Function for testing the AnnManager class in a systematic way.
+% Function for testing the 'AnnManager' class in a systematic way.
 %
 %    Parameters:
 %        ann_type (str): type of the regression method to be used

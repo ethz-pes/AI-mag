@@ -1,6 +1,9 @@
 function master_fem(file_init, folder_fem, file_model, model_type, var_type, sweep)
 % Make many FEM simulations for different variable combinations.
 %
+%    Sweep different combinations.
+%    Extract the FEM results and save them.
+%
 %    This function saves the results during the solving process:
 %        - The results are stored with an hash
 %        - If the hash already exists the simulation is skiped

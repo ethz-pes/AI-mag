@@ -61,6 +61,11 @@ T_winding_max = (-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1
 T_core_max = (-1).*(R_extract_core+R_extract_winding+R_iso_core_winding).^(-1).*((-1).*P_core.*R_core.*R_extract_core+(-1).*P_core.*R_core.*R_extract_winding+(-1).*P_core.*R_extract_core.*R_extract_winding+(-1).*P_winding.*R_extract_core.*R_extract_winding+(-1).*P_core.*R_core.*R_iso_core_winding+(-1).*P_core.*R_extract_core.*R_iso_core_winding+(-1).*R_extract_core.*T_ambient+(-1).*R_extract_winding.*T_ambient+(-1).*R_iso_core_winding.*T_ambient);
 
 % compute the temperature differences, assign the results
+%    - maximum temperature elevation of the core, for the thermal limit
+%    - average temperature elevation of the core, for the losses
+%    - maximum temperature elevation of the winding, for the thermal limit
+%    - average temperature elevation of the winding, for the losses
+%    - maximum temperature elevation of the insulation, for the thermal limit
 out_approx.dT_core_max = T_core_max-T_ambient;
 out_approx.dT_core_avg = ((T_core_max+T_core_min)./2)-T_ambient;
 out_approx.dT_winding_max = T_winding_max-T_ambient;

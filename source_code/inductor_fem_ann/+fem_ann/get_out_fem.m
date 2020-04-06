@@ -14,8 +14,19 @@ function out_fem = get_out_fem(file_model, model_type, inp)
 % get expression to be evaluated
 switch model_type
     case 'mf'
+        % magnetic output variables:
+        %    - inductance (for a single turn)
+        %    - quasi-RMS flux density, integral of B^beta, normalized for one turn and 1A, for the core losses
+        %    - RMS current density, integral of J^2, normalized for one turn and 1A, for the LF winding losses
+        %    - RMS magnetic density, integral of H^2, normalized for one turn and 1A, for the HF winding losses
         expr = {'L_norm', 'B_norm', 'J_norm', 'H_norm'};
     case 'ht'
+        % thermal output variables:
+        %    - maximum temperature elevation of the core, for the thermal limit
+        %    - average temperature elevation of the core, for the losses
+        %    - maximum temperature elevation of the winding, for the thermal limit
+        %    - average temperature elevation of the winding, for the losses
+        %    - maximum temperature elevation of the insulation, for the thermal limit
         expr = {'dT_core_max', 'dT_core_avg', 'dT_winding_max', 'dT_winding_avg', 'dT_iso_max'};
     otherwise
         error('invalid type')

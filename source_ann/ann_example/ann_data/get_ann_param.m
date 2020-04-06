@@ -1,11 +1,11 @@
 function ann_input = get_ann_param(ann_type)
-% Return the data for the AnnManager class for different regression types.
+% Return the data for the 'AnnManager' class for different regression types.
 %
 %    Parameters:
 %        ann_type (str): type of the regression method to be used
 %
 %    Returns:
-%        ann_input (struct): input data for the AnnManager class
+%        ann_input (struct): input data for the 'AnnManager' class
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
@@ -165,7 +165,7 @@ function model = fct_model(n_sol, n_inp, n_out)
 %    Returns:
 %        model (model): creating MATLAB ANN
 
-% check the data, the tag and the size information are not used in this example
+% check the data, the size information are not used in this example
 assert(isfinite(n_sol), 'invalid number of samples')
 assert(isfinite(n_inp), 'invalid input')
 assert(isfinite(n_out), 'invalid output')

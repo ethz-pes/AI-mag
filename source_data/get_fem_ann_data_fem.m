@@ -6,7 +6,7 @@ function [file_model, var_type, sweep] = get_fem_ann_data_fem(model_type, sweep_
 %
 %    Parameters:
 %        model_type (str): name of the physics to be solved ('mf' or 'ht')
-%        sweep_mode (str): method for generating the variable combinations ('extrema' or 'random')%
+%        sweep_mode (str): method for generating the variable combinations ('extrema' or 'random')
 %    Returns:
 %        file_model (str): path of the COMSOL file to be used for the simulations
 %        var_type (struct): type of the different variables used in the solver

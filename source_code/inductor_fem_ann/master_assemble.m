@@ -1,9 +1,9 @@
 function master_assemble(file_assemble, folder_fem)
 % Assemble FEM simulations into a single file.
 %
-%    Load all the FEM results, assemble them into a single struct.
+%    Load all the FEM results, assemble them.
 %    Filter out the invalid simulations.
-%    Compute and add the results obtained with the analytical model.
+%    Compute the same samples with the analytical model.
 %
 %    Parameters:
 %        file_assemble (str): path of the file to be written with the assembled data

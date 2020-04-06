@@ -26,7 +26,7 @@ classdef AnnManager < handle
         var_out % cell: description of the output variables
         split_train_test % struct: control the splitting of the samples between training and testing
         split_var % logical: use (or not) not a separate regression for each output variable
-        ann_info % struct: control the choice of the regression algoritm
+        ann_info % struct: control the choice of the regression algoritm and defines the parameters
     end
     
     %% properties / private
