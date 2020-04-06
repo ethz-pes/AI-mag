@@ -8,14 +8,13 @@ function run_0_init()
 
 init_toolbox();
 
-% path of the file containing the constant data
+% path of the file to be written with the constant data
 file_init = 'data/init.mat';
 
 % get the constant data
 const = get_fem_ann_data_init();
 
 % save the data
-[s, m] = mkdir(fileparts(file_init));
-save(file_init, '-struct', 'const')
+master_init(file_init, const);
 
 end

@@ -21,15 +21,10 @@ file_ann_ht = 'data/ht_ann.mat';
 % path of the file containing the magnetic ANN/regression data
 file_ann_mf = 'data/mf_ann.mat';
 
-% path of the file to be written with the assembled data
+% path of the file to be written with the exported data
 file_export = 'data/export.mat';
 
-% load the data
-ann_ht = load(file_ann_ht);
-ann_mf = load(file_ann_mf);
-const = load(file_init);
-
 % save the data
-save(file_export, 'const', 'ann_ht', 'ann_mf')
+master_export(file_export, file_init, file_ann_ht, file_ann_mf);
 
 end
