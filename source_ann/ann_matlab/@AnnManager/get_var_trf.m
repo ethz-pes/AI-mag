@@ -31,7 +31,7 @@ switch type
         y_scl = sqrt(vec_input);
         y_unscale = vec_input.^2;
     otherwise
-        error('invalid data')
+        error('invalid type')
 end
 
 switch scale_unscale
@@ -40,7 +40,7 @@ switch scale_unscale
     case 'unscale'
         vec_output = y_unscale;
     otherwise
-        error('invalid data')
+        error('invalid type')
 end
 
 end

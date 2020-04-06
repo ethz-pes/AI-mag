@@ -5,12 +5,14 @@ function bytes_array = get_serialize(data)
 %        - The data has to be a struct
 %        - The values of the struct can be strings
 %        - The values of the struct can be arrays:
-%            - Multi-dimensional arrays are supported
+%            - multi-dimensional arrays are supported
 %            - double, single, logical, int8, uint8, int32, uint32, int64, uint64
 %
 %    The reasons of these limitation are:
 %        - To keep this function as simple as possible
-%        - The mismatch between the Pythpn data types and the MATLAB data types
+%        - The mismatch between the Python data types and the MATLAB data types
+%
+%    Warning: The serialization/deserialization routine have meant to be safe against malicious data.
 %
 %    Parameters:
 %        data (struct): data to be serialized

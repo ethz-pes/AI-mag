@@ -19,6 +19,8 @@ def get(bytes_array):
         - To keep this function as simple as possible
         - The mismatch between the Pythpn data types and the MATLAB data types
 
+    Warning: The serialization/deserialization routine have meant to be safe against malicious data.
+
     Parameters:
     bytes_array (bytes): Data to be deserialized
 

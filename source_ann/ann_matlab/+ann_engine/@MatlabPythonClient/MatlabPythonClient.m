@@ -4,6 +4,10 @@ classdef MatlabPythonClient < handle
     %    Connect to a Python TCP/IP server.
     %    Send request and get response from the server.
     %
+    %    Warning: The request read and response write do not feature a robust format.
+    %             Each "packet" has the number of bytes_array contained as the beginning.
+    %             No checksum, escaping, or anything fancy are done.
+    %
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
     
     %% properties

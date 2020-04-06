@@ -19,8 +19,10 @@ def get(data):
         - To keep this function as simple as possible
         - The mismatch between the Pythpn data types and the MATLAB data types
 
+    Warning: The serialization/deserialization routine have meant to be safe against malicious data.
+
     Parameters:
-    
+    data (dict): Data to be seserialized
 
     Returns:
     bytes: Serialized data
