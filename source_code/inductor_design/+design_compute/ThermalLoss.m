@@ -18,7 +18,7 @@ classdef ThermalLoss < handle
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
     %% properties
-    properties (SetAccess = immutable, GetAccess = public)
+    properties (SetAccess = private, GetAccess = public)
         iter % struct: contains the control parameters
         fct % struct: contains the function handle for the thermal and loss models
     end
