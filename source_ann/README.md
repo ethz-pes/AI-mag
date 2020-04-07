@@ -15,8 +15,16 @@ Currently, the current regression/fitting methods are implemented:
 * MATLAB regression with **genetic algorithm**, for benchmark with ANN
 
 The MATLAB and Python runtimes are communicating over TCP/IP sockets (Python is the server, MATLAB the client).
+The MATLAB code is the main entry point and is making requests to the Python code.
+
 This toolbox is primarily meant for regression with ANN but is also useful for other methods (such as least-squares or genetic algorithm).
-This toolbox is made in order to be **easily extended** by other fitting and regression methods.
+This toolbox is made in order to be **easily extended** by other fitting and regression methods (abstract class).
+
+## Code Structure
+
+* [ann_matlab](ann_matlab) - MATLAB code, the class "AnnManager" is the main class
+* [ann_matlab](ann_matlab) - Python code, the module "ann_server" is the main module
+* [ann_example](ann_example) - MATLAB/Python example
 
 ## Example
 

@@ -5,7 +5,7 @@ classdef IsoData < handle
         volume
     end
     
-    %% init
+    %% public
     methods (Access = public)
         function self = IsoData(material, id, volume)
             assert(strcmp(material.type, 'iso'), 'invalid length')

@@ -1,7 +1,7 @@
-function [sweep, n_split, fct, data_ann, data_compute] = get_design_data_compute(sweep_type, n)
+function [sweep, n_split, fct, data_ann, data_compute] = get_design_data_compute(sweep_mode)
 
 % sweep
-sweep = get_sweep(sweep_type, n);
+sweep = get_sweep(sweep_mode);
 
 % n_split
 n_split = 100e3;
@@ -21,17 +21,44 @@ data_compute.fct_excitation = @(var, fom) get_excitation(var, fom);
 
 end
 
-function sweep = get_sweep(sweep_type, n)
+function sweep = get_sweep(sweep_mode)
 
-sweep.type = sweep_type;
-sweep.n_sol = n;
-sweep.var.fact_window = struct('var_trf', 'log', 'type', 'float', 'lb', 2.0, 'ub', 4.0, 'n', n);
-sweep.var.fact_core = struct('var_trf', 'log', 'type', 'float', 'lb', 1.0,  'ub', 3.0, 'n', n);
-sweep.var.fact_core_window = struct('var_trf', 'log', 'type', 'float', 'lb', 0.3,  'ub', 3.0, 'n', n);
-sweep.var.fact_gap = struct('var_trf', 'log', 'type', 'float', 'lb', 0.01,  'ub', 0.2, 'n', n);
-sweep.var.V_box = struct('var_trf', 'log', 'type', 'float', 'lb', 20e-6,  'ub', 200e-6, 'n', n);
-sweep.var.f = struct('var_trf', 'log', 'type', 'float', 'lb', 50e3,  'ub', 500e3, 'n', n);
-sweep.var.n_turn = struct('var_trf', 'log', 'type', 'int', 'lb', 2, 'ub', 75, 'n', n);
+switch sweep_mode
+    case 'extrema'
+        % regular grid sweep (all combinations)
+        sweep.type = 'all_combinations';
+        
+        % maximum sumber of resulting sample
+        sweep.n_sol_max = 10e6;
+        
+        % two samples per variables (extreme case)
+        n = 8;
+        
+        % samples generation: linear
+        span = 'linear';
+    case 'random'
+        % regular vector sweep (specified combinations)
+        sweep.type = 'specified_combinations';
+        
+        % maximum sumber of resulting sample
+        sweep.n_sol_max = 10e6;
+        
+        % samples per variables
+        n = 1e6;
+        
+        % samples generation: linear
+        span = 'random';
+    otherwise
+        error('invalid sweep_type')
+end
+
+sweep.var.fact_window = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 2.0, 'ub', 4.0, 'n', n);
+sweep.var.fact_core = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 1.0,  'ub', 3.0, 'n', n);
+sweep.var.fact_core_window = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 0.3,  'ub', 3.0, 'n', n);
+sweep.var.fact_gap = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 0.01,  'ub', 0.2, 'n', n);
+sweep.var.V_box = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 20e-6,  'ub', 200e-6, 'n', n);
+sweep.var.f = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 50e3,  'ub', 500e3, 'n', n);
+sweep.var.n_turn = struct('type', 'span', 'var_trf', 'log', 'var_type', 'int', 'span', span, 'lb', 2, 'ub', 75, 'n', n);
 
 end
 

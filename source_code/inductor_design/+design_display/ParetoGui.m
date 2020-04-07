@@ -28,10 +28,10 @@ classdef ParetoGui < handle
     end
     methods (Access = private)
         function init_data(self, id_design, fom, operating, fct_data, plot_param, fom_param)
-            self.pareto_display_obj = design.ParetoDisplay(id_design, fom, operating, fct_data, plot_param, fom_param);
+            self.pareto_display_obj = design_display.ParetoDisplay(id_design, fom, operating, fct_data, plot_param, fom_param);
             [self.plot_data, self.size_data, self.txt_size] = self.pareto_display_obj.get_data_base();
                         
-            self.inductor_gui_obj = design.InductorGui(id_design, fom, operating);
+            self.inductor_gui_obj = design_display.InductorGui(id_design, fom, operating);
             
             self.id_fig = randi(1e9);
             self.is_select = false;

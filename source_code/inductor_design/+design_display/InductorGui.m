@@ -16,7 +16,7 @@ classdef InductorGui < handle
     methods (Access = public)
         function self = InductorGui(id_design, fom, operating)
             self.id_fig = randi(1e9);
-            self.inductor_display_obj = design.InductorDisplay(id_design, fom, operating);
+            self.inductor_display_obj = design_display.InductorDisplay(id_design, fom, operating);
         end
         
         function set_id_select(self, id_select)

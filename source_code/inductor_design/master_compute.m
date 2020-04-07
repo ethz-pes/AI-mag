@@ -87,7 +87,7 @@ data_const = data_compute.data_const;
 data_vec = data_compute.fct_data_vec(var);
 
 % inductor
-inductor_compute_obj = design.InductorCompute(n_sol, data_vec, data_const, ann_fem_obj);
+inductor_compute_obj = design_compute.InductorCompute(n_sol, data_vec, data_const, ann_fem_obj);
 fom = inductor_compute_obj.get_fom();
 
 end
@@ -103,7 +103,7 @@ data_const = data_compute.data_const;
 data_vec = data_compute.fct_data_vec(var);
 
 % inductor
-inductor_compute_obj = design.InductorCompute(n_sol, data_vec, data_const, ann_fem_obj);
+inductor_compute_obj = design_compute.InductorCompute(n_sol, data_vec, data_const, ann_fem_obj);
 fom = inductor_compute_obj.get_fom();
 
 % get operating

@@ -14,7 +14,7 @@ classdef AnnFem < handle
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
     %% properties
-    properties (SetAccess = immutable, GetAccess = public)
+    properties (SetAccess = private, GetAccess = public)
         data_fem_ann % struct: contain the results of the magnetic and thermal ANN/regression
         geom_type % str: type of the geometry variables ('abs' or 'rel')
         eval_type % str: get the result of the ANN/regression or just the analytical solution ('ann' or 'approx')

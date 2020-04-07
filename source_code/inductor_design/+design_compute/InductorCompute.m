@@ -54,9 +54,9 @@ classdef InductorCompute < handle
             
             self.fom.is_valid_geom = is_valid_geom;
             
-            self.core_obj = design.CoreData(self.data_const.material_core, self.data_vec.material.core_id, geom.V_core);
-            self.winding_obj = design.WindingData(self.data_const.material_winding, self.data_vec.material.winding_id, geom.V_winding);
-            self.iso_obj = design.IsoData(self.data_const.material_iso, self.data_vec.material.iso_id, geom.V_iso);
+            self.core_obj = design_compute.CoreData(self.data_const.material_core, self.data_vec.material.core_id, geom.V_core);
+            self.winding_obj = design_compute.WindingData(self.data_const.material_winding, self.data_vec.material.winding_id, geom.V_winding);
+            self.iso_obj = design_compute.IsoData(self.data_const.material_iso, self.data_vec.material.iso_id, geom.V_iso);
             
             self.fom.material.core_id = self.data_vec.material.core_id;
             self.fom.material.winding_id = self.data_vec.material.winding_id;
@@ -140,7 +140,7 @@ classdef InductorCompute < handle
             fct.get_losses = @(operating) self.get_losses(operating);
             fct.get_thermal_vec = @(operating) self.get_thermal_vec(operating);
             fct.get_losses_vec = @(operating) self.get_losses_vec(operating);
-            self.thermal_losses_obj = design.ThermalLoss(self.data_const.iter, fct);
+            self.thermal_losses_obj = design_compute.ThermalLoss(self.data_const.iter, fct);
         end
 
         function is_valid_tmp = init_is_valid_check(self, vec, limit)

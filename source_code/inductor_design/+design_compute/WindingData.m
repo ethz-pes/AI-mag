@@ -7,7 +7,7 @@ classdef WindingData < handle
         volume
     end
     
-    %% init
+    %% public
     methods (Access = public)
         function self = WindingData(material, id, volume)
             assert(strcmp(material.type, 'winding'), 'invalid length')
@@ -52,6 +52,7 @@ classdef WindingData < handle
         end
     end
     
+    %% private
     methods (Access = private)        
         function interp = parse_interp(self, interp)
             %% load

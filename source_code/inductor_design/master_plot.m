@@ -11,7 +11,7 @@ fom = data_compute.fom;
 operating = data_compute.operating;
 
 fprintf('gui\n')
-design.ParetoGui(id_design, fom, operating, fct_data, plot_param, fom_param);
+design_display.ParetoGui(id_design, fom, operating, fct_data, plot_param, fom_param);
 
 fprintf('################## master_plot\n')
 
