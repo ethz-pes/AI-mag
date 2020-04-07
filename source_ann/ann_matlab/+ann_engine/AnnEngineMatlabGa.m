@@ -1,7 +1,7 @@
 classdef AnnEngineMatlabGa < ann_engine.AnnEngineAbstract
     % Regression engine using MATLAB 'ga'.
     %
-    %    Class implementing 'ann_engine.AnnEngineAbstract'.
+    %    Class implementing 'AnnEngineAbstract'.
     %    Fit, load, unload, and evaluate MATLAB genetic algorithm.
     %
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod

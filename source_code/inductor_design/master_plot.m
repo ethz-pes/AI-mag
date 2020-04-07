@@ -1,4 +1,4 @@
-function master_plot(file_compute, fct_data, plot_param, fom_param)
+function master_plot(file_compute, fct_data, plot_param, text_param)
 
 % name
 fprintf('################## master_plot\n')
@@ -11,7 +11,7 @@ fom = data_compute.fom;
 operating = data_compute.operating;
 
 fprintf('gui\n')
-design_display.ParetoGui(id_design, fom, operating, fct_data, plot_param, fom_param);
+design_display.ParetoGui(id_design, fom, operating, fct_data, plot_param, text_param);
 
 fprintf('################## master_plot\n')
 

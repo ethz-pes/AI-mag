@@ -1,7 +1,7 @@
 classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
     % Regression engine using Python TensorFlow ANN.
     %
-    %    Class implementing 'ann_engine.AnnEngineAbstract'.
+    %    Class implementing 'AnnEngineAbstract'.
     %    Train, load, unload, and evaluate Python TensorFlow ANN.
     %    Use and require a running Python ANN server over TCP/IP.
     %
@@ -10,7 +10,7 @@ classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
     %% properties
     properties (SetAccess = private, GetAccess = public)
         tag_train % str: tag for enabling different training/fitting modes
-        client_obj % ann_engine.MatlabPythonClient: manage the connection to the server
+        client_obj % MatlabPythonClient: manage the connection to the server
     end
     
     %% public

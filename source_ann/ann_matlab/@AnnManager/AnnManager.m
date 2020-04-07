@@ -9,14 +9,14 @@ classdef AnnManager < handle
     %        - Evaluating the fit for given input data
     %        - Dumping and reloading the data stored in the object
     %
-    %    Can use different regression engine with the abtract class 'ann_engine.AnnEngineAbstract'.
+    %    Can use different regression engine with the abtract class 'AnnEngineAbstract'.
     %    This class is primarily meant for regression with ANN but is also useful for other methods.
     %
     %    Several regression methods are implemented:
-    %        - 'matlab_ann': ANN regression with MATLAB Deep Learning ('ann_engine.AnnEngineMatlabAnn')
-    %        - 'python_ann': ANN regression with Python Keras and TensorFlow ('ann_engine.AnnEnginePythonAnn')
-    %        - 'matlab_lsq': MATLAB regression with nonlinear least-squares, for benchmark with ANN ('ann_engine.AnnEngineMatlabLsq')
-    %        - 'matlab_ga': regression with genetic algorithm, for benchmark with ANN ('ann_engine.AnnEngineMatlabGa')
+    %        - 'matlab_ann': ANN regression with MATLAB Deep Learning ('AnnEngineMatlabAnn')
+    %        - 'python_ann': ANN regression with Python Keras and TensorFlow ('AnnEnginePythonAnn')
+    %        - 'matlab_lsq': MATLAB regression with nonlinear least-squares, for benchmark with ANN ('AnnEngineMatlabLsq')
+    %        - 'matlab_ga': regression with genetic algorithm, for benchmark with ANN ('AnnEngineMatlabGa')
     %
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
@@ -43,7 +43,7 @@ classdef AnnManager < handle
         is_train % logical: if the training/fitting has been done (or not)
         ann_data % struct: data of the ANN or fitting algorithm
         fom % struct: figures of merit for the regression quality
-        ann_engine_obj % ann_engine.AnnEngineAbstract: manage the selected regression algorithm
+        ann_engine_obj % AnnEngineAbstract: manage the selected regression algorithm
     end
     
     %% public
@@ -295,7 +295,7 @@ classdef AnnManager < handle
             % Init the regression engine.
             %
             %    Extract the regression parameters.
-            %    Create an instance of 'ann_engine.AnnEngineAbstract'.
+            %    Create an instance of 'AnnEngineAbstract'.
             
             switch self.ann_info.type
                 case 'matlab_ann'

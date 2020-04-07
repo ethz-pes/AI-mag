@@ -21,7 +21,7 @@ classdef InductorCompute < handle
     %
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
     
-    %% init
+    %% properties
     properties (SetAccess = private, GetAccess = public)
         n_sol % int: number of designs or samples
         data_vec % struct: struct of vector with one value per sample

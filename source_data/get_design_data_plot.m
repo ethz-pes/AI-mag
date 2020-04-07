@@ -1,4 +1,4 @@
-function [fct_data, plot_param, fom_param] = get_design_data_plot()
+function [fct_data, plot_param, text_param] = get_design_data_plot()
 
 fct_data = @(fom, operating, n_sol) get_data(fom, operating, n_sol);
 
@@ -6,10 +6,10 @@ plot_param.weighted_losses = get_plot_param('V_box', 'P_tot', 'f', [50 500]);
 plot_param.mass_correlation = get_plot_param('V_box', 'm_tot', 'f', [50 500]);
 plot_param.cost_correlation = get_plot_param('V_box', 'c_tot', 'f', [50 500]);
 
-fom_param{1} = struct('title', 'fom', 'var', {{'V_box', 'A_box', 'm_tot', 'c_tot'}});
-fom_param{2} = struct('title', 'circuit', 'var', {{'L', 'f', 'I_sat', 'I_rms'}});
-fom_param{3} = struct('title', 'operating', 'var', {{'P_fl', 'P_hl', 'P_tot', 'T_max'}});
-fom_param{4} = struct('title', 'utilization', 'var', {{'I_peak_tot', 'I_rms_tot', 'r_peak_peak', 'fact_sat', 'fact_rms'}});
+text_param{1} = struct('title', 'fom', 'var', {{'V_box', 'A_box', 'm_tot', 'c_tot'}});
+text_param{2} = struct('title', 'circuit', 'var', {{'L', 'f', 'I_sat', 'I_rms'}});
+text_param{3} = struct('title', 'operating', 'var', {{'P_fl', 'P_hl', 'P_tot', 'T_max'}});
+text_param{4} = struct('title', 'utilization', 'var', {{'I_peak_tot', 'I_rms_tot', 'r_peak_peak', 'fact_sat', 'fact_rms'}});
 
 end
 
@@ -34,7 +34,7 @@ plot_param.c_lim = c_lim;
 
 end
 
-function [is_valid, data_ctrl] = get_data(fom, operating, n_sol)
+function [is_plot, data_fom] = get_data(fom, operating, n_sol)
 
 A_box = fom.area.A_box;
 V_box = fom.volume.V_box;
@@ -67,30 +67,30 @@ f = (f_fl+f_hl)./2;
 P_tot = 0.5.*P_fl+0.5.*P_hl;
 T_max = max(T_fl, T_hl);
 
-data_ctrl.V_box = struct('value', V_box, 'name', 'V_box', 'scale', 1e6, 'unit', 'cm3');
-data_ctrl.A_box = struct('value', A_box, 'name', 'A_box', 'scale', 1e4, 'unit', 'cm2');
-data_ctrl.m_tot = struct('value', m_tot, 'name', 'm_tot', 'scale', 1e3, 'unit', 'g');
-data_ctrl.c_tot = struct('value', c_tot, 'name', 'c_tot', 'scale', 1.0, 'unit', '$');
+data_fom.V_box = struct('value', V_box, 'name', 'V_box', 'scale', 1e6, 'unit', 'cm3');
+data_fom.A_box = struct('value', A_box, 'name', 'A_box', 'scale', 1e4, 'unit', 'cm2');
+data_fom.m_tot = struct('value', m_tot, 'name', 'm_tot', 'scale', 1e3, 'unit', 'g');
+data_fom.c_tot = struct('value', c_tot, 'name', 'c_tot', 'scale', 1.0, 'unit', '$');
 
-data_ctrl.L = struct('value', L, 'name', 'L', 'scale', 1e6, 'unit', 'uH');
-data_ctrl.f = struct('value', f, 'name', 'f', 'scale', 1e-3, 'unit', 'kHz');
-data_ctrl.I_sat = struct('value', I_sat, 'name', 'I_sat', 'scale', 1.0, 'unit', 'A');
-data_ctrl.I_rms = struct('value', I_rms, 'name', 'I_rms', 'scale', 1.0, 'unit', 'A');
+data_fom.L = struct('value', L, 'name', 'L', 'scale', 1e6, 'unit', 'uH');
+data_fom.f = struct('value', f, 'name', 'f', 'scale', 1e-3, 'unit', 'kHz');
+data_fom.I_sat = struct('value', I_sat, 'name', 'I_sat', 'scale', 1.0, 'unit', 'A');
+data_fom.I_rms = struct('value', I_rms, 'name', 'I_rms', 'scale', 1.0, 'unit', 'A');
 
-data_ctrl.I_peak_tot = struct('value', I_peak_tot, 'name', 'I_peak_tot', 'scale', 1.0, 'unit', 'A');
-data_ctrl.I_rms_tot = struct('value', I_rms_tot, 'name', 'I_rms_tot', 'scale', 1.0, 'unit', 'A');
-data_ctrl.r_peak_peak = struct('value', r_peak_peak, 'name', 'r_peak_peak', 'scale', 1e2, 'unit', '%');
-data_ctrl.fact_sat = struct('value', fact_sat, 'name', 'fact_sat', 'scale', 1e2, 'unit', '%');
-data_ctrl.fact_rms = struct('value', fact_rms, 'name', 'fact_rms', 'scale', 1e2, 'unit', '%');
+data_fom.I_peak_tot = struct('value', I_peak_tot, 'name', 'I_peak_tot', 'scale', 1.0, 'unit', 'A');
+data_fom.I_rms_tot = struct('value', I_rms_tot, 'name', 'I_rms_tot', 'scale', 1.0, 'unit', 'A');
+data_fom.r_peak_peak = struct('value', r_peak_peak, 'name', 'r_peak_peak', 'scale', 1e2, 'unit', '%');
+data_fom.fact_sat = struct('value', fact_sat, 'name', 'fact_sat', 'scale', 1e2, 'unit', '%');
+data_fom.fact_rms = struct('value', fact_rms, 'name', 'fact_rms', 'scale', 1e2, 'unit', '%');
 
-data_ctrl.P_fl = struct('value', P_fl, 'name', 'P_fl', 'scale', 1.0, 'unit', 'W');
-data_ctrl.P_hl = struct('value', P_hl, 'name', 'P_hl', 'scale', 1.0, 'unit', 'W');
-data_ctrl.P_tot = struct('value', P_tot, 'name', 'P_tot', 'scale', 1.0, 'unit', 'W');
-data_ctrl.T_max = struct('value', T_max, 'name', 'T_max', 'scale', 1.0, 'unit', 'C');
+data_fom.P_fl = struct('value', P_fl, 'name', 'P_fl', 'scale', 1.0, 'unit', 'W');
+data_fom.P_hl = struct('value', P_hl, 'name', 'P_hl', 'scale', 1.0, 'unit', 'W');
+data_fom.P_tot = struct('value', P_tot, 'name', 'P_tot', 'scale', 1.0, 'unit', 'W');
+data_fom.T_max = struct('value', T_max, 'name', 'T_max', 'scale', 1.0, 'unit', 'C');
 
-is_valid = true(1, n_sol);
-is_valid = is_valid&is_valid_fom;
-is_valid = is_valid&is_valid_fl;
-is_valid = is_valid&is_valid_hl;
+is_plot = true(1, n_sol);
+is_plot = is_plot&is_valid_fom;
+is_plot = is_plot&is_valid_fl;
+is_plot = is_plot&is_valid_hl;
 
 end
