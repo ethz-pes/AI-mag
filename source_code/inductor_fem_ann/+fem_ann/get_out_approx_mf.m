@@ -41,7 +41,7 @@ J_norm = J_tot./I_winding;
 %    - no good simple analytical approximation exists
 %    - due to the air gap fringing this is a complex problem
 %    - use a simple estimation of the field (by M. Leibl) 
-%    - M. Leibl, "Three-Phase PFC Rectifier and High-Voltage Generator", 2017
+%    - details: M. Leibl, "Three-Phase PFC Rectifier and High-Voltage Generator", 2017
 H_rms_x = I_winding./(2.*sqrt(3).*x_window);
 H_rms_y = I_winding./(2.*sqrt(3).*y_window);
 H_tot = sqrt(H_rms_x.^2+H_rms_y.^2);
