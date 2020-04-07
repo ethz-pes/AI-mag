@@ -137,10 +137,12 @@ function data_const = get_data_const()
 
 %% iter
 data_const.iter.n_iter = 15;
-data_const.iter.tol_losses = 5.0;
-data_const.iter.tol_thermal = 2.0;
-data_const.iter.relax_losses = 1.0;
-data_const.iter.relax_thermal = 1.0;
+data_const.iter.losses.tol_abs = 0.5;
+data_const.iter.losses.tol_rel = 0.05;
+data_const.iter.losses.relax = 1.0;
+data_const.iter.thermal.tol_abs = 2.0;
+data_const.iter.thermal.tol_rel = 0.05;
+data_const.iter.thermal.relax = 1.0;
 
 data_const.material_core = load('source_data\material\core_data.mat');
 data_const.material_winding = load('source_data\material\winding_data.mat');
