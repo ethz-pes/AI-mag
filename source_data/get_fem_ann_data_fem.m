@@ -7,6 +7,7 @@ function [file_model, var_type, sweep] = get_fem_ann_data_fem(model_type, sweep_
 %    Parameters:
 %        model_type (str): name of the physics to be solved ('mf' or 'ht')
 %        sweep_mode (str): method for generating the variable combinations ('extrema' or 'random')
+%
 %    Returns:
 %        file_model (str): path of the COMSOL file to be used for the simulations
 %        var_type (struct): type of the different variables used in the solver
@@ -99,14 +100,14 @@ end
 % COMSOL model path
 file_model = ['source_data/model/model_' model_type '.mph'];
 
-% type of the geometry input variables
-%    - 'rel': boxed volume, geometrical aspect ratio, and relative air gap length
-%    - 'abs': absolute core, winding, and air gap length
+% type of the different variables used in the solver
+%    - geom_type: type of the geometry input variables
+%        - 'rel': boxed volume, geometrical aspect ratio, and relative air gap length
+%        - 'abs': absolute core, winding, and air gap length
+%    - excitation_type: type of the excitation input variables
+%        - 'rel': relative excitation (current density, losses per surface, etc.)
+%        - 'abs': absolute excitation (current value, loss values, etc.)
 var_type.geom_type = 'rel';
-
-% type of the excitation input variables
-%    - 'rel': relative excitation (current density, losses per surface, etc.)
-%    - 'abs': absolute excitation (current value, loss values, etc.)
 var_type.excitation_type = 'rel';
 
 end

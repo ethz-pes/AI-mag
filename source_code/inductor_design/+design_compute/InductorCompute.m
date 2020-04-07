@@ -74,10 +74,10 @@ classdef InductorCompute < handle
             % Compute several operating points (losses and temperatures) for the different designs.
             %
             %    Parameters:
-            %        excitation (struct): struct containg the operating points (e.g., full load, half load)
+            %        excitation (struct): struct containing the operating points (e.g., full load, half load)
             %
             %    Returns:
-            %        operating (struct): struct containg the excitation, losses, and temperatures
+            %        operating (struct): struct containing the excitation, losses, and temperatures
             
             field = fieldnames(excitation);
             for j=1:length(field)
@@ -287,10 +287,10 @@ classdef InductorCompute < handle
             % Compute a single operating point (losses and temperatures) for the different designs.
             %
             %    Parameters:
-            %        excitation (struct): struct containg the operating point excitation
+            %        excitation (struct): struct containing the operating point excitation
             %
             %    Returns:
-            %        operating (struct): struct containg the excitation, losses, and temperatures
+            %        operating (struct): struct containing the excitation, losses, and temperatures
             
             % add the excitation data, expand the data to the number of designs
             operating.excitation = get_struct_size(excitation, self.n_sol);
