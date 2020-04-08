@@ -15,8 +15,8 @@ function run_5_compute()
 %
 %    This function requires a running ANN Python Server (if this regression method is used):
 %        - run 'run_ann_server.py' with Python
-%        - use 'start_python.bat' on MS Windows
-%        - use 'start_python.sh' on Linux
+%        - use 'start_python_ann_server.bat' on MS Windows
+%        - use 'start_python_ann_server.sh' on Linux
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
