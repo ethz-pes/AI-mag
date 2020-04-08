@@ -150,7 +150,7 @@ fact_curve = inp.fact_curve;
 % solve the equation, get area product 
 %    - this constrain problem is solved with Mathematica
 %    - the solution is exported to MATLAB
-%    - the Mathematica source file is 'source_scratch/geom_volume.nb'
+%    - the Mathematica source file is 'ressources/geom_volume.nb'
 fact = 2.*((fact_core.^(-1).*fact_core_window.^(1/2)).^(1/2)+((fact_core_window.^(-1)).^(1/2).*fact_window.^(-1)).^(1/2)).*((fact_core.*fact_core_window.^(1/2)).^(1/2)+(fact_core.^(-1).*fact_core_window.^(1/2)).^(1/2).*fact_curve+2.*((fact_core_window.^(-1)).^(1/2).*fact_window.^(-1)).^(1/2)).*((fact_core.^(-1).*fact_core_window.^(1/2)).^(1/2)+((fact_core_window.^(-1)).^(1/2).*fact_window).^(1/2));
 x = (V_box./fact).^(1./3);
 A_core_window = x.^4;

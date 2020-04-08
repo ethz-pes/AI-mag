@@ -210,8 +210,12 @@ classdef ParetoGui < handle
             %    Parameters:
             %        panel (obj): parent object to create the feature
             
-            % put the logo
+            % logo file
+            %    - the logo is done with Illustrator
+            %    - the Mathematica source file is 'ressources/logo_fem_ann.ai'
             filename = 'logo_fem_ann.png';
+            
+            % set the logo
             path = fileparts(mfilename('fullpath'));
             filename = [path filesep() filename];
             gui.GuiUtils.set_logo(panel, filename);
@@ -299,7 +303,12 @@ classdef ParetoGui < handle
             %    Parameters:
             %        parent (obj): parent object to create the feature
             
+            % logo file
+            %    - the logo is done with Illustrator
+            %    - the Mathematica source file is 'ressources/logo_pes_ethz.ai'
             filename = 'logo_pes_ethz.png';
+            
+            % set the logo
             path = fileparts(mfilename('fullpath'));
             filename = [path filesep() filename];
             gui.GuiUtils.set_logo(panel, filename);
