@@ -11,24 +11,30 @@ More precisely, the following **worflow** is implemented:
 * Using the **ANNs**, **quickly** generate **accurate inductor designs** (without solving any FEM model)
 * **Multi-objective** data exploration with a **GUI**
 
-The following performance are achieved:
+The following performances are achieved:
 * The **average error** between the FEM simulations and the ANN predictions is **below 1%** 
 * The **worst-case error** between the FEM simulations and the ANN predictions is **below 8%** 
 * The tool is able for generate more than **5000 valid designs per second** on a laptop computer
 
+## Simplified Workflow
+
+<p float="middle">
+    <img src="ressources/img_readme/workflow.png" width="700">
+</p>
+
 ## GUI Screenshots
 
 <p float="middle">
-    <img src="ressources/screenshot/screenshot_1.png" width="400">
-    <img src="ressources/screenshot/screenshot_2.png" width="400">
+    <img src="ressources/img_readme/screenshot_1.png" width="400">
+    <img src="ressources/img_readme/screenshot_2.png" width="400">
 </p>
 <p float="middle">
-    <img src="ressources/screenshot/screenshot_3.png" width="400">
-    <img src="ressources/screenshot/screenshot_4.png" width="400">
+    <img src="ressources/img_readme/screenshot_3.png" width="400">
+    <img src="ressources/img_readme/screenshot_4.png" width="400">
 </p>
 <p float="middle">
-    <img src="ressources/screenshot/screenshot_5.png" width="400">
-    <img src="ressources/screenshot/screenshot_6.png" width="400">
+    <img src="ressources/img_readme/screenshot_5.png" width="400">
+    <img src="ressources/img_readme/screenshot_6.png" width="400">
 </p>
 
 ## Getting Started / Example
