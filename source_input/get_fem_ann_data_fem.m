@@ -98,7 +98,7 @@ if strcmp(model_type, 'ht')
 end
 
 % COMSOL model path
-file_model = ['source_data/model/model_' model_type '.mph'];
+file_model = ['source_input/model/model_' model_type '.mph'];
 
 % type of the different variables used in the solver
 %    - geom_type: type of the geometry input variables

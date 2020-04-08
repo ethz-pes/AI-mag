@@ -26,6 +26,10 @@ The following performance are achieved:
     <img src="ressources/screenshot/screenshot_3.png" width="400">
     <img src="ressources/screenshot/screenshot_4.png" width="400">
 </p>
+<p float="middle">
+    <img src="ressources/screenshot/screenshot_5.png" width="400">
+    <img src="ressources/screenshot/screenshot_6.png" width="400">
+</p>
 
 ## Getting Started / Example
 

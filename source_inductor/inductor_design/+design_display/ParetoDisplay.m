@@ -63,9 +63,9 @@ classdef ParetoDisplay < handle
             % parse the data for all the specified plots
             field = fieldnames(self.plot_param);
             for i=1:length(field)
-                plot_param_tmp = self.plot_param.(field{i});
-                plot_data_tmp = self.get_plot_data(plot_param_tmp);
-                plot_data.(field{i}) = plot_data_tmp;
+                plot_param_plt = self.plot_param.(field{i});
+                plot_data_plt = self.get_plot_data(plot_param_plt);
+                plot_data.(field{i}) = plot_data_plt;
             end
             
             % data with the number of designs
@@ -95,40 +95,40 @@ classdef ParetoDisplay < handle
             % get the data for the clipboard
             gui_clipboard_obj = gui.GuiClipboard();
             gui_clipboard_obj.add_title('fom / id_design = %d', id_select)
-            gui_clipboard_obj.add_text_data(text_data)
+            gui_clipboard_obj.add_text_data(text_data_fom)
             txt_fom = gui_clipboard_obj.get_txt();
         end
     end
     
     %% private
     methods (Access = private)        
-        function plot_data_tmp = get_plot_data(self, plot_param_tmp)
+        function plot_data_plt = get_plot_data(self, plot_param_plt)
             % Get the GUI data for a specific plot.
             %
             %    Parameters:
-            %        plot_param_tmp (struct): definition of a specific different plot
+            %        plot_param_plt (struct): definition of a specific different plot
             %
             %    Returns:
-            %        plot_data_tmp (struct): data for plotting a specific Pareto front
+            %        plot_data_plt (struct): data for plotting a specific Pareto front
 
             % set the data (x, y, and color axis)
-            [plot_data_tmp.x_label, plot_data_tmp.x_lim, plot_data_tmp.x_data] = self.get_axis(plot_param_tmp.x_var, plot_param_tmp.x_lim);
-            [plot_data_tmp.y_label, plot_data_tmp.y_lim, plot_data_tmp.y_data] = self.get_axis(plot_param_tmp.y_var, plot_param_tmp.y_lim);
-            [plot_data_tmp.c_label, plot_data_tmp.c_lim, plot_data_tmp.c_data] = self.get_axis(plot_param_tmp.c_var, plot_param_tmp.c_lim);
+            [plot_data_plt.x_label, plot_data_plt.x_lim, plot_data_plt.x_data] = self.get_axis(plot_param_plt.x_var, plot_param_plt.x_lim);
+            [plot_data_plt.y_label, plot_data_plt.y_lim, plot_data_plt.y_data] = self.get_axis(plot_param_plt.y_var, plot_param_plt.y_lim);
+            [plot_data_plt.c_label, plot_data_plt.c_lim, plot_data_plt.c_data] = self.get_axis(plot_param_plt.c_var, plot_param_plt.c_lim);
             
             % save the id of the plots
-            plot_data_tmp.id_data = self.id_design(self.is_plot);
+            plot_data_plt.id_data = self.id_design(self.is_plot);
                         
             % axis type
-            plot_data_tmp.x_scale = plot_param_tmp.x_scale;
-            plot_data_tmp.y_scale = plot_param_tmp.y_scale;
-            plot_data_tmp.c_scale = plot_param_tmp.c_scale;
+            plot_data_plt.x_scale = plot_param_plt.x_scale;
+            plot_data_plt.y_scale = plot_param_plt.y_scale;
+            plot_data_plt.c_scale = plot_param_plt.c_scale;
             
             % scatter plot format
-            plot_data_tmp.marker_pts_size = plot_param_tmp.marker_pts_size;
-            plot_data_tmp.marker_select_size = plot_param_tmp.marker_select_size;
-            plot_data_tmp.marker_select_color = plot_param_tmp.marker_select_color;
-            plot_data_tmp.order = plot_param_tmp.order;
+            plot_data_plt.marker_pts_size = plot_param_plt.marker_pts_size;
+            plot_data_plt.marker_select_size = plot_param_plt.marker_select_size;
+            plot_data_plt.marker_select_color = plot_param_plt.marker_select_color;
+            plot_data_plt.order = plot_param_plt.order;
         end
         
         function [label, lim, data] = get_axis(self, var, lim)

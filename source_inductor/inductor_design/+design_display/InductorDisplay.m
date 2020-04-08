@@ -64,10 +64,10 @@ classdef InductorDisplay < handle
             % get the data of the different operating points (and add to clipboard)
             field = fieldnames(operating_tmp);
             for i=1:length(field)
-                operating_tmp = operating_tmp.(field{i});
-                operating_data_tmp = self.get_text_data_operating(operating_tmp);
-                self.disp_block(gui_clipboard_obj, field{i}, operating_data_tmp);
-                operating_data.(field{i}) = operating_data_tmp;
+                operating_pts = operating_tmp.(field{i});
+                operating_data_pts = self.get_text_data_operating(operating_pts);
+                self.disp_block(gui_clipboard_obj, field{i}, operating_data_pts);
+                operating_data.(field{i}) = operating_data_pts;
             end
             
             % flush the clipboard data as a string
@@ -159,11 +159,11 @@ classdef InductorDisplay < handle
             data.text_data = text_data;
         end
         
-        function data = get_text_data_operating(self, operating_tmp)
+        function data = get_text_data_operating(self, operating_pts)
             % Get the figures of merit data.
             %
             %    Parameters:
-            %        operating_tmp (struct): operating point to be parsed
+            %        operating_pts (struct): operating point to be parsed
             %
             %    Returns:
             %        data (struct): data for displaying a text field
@@ -173,71 +173,71 @@ classdef InductorDisplay < handle
             
             % validity information
             text = {};
-            text{end+1} = sprintf('is_valid_iter = %d', operating_tmp.is_valid_iter);
-            text{end+1} = sprintf('is_valid_thermal = %d', operating_tmp.is_valid_thermal);
-            text{end+1} = sprintf('is_valid_core = %d', operating_tmp.is_valid_core);
-            text{end+1} = sprintf('is_valid_winding = %d', operating_tmp.is_valid_winding);
+            text{end+1} = sprintf('is_valid_iter = %d', operating_pts.is_valid_iter);
+            text{end+1} = sprintf('is_valid_thermal = %d', operating_pts.is_valid_thermal);
+            text{end+1} = sprintf('is_valid_core = %d', operating_pts.is_valid_core);
+            text{end+1} = sprintf('is_valid_winding = %d', operating_pts.is_valid_winding);
             text_data{end+1} = struct('title', 'is_valid', 'text', {text});
             
             % applied excitation
             text = {};
-            text{end+1} = sprintf('T_ambient = %.2f C', operating_tmp.excitation.T_ambient);
-            text{end+1} = sprintf('is_pwm = %d', operating_tmp.excitation.is_pwm);
-            text{end+1} = sprintf('f = %.2f kHz', 1e-3.*operating_tmp.excitation.f);
-            text{end+1} = sprintf('d_c = %.2f %%', 1e2.*operating_tmp.excitation.d_c);
-            text{end+1} = sprintf('I_dc = %.2f A', operating_tmp.excitation.I_dc);
-            text{end+1} = sprintf('I_ac_peak = %.2f A', operating_tmp.excitation.I_ac_peak);
+            text{end+1} = sprintf('T_ambient = %.2f C', operating_pts.excitation.T_ambient);
+            text{end+1} = sprintf('is_pwm = %d', operating_pts.excitation.is_pwm);
+            text{end+1} = sprintf('f = %.2f kHz', 1e-3.*operating_pts.excitation.f);
+            text{end+1} = sprintf('d_c = %.2f %%', 1e2.*operating_pts.excitation.d_c);
+            text{end+1} = sprintf('I_dc = %.2f A', operating_pts.excitation.I_dc);
+            text{end+1} = sprintf('I_ac_peak = %.2f A', operating_pts.excitation.I_ac_peak);
             text_data{end+1} = struct('title', 'excitation', 'text', {text});
             
             % physical fields
             text = {};
-            text{end+1} = sprintf('J_dc = %.2f A/mm2', 1e-6.*operating_tmp.field.J_dc);
-            text{end+1} = sprintf('J_ac_peak = %.2f A/mm2', 1e-6.*operating_tmp.field.J_ac_peak);
-            text{end+1} = sprintf('B_dc = %.2f mT', 1e3.*operating_tmp.field.B_dc);
-            text{end+1} = sprintf('B_ac_peak = %.2f mT', 1e3.*operating_tmp.field.B_ac_peak);
-            text{end+1} = sprintf('H_dc = %.2f A/mm', 1e-3.*operating_tmp.field.H_dc);
-            text{end+1} = sprintf('H_ac_peak = %.2f A/mm', 1e-3.*operating_tmp.field.H_ac_peak);
+            text{end+1} = sprintf('J_dc = %.2f A/mm2', 1e-6.*operating_pts.field.J_dc);
+            text{end+1} = sprintf('J_ac_peak = %.2f A/mm2', 1e-6.*operating_pts.field.J_ac_peak);
+            text{end+1} = sprintf('B_dc = %.2f mT', 1e3.*operating_pts.field.B_dc);
+            text{end+1} = sprintf('B_ac_peak = %.2f mT', 1e3.*operating_pts.field.B_ac_peak);
+            text{end+1} = sprintf('H_dc = %.2f A/mm', 1e-3.*operating_pts.field.H_dc);
+            text{end+1} = sprintf('H_ac_peak = %.2f A/mm', 1e-3.*operating_pts.field.H_ac_peak);
             text_data{end+1} = struct('title', 'field', 'text', {text});
             
             % temperatures
             text = {};
-            text{end+1} = sprintf('T_core_max = %.2f C', operating_tmp.thermal.T_core_max);
-            text{end+1} = sprintf('T_core_avg = %.2f C', operating_tmp.thermal.T_core_avg);
-            text{end+1} = sprintf('T_winding_max = %.2f C', operating_tmp.thermal.T_winding_max);
-            text{end+1} = sprintf('T_winding_avg = %.2f C', operating_tmp.thermal.T_winding_avg);
-            text{end+1} = sprintf('T_iso_max = %.2f C', operating_tmp.thermal.T_iso_max);
-            text{end+1} = sprintf('T_max = %.2f C', operating_tmp.thermal.T_max);
+            text{end+1} = sprintf('T_core_max = %.2f C', operating_pts.thermal.T_core_max);
+            text{end+1} = sprintf('T_core_avg = %.2f C', operating_pts.thermal.T_core_avg);
+            text{end+1} = sprintf('T_winding_max = %.2f C', operating_pts.thermal.T_winding_max);
+            text{end+1} = sprintf('T_winding_avg = %.2f C', operating_pts.thermal.T_winding_avg);
+            text{end+1} = sprintf('T_iso_max = %.2f C', operating_pts.thermal.T_iso_max);
+            text{end+1} = sprintf('T_max = %.2f C', operating_pts.thermal.T_max);
             text_data{end+1} = struct('title', 'thermal', 'text', {text});
             
             % losses
             text = {};
-            text{end+1} = sprintf('P_core = %.2f W', operating_tmp.losses.P_core);
-            text{end+1} = sprintf('P_winding = %.2f W', operating_tmp.losses.P_winding);
-            text{end+1} = sprintf('P_winding_dc = %.2f W', operating_tmp.losses.P_winding_dc);
-            text{end+1} = sprintf('P_winding_ac_lf = %.2f W', operating_tmp.losses.P_winding_ac_lf);
-            text{end+1} = sprintf('P_winding_ac_hf = %.2f W', operating_tmp.losses.P_winding_ac_hf);
-            text{end+1} = sprintf('P_add = %.2f W', operating_tmp.losses.P_add);
-            text{end+1} = sprintf('P_tot = %.2f W', operating_tmp.losses.P_tot);
+            text{end+1} = sprintf('P_core = %.2f W', operating_pts.losses.P_core);
+            text{end+1} = sprintf('P_winding = %.2f W', operating_pts.losses.P_winding);
+            text{end+1} = sprintf('P_winding_dc = %.2f W', operating_pts.losses.P_winding_dc);
+            text{end+1} = sprintf('P_winding_ac_lf = %.2f W', operating_pts.losses.P_winding_ac_lf);
+            text{end+1} = sprintf('P_winding_ac_hf = %.2f W', operating_pts.losses.P_winding_ac_hf);
+            text{end+1} = sprintf('P_add = %.2f W', operating_pts.losses.P_add);
+            text{end+1} = sprintf('P_tot = %.2f W', operating_pts.losses.P_tot);
             text_data{end+1} = struct('title', 'losses', 'text', {text});
             
             % utilization indicator of the operating point
             text = {};
-            text{end+1} = sprintf('I_peak_tot = %.2f A', operating_tmp.utilization.I_peak_tot);
-            text{end+1} = sprintf('I_rms_tot = %.2f A', operating_tmp.utilization.I_rms_tot);
-            text{end+1} = sprintf('r_peak_peak = %.2f %%', 1e2.*operating_tmp.utilization.r_peak_peak);
-            text{end+1} = sprintf('fact_sat = %.2f %%', 1e2.*operating_tmp.utilization.fact_sat);
-            text{end+1} = sprintf('fact_rms = %.2f %%', 1e2.*operating_tmp.utilization.fact_rms);
+            text{end+1} = sprintf('I_peak_tot = %.2f A', operating_pts.utilization.I_peak_tot);
+            text{end+1} = sprintf('I_rms_tot = %.2f A', operating_pts.utilization.I_rms_tot);
+            text{end+1} = sprintf('r_peak_peak = %.2f %%', 1e2.*operating_pts.utilization.r_peak_peak);
+            text{end+1} = sprintf('fact_sat = %.2f %%', 1e2.*operating_pts.utilization.fact_sat);
+            text{end+1} = sprintf('fact_rms = %.2f %%', 1e2.*operating_pts.utilization.fact_rms);
             text_data{end+1} = struct('title', 'utilization', 'text', {text});
             
             % interesting ratios
             text = {};
-            text{end+1} = sprintf('core_losses = %.2f %%', 1e2.*operating_tmp.fact.core_losses);
-            text{end+1} = sprintf('winding_losses = %.2f %%', 1e2.*operating_tmp.fact.winding_losses);
-            text{end+1} = sprintf('winding_hf_res = %.2f x', operating_tmp.fact.winding_hf_res);
+            text{end+1} = sprintf('core_losses = %.2f %%', 1e2.*operating_pts.fact.core_losses);
+            text{end+1} = sprintf('winding_losses = %.2f %%', 1e2.*operating_pts.fact.winding_losses);
+            text{end+1} = sprintf('winding_hf_res = %.2f x', operating_pts.fact.winding_hf_res);
             text_data{end+1} = struct('title', 'fact', 'text', {text});
             
             % assign the block and the status
-            data.is_valid = operating_tmp.is_valid;
+            data.is_valid = operating_pts.is_valid;
             data.text_data = text_data;
         end
         
