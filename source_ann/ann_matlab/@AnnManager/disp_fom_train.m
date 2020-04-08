@@ -70,7 +70,7 @@ disp_value('train', fom.train, type)
 disp_value('test', fom.test ,type)
 
 % plot the histogram
-disp_hist(tag, fom, type)
+disp_hist(tag, fom.train, fom.test, type)
 
 end
 
@@ -98,29 +98,43 @@ end
 
 end
 
-function disp_hist(tag, fom, type)
+function disp_hist(tag, fom_train, fom_test, type)
 % Plot a variable with an histogram (split training and test datasets).
 %
 %    Parameters:
 %        tag (str): name of the variable
-%        fom (struct): figures of merit of the variable
+%        fom_train (struct): figures of merit of the variable (training)
+%        fom_test (struct): figures of merit of the variable (testing)
 %        type (str): type of the variable ('set' or 'abs' or 'rel')
 
 hold('on')
 switch type
-    case {'set', 'abs'}
-        histogram(fom.train.vec)
-        histogram(fom.test.vec)
+    case 'set'
+        histogram(fom_train.vec)
+        histogram(fom_test.vec)
         xlabel('x [1]')
         ylabel('n [1]')
+        vec_train = [fom_train.v_min fom_train.v_max];
+        vec_test = [fom_test.v_min fom_test.v_max];
+    case 'abs'
+        histogram(fom_train.vec)
+        histogram(fom_test.vec)
+        xlabel('x [1]')
+        ylabel('n [1]')
+        vec_train = [fom_train.v_min fom_train.v_max fom_train.v_avg fom_train.v_prc_99];
+        vec_test = [fom_test.v_min fom_test.v_max fom_test.v_avg fom_test.v_prc_99];
     case 'rel'
-        histogram(1e2.*fom.train.vec)
-        histogram(1e2.*fom.test.vec)
+        histogram(1e2.*fom_train.vec)
+        histogram(1e2.*fom_test.vec)
         xlabel('err [%]')
         ylabel('n [1]')
+        vec_train = 1e2.*[fom_train.v_min fom_train.v_max fom_train.v_avg fom_train.v_prc_99];
+        vec_test = 1e2.*[fom_test.v_min fom_test.v_max fom_test.v_avg fom_test.v_prc_99];
     otherwise
         error('invalid type')
 end
+plot(vec_train, zeros(1, length(vec_train)), 'sb', 'MarkerFaceColor', 'b')
+plot(vec_test, zeros(1, length(vec_test)), '*r', 'MarkerFaceColor', 'r')
 grid('on')
 legend({'train', 'test'})
 title(tag, 'interpreter', 'none')
