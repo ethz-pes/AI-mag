@@ -9,6 +9,10 @@ function run_1_fem()
 %        - If the hash already exists the simulation is skiped
 %        - Therefore, this function can be interrupted and restarted
 %
+%    This function requires a running COMSOL MATLAB Livelink:
+%        - use 'start_comsol_matlab.bat' on MS Windows
+%        - use 'start_comsol_matlab.sh' on Linux
+%
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 init_toolbox();

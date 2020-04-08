@@ -9,8 +9,8 @@ function init_toolbox()
 
 % add path
 addpath(genpath('source_ann'))
-addpath(genpath('source_code'))
-addpath(genpath('source_data'))
+addpath(genpath('source_inductor'))
+addpath(genpath('source_input'))
 
 % close figures
 close('all')

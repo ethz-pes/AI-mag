@@ -13,6 +13,11 @@ function master_compute(file_compute, file_export, sweep, n_split, fct, eval_ann
 %        - parallel: on different MATLAB workers
 %        - vectorized: many designs at the same time
 %
+%    This function requires a running ANN Python Server (if this regression method is used):
+%        - run 'run_ann_server.py' with Python
+%        - use 'start_python.bat' on MS Windows
+%        - use 'start_python.sh' on Linux
+%
 %    Parameters:
 %        file_compute (str): path of the file to be written with the computed designs
 %        file_export (str): path of the file containing the exported data from the FEM/ANN

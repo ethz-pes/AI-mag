@@ -9,6 +9,10 @@ function master_fem(file_init, folder_fem, file_model, model_type, var_type, swe
 %        - If the hash already exists the simulation is skiped
 %        - Therefore, this function can be interrupted and restarted
 %
+%    This function requires a running COMSOL MATLAB Livelink:
+%        - use 'start_comsol_matlab.bat' on MS Windows
+%        - use 'start_comsol_matlab.sh' on Linux
+%
 %    Parameters:
 %        file_init (str): path of the file containing the constant data
 %        folder_fem (str): path of the folder where the results are stored 

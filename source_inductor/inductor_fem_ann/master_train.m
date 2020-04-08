@@ -5,6 +5,11 @@ function master_train(file_ann, file_assemble, ann_input)
 %    Train/fit the ANN/regression with the data.
 %    Obtain, display, and plot the dataset and error metrics.
 %
+%    This function requires a running ANN Python Server (if this regression method is used):
+%        - run 'run_ann_server.py' with Python
+%        - use 'start_python.bat' on MS Windows
+%        - use 'start_python.sh' on Linux
+%
 %    Parameters:
 %        file_ann (str): path of the file to be written with the ANN/regression data
 %        file_assemble (str): path of the file with the assembled data
