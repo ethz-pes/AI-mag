@@ -23,8 +23,8 @@ sweep{2} = get_sweep('random');
 n_split = 100e3;
 
 % struct with custom functions for filtering invalid designs:
-%    - fct_filter_compute: filter the valid design from the figure of merit (without the operating points)
-%    - fct_filter_save: filter the valid design from the figure of merit and the operating points
+%    - fct_filter_compute: filter the valid designs from the figure of merit (without the operating points)
+%    - fct_filter_save: filter the valid designs from the figure of merit and the operating points
 fct.fct_filter_compute = @(fom, n_sol) fom.is_valid;
 fct.fct_filter_save = @(fom, operating, n_sol) operating.half_load.is_valid&operating.full_load.is_valid;
 

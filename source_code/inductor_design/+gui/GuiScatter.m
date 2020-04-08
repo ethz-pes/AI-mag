@@ -129,10 +129,10 @@ classdef GuiScatter < handle
             % Permuation for plotting.
             %
             %    For visualization different plotting order can be interesting:
-            %        - Original order
-            %        - Ascending color value order
-            %        - Descending color value order
-            %        - Random order
+            %        - original order
+            %        - ascending color value order
+            %        - descending color value order
+            %        - random order
 
             % extract the color data and the order information
             c_vec = self.plot_data.c_data;

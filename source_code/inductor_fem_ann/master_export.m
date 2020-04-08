@@ -15,7 +15,7 @@ function master_export(file_export, file_init, file_ann_ht, file_ann_mf)
 % init
 fprintf('################## master_export\n')
 
-% load the simulation data
+% load the ANN/regression data
 fprintf('load\n')
 ann_ht = load(file_ann_ht);
 ann_mf = load(file_ann_mf);

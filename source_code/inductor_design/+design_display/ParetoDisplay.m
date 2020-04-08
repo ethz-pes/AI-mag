@@ -13,7 +13,7 @@ classdef ParetoDisplay < handle
         n_sol % int: number of provided solutions
         n_plot % int: number of solution selected for plotting
         id_design % vector: unique id of the designs
-        is_plot % vector: indices of the valid design for plotting
+        is_plot % vector: indices of the valid designs for plotting
         data_fom % struct: struct with user defined custom figures of merit
         plot_param % struct: definition of the different plots
         text_param % struct: definition of variable to be shown in the text field
@@ -33,7 +33,7 @@ classdef ParetoDisplay < handle
             %        text_param (struct): definition of variable to be shown in the text field
 
             % get the designs be to plotted and the user defined custom figures of merit
-            [is_plot, data_fom] = fct_data(fom, operating, length(id_design));
+            [is_plot, data_fom] = fct_data(length(id_design), fom, operating);
                         
             % assign the data
             self.n_sol = length(id_design);
@@ -112,18 +112,13 @@ classdef ParetoDisplay < handle
             %        plot_data_tmp (struct): data for plotting a specific Pareto front
 
             % set the data (x, y, and color axis)
-            [plot_data_tmp.x_label, plot_data_tmp.x_data] = self.get_axis(plot_param_tmp.x_var);
-            [plot_data_tmp.y_label, plot_data_tmp.y_data] = self.get_axis(plot_param_tmp.y_var);
-            [plot_data_tmp.c_label, plot_data_tmp.c_data] = self.get_axis(plot_param_tmp.c_var);
+            [plot_data_tmp.x_label, plot_data_tmp.x_lim, plot_data_tmp.x_data] = self.get_axis(plot_param_tmp.x_var, plot_param_tmp.x_lim);
+            [plot_data_tmp.y_label, plot_data_tmp.y_lim, plot_data_tmp.y_data] = self.get_axis(plot_param_tmp.y_var, plot_param_tmp.y_lim);
+            [plot_data_tmp.c_label, plot_data_tmp.c_lim, plot_data_tmp.c_data] = self.get_axis(plot_param_tmp.c_var, plot_param_tmp.c_lim);
             
             % save the id of the plots
             plot_data_tmp.id_data = self.id_design(self.is_plot);
-            
-            % axis limit
-            plot_data_tmp.x_lim = plot_param_tmp.x_lim;
-            plot_data_tmp.y_lim = plot_param_tmp.y_lim;
-            plot_data_tmp.c_lim = plot_param_tmp.c_lim;
-            
+                        
             % axis type
             plot_data_tmp.x_scale = plot_param_tmp.x_scale;
             plot_data_tmp.y_scale = plot_param_tmp.y_scale;
@@ -136,14 +131,16 @@ classdef ParetoDisplay < handle
             plot_data_tmp.order = plot_param_tmp.order;
         end
         
-        function [label, data] = get_axis(self, var)
+        function [label, lim, data] = get_axis(self, var, lim)
             % Get the label and the associated data for an axis.
             %
             %    Parameters:
             %        var (str): name of the variable to be used for this axis
+            %        lim (vector): axis limit (unscaled)
             %
             %    Returns:
             %        label (str): axis label
+            %        lim (vector): axis limit (scaled)
             %        data (vector): vector with the data along this axis
 
             % extract the variable
@@ -151,6 +148,7 @@ classdef ParetoDisplay < handle
             
             % axis parameters
             data = data_fom_tmp.scale.*data_fom_tmp.value(self.is_plot);
+            lim = data_fom_tmp.scale.*lim;
             label = sprintf('%s [%s]', data_fom_tmp.name, data_fom_tmp.unit);
         end
                 
