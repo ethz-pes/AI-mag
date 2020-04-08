@@ -56,6 +56,38 @@ The toolbox is known to run with the following operating systems:
 * Linux Ubuntu 18.04.4 LTS
 * Microsoft Windows 10
 
+# FAQ
+
+Why a custom TCP/IP communication is used and not the provided Python interface of MATLAB?
+* Keras and TensorFlow has specific Python version requirements, they are huge library.
+* The Python interface of MATLAB has also requirements for the Python version.
+* Additionally, importing TensorFlow from MATLAB causes crashes with some Python environnement.
+* Finally, this choice limits the coupling between the MATLAB and Python code.
+
+Can this toolbox be used for ANN with unstructured data?
+* No, this library is meant to work for structured data.
+* Unstructured data (text, image, etc.) cannot be used.
+
+Can this toolbox be used for binary classification ANN?
+* The toolbox is mainly meant for regression/fitting.
+* However, with very small adaptation, binary classification can be performed.
+
+Should I use the Keras/TensorFlow or the MATLAB Deep Learning ANN engine?
+* The MATLAB Deep Learning ANN engine is easier to use (fewer parameters, no installation of a Python system).
+* The Keras/TensorFlow ANN engine is more flexible, allowing very advanced tuning.
+
+Can this toolbox handle big data?
+* Depending what is big data, few 10 millions of samples are definitely OK.
+* The memory management model (everything is stored in RAM) does not allow billions of samples.
+
+The variable scaling and transformation looks complex, is it required?
+* Yes, proper scaling of the data is critical for ANNs.
+* For some datasets, without scaling, no proper training is possible.
+
+Can this code run with GNU Octave?
+* The MATLAB Deep Learning toolbox is not compatible with GNU Octave.
+* The TCP/IP communication with Python (serialization) is not compatible with GNU Octave.
+
 ## Author
 
 **Thomas Guillod, ETH Zurich, Power Electronic Systems Laboratory** - [GitHub Profile](https://github.com/otvam)
