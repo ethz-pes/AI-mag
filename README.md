@@ -1,23 +1,20 @@
 # MATLAB Inductor Optimization with FEM/AMM
 
 **MATLAB** toolbox (using also COMSOL and Python) for **power electronic inductor optimization**. 
-The goal of this tool is to combine the **accuracy of the *Finite Element Method** with the **speed** of semi-numerical model by using **Artificial Neural Network (ANN)**.
+The goal of this tool is to **combine** the **accuracy of the Finite Element Method** with the **speed** of semi-numerical model by using **Artificial Neural Network (ANN)**.
 
 More precisely, the following **worflow** is implemented:
 * Simulating many designs with **FEM thermal and magnetic** simulations (COMSOL)
 * Extracting the important figures of merit out of the FEM simulations
 * Extracting the same figures of merit with a simplified analytical model (for comparison)
 * **Training regression ANNs** to reproduce the figures of merit (MATLAB or Python Keras and TensorFlow)
-* Using the ANNs**, **quickly** generate **accurate inductor designs**
+* Using the **ANNs**, **quickly** generate **accurate inductor designs**
 * **Multi-objective** data exploration with a **GUI**
 
 The following performance are achieved:
-* The **average error* between the FEM simulations and the ANN predictions is below **1%** 
-* The **worst-case error* between the FEM simulations and the ANN predictions is below **8%** 
+* The **average error** between the FEM simulations and the ANN predictions is **below 1%** 
+* The **worst-case error** between the FEM simulations and the ANN predictions is **below 8%** 
 * The tool is able for generate more than **5000 valid designs per second** on a laptop computer
-    * [run_ann_example.m](ann_example/run_ann_example.m) - the MATLAB main file
-    * [run_ann_server.py](ann_example/run_ann_server.py) - the Python ANN server main file
-    * Shell script (Linux) and (batch) script (MS Windows) for starting the Python ANN server
 
 ## Getting Started / Example
 
