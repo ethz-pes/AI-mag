@@ -52,7 +52,7 @@ The toolbox was tested with the following Python setup:
 
 However, the toolbox can work without Python (only MATLAB), as long as the Python ANN engine is not used.
 
-The toolbox was tested with the following operating system:
+The toolbox was tested with the following operating systems:
 * Linux Ubuntu 18.04.4 LTS
 * Microsoft Windows 10
 

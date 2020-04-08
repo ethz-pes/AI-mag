@@ -28,6 +28,32 @@ classdef AnnEngineMatlabAnn < ann_engine.AnnEngineAbstract
             self.ann_data = struct();
         end
         
+        function load(self, name, model, history)
+            % Load a regression to the memory.
+            %
+            %    Parameters:
+            %        name (str): Name of the regression to be loaded
+            %        model (various): regression parameters
+            %        history (various): regression training/fitting record
+            
+            % check the data type
+            assert(isa(model, 'network'), 'invalid model')
+            assert(isstruct(history), 'invalid model')
+            
+            % load the data
+            self.ann_data.(name) = struct('model', model, 'history', history);
+        end
+        
+        function unload(self, name)
+            % Remove an regression from the memory.
+            %
+            %    Parameters:
+            %        name (str): Name of the regression to be removed
+            
+            % remove the entry (also if not existing)
+            self.ann_data = rmfield(self.ann_data, name);
+        end
+        
         function [model, history] = train(self, inp, out)
             % Train/fit a regression and get the corresponding model.
             %
@@ -59,32 +85,6 @@ classdef AnnEngineMatlabAnn < ann_engine.AnnEngineAbstract
             % check the data type
             assert(isa(model, 'network'), 'invalid model')
             assert(isstruct(history), 'invalid model')
-        end
-        
-        function unload(self, name)
-            % Remove an regression from the memory.
-            %
-            %    Parameters:
-            %        name (str): Name of the regression to be removed
-            
-            % remove the entry (also if not existing)
-            self.ann_data = rmfield(self.ann_data, name);
-        end
-        
-        function load(self, name, model, history)
-            % Load a regression to the memory.
-            %
-            %    Parameters:
-            %        name (str): Name of the regression to be loaded
-            %        model (various): regression parameters
-            %        history (various): regression training/fitting record
-            
-            % check the data type
-            assert(isa(model, 'network'), 'invalid model')
-            assert(isstruct(history), 'invalid model')
-            
-            % load the data
-            self.ann_data.(name) = struct('model', model, 'history', history);
         end
         
         function out = predict(self, name, inp)

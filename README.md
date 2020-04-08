@@ -1,20 +1,31 @@
 # MATLAB Inductor Optimization with FEM/AMM
 
 **MATLAB** toolbox (using also COMSOL and Python) for **power electronic inductor optimization**. 
-The goal of this tool is to **combine** the **accuracy of the Finite Element Method** with the **speed** of semi-numerical model by using **Artificial Neural Network (ANN)**.
+The goal of this tool is to **combine** the **accuracy of the Finite Element Method** with the **evaluation speed** of a semi-numerical model by using **Artificial Neural Network (ANN)**.
 
 More precisely, the following **worflow** is implemented:
 * Simulating many designs with **FEM thermal and magnetic** simulations (COMSOL)
 * Extracting the important figures of merit out of the FEM simulations
 * Extracting the same figures of merit with a simplified analytical model (for comparison)
 * **Training regression ANNs** to reproduce the figures of merit (MATLAB or Python Keras and TensorFlow)
-* Using the **ANNs**, **quickly** generate **accurate inductor designs**
+* Using the **ANNs**, **quickly** generate **accurate inductor designs** (without solving any FEM model)
 * **Multi-objective** data exploration with a **GUI**
 
 The following performance are achieved:
 * The **average error** between the FEM simulations and the ANN predictions is **below 1%** 
 * The **worst-case error** between the FEM simulations and the ANN predictions is **below 8%** 
 * The tool is able for generate more than **5000 valid designs per second** on a laptop computer
+
+## GUI Screenshots
+
+<p float="middle">
+    <img src="ressources/screenshot/screenshot_1.png" width="400">
+    <img src="ressources/screenshot/screenshot_2.png" width="400">
+</p>
+<p float="middle">
+    <img src="ressources/screenshot/screenshot_3.png" width="400">
+    <img src="ressources/screenshot/screenshot_4.png" width="400">
+</p>
 
 ## Getting Started / Example
 
@@ -78,11 +89,11 @@ The toolbox was tested with the following Python setup (for ANN with Keras and T
 
 However, the toolbox can work without Python, as long as the Python ANN engine is not used.
 
-The toolbox was tested with the following operating system:
+The toolbox was tested with the following operating systems:
 * Linux Ubuntu 18.04.4 LTS
 * Microsoft Windows 10
 
-The following software were used to generate ressources but are not required to run the code:
+The following softwares were used to generate ressources but are not required to run the code:
 * Adobe Illustrator 2020 - generating the GUI artwork
 * Wolfram Mathematica 12 - generating analytical solutions
 
@@ -94,6 +105,7 @@ The following software were used to generate ressources but are not required to 
 
 * Prof. J.W. Kolar, ETH Zurich, Power Electronic Systems Laboratory
 * P. Papamanolis, ETH Zurich, Power Electronic Systems Laboratory
+* The Pareto optimization team at ETH Zurich, Power Electronic Systems Laboratory
 * Keras and TensorFlow communities
 
 ## License

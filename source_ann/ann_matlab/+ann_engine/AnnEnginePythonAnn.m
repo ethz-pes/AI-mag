@@ -6,7 +6,7 @@ classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
     %    Use and require a running Python ANN server over TCP/IP.
     %
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
-
+    
     %% properties
     properties (SetAccess = private, GetAccess = public)
         tag_train % str: tag for enabling different training/fitting modes
@@ -27,6 +27,40 @@ classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
             self = self@ann_engine.AnnEngineAbstract();
             self.tag_train = tag_train;
             self.client_obj = ann_engine.MatlabPythonClient(hostname, port, timeout);
+        end
+        
+        function load(self, name, model, history)
+            % Load a regression to the memory.
+            %
+            %    Parameters:
+            %        name (str): Name of the regression to be loaded
+            %        model (various): regression parameters
+            %        history (various): regression training/fitting record
+            
+            % request data
+            data_inp.type = 'load';
+            data_inp.name = name;
+            data_inp.model = model;
+            data_inp.history = history;
+            
+            % make request
+            data_out = self.client_obj.run(data_inp);
+            assert(data_out.status==true, 'train error')
+        end
+        
+        function unload(self, name)
+            % Remove an regression from the memory.
+            %
+            %    Parameters:
+            %        name (str): Name of the regression to be removed
+            
+            % request data
+            data_inp.type = 'unload';
+            data_inp.name = name;
+            
+            % make request
+            data_out = self.client_obj.run(data_inp);
+            assert(data_out.status==true, 'train error')
         end
         
         function [model, history] = train(self, inp, out)
@@ -53,40 +87,6 @@ classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
             % response data
             model = data_out.model;
             history = data_out.history;
-        end
-        
-        function unload(self, name)
-            % Remove an regression from the memory.
-            %
-            %    Parameters:
-            %        name (str): Name of the regression to be removed
-            
-            % request data
-            data_inp.type = 'unload';
-            data_inp.name = name;
-            
-            % make request
-            data_out = self.client_obj.run(data_inp);
-            assert(data_out.status==true, 'train error')
-        end
-        
-        function load(self, name, model, history)
-            % Load a regression to the memory.
-            %
-            %    Parameters:
-            %        name (str): Name of the regression to be loaded
-            %        model (various): regression parameters
-            %        history (various): regression training/fitting record
-            
-            % request data
-            data_inp.type = 'load';
-            data_inp.name = name;
-            data_inp.model = model;
-            data_inp.history = history;
-            
-            % make request
-            data_out = self.client_obj.run(data_inp);
-            assert(data_out.status==true, 'train error')
         end
         
         function out = predict(self, name, inp)
