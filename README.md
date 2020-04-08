@@ -107,6 +107,7 @@ The tool is known to run with the following operating systems:
 The following softwares were used to generate resources but are not required to run the code:
 * Adobe Illustrator 2020 - generating the GUI artwork
 * Wolfram Mathematica 12 - generating analytical solutions
+* PyCharm Community Edition 2019 - running and debugging the Python code
 
 ## Author
 
@@ -117,6 +118,7 @@ The following softwares were used to generate resources but are not required to 
 * Prof. J.W. Kolar, ETH Zurich, Power Electronic Systems Laboratory
 * P. Papamanolis, ETH Zurich, Power Electronic Systems Laboratory
 * The Pareto optimization team at ETH Zurich, Power Electronic Systems Laboratory
+* Jan, from MATLAB File Exchange for the inspiration for the md5 hashing code
 * Keras and TensorFlow communities
 
 ## License

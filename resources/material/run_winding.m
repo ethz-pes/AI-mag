@@ -60,8 +60,8 @@ material.param.lambda = rho_copper.*fill.*kappa_copper+rho_iso.*(1-fill).*kappa_
 material.param.n_harm = 10; % number of harmonics for PWM losses
 material.param.P_max = 1000e3; % maximum loss density
 material.param.J_rms_max = 15e6; % maximum rms current density
-material.param.P_scale_lf = 1.3; % scaling factor for LF losses
-material.param.P_scale_hf = 1.4; % scaling factor for HF losses
+material.param.P_scale_lf = 1.1; % scaling factor for LF losses
+material.param.P_scale_hf = 1.1; % scaling factor for HF losses
 material.param.T_max = 140.0; % maximum temperature
 material.param.c_offset = 0.3; % cost offset
 

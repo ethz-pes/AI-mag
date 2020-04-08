@@ -67,7 +67,7 @@ material.param.lambda = rho.*kappa; % cost per volume
 material.param.fact_igse = 0.1; % factor for computing alpha and beta for IGSE (gradient in log scale)
 material.param.B_sat_max = 300e-3; % saturation flux density
 material.param.P_max = 1000e3; % maximum loss density
-material.param.P_scale = 1.3; % scaling factor for losses
+material.param.P_scale = 1.1; % scaling factor for losses
 material.param.T_max = 130.0; % maximum temperature
 material.param.c_offset = 0.3; % cost offset
 

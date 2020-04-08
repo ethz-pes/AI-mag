@@ -96,6 +96,7 @@ Can this code run with GNU Octave?
 
 * Prof. J.W. Kolar, ETH Zurich, Power Electronic Systems Laboratory
 * P. Papamanolis, ETH Zurich, Power Electronic Systems Laboratory
+* Tim, from MATLAB File Exchange for the inspiration for the serialization code
 * Keras and TensorFlow communities
 
 ## License
