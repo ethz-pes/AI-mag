@@ -12,8 +12,8 @@ function [n_sol, inp, out_nrm] = get_ann_predict()
 n_sol = 100000;
 
 % input data
-inp.x_1 = 7.0+3.0.*rand(1, n_sol);
-inp.x_2 = 1.0+5.0.*rand(1, n_sol);
+inp.x_1 = linspace(7.0, 10.0, n_sol);
+inp.x_2 = linspace(1.0, 6.0, n_sol);
 
 % output normalization data: average of the output reference values
 out_nrm.y_1 = 12.0.*ones(1, n_sol);

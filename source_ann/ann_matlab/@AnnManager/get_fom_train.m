@@ -104,7 +104,7 @@ fom.v_min = min(vec);
 end
 
 function fom = get_var_err(vec_cmp, vec_ref, idx, type)
-% Compute the error between two variables (avg, rms, min, max, std_dev).
+% Compute the error between two variables (avg, rms, min, max, std_dev, 99% percentile).
 %
 %    Parameters:
 %        vec_cmp (vector): first variable data (to be compared)
@@ -136,6 +136,7 @@ fom.v_rms = rms(vec);
 fom.v_std_dev = std(vec);
 fom.v_max = max(vec);
 fom.v_min = min(vec);
+fom.v_prc_99 = prctile(vec, 99);
 
 end
 

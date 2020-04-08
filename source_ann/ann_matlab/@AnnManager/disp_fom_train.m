@@ -41,7 +41,7 @@ for i=1:length(var)
     name_tmp = var{i}.name;
     switch type
         case 'set'
-            var_err_tmp = 'abs';
+            var_err_tmp = 'set';
         case 'err'
             var_err_tmp = var{i}.var_err;
         otherwise
@@ -80,15 +80,18 @@ function disp_value(tag, fom, type)
 %    Parameters:
 %        tag (str): name of the variable
 %        fom (struct): figures of merit of the variable
-%        type (str): type of the variable ('abs' or 'rel')
+%        type (str): type of the variable ('set' or 'abs' or 'rel')
 
 switch type
-    case 'abs'
+    case 'set'
         fprintf('        %s / avg = %.3e / rms = %.3e / std_dev = %.3e / min = %.3e / max = %.3e\n',...
             tag, fom.v_avg, fom.v_rms, fom.v_std_dev, fom.v_min, fom.v_max)
+    case 'abs'
+        fprintf('        %s / avg = %.3e / rms = %.3e / std_dev = %.3e / min = %.3e / max = %.3e / prc_99 = %.3e\n',...
+            tag, fom.v_avg, fom.v_rms, fom.v_std_dev, fom.v_min, fom.v_max, fom.v_prc_99)
     case 'rel'
-        fprintf('        %s / avg = %.2f %% / rms = %.2f %% / std_dev = %.2f %% / min = %.2f %% / max = %.2f %%\n',...
-            tag, 1e2.*fom.v_avg, 1e2.*fom.v_rms, 1e2.*fom.v_std_dev, 1e2.*fom.v_min, 1e2.*fom.v_max)
+        fprintf('        %s / avg = %.2f %% / rms = %.2f %% / std_dev = %.2f %% / min = %.2f %% / max = %.2f %% / prc_99 = %.2f %%\n',...
+            tag, 1e2.*fom.v_avg, 1e2.*fom.v_rms, 1e2.*fom.v_std_dev, 1e2.*fom.v_min, 1e2.*fom.v_max, 1e2.*fom.v_prc_99)
     otherwise
         error('invalid type')
 end
@@ -101,11 +104,11 @@ function disp_hist(tag, fom, type)
 %    Parameters:
 %        tag (str): name of the variable
 %        fom (struct): figures of merit of the variable
-%        type (str): type of the variable ('abs' or 'rel')
+%        type (str): type of the variable ('set' or 'abs' or 'rel')
 
 hold('on')
 switch type
-    case 'abs'
+    case {'set', 'abs'}
         histogram(fom.train.vec)
         histogram(fom.test.vec)
         xlabel('x [1]')
