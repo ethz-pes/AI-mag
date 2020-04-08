@@ -1,7 +1,7 @@
 function master_compute(file_compute, file_export, sweep, n_split, fct, eval_ann, data_compute)
 % Compute many inductor inductor designs (properties, thermal, losses, etc.).
 %
-%    Load the ANN/regression obtained with the FEM/ANN worflow.
+%    Load the ANN/regression obtained with the FEM/ANN workflow.
 %    Sweep different inductor designs.
 %    Compute the inductor properties, thermal, losses, etc.
 %    
@@ -116,7 +116,7 @@ function [idx_chunk, n_sol, n_compute, fom, operating] = compute_chunk(var, idx_
 %        - filter the designs
 %        - then,  the figures of merit and the of the operating points are extracted
 %        - filter the designs
-%        - with this worflow, it is possible to avoid the computation of operating points of rubbish designs
+%        - with this workflow, it is possible to avoid the computation of operating points of rubbish designs
 %
 %    Parameters:
 %        var (struct): struct of vectors with the samples with all the combinations

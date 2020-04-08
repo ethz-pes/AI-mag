@@ -2,8 +2,9 @@
 
 **MATLAB** toolbox (using also COMSOL and Python) for **power electronic inductor optimization**. 
 The goal of this tool is to **combine** the **accuracy of the Finite Element Method** with the **evaluation speed** of a semi-numerical model by using **Artificial Neural Network (ANN)**.
+This project is licensed under the **xxx License**.
 
-More precisely, the following **worflow** is implemented:
+More precisely, the following **workflow** is implemented:
 * Simulating many designs with **FEM thermal and magnetic** simulations (COMSOL)
 * Extracting the important figures of merit out of the FEM simulations
 * Extracting the same figures of merit with a simplified analytical model (for comparison)
@@ -19,28 +20,28 @@ The following performances are achieved:
 ## Simplified Workflow
 
 <p float="middle">
-    <img src="ressources/img_readme/workflow.png" width="700">
+    <img src="resources/img_readme/workflow.png" width="700">
 </p>
 
 ## GUI Screenshots
 
 <p float="middle">
-    <img src="ressources/img_readme/screenshot_1.png" width="400">
-    <img src="ressources/img_readme/screenshot_2.png" width="400">
+    <img src="resources/img_readme/screenshot_1.png" width="400">
+    <img src="resources/img_readme/screenshot_2.png" width="400">
 </p>
 <p float="middle">
-    <img src="ressources/img_readme/screenshot_3.png" width="400">
-    <img src="ressources/img_readme/screenshot_4.png" width="400">
+    <img src="resources/img_readme/screenshot_3.png" width="400">
+    <img src="resources/img_readme/screenshot_4.png" width="400">
 </p>
 <p float="middle">
-    <img src="ressources/img_readme/screenshot_5.png" width="400">
-    <img src="ressources/img_readme/screenshot_6.png" width="400">
+    <img src="resources/img_readme/screenshot_5.png" width="400">
+    <img src="resources/img_readme/screenshot_6.png" width="400">
 </p>
 
 ## Getting Started / Example
 
 The following code structure is considered:
-* [ressources](ressources) - Different ressources which are not directly used in the toolbox
+* [resources](resources) - Different resources which are not directly used in the toolbox
 * [source_ann](source_ann) - ANN library for regression/fitting (standalone code with examples)
 * [source_inductor](source_inductor) - Source code for the FEM/ANN inductor design tool
 * [source_input](source_input) - Input data and parameters defined by the user
@@ -57,7 +58,7 @@ The following code structure is considered:
 * Shell script (Linux) and (batch) script (MS Windows) for starting the Python ANN server
 * Shell script (Linux) and (batch) script (MS Windows) for starting the COMSOL MATLAB Livelink
 
-The example shows the complete worflow: FEM simulations, ANN training, design generation, and display with GUI:
+The example shows the complete workflow: FEM simulations, ANN training, design generation, and display with GUI:
 * The inductor of a DC-DC Buck converter is optimized
 * The converter has the following ratings: 2kW, 400V input voltage, 200V output voltage
 
@@ -75,14 +76,14 @@ However, this toolbox is made in order to be **easily extended** with other indu
 
 ## Compatibility
 
-The toolbox was tested with the following MATLAB setup:
+The tool is tested with the following MATLAB setup:
 * Tested with MATLAB R2018b
-* MATLAB Deep Learning Toolbox ("neural_network_toolbox")
-* MATLAB Global Optimization Toolbox ("gads_toolbox")
-* MATLAB Optimization Toolbox ("optimization_toolbox")
-* MATLAB Signal Processing Toolbox ("signal_toolbox")
+* Deep Learning Toolbox ("neural_network_toolbox")
+* Global Optimization Toolbox ("gads_toolbox")
+* Optimization Toolbox ("optimization_toolbox")
+* Signal Processing Toolbox ("signal_toolbox")
 
-The toolbox was tested with the following COMSOL setup (for FEM simulations):
+The tool is tested with the following COMSOL setup (for FEM simulations):
 * COMSOL Multiphysics 5.4
 * AC/DC Module (for the magnetic simulation)
 * Heat Transfer Module (for the thermal simulation)
@@ -92,18 +93,18 @@ The toolbox was tested with the following COMSOL setup (for FEM simulations):
 It should be noted that COMSOL is only required to run the FEM simulations, not for the ANN/regression or the inductor design evaluation.
 In other word, COMSOL is required to generate the ANN training set, but not for running the design tool.
 
-The toolbox was tested with the following Python setup (for ANN with Keras and TensorFlow):
+The tool is tested with the following Python setup (for ANN with Keras and TensorFlow):
 * Tested with Python 3.6.8
 * Numpy 1.18.1
 * TensorFlow 2.1.0
 
 However, the toolbox can work without Python, as long as the Python ANN engine is not used.
 
-The toolbox was tested with the following operating systems:
+The tool is known to run with the following operating systems:
 * Linux Ubuntu 18.04.4 LTS
 * Microsoft Windows 10
 
-The following softwares were used to generate ressources but are not required to run the code:
+The following softwares were used to generate resources but are not required to run the code:
 * Adobe Illustrator 2020 - generating the GUI artwork
 * Wolfram Mathematica 12 - generating analytical solutions
 

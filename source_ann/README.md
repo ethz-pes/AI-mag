@@ -38,21 +38,21 @@ The examples show the capabilities of the toolbox:
 
 ## Compatibility
 
-The toolbox was tested with the following MATLAB setup:
+The toolbox is tested with the following MATLAB setup:
 * Tested with MATLAB R2018b
-* MATLAB Deep Learning Toolbox ("neural_network_toolbox")
-* MATLAB Global Optimization Toolbox ("gads_toolbox")
-* MATLAB Optimization Toolbox ("optimization_toolbox")
-* MATLAB Signal Processing Toolbox ("signal_toolbox")
+* Deep Learning Toolbox ("neural_network_toolbox")
+* Global Optimization Toolbox ("gads_toolbox")
+* Optimization Toolbox ("optimization_toolbox")
+* Signal Processing Toolbox ("signal_toolbox")
 
-The toolbox was tested with the following Python setup:
+The toolbox is tested with the following Python setup:
 * Tested with Python 3.6.8
 * Numpy 1.18.1
 * TensorFlow 2.1.0
 
 However, the toolbox can work without Python (only MATLAB), as long as the Python ANN engine is not used.
 
-The toolbox was tested with the following operating systems:
+The toolbox is known to run with the following operating systems:
 * Linux Ubuntu 18.04.4 LTS
 * Microsoft Windows 10
 

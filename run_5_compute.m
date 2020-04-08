@@ -1,7 +1,7 @@
 function run_5_compute()
 % Compute many inductor inductor designs (properties, thermal, losses, etc.).
 %
-%    Load the ANN/regression obtained with the FEM/ANN worflow.
+%    Load the ANN/regression obtained with the FEM/ANN workflow.
 %    Sweep different inductor designs.
 %    Compute the inductor properties, thermal, losses, etc.
 %    

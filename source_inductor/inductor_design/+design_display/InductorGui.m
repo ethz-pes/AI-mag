@@ -264,7 +264,7 @@ classdef InductorGui < handle
             
             % logo file
             %    - the logo is done with Illustrator
-            %    - the Mathematica source file is 'ressources/logo_pes_ethz.ai'
+            %    - the Mathematica source file is 'resources/logo_pes_ethz.ai'
             filename = 'logo_pes_ethz.png';
             
             % set the logo
