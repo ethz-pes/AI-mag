@@ -117,7 +117,7 @@ def serialize_char(bytes_array, data):
     bytes_array = append_byte(bytes_array, bytes_add)
 
     # encode the data
-    bytes_add = bytes_array(data, 'utf-8')
+    bytes_add = bytearray(data, 'utf-8')
     bytes_array = append_byte(bytes_array, bytes_add)
 
     return bytes_array
