@@ -22,7 +22,7 @@ classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
             %        hostname (str): hostname of the Python server
             %        port (int): port of the Python server
             %        timeout (int): timeout for Python server requests
-            %        tag_train (str): tag for enabling different training/fitting modes
+            %        tag_train (various): tag for enabling different training/fitting modes
             
             self = self@ann_engine.AnnEngineAbstract();
             self.tag_train = tag_train;

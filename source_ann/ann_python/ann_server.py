@@ -108,7 +108,7 @@ class AnnHandler(server.HandlerAbstract):
         """Train an ANN and serialize the resulting model.
 
         Parameters:
-        tag_train (str): Tag for enabling different training modes
+        tag_train (various): Tag for enabling different training modes
         inp (matrix): Matrix with the input data
         out (matrix): Matrix with the output data
 

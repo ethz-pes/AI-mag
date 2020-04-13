@@ -14,7 +14,7 @@ def fct_model(tag_train, n_sol, n_inp, n_out):
     Create and return the Keras/TensorFlow model.
 
     Parameters:
-    tag_train (str): Tag for enabling different model types
+    tag_train (various): Tag for enabling different model types
     n_sol (int): Number of samples that are available
     n_inp (int): Number of inputs
     n_out (int): Number of outputs
@@ -50,7 +50,7 @@ def fct_train(tag_train, model, inp, out):
     Train the model.
 
     Parameters:
-    tag_train (str): Tag for enabling different training modes
+    tag_train (various): Tag for enabling different training modes
     model (model): Keras/TensorFlow model (to be trained)
     inp (matrix): Matrix with the input data
     out (matrix): Matrix with the output data

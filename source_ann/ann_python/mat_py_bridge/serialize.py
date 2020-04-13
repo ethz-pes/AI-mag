@@ -8,16 +8,18 @@ def get(data):
     """Serialize a Python dict to be transferred to MATLAB.
 
     This function can only serialize very specific Python data:
-        - The data has to be a dictionary
-        - The keys of the dictionary should be strings
-        - The values of the dictionary can be strings
-        - The values of the dictionary can be numpy arrays:
-            - Multi-dimensional arrays are supported
+        - string
+        - array:
+            - multi-dimensional arrays are supported
             - float64, float32, bool, int8, uint8, int32, uint32, int64, uint64
+        - dictionary:
+            - the values of the dictionary can be strings or array
+            - the values of the dictionary can be other structs
+            - all dictionary keys have to be strings
 
     The reasons of these limitation are:
         - To keep this function as simple as possible
-        - The mismatch between the Pythpn data types and the MATLAB data types
+        - The mismatch between the Python data types and the MATLAB data types
 
     Warning: The serialization/deserialization routine have meant to be safe against malicious data.
 
@@ -29,62 +31,26 @@ def get(data):
 
    """
 
-    # check the type
-    assert isinstance(data, dict), 'invalid data type'
-
-    # serialize data
-    bytes_array = serialize_struct(data)
-
-    return bytes_array
-
-
-def serialize_struct(data):
-    """Serialize a Python dict.
-
-    Parameters:
-    data (dict): Data to be serialized
-
-    Returns:
-    bytes: Serialized data
-
-   """
-    
     # init array
     bytes_array = bytearray()
 
-    # encode the data type: dict
-    bytes_add = class_encode(data)
-    bytes_array = append_byte(bytes_array, bytes_add)
-
-    # encode the number of fields
-    bytes_add = len(data)
-    bytes_add = struct.pack('I', bytes_add)
-    bytes_array = append_byte(bytes_array, bytes_add)
-
-    # serialize the keys and values
-    for field in data:
-        bytes_add = serialize_data(field)
-        bytes_array = append_byte(bytes_array, bytes_add)
-
-        bytes_add = serialize_data(data[field])
-        bytes_array = append_byte(bytes_array, bytes_add)
+    # serialize data
+    bytes_array = serialize_data(bytes_array, data)
 
     return bytes_array
 
 
-def serialize_data(data):
-    """Serialize a Python string or a numpy array.
+def serialize_data(bytes_array, data):
+    """Serialize a Python data.
 
     Parameters:
+    bytes_array (bytes): Bytes array to add the new data
     data (str/array): Data to be serialized
 
     Returns:
     bytes: Serialized data
 
    """
-
-    # init array
-    bytes_array = bytearray()
 
     # encode the data type: string or numpy array
     bytes_add = class_encode(data)
@@ -93,8 +59,36 @@ def serialize_data(data):
     # encode the data
     if isinstance(data, str):
         bytes_array = serialize_char(bytes_array, data)
+    elif isinstance(data, dict):
+        bytes_array = serialize_struct(bytes_array, data)
     else:
         bytes_array = serialize_matrix(bytes_array, data)
+
+    return bytes_array
+
+
+def serialize_struct(bytes_array, data):
+    """Serialize a Python dict.
+
+    Parameters:
+    bytes_array (bytes): Bytes array to add the new data
+    data (dict): Data to be serialized
+
+    Returns:
+    bytes: Serialized data
+
+   """
+
+    # encode the number of fields
+    bytes_add = len(data)
+    bytes_add = struct.pack('I', bytes_add)
+    bytes_array = append_byte(bytes_array, bytes_add)
+
+    # serialize the keys and values
+    for field in data:
+        assert isinstance(field, str), 'invalid dict key type'
+        bytes_array = serialize_data(bytes_array, field)
+        bytes_array = serialize_data(bytes_array, data[field])
 
     return bytes_array
 

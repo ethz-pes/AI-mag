@@ -53,10 +53,8 @@ if strcmp(cls, 'char')
     [data, bytes_array] = deserialize_char(bytes_array, cls);
 elseif strcmp(cls, 'struct')
     [data, bytes_array] = deserialize_struct(bytes_array);
-elseif any(strcmp(cls, {'double', 'single', 'logical', 'int8', 'uint8', 'int32', 'uint32', 'int64', 'uint64'}))
-    [data, bytes_array] = deserialize_matrix(bytes_array, cls);
 else
-    error('invalid data type');
+    [data, bytes_array] = deserialize_matrix(bytes_array, cls);
 end
 
 end
@@ -79,6 +77,7 @@ n_field = double(typecast(bytes_tmp, 'uint32'));
 for i=1:n_field
     [v_field, bytes_array] = deserialize_data(bytes_array);
     [v_value, bytes_array] = deserialize_data(bytes_array);
+    assert(ischar(v_field), 'invalid struct key type')
     data.(v_field) = v_value;
 end
 

@@ -52,12 +52,10 @@ bytes_array = append_byte(bytes_array, bytes_add);
 % encode the data
 if ischar(data)
     bytes_array = serialize_char(bytes_array, data);
-elseif isnumeric(data)||islogical(data)
-    bytes_array = serialize_matrix(bytes_array, data);
 elseif isstruct(data)
     bytes_array = serialize_struct(bytes_array, data);
 else
-   error('invalid type') 
+    bytes_array = serialize_matrix(bytes_array, data);
 end
 
 end
@@ -85,6 +83,7 @@ bytes_array = append_byte(bytes_array, bytes_add);
 
 % serialize the keys and values
 for i=1:numel(field)
+    assert(ischar(field{i}), 'invalid struct key type')
     bytes_array = serialize_data(bytes_array, field{i});
     bytes_array = serialize_data(bytes_array, data.(field{i}));
 end

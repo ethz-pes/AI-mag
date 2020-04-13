@@ -8,16 +8,18 @@ def get(bytes_array):
     """Deserialize data from MATLAB into a Python dict.
 
     This function can only deserialize very specific Python data:
-        - The data has to be a dictionary
-        - The keys of the dictionary should be strings
-        - The values of the dictionary can be strings
-        - The values of the dictionary can be numpy arrays:
-            - Multi-dimensional arrays are supported
+        - string
+        - array:
+            - multi-dimensional arrays are supported
             - float64, float32, bool, int8, uint8, int32, uint32, int64, uint64
+        - dictionary:
+            - the values of the dictionary can be strings or array
+            - the values of the dictionary can be other structs
+            - all dictionary keys have to be strings
 
     The reasons of these limitation are:
         - To keep this function as simple as possible
-        - The mismatch between the Pythpn data types and the MATLAB data types
+        - The mismatch between the Python data types and the MATLAB data types
 
     Warning: The serialization/deserialization routine have meant to be safe against malicious data.
 
@@ -32,16 +34,38 @@ def get(bytes_array):
     # check the type
     assert isinstance(bytes_array, bytearray), 'invalid data type'
 
-    # check that the data start with a dict
-    (bytes_array, bytes_tmp) = get_byte(bytes_array, 1)
-    cls = class_decode(bytes_tmp)
-    assert cls=='dict', 'invalid data type'
-
     # deserialize data, at the end the byte array should be empty
-    (data, bytes_array) = deserialize_struct(bytes_array)
+    (data, bytes_array) = deserialize_data(bytes_array)
     assert len(bytes_array) == 0, 'invalid data length'
 
     return data
+
+
+def deserialize_data(bytes_array):
+    """Deserialize a Python data.
+
+    Parameters:
+    bytes_array (bytes): Data to be deserialized
+
+    Returns:
+    str/array: Deserialized data
+    bytes: Remaining data to be deserialized
+
+   """
+
+    # get the type
+    (bytes_array, bytes_tmp) = get_byte(bytes_array, 1)
+    cls = class_decode(bytes_tmp)
+
+    # decode the data
+    if cls == 'str':
+        (data, bytes_array) = deserialize_char(bytes_array, cls)
+    elif cls == 'dict':
+        (data, bytes_array) = deserialize_struct(bytes_array)
+    else:
+        (data, bytes_array) = deserialize_matrix(bytes_array, cls)
+
+    return (data, bytes_array)
 
 
 def deserialize_struct(bytes_array):
@@ -67,32 +91,8 @@ def deserialize_struct(bytes_array):
     for i in range(n_field):
         (v_field, bytes_array) = deserialize_data(bytes_array)
         (v_value, bytes_array) = deserialize_data(bytes_array)
+        assert isinstance(v_field, str), 'invalid struct key type'
         data[v_field] = v_value
-
-    return (data, bytes_array)
-
-
-def deserialize_data(bytes_array):
-    """Deserialize a Python string or a numpy array.
-
-    Parameters:
-    bytes_array (bytes): Data to be deserialized
-
-    Returns:
-    str/array: Deserialized data
-    bytes: Remaining data to be deserialized 
-
-   """
-    
-    # get the type
-    (bytes_array, bytes_tmp) = get_byte(bytes_array, 1)
-    cls = class_decode(bytes_tmp)
-
-    # decode the data
-    if cls=='str':
-        (data, bytes_array) = deserialize_char(bytes_array, cls)
-    else:
-        (data, bytes_array) = deserialize_matrix(bytes_array, cls)
 
     return (data, bytes_array)
 
