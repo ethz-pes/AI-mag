@@ -1,12 +1,15 @@
 function bytes_array = get_serialize(data)
-% Serialize a MATLAB struct to be transferred to Python.
+% Serialize a MATLAB data to be transferred to Python.
 %
 %    This function can only serialize very specific MATLAB data:
-%        - The data has to be a struct
-%        - The values of the struct can be strings
-%        - The values of the struct can be arrays:
+%        - string
+%        - array:
 %            - multi-dimensional arrays are supported
 %            - double, single, logical, int8, uint8, int32, uint32, int64, uint64
+%        - struct:
+%            - the values of the struct can be strings or array
+%            - the values of the struct can be other structs
+%            - all structs have to be scalar
 %
 %    The reasons of these limitation are:
 %        - To keep this function as simple as possible
@@ -23,28 +26,54 @@ function bytes_array = get_serialize(data)
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % check the type
-assert(isstruct(data), 'invalid data')
+% assert(isstruct(data), 'invalid data')
+
+% init the byte array
+bytes_array = uint8([]);
 
 % serialize data
-bytes_array = serialize_struct(data);
+bytes_array = serialize_data(bytes_array, data);
 
 end
 
-function bytes_array = serialize_struct(data)
+function bytes_array = serialize_data(bytes_array, data)
+% Serialize a MATLAB data.
+%
+%    Parameters:
+%        data (str/array): data to be serialized
+%
+%    Returns:
+%        bytes_array (bytes): serialized data
+
+% encode the data type: string or numpy array
+bytes_add = class_encode(data);
+bytes_array = append_byte(bytes_array, bytes_add);
+
+% encode the data
+if ischar(data)
+    bytes_array = serialize_char(bytes_array, data);
+elseif isnumeric(data)||islogical(data)
+    bytes_array = serialize_matrix(bytes_array, data);
+elseif isstruct(data)
+    bytes_array = serialize_struct(bytes_array, data);
+else
+   error('invalid type') 
+end
+
+end
+
+function bytes_array = serialize_struct(bytes_array, data)
 % Serialize a MATLAB struct.
 %
 %    Parameters:
+%        bytes_array (bytes): bytes array to add the new data
 %        data (struct): data to be serialized
 %
 %    Returns:
 %        bytes_array (bytes): serialized data
 
-% init array
-bytes_array = uint8([]);
-
-% encode the data type: dict
-bytes_add = class_encode(data);
-bytes_array = append_byte(bytes_array, bytes_add);
+% check size
+assert(length(data)==1, 'invalid struct length')
 
 % field names
 field = fieldnames(data);
@@ -56,35 +85,8 @@ bytes_array = append_byte(bytes_array, bytes_add);
 
 % serialize the keys and values
 for i=1:numel(field)
-    bytes_add = serialize_data(field{i});
-    bytes_array = append_byte(bytes_array, bytes_add);
-    bytes_add = serialize_data(data.(field{i}));
-    bytes_array = append_byte(bytes_array, bytes_add);
-end
-
-end
-
-function bytes_array = serialize_data(data)
-% Serialize a MATLAB string or an array.
-%
-%    Parameters:
-%        data (str/array): data to be serialized
-%
-%    Returns:
-%        bytes_array (bytes): serialized data
-
-% init array
-bytes_array = uint8([]);
-
-% encode the data type: string or numpy array
-bytes_add = class_encode(data);
-bytes_array = append_byte(bytes_array, bytes_add);
-
-% encode the data
-if ischar(data)
-    bytes_array = serialize_char(bytes_array, data);
-else
-    bytes_array = serialize_matrix(bytes_array, data);
+    bytes_array = serialize_data(bytes_array, field{i});
+    bytes_array = serialize_data(bytes_array, data.(field{i}));
 end
 
 end

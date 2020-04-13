@@ -2,11 +2,14 @@ function data = get_deserialize(bytes_array)
 % Deserialize data from Python into a MATLAB struct.
 %
 %    This function can only serialize very specific MATLAB data:
-%        - The data has to be a struct
-%        - The values of the struct can be strings
-%        - The values of the struct can be arrays:
+%        - string
+%        - array:
 %            - multi-dimensional arrays are supported
 %            - double, single, logical, int8, uint8, int32, uint32, int64, uint64
+%        - struct:
+%            - the values of the struct can be strings or array
+%            - the values of the struct can be other structs
+%            - all structs have to be scalar
 %
 %    The reasons of these limitation are:
 %        - To keep this function as simple as possible
@@ -25,14 +28,36 @@ function data = get_deserialize(bytes_array)
 % check the type
 assert(isa(bytes_array, 'uint8'), 'invalid data type')
 
-% check that the data start with a dict
+% deserialize data, at the end the bytes_array array should be empty
+[data, bytes_array] = deserialize_data(bytes_array);
+assert(isempty(bytes_array), 'invalid data length')
+
+end
+
+function [data, bytes_array] = deserialize_data(bytes_array)
+% Deserialize a MATLAB data.
+%
+%    Parameters:
+%        bytes_array (bytes): data to be deserialized
+%
+%    Returns:
+%        data (str/array): deserialized data
+%        bytes_array (bytes): remaining data to be deserialized
+
+% get the type
 [bytes_array, bytes_tmp] = get_byte(bytes_array, 1);
 cls = class_decode(bytes_tmp);
-assert(strcmp(cls, 'struct'), 'invalid data type')
 
-% deserialize data, at the end the bytes_array array should be empty
-[data, bytes_array] = deserialize_struct(bytes_array);
-assert(isempty(bytes_array), 'invalid data length')
+% decode the data
+if strcmp(cls, 'char')
+    [data, bytes_array] = deserialize_char(bytes_array, cls);
+elseif strcmp(cls, 'struct')
+    [data, bytes_array] = deserialize_struct(bytes_array);
+elseif any(strcmp(cls, {'double', 'single', 'logical', 'int8', 'uint8', 'int32', 'uint32', 'int64', 'uint64'}))
+    [data, bytes_array] = deserialize_matrix(bytes_array, cls);
+else
+    error('invalid data type');
+end
 
 end
 
@@ -51,33 +76,10 @@ function [data, bytes_array] = deserialize_struct(bytes_array)
 n_field = double(typecast(bytes_tmp, 'uint32'));
 
 % decode the keys and values
-for i =1:n_field
+for i=1:n_field
     [v_field, bytes_array] = deserialize_data(bytes_array);
     [v_value, bytes_array] = deserialize_data(bytes_array);
     data.(v_field) = v_value;
-end
-
-end
-
-function [data, bytes_array] = deserialize_data(bytes_array)
-% Deserialize a MATLAB string or an array.
-%
-%    Parameters:
-%        bytes_array (bytes): data to be deserialized
-%
-%    Returns:
-%        data (str/array): deserialized data
-%        bytes_array (bytes): remaining data to be deserialized
-
-% get the type
-[bytes_array, bytes_tmp] = get_byte(bytes_array, 1);
-cls = class_decode(bytes_tmp);
-
-% decode the data
-if strcmp(cls, 'char')
-    [data, bytes_array] = deserialize_char(bytes_array, cls);
-else
-    [data, bytes_array] = deserialize_matrix(bytes_array, cls);
 end
 
 end
