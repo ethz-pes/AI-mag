@@ -39,7 +39,7 @@ def fct_model(tag_train, n_sol, n_inp, n_out):
         keras.layers.Dense(64, activation='relu'),
         keras.layers.Dense(64, activation='relu'),
         keras.layers.Dense(64, activation='relu'),
-        keras.layers.Dense(activation='linear', units=n_out),
+        keras.layers.Dense(units=n_out, activation='linear'),
     ])
 
     return model

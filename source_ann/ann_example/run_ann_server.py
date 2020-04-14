@@ -42,13 +42,13 @@ def fct_model(tag_train, n_sol, n_inp, n_out):
     model = keras.Sequential()
     if n_layer == 1:
         # one layer, input and output layers are the same
-        model.add(keras.layers.Dense(n_out, input_dim=n_inp, activation=activation))
+        model.add(keras.layers.Dense(n_out, input_dim=n_inp, activation='linear'))
     elif n_layer >= 2:
         # input, hidden, and output layers
         model.add(keras.layers.Dense(n_neuron, input_dim=n_inp, activation=activation))
         for i in range(n_layer - 2):
             model.add(keras.layers.Dense(n_neuron, activation=activation))
-        model.add(keras.layers.Dense(activation=activation, units=n_out))
+        model.add(keras.layers.Dense(units=n_out, activation='linear'))
     else:
         raise ValueError('invalid layer size')
 
