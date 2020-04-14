@@ -93,8 +93,13 @@ switch ann_type
         % timeout for Python ANN server requests
         ann_info.timeout = 240;
 
-        % tag to be passed for the training/fitting method (not used in this example)
-        ann_info.tag_train = 'none';
+        % tag to be passed for the training/fitting method
+        %    activation: name of the activation function to be used
+        %    n_layer: number of layers of the ANN
+        %    n_neuron: number of neurons per layer
+        ann_info.tag_train.activation = 'relu';
+        ann_info.tag_train.n_layer = 6;
+        ann_info.tag_train.n_neuron = 64;
 case 'matlab_lsq'
         % options for the MATLAB 'lsqnonlin' function
         ann_info.options = struct(...

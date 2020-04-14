@@ -62,6 +62,7 @@ class AnnHandler(server.HandlerAbstract):
             data_status = {'status': np.array(False, dtype='bool')}
 
             print('    status: fail / n_model: %d' % len(self.ann_data))
+            print('    exception: %s' % str(e))
 
         data_out = {**data_info, **data_status}
         return data_out

@@ -24,21 +24,33 @@ def fct_model(tag_train, n_sol, n_inp, n_out):
 
    """
 
-    # network size and tag_train are not used for this model
-    assert isinstance(tag_train, str), 'invalid size'
-    assert isinstance(n_sol, int), 'invalid size'
-    assert isinstance(n_inp, int), 'invalid size'
-    assert isinstance(n_out, int), 'invalid size'
+    # check network size
+    assert isinstance(n_sol, int), 'invalid sample size'
+    assert isinstance(n_inp, int), 'invalid input size'
+    assert isinstance(n_out, int), 'invalid ouput size'
+
+    # check tag_train data
+    assert isinstance(tag_train, dict), 'invalid tag_train'
+    n_layer = int(tag_train['n_layer'])
+    n_neuron = int(tag_train['n_neuron'])
+    activation = tag_train['activation']
+    assert isinstance(n_layer, int), 'invalid layer size'
+    assert isinstance(n_neuron, int), 'invalid neuron size'
+    assert isinstance(activation, str), 'invalid activation'
 
     # create the Keras/TensorFlow model
-    model = keras.Sequential([
-        keras.layers.Dense(64, input_dim=n_inp, activation='relu'),
-        keras.layers.Dense(64, activation='relu'),
-        keras.layers.Dense(64, activation='relu'),
-        keras.layers.Dense(64, activation='relu'),
-        keras.layers.Dense(64, activation='relu'),
-        keras.layers.Dense(activation='linear', units=n_out),
-    ])
+    model = keras.Sequential()
+    if n_layer == 1:
+        # one layer, input and output layers are the same
+        model.add(keras.layers.Dense(n_out, input_dim=n_inp, activation=activation))
+    elif n_layer >= 2:
+        # input, hidden, and output layers
+        model.add(keras.layers.Dense(n_neuron, input_dim=n_inp, activation=activation))
+        for i in range(n_layer - 2):
+            model.add(keras.layers.Dense(n_neuron, activation=activation))
+        model.add(keras.layers.Dense(activation=activation, units=n_out))
+    else:
+        raise ValueError('invalid layer size')
 
     return model
 
@@ -62,7 +74,7 @@ def fct_train(tag_train, model, inp, out):
    """
 
     # tag_train is not used for this training
-    assert isinstance(tag_train, str), 'invalid size'
+    assert isinstance(tag_train, dict), 'invalid tag_train'
 
     # compile and train
     model.compile(loss='mse', optimizer=keras.optimizers.Adam(lr=0.001), metrics=['mae', 'mse'])
