@@ -51,10 +51,10 @@ class PythonMatlabConnection(Thread):
        """
 
         try:
-            print('[SERVER] connected: %s / %d' % self.client_address)
+            print('[SERVER] connected / hostname: %s / port: %d' % self.client_address)
             self.__loop()
         finally:
-            print('[SERVER] disconnected: %s / %d' % self.client_address)
+            print('[SERVER] disconnected / hostname: %s / port: %d' % self.client_address)
             self.connection.close()
 
     def __loop(self):
@@ -68,7 +68,7 @@ class PythonMatlabConnection(Thread):
         while True:
             try:
                 data = self.__receive()
-                print('[SERVER] run data: %s / %d' % self.client_address)
+                print('[SERVER] run data / hostname: %s / port: %d' % self.client_address)
                 data = self.handler_obj.run_data(data)
                 self.__send(data)
             except socket.error:
@@ -209,7 +209,7 @@ class PythonMatlabServer():
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.bind((self.hostname, self.port))
         sock.listen(self.n_connection)
-        print('[SERVER] waiting for connections')
+        print('[SERVER] waiting for connections / hostname: %s / port: %d' % (self.hostname, self.port))
 
         # for each connection, create and start a thread
         while True:
