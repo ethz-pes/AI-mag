@@ -2,8 +2,9 @@ function P_mat = get_loss_map(data_map, data_fact_dc, param, interp)
 % Combine the AC and DC loss map and get the loss value of the specified points.
 %
 %    Parameters:
-%        data_ac (struct): AC loss map
-%        data_dc (struct): DC loss map
+%        data_map (struct): main loss map
+%        data_fact_dc (struct): loss map for DC bias correction (if required)
+%        param (struct): parameters for the interpolation method
 %        interp (struct): point to interpolate (frequency, AC flux density, DC bias, and temperature)
 %
 %    Returns:
@@ -18,7 +19,7 @@ B_dc_vec = interp.B_dc_vec;
 T_vec = interp.T_vec;
 [f_mat, B_ac_peak_mat, B_dc_mat, T_mat] = ndgrid(f_vec, B_ac_peak_vec, B_dc_vec, T_vec);
 
-% param
+% extract the parameters for the interpolation method
 fact_dc = param.fact_dc;
 limit_dc = param.limit_dc;
 clamp_dc = param.clamp_dc;

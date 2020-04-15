@@ -7,6 +7,8 @@ function data = get_clamp(data, range)
 %
 %    Returns:
 %        data (matrix): data (clamped)
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % get range
 v_max = max(range(:));

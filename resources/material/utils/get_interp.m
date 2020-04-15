@@ -1,5 +1,5 @@
 function P = get_interp(data, f, B_ac_peak, B_dc, T, is_clamp)
-% Interpolate the DC loss map (correction factor).
+% Interpolate the a loss map (with or without DC bias data).
 %
 %    Parameters:
 %        data (struct): loss map
@@ -7,9 +7,12 @@ function P = get_interp(data, f, B_ac_peak, B_dc, T, is_clamp)
 %        B_ac_peak (matrix): AC flux density matrix
 %        B_dc (matrix): DC flux density matrix
 %        T (matrix): temperature matrix
+%        is_clamp (logical): clamp (or not) the variables (prevent extrapolation)
 %
 %    Returns:
-%        fact (matrix): correction factor matrix (DC over AC losses)
+%        P (matrix): multi-dimensional matrix with the loss data
+%
+%    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 switch data.type
     case 'ac_dc_matrix'
@@ -23,6 +26,18 @@ end
 end
 
 function P = get_interp_ac_dc_matrix(data, f, B_ac_peak, B_dc, T, is_clamp)
+% Interpolate the a loss map (with DC bias data).
+%
+%    Parameters:
+%        data (struct): loss map
+%        f (matrix): frequency matrix
+%        B_ac_peak (matrix): AC flux density matrix
+%        B_dc (matrix): DC flux density matrix
+%        T (matrix): temperature matrix
+%        is_clamp (logical): clamp (or not) the variables (prevent extrapolation)
+%
+%    Returns:
+%        P (matrix): multi-dimensional matrix with the loss data
 
 % get the grid
 f_vec = data.f_vec;
@@ -49,6 +64,17 @@ P = 10.^interp(log10(f), log10(B_ac_peak), B_dc, T);
 end
 
 function P = get_interp_ac_matrix(data, f, B_ac_peak, T, is_clamp)
+% Interpolate the a loss map (without DC bias data).
+%
+%    Parameters:
+%        data (struct): loss map
+%        f (matrix): frequency matrix
+%        B_ac_peak (matrix): AC flux density matrix
+%        T (matrix): temperature matrix
+%        is_clamp (logical): clamp (or not) the variables (prevent extrapolation)
+%
+%    Returns:
+%        P (matrix): multi-dimensional matrix with the loss data
 
 % get the grid
 f_vec = data.f_vec;
