@@ -145,6 +145,37 @@ function excitation = get_excitation(fom)
 %    Returns:
 %        excitation (struct): struct containing the operating points (e.g., full load, half load)
 
+% 200kHz
+excitation.f_200k = get_excitation_frequency(fom, 200e3);
+
+% 375kHz
+excitation.f_375k = get_excitation_frequency(fom, 375e3);
+
+% 500kHz
+excitation.f_500k = get_excitation_frequency(fom, 500e3);
+
+% 625kHz
+excitation.f_625k = get_excitation_frequency(fom, 625e3);
+
+% 750kHz
+excitation.f_750k = get_excitation_frequency(fom, 750e3);
+
+end
+
+function excitation = get_excitation_frequency(fom, f)
+% Function for getting the operating point for a specific frequency.
+%
+%    Parameters:
+%        fom (struct): computed inductor figures of merit
+%        n_sol (int): number of designs
+%        load (float): operating point load (relative to full load)
+%
+%    Returns:
+%        excitation (struct): struct containing the operating points (e.g., full load, half load)
+
+% extract inductance
+L = fom.circuit.L;
+
 % excitation data
 %    - T_ambient: ambient temperature
 %    - is_pwm: is the waveform are sinus or PWM (triangular)
@@ -152,20 +183,12 @@ function excitation = get_excitation(fom)
 %    - f: operating frequency
 %    - I_dc: DC current
 %    - I_ac_peak: AC peak current
-excitation_tmp.T_ambient = 40.0;
-excitation_tmp.is_pwm = true;
-excitation_tmp.d_c = 0.5;
-excitation_tmp.f = 200e3;
-excitation_tmp.I_dc = 10.0;
-excitation_tmp.I_ac_peak = 200./(4.*200e3.*fom.circuit.L);
-
-% data for full load operation
-excitation.full_load = excitation_tmp;
-excitation.full_load.I_dc = 1.0.*excitation_tmp.I_dc;
-
-% data for half load operation
-excitation.half_load = excitation_tmp;
-excitation.half_load.I_dc = 0.5.*excitation_tmp.I_dc;
+excitation.T_ambient = 40.0;
+excitation.is_pwm = false;
+excitation.d_c = NaN;
+excitation.f = f;
+excitation.I_dc = 10.0;
+excitation.I_ac_peak = 200./(4.*f.*L);
 
 end
 

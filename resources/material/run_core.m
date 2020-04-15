@@ -56,7 +56,7 @@ function material = get_data(rho, kappa)
 % loss interpolation
 material.interp.f_vec = logspace(log10(25e3), log10(1e6), 20);  % frequency vector
 material.interp.B_ac_peak_vec = logspace(log10(2.5e-3), log10(250e-3), 20); % AC flux density vector
-material.interp.B_dc_vec = 0e-3:10e-3:250e-3; % DC flux density vector
+material.interp.B_dc_vec = 0e-3:10e-3:300e-3; % DC flux density vector
 material.interp.T_vec = 20:10:140;  % temperature vector
 
 % assign param

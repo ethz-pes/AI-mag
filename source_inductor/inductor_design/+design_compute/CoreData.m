@@ -373,7 +373,7 @@ classdef CoreData < handle
             
             % clamp the data to avoid extrapolation
             %    - extrapolation of core loss data is dangerous
-            %    - if clamped, the points are invalid
+            %    - if clamped, the points are invalid            
             is_valid = true;
             [is_valid, f] = get_clamp(is_valid, f, interp.f_vec);
             [is_valid, B_ac_peak] = get_clamp(is_valid, B_ac_peak, interp.B_ac_peak_vec);

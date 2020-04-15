@@ -214,7 +214,7 @@ classdef InductorCompute < handle
             r_peak_peak = (2.*I_ac_peak)./I_dc;
             fact_sat = I_peak_tot./I_sat;
             fact_rms = I_rms_tot./I_rms;
-            
+                        
             % assign the results
             utilization.I_peak_tot = I_peak_tot;
             utilization.I_rms_tot = I_rms_tot;
@@ -465,7 +465,7 @@ classdef InductorCompute < handle
                 % sinus, losses
                 [is_valid_core, P_core] = self.core_obj.get_losses_sin(f, B_ac_peak, B_dc, T_core_avg);
                 [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_sin(f, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);
-                
+                                
                 % sinus waveform, factor between peak and RMS
                 fact_rms = 1./sqrt(2);
             end

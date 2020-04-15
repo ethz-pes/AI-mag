@@ -48,6 +48,10 @@ fprintf('run\n')
 fprintf('save\n')
 save(file_single, 'fom', 'operating')
 
+% gui
+fprintf('gui\n')
+plot_design(fom, operating)
+
 fprintf('################## master_single\n')
 
 end
@@ -79,5 +83,21 @@ fom = inductor_compute_obj.get_fom();
 % compute the operating points
 excitation = data_compute.fct_excitation(fom);
 operating = inductor_compute_obj.get_operating(excitation);
+
+end
+
+function plot_design(fom, operating)
+
+% single design is required
+id_design = 1;
+
+% create GUI object
+inductor_gui = design_display.InductorGui(id_design, fom, operating);
+
+% set design
+inductor_gui.set_id_select(id_design)
+
+% launch gui
+inductor_gui.open_gui()
 
 end

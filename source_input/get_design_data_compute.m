@@ -225,8 +225,30 @@ function excitation = get_excitation(var, fom, n_sol)
 %    Returns:
 %        excitation (struct): struct containing the operating points (e.g., full load, half load)
 
-% check size
+% data for full load operation
+excitation.full_load = get_excitation_load(var, fom, n_sol, 1.0);
+
+% data for half load operation
+excitation.half_load = get_excitation_load(var, fom, n_sol, 0.5);
+
+end
+
+function excitation = get_excitation_load(var, fom, n_sol, load)
+% Function for getting the operating point for a specific load condition.
+%
+%    Parameters:
+%        var (struct): struct of vectors with the samples with all the combinations
+%        fom (struct): computed inductor figures of merit
+%        n_sol (int): number of designs
+%        load (float): operating point load (relative to full load)
+%
+%    Returns:
+%        excitation (struct): struct containing the operating points (e.g., full load, half load)
+
+% check size and extract
 assert(isnumeric(n_sol), 'invalid number of samples')
+L = fom.circuit.L;
+f = var.f;
 
 % excitation data
 %    - T_ambient: ambient temperature
@@ -235,20 +257,12 @@ assert(isnumeric(n_sol), 'invalid number of samples')
 %    - f: operating frequency
 %    - I_dc: DC current
 %    - I_ac_peak: AC peak current
-excitation_tmp.T_ambient = 40.0;
-excitation_tmp.is_pwm = true;
-excitation_tmp.d_c = 0.5;
-excitation_tmp.f = var.f;
-excitation_tmp.I_dc = 10.0;
-excitation_tmp.I_ac_peak = 200./(4.*var.f.*fom.circuit.L);
-
-% data for full load operation
-excitation.full_load = excitation_tmp;
-excitation.full_load.I_dc = 1.0.*excitation_tmp.I_dc;
-
-% data for half load operation
-excitation.half_load = excitation_tmp;
-excitation.half_load.I_dc = 0.5.*excitation_tmp.I_dc;
+excitation.T_ambient = 40.0;
+excitation.is_pwm = true;
+excitation.d_c = 0.5;
+excitation.f = f;
+excitation.I_dc = load.*10.0;
+excitation.I_ac_peak = 200./(4.*f.*L);
 
 end
 
