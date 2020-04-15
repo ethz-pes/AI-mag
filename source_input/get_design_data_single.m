@@ -1,4 +1,4 @@
-function [sweep, n_split, fct, eval_ann, data_compute] = get_design_data_compute()
+function [eval_ann, data_compute] = get_design_data_single()
 % Return the data required for the compuation of inductor designs.
 %
 %    Define the variables and how to generate the samples.
@@ -15,19 +15,6 @@ function [sweep, n_split, fct, eval_ann, data_compute] = get_design_data_compute
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
-% data controlling the generation of the design combinations
-sweep{1} = get_sweep('extrema');
-sweep{2} = get_sweep('random');
-
-% number of vectorized designs per computation
-n_split = 100e3;
-
-% struct with custom functions for filtering invalid designs:
-%    - fct_filter_compute: filter the valid designs from the figure of merit (without the operating points)
-%    - fct_filter_save: filter the valid designs from the figure of merit and the operating points
-fct.fct_filter_compute = @(fom, n_sol) fom.is_valid;
-fct.fct_filter_save = @(fom, operating, n_sol) operating.half_load.is_valid&operating.full_load.is_valid;
-
 % data for controlling the evaluation of the ANN/regression:
 %    - geom_type: type of the geometry input variables
 %        - 'rel': boxed volume, geometrical aspect ratio, and relative air gap length
@@ -35,94 +22,28 @@ fct.fct_filter_save = @(fom, operating, n_sol) operating.half_load.is_valid&oper
 %    - eval_type: type of the ANN/regression evaluation
 %        - 'ann': get the result of the ANN/regression
 %        - 'approx': get the analytical solution without the ANN/regression
-eval_ann.geom_type = 'rel';
+eval_ann.geom_type = 'abs';
 eval_ann.eval_type = 'ann';
 
 % inductor data (data which are common for all the sample)
 data_compute.data_const = get_data_const();
 
 % function for getting the inductor data (struct of vector with one value per sample)
-data_compute.fct_data_vec = @(var, n_sol) get_data_vec(var, n_sol);
+data_compute.data_vec = get_data_vec();
 
 % function for getting the operating points data (struct of vector with one value per sample)
-data_compute.fct_excitation = @(var, fom, n_sol) get_excitation(var, fom, n_sol);
+data_compute.fct_excitation = @(fom) get_excitation(fom);
 
 end
 
-function sweep = get_sweep(sweep_mode)
-% Data for generating the variable combinations with different methods.
-%
-%    Parameters:
-%        sweep_mode (str): method for generating the variable combinations ('extrema' or 'random')
-%
-%    Returns:
-%        sweep (struct): data controlling the generation of the design combinations
-
-% control the samples generation
-switch sweep_mode
-    case 'extrema'
-        % regular grid sweep (all combinations)
-        sweep.type = 'all_combinations';
-        
-        % maximum sumber of resulting sample
-        sweep.n_sol_max = 10e6;
-        
-        % two samples per variables (extreme case)
-        n = 5;
-        
-        % samples generation: linear
-        span = 'linear';
-    case 'random'
-        % regular vector sweep (specified combinations)
-        sweep.type = 'specified_combinations';
-        
-        % maximum sumber of resulting sample
-        sweep.n_sol_max = 10e6;
-        
-        % samples per variables
-        n = 1e6;
-        
-        % samples generation: linear
-        span = 'random';
-    otherwise
-        error('invalid sweep_type')
-end
-
-% ratio between the height and width and the winding window
-sweep.var.fact_window = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 2.0, 'ub', 4.0, 'n', n);
-
-% ratio between the length and width of the core cross section
-sweep.var.fact_core = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 1.0,  'ub', 3.0, 'n', n);
-
-% ratio between the core cross section and the winding window cross section
-sweep.var.fact_core_window = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 0.3,  'ub', 3.0, 'n', n);
-
-% ratio between the air gap length and the square root of the core cross section
-sweep.var.fact_gap = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 0.01,  'ub', 0.2, 'n', n);
-
-% inductor box volume
-sweep.var.V_box = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 20e-6,  'ub', 200e-6, 'n', n);
-
-% inductor operating frequency
-sweep.var.f = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 50e3,  'ub', 500e3, 'n', n);
-
-% inductor number of turns
-sweep.var.n_turn = struct('type', 'span', 'var_trf', 'log', 'var_type', 'int', 'span', span, 'lb', 2, 'ub', 75, 'n', n);
-
-end
-
-function data_vec = get_data_vec(var, n_sol)
+function data_vec = get_data_vec()
 % Function for getting the inductor data (struct of vector with one value per sample)
 %
 %    Parameters:
 %        var (struct): struct of vectors with the samples with all the combinations
-%        n_sol (int): number of designs
 %
 %    Returns:
 %        data_vec (struct:) struct of vector with one value per sample
-
-% check size
-assert(isnumeric(n_sol), 'invalid number of samples')
 
 % inductor geometry
 %    - fact_window: ratio between the height and width and the winding window
@@ -131,12 +52,12 @@ assert(isnumeric(n_sol), 'invalid number of samples')
 %    - fact_gap: ratio between the air gap length and the square root of the core cross section
 %    - V_box: inductor box volume
 %    - n_turn: inductor number of turns
-geom.fact_window = var.fact_window;
-geom.fact_core = var.fact_core;
-geom.fact_core_window = var.fact_core_window;
-geom.fact_gap = var.fact_gap;
-geom.V_box = var.V_box;
-geom.n_turn = var.n_turn;
+geom.x_window = 10.15e-3;
+geom.y_window = 37.40e-3;
+geom.t_core = 17.20e-3;
+geom.z_core = 21.00e-3;
+geom.d_gap = 0.40e-3;
+geom.n_turn = 16;
 
 % inductor physical parameters
 %    - I_test: test current for computing the magnetic circuit
@@ -166,9 +87,9 @@ fom_data.P_offset = 0.0;
 %    - c_tot: total cost
 %    - m_tot: total mass
 %    - V_box: box volume
-fom_limit.c_tot = struct('min', 0.0, 'max', 20.0);
-fom_limit.m_tot = struct('min', 0.0, 'max', 800e-3);
-fom_limit.V_box = struct('min', 0.0, 'max', 200e-6);
+fom_limit.c_tot = struct('min', 0.0, 'max', Inf);
+fom_limit.m_tot = struct('min', 0.0, 'max', Inf);
+fom_limit.V_box = struct('min', 0.0, 'max', Inf);
 
 % bounds for the circuit figures of merit
 %    - L: inductance
@@ -190,19 +111,19 @@ fom_limit.I_rms = struct('min', 0.0, 'max', Inf);
 %    - r_peak_peak: peak to peak ripple
 %    - fact_sat: total peak current with respect to the maximum saturation current
 %    - fact_rms: total RMS current with respect to the maximum RMS current
-fom_limit.stress = struct('I_dc', 10.0, 'V_t_area', 200./(2.*var.f), 'fact_rms', 1./sqrt(3));
+fom_limit.stress = struct('I_dc', 10.0, 'V_t_area', 200./(2.*200e3), 'fact_rms', 1./sqrt(3));
 fom_limit.I_rms_tot = struct('min', 0.0, 'max', Inf);
 fom_limit.I_peak_tot = struct('min', 0.0, 'max', Inf);
-fom_limit.r_peak_peak = struct('min', 0.0, 'max', 0.3);
-fom_limit.fact_sat = struct('min', 0.0, 'max', 0.9);
-fom_limit.fact_rms = struct('min', 0.0, 'max', 0.9);
+fom_limit.r_peak_peak = struct('min', 0.0, 'max', Inf);
+fom_limit.fact_sat = struct('min', 0.0, 'max', Inf);
+fom_limit.fact_rms = struct('min', 0.0, 'max', Inf);
 
 % inductor geometry
 %    - winding_id: id of the winding material
 %    - core_id: id of the core material
 %    - iso_id: id of the insulation material
-material.winding_id = 71;
-material.core_id = 95;
+material.winding_id = 100;
+material.core_id = 87;
 material.iso_id = 1;
 
 % assign the data
@@ -214,19 +135,15 @@ data_vec.fom_limit = fom_limit;
 
 end
 
-function excitation = get_excitation(var, fom, n_sol)
+function excitation = get_excitation(fom)
 % Function for getting the operating points data (struct of vector with one value per sample)
 %
 %    Parameters:
 %        var (struct): struct of vectors with the samples with all the combinations
 %        fom (struct): computed inductor figures of merit
-%        n_sol (int): number of designs
 %
 %    Returns:
 %        excitation (struct): struct containing the operating points (e.g., full load, half load)
-
-% check size
-assert(isnumeric(n_sol), 'invalid number of samples')
 
 % excitation data
 %    - T_ambient: ambient temperature
@@ -238,9 +155,9 @@ assert(isnumeric(n_sol), 'invalid number of samples')
 excitation_tmp.T_ambient = 40.0;
 excitation_tmp.is_pwm = true;
 excitation_tmp.d_c = 0.5;
-excitation_tmp.f = var.f;
+excitation_tmp.f = 200e3;
 excitation_tmp.I_dc = 10.0;
-excitation_tmp.I_ac_peak = 200./(4.*var.f.*fom.circuit.L);
+excitation_tmp.I_ac_peak = 200./(4.*200e3.*fom.circuit.L);
 
 % data for full load operation
 excitation.full_load = excitation_tmp;

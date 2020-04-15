@@ -45,7 +45,7 @@ ann_fem_obj = AnnFem(data_fem_ann, eval_ann.geom_type, eval_ann.eval_type);
 
 % generate the combinations to be computed
 fprintf('sweep\n')
-[n_tot, var] = get_sweep_cell(sweep);
+[n_tot, var] = get_sweep_combine(sweep);
 
 % split the design into chunks for parallel computing
 fprintf('split\n')
@@ -82,29 +82,6 @@ fprintf('save\n')
 save(file_compute, 'diff', 'n_tot', 'n_compute', 'n_sol', 'id_design', 'fom', 'operating')
 
 fprintf('################## master_compute\n')
-
-end
-
-function [n_sol, var] = get_sweep_cell(sweep)
-% Generate samples combinations with different types of sweep (combined).
-%
-%    Parameters:
-%        sweep (cell): data controlling the samples generation
-%
-%    Returns:
-%        n_sol (int): number of generated samples
-%        var (struct): struct of vectors with the samples
-
-% get each sweep
-for i=1:length(sweep)
-    [n_tot_tmp, var_tmp] = get_sweep(sweep{i});
-    n_sol_vec(i) = n_tot_tmp;
-    var_vec(i) = var_tmp;
-end
-
-% assemble the data
-n_sol = sum(n_sol_vec);
-var = get_struct_assemble(var_vec);
 
 end
 
@@ -172,7 +149,7 @@ n_sol = length(idx_chunk);
 
 % get the inductor data
 data_const = data_compute.data_const;
-data_vec = data_compute.fct_data_vec(var);
+data_vec = data_compute.fct_data_vec(var, n_sol);
 
 % create the object and get the figures of merit
 inductor_compute_obj = design_compute.InductorCompute(n_sol, data_vec, data_const, ann_fem_obj);
@@ -199,14 +176,14 @@ n_sol = length(idx_chunk);
 
 % get the inductor data
 data_const = data_compute.data_const;
-data_vec = data_compute.fct_data_vec(var);
+data_vec = data_compute.fct_data_vec(var, n_sol);
 
 % create the object and get the figures of merit
 inductor_compute_obj = design_compute.InductorCompute(n_sol, data_vec, data_const, ann_fem_obj);
 fom = inductor_compute_obj.get_fom();
 
 % compute the operating points
-excitation = data_compute.fct_excitation(var, fom);
+excitation = data_compute.fct_excitation(var, fom, n_sol);
 operating = inductor_compute_obj.get_operating(excitation);
 
 end
