@@ -1,15 +1,10 @@
 function [eval_ann, data_compute] = get_design_data_single()
-% Return the data required for the compuation of inductor designs.
+% Return the data required for the computation of a single inductor design.
 %
-%    Define the variables and how to generate the samples.
 %    How to evaluate the ANN/regression.
-%    How to filter the invalid design.
-%    Data required for the inductor evaulation.
+%    Data required for the inductor evaluation.
 %
 %    Returns:
-%        sweep (cell): data controlling the generation of the design combinations
-%        n_split (int): number of vectorized designs per computation
-%        fct (struct): struct with custom functions for filtering invalid designs
 %        eval_ann (struct): data for controlling the evaluation of the ANN/regression
 %        data_compute (struct): data for the inductor designs
 %
@@ -25,32 +20,29 @@ function [eval_ann, data_compute] = get_design_data_single()
 eval_ann.geom_type = 'abs';
 eval_ann.eval_type = 'ann';
 
-% inductor data (data which are common for all the sample)
+% inductor data (data which are not only numeric)
 data_compute.data_const = get_data_const();
 
-% function for getting the inductor data (struct of vector with one value per sample)
+% inductor data (struct of scalars)
 data_compute.data_vec = get_data_vec();
 
-% function for getting the operating points data (struct of vector with one value per sample)
+% function for getting the operating points data (struct containing the operating points)
 data_compute.fct_excitation = @(fom) get_excitation(fom);
 
 end
 
 function data_vec = get_data_vec()
-% Function for getting the inductor data (struct of vector with one value per sample)
-%
-%    Parameters:
-%        var (struct): struct of vectors with the samples with all the combinations
+% Function for getting the inductor data (struct of scalars)
 %
 %    Returns:
-%        data_vec (struct:) struct of vector with one value per sample
+%        data_vec (struct:) struct of scalars
 
 % inductor geometry
-%    - fact_window: ratio between the height and width and the winding window
-%    - fact_core: ratio between the length and width of the core cross section
-%    - fact_core_window: ratio between the core cross section and the winding window cross section
-%    - fact_gap: ratio between the air gap length and the square root of the core cross section
-%    - V_box: inductor box volume
+%    - x_window: width of the winding window
+%    - y_window: height of the winding window
+%    - t_core: width of the central core limb
+%    - z_core: depth of the core
+%    - d_gap: air gap length (physical air gap)
 %    - n_turn: inductor number of turns
 geom.x_window = 10.15e-3;
 geom.y_window = 37.40e-3;
@@ -136,10 +128,9 @@ data_vec.fom_limit = fom_limit;
 end
 
 function excitation = get_excitation(fom)
-% Function for getting the operating points data (struct of vector with one value per sample)
+% Function for getting the operating points data (struct of struct of scalars)
 %
 %    Parameters:
-%        var (struct): struct of vectors with the samples with all the combinations
 %        fom (struct): computed inductor figures of merit
 %
 %    Returns:
@@ -167,11 +158,10 @@ function excitation = get_excitation_frequency(fom, f)
 %
 %    Parameters:
 %        fom (struct): computed inductor figures of merit
-%        n_sol (int): number of designs
-%        load (float): operating point load (relative to full load)
+%        f (float): operating frequency
 %
 %    Returns:
-%        excitation (struct): struct containing the operating points (e.g., full load, half load)
+%        excitation (struct): struct containing the operating point
 
 % extract inductance
 L = fom.circuit.L;
@@ -193,10 +183,10 @@ excitation.I_ac_peak = 200./(4.*f.*L);
 end
 
 function data_const = get_data_const()
-% Get the inductor data which are common for all the sample.
+% Get the inductor data (not only numeric, any data type).
 %
 %    Returns:
-%        data_const (struct): inductor data common for all the sample
+%        data_const (struct): inductor data
 
 % data controlling the thermal/loss iteration:
 %     - n_iter: maximum number of iterations

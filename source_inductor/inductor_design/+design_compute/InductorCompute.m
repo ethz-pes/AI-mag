@@ -24,8 +24,8 @@ classdef InductorCompute < handle
     %% properties
     properties (SetAccess = private, GetAccess = public)
         n_sol % int: number of designs or samples
-        data_vec % struct: struct of vector with one value per sample
-        data_const % struct: data common for all the sample
+        data_vec % struct: struct of vectors with one value per sample
+        data_const % struct: data common for all the sample (not only numeric, any data type)
         ann_fem_obj % AnnFem: instance of the ANN/regression engine for thermal and magnetic model
         fom % struct: computed figures of merit (independent of any operating points)
         core_obj % CoreData: object mananaging the core properties
@@ -41,8 +41,8 @@ classdef InductorCompute < handle
             %
             %    Parameters:
             %        n_sol (int): number of designs or samples
-            %        data_vec (struct:) struct of vector with one value per sample
-            %        data_const (struct): data common for all the sample
+            %        data_vec (struct:) struct of vectors with one value per sample
+            %        data_const (struct): data common for all the sample (not only numeric, any data type)
             %        ann_fem_obj (AnnFem): instance of the ANN/regression engine for thermal and magnetic model
             
             % assign the data

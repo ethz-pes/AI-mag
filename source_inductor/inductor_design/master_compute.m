@@ -47,11 +47,11 @@ ann_fem_obj = AnnFem(data_fem_ann, eval_ann.geom_type, eval_ann.eval_type);
 fprintf('sweep\n')
 [n_tot, var] = get_sweep_combine(sweep);
 
-% split the design into chunks for parallel computing
+% split the designs into chunks for parallel computing
 fprintf('split\n')
 [n_chunk, idx_chunk] = get_chunk(n_split, n_tot);
 
-% compute the design in parallel
+% compute the designs in parallel
 fprintf('run\n')
 parfor i=1:n_chunk
     fprintf('    %d / %d\n', i, n_chunk)

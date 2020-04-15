@@ -1,10 +1,10 @@
 function [sweep, n_split, fct, eval_ann, data_compute] = get_design_data_compute()
-% Return the data required for the compuation of inductor designs.
+% Return the data required for the computation of inductor designs.
 %
 %    Define the variables and how to generate the samples.
 %    How to evaluate the ANN/regression.
 %    How to filter the invalid design.
-%    Data required for the inductor evaulation.
+%    Data required for the inductor evaluation.
 %
 %    Returns:
 %        sweep (cell): data controlling the generation of the design combinations
@@ -38,13 +38,13 @@ fct.fct_filter_save = @(fom, operating, n_sol) operating.half_load.is_valid&oper
 eval_ann.geom_type = 'rel';
 eval_ann.eval_type = 'ann';
 
-% inductor data (data which are common for all the sample)
+% inductor data (data which are not only numeric and common for all the sample)
 data_compute.data_const = get_data_const();
 
-% function for getting the inductor data (struct of vector with one value per sample)
+% function for getting the inductor data (struct of vectors with one value per sample)
 data_compute.fct_data_vec = @(var, n_sol) get_data_vec(var, n_sol);
 
-% function for getting the operating points data (struct of vector with one value per sample)
+% function for getting the operating points data (struct containing the operating points)
 data_compute.fct_excitation = @(var, fom, n_sol) get_excitation(var, fom, n_sol);
 
 end
@@ -112,14 +112,14 @@ sweep.var.n_turn = struct('type', 'span', 'var_trf', 'log', 'var_type', 'int', '
 end
 
 function data_vec = get_data_vec(var, n_sol)
-% Function for getting the inductor data (struct of vector with one value per sample)
+% Function for getting the inductor data (struct of vectors with one value per sample)
 %
 %    Parameters:
 %        var (struct): struct of vectors with the samples with all the combinations
 %        n_sol (int): number of designs
 %
 %    Returns:
-%        data_vec (struct:) struct of vector with one value per sample
+%        data_vec (struct:) struct of vectors with one value per sample
 
 % check size
 assert(isnumeric(n_sol), 'invalid number of samples')
@@ -215,7 +215,7 @@ data_vec.fom_limit = fom_limit;
 end
 
 function excitation = get_excitation(var, fom, n_sol)
-% Function for getting the operating points data (struct of vector with one value per sample)
+% Function for getting the operating points data (struct of struct of vectors with one value per sample)
 %
 %    Parameters:
 %        var (struct): struct of vectors with the samples with all the combinations
@@ -243,9 +243,9 @@ function excitation = get_excitation_load(var, fom, n_sol, load)
 %        load (float): operating point load (relative to full load)
 %
 %    Returns:
-%        excitation (struct): struct containing the operating points (e.g., full load, half load)
+%        excitation (struct): struct containing the operating point
 
-% check size and extract
+% check size and extract data
 assert(isnumeric(n_sol), 'invalid number of samples')
 L = fom.circuit.L;
 f = var.f;
@@ -267,7 +267,7 @@ excitation.I_ac_peak = 200./(4.*f.*L);
 end
 
 function data_const = get_data_const()
-% Get the inductor data which are common for all the sample.
+% Get the inductor data which are common for all the sample (not only numeric, any data type).
 %
 %    Returns:
 %        data_const (struct): inductor data common for all the sample

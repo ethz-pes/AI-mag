@@ -1,17 +1,13 @@
 function run_7_single()
-% Compute many inductor inductor designs (properties, thermal, losses, etc.).
+% Compute and plot a single inductor design.
 %
 %    Load the ANN/regression obtained with the FEM/ANN workflow.
-%    Sweep different inductor designs.
-%    Compute the inductor properties, thermal, losses, etc.
+%    Compute the specified design.
+%    Show the design with a GUI.
 %    
 %    Use the ANN/regression are used for predicting:
 %        - the thermal model (hotspot and average temperatures)
 %        - the magnetic model (inductance, current density, flux density, and magnetic field)
-%
-%    The complete code is running:
-%        - parallel: on different MATLAB workers
-%        - vectorized: many designs at the same time
 %
 %    This function requires a running ANN Python Server (if this regression method is used):
 %        - run 'run_ann_server.py' with Python
@@ -25,13 +21,13 @@ init_toolbox();
 % path of the file containing the exported data from the FEM/ANN
 file_export = 'data/export.mat';
 
-% path of the file to be written with the computed designs
+% path of the file to be written with the computed single design
 file_single = 'data/single.mat';
 
-% get the design parameters for the inductors
+% get the design parameters for the inductor
 [eval_ann, data_compute] = get_design_data_single();
 
-% compute the inductor designs
+% compute and plot the inductor design
 master_single(file_single, file_export, eval_ann, data_compute)
 
 end
