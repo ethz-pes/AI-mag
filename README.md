@@ -54,6 +54,7 @@ The following code structure is considered:
 * [run_4_export.m](run_4_export.m) - Export the ANNs in prevision of the evaluation of inductor designs 
 * [run_5_compute.m](run_5_compute.m) - Simulate many inductor designs with the help of the ANNs
 * [run_6_plot.m](run_6_plot.m) - Plot the results in a GUI
+* [run_7_single.m](run_7_single.m) - Run and plot a single design
 * [run_ann_server.py](run_ann_server.py) - Python ANN server for using Keras and TensorFlow from MATLAB
 * Shell script (Linux) and (batch) script (MS Windows) for starting the Python ANN server
 * Shell script (Linux) and (batch) script (MS Windows) for starting the COMSOL MATLAB Livelink
