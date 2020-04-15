@@ -5,18 +5,14 @@ function run_winding()
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
-% data
-id = [50 71 100]; % unique id
-fill_litz = [0.47 0.49 0.51]; % fill factor of the litz wire itself (not of the packing)
-d_strand = [50e-6 71e-6 100e-6]; % strand diameter
-kappa_copper = [32.5 23.5 21.5]; % cost per mass for the copper
+% unique id
+id_vec = [50 71 100];
 
 % parse data
 data = {};
-for i=1:length(id)
-   material = get_data(fill_litz(i), d_strand(i), kappa_copper(i));
-   
-   data{end+1} = struct('id', id(i), 'material', material);
+for i=1:length(id_vec)
+   material = get_data(id_vec(i));
+   data{end+1} = struct('id', id_vec(i), 'material', material);
 end
 
 % material type
@@ -27,23 +23,39 @@ save('data/winding_data.mat', 'data', 'type')
 
 end
 
-function material = get_data(fill_litz, d_strand, kappa_copper)
+function material = get_data(id)
 % Generate the winding (litz wire) material data.
 %
 %    Parameters:
-%        fill_litz (float): fill factor of the litz wire itself (not of the packing)
-%        d_strand (float): strand diameter
-%        kappa_copper (float): cost per mass for the copper
+%        id (int): material id
 %
 %    Returns:
 %        material (dict): material data
+
+% get values
+switch id
+    case 50
+        fill_litz = 0.47;
+        d_strand = 50e-6;
+        kappa_copper = 32.5;
+    case 71
+        fill_litz = 0.49;
+        d_strand = 71e-6;
+        kappa_copper = 23.5;
+    case 100
+        fill_litz = 0.51;
+        d_strand = 100e-6;
+        kappa_copper = 21.5;
+    otherwise
+        error('invalid id')
+end
 
 % conductivity interpolation
 material.interp.T_vec = [20 46 72 98 124 150]; % temperature vector
 material.interp.sigma_vec = 1e7.*[5.800 5.262 4.816 4.439 4.117 3.839]; % conductivity vector
 
 % assign param
-material.param.fill_litz = fill_litz; % fill factor
+material.param.fill_litz = fill_litz; % fill factor of the litz wire itself (not of the packing)
 material.param.d_strand = d_strand; % strand diameter
 material.param.delta_min = 0.5.*d_strand; % minimum skin depth
 
