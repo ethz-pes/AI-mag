@@ -19,17 +19,19 @@ classdef WindingData < handle
         param % struct: struct of vectors containing the constant properties for each sample
         interp % cell: cell containing the interpolation object for the different materials
         volume % vector: volume of the material for each sample
+        fill_pack % vector: fill factor of the packing (not of the litz wire) for each sample
     end
     
     %% public
     methods (Access = public)
-        function self = WindingData(material, id, volume)
+        function self = WindingData(material, id, volume, fill_pack)
             % Constructor.
             %
             %    Parameters:
             %        material (struct): definition of the materials and the corresponding unique id
             %        id (vector): material id of each sample
             %        volume (vector): volume of the material for each sample
+            %        fill_pack (vector): fill factor of the packing (not of the litz wire) for each sample
             
             % check that the data are winding data
             assert(strcmp(material.type, 'winding'), 'invalid length')
@@ -52,6 +54,7 @@ classdef WindingData < handle
             % assign the data
             self.interp = interp_tmp;
             self.volume = volume;
+            self.fill_pack = fill_pack;
         end
         
         function m = get_mass(self)
@@ -60,7 +63,14 @@ classdef WindingData < handle
             %    Returns:
             %        m (vector): mass of the different samples
             
-            m = self.volume.*self.param.rho;
+            % total fill factor (litz wire and packing)
+            fill = self.param.fill_litz.*self.fill_pack;
+            
+            % mass per volume
+            rho = self.param.rho_copper.*fill+self.param.rho_iso.*(1-fill);
+            
+            % absolute mass
+            m = self.volume.*rho;
         end
         
         function c = get_cost(self)
@@ -69,7 +79,17 @@ classdef WindingData < handle
             %    Returns:
             %        c (vector): cost of the different samples
             
-            c = self.param.c_offset+self.volume.*self.param.lambda;
+            % total fill factor (litz wire and packing)
+            fill = self.param.fill_litz.*self.fill_pack;
+            
+            % cost per volume
+            lambda_copper = self.param.rho_copper.*self.param.kappa_copper;
+            lambda_iso = self.param.rho_iso.*self.param.kappa_iso;
+            lambda = lambda_copper.*fill+lambda_iso.*(1-fill);
+            
+            % absolute cost
+            c = self.volume.*lambda;
+            c = self.param.c_offset+c;
         end
         
         function T_max = get_temperature(self)
@@ -285,8 +305,11 @@ classdef WindingData < handle
             %    Returns:
             %        P (vector): computed loss densities
             
+            % total fill factor (litz wire and packing)
+            fill = self.param.fill_litz.*self.fill_pack;
+
             % correct the losses with a factor and the winding fill factor
-            fact_tmp = self.param.P_scale_lf./(self.param.fill.*sigma);
+            fact_tmp = self.param.P_scale_lf./(fill.*sigma);
             
             % compute the losses
             P = fact_tmp.*(J_rms.^2);
@@ -303,11 +326,14 @@ classdef WindingData < handle
             %    Returns:
             %        P (vector): computed loss densities
             
+            % total fill factor (litz wire and packing)
+            fill = self.param.fill_litz.*self.fill_pack;
+
             % proximity loss factor
             gr = (pi.^2.*self.param.d_strand.^6)./(128.*delta.^4);
             
             % correct the losses with a factor and the winding fill factor
-            fact_tmp = self.param.P_scale_hf.*gr.*(32.*self.param.fill)./(sigma.*pi.^2.*self.param.d_strand.^4);
+            fact_tmp = self.param.P_scale_hf.*gr.*(32.*fill)./(sigma.*pi.^2.*self.param.d_strand.^4);
             
             % compute the losses
             P = fact_tmp.*(H_rms.^2);

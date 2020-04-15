@@ -37,7 +37,7 @@ function material = get_data(rho, kappa)
 %        material (struct): material data
 
 material.rho = rho; % volumetric density
-material.lambda = rho.*kappa; % cost per volume
+material.kappa = kappa; % cost per mass
 material.T_max = 130.0; % maximum temperature
 material.c_offset = 0.3; % cost offset
 

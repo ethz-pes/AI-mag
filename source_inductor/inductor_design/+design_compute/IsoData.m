@@ -61,7 +61,12 @@ classdef IsoData < handle
             %    Returns:
             %        c (vector): cost of the different samples
             
-            c = self.param.c_offset+self.volume.*self.param.lambda;
+            % cost per volume
+            lambda = self.param.rho.*self.param.kappa;
+            
+            % absolute cost
+            c = self.volume.*lambda;
+            c = self.param.c_offset+c;
         end
         
         function T_max = get_temperature(self)

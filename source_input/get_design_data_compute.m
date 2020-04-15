@@ -131,12 +131,14 @@ assert(isnumeric(n_sol), 'invalid number of samples')
 %    - fact_gap: ratio between the air gap length and the square root of the core cross section
 %    - V_box: inductor box volume
 %    - n_turn: inductor number of turns
+%    - fill_pack: fill factor of the packing (not of the litz wire)
 geom.fact_window = var.fact_window;
 geom.fact_core = var.fact_core;
 geom.fact_core_window = var.fact_core_window;
 geom.fact_gap = var.fact_gap;
 geom.V_box = var.V_box;
 geom.n_turn = var.n_turn;
+geom.fill_pack = 0.7;
 
 % inductor physical parameters
 %    - I_test: test current for computing the magnetic circuit

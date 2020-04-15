@@ -61,7 +61,7 @@ material.interp.T_vec = 20:10:140;  % temperature vector
 
 % assign param
 material.param.rho = rho; % volumetric density
-material.param.lambda = rho.*kappa; % cost per volume
+material.param.kappa = kappa; % cost per mass
 
 % assign constant
 material.param.fact_igse = 0.1; % factor for computing alpha and beta for IGSE (gradient in log scale)

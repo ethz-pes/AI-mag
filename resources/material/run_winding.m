@@ -7,14 +7,14 @@ function run_winding()
 
 % data
 id = [50 71 100]; % unique id
-fill = 0.7.*[0.47 0.49 0.51]; % fill factor
+fill_litz = [0.47 0.49 0.51]; % fill factor of the litz wire itself (not of the packing)
 d_strand = [50e-6 71e-6 100e-6]; % strand diameter
 kappa_copper = [32.5 23.5 21.5]; % cost per mass for the copper
 
 % parse data
 data = {};
 for i=1:length(id)
-   material = get_data(fill(i), d_strand(i), kappa_copper(i));
+   material = get_data(fill_litz(i), d_strand(i), kappa_copper(i));
    
    data{end+1} = struct('id', id(i), 'material', material);
 end
@@ -27,11 +27,11 @@ save('data/winding_data.mat', 'data', 'type')
 
 end
 
-function material = get_data(fill, d_strand, kappa_copper)
+function material = get_data(fill_litz, d_strand, kappa_copper)
 % Generate the winding (litz wire) material data.
 %
 %    Parameters:
-%        fill (float): fill factor
+%        fill_litz (float): fill factor of the litz wire itself (not of the packing)
 %        d_strand (float): strand diameter
 %        kappa_copper (float): cost per mass for the copper
 %
@@ -43,16 +43,15 @@ material.interp.T_vec = [20 46 72 98 124 150]; % temperature vector
 material.interp.sigma_vec = 1e7.*[5.800 5.262 4.816 4.439 4.117 3.839]; % conductivity vector
 
 % assign param
-material.param.fill = fill; % fill factor
+material.param.fill_litz = fill_litz; % fill factor
 material.param.d_strand = d_strand; % strand diameter
 material.param.delta_min = 0.5.*d_strand; % minimum skin depth
 
 % assign density
-rho_copper = 8960; % volumetric density for copper
-rho_iso = 1500; % volumetric density for insulation
-kappa_iso = 5.0; % cost per mass for the insulation
-material.param.rho = rho_copper.*fill+rho_iso.*(1-fill); % volumetric density
-material.param.lambda = rho_copper.*fill.*kappa_copper+rho_iso.*(1-fill).*kappa_iso; % cost per volume
+material.param.rho_copper = 8960; % volumetric density for copper
+material.param.rho_iso = 1500; % volumetric density for insulation
+material.param.kappa_iso = 5.0; % cost per mass for the insulation
+material.param.kappa_copper = kappa_copper; % cost per mass for the copper
 
 % assign constant
 material.param.n_harm = 10; % number of harmonics for PWM losses

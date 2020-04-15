@@ -105,7 +105,7 @@ classdef InductorCompute < handle
             %    - the material data are common for all the designs
             %    - the material of the different designs is select with the respective id
             self.core_obj = design_compute.CoreData(self.data_const.material_core, self.data_vec.material.core_id, geom.V_core);
-            self.winding_obj = design_compute.WindingData(self.data_const.material_winding, self.data_vec.material.winding_id, geom.V_winding);
+            self.winding_obj = design_compute.WindingData(self.data_const.material_winding, self.data_vec.material.winding_id, geom.V_winding, geom.fill_pack);
             self.iso_obj = design_compute.IsoData(self.data_const.material_iso, self.data_vec.material.iso_id, geom.V_iso);
             
             % set the data to the figures of merit

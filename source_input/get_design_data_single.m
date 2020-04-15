@@ -44,12 +44,14 @@ function data_vec = get_data_vec()
 %    - z_core: depth of the core
 %    - d_gap: air gap length (physical air gap)
 %    - n_turn: inductor number of turns
+%    - fill_pack: fill factor of the packing (not of the litz wire)
 geom.x_window = 10.15e-3;
 geom.y_window = 37.40e-3;
 geom.t_core = 17.20e-3;
 geom.z_core = 21.00e-3;
 geom.d_gap = 0.40e-3;
 geom.n_turn = 16;
+geom.fill_pack = 0.7;
 
 % inductor physical parameters
 %    - I_test: test current for computing the magnetic circuit
@@ -173,7 +175,7 @@ L = fom.circuit.L;
 %    - f: operating frequency
 %    - I_dc: DC current
 %    - I_ac_peak: AC peak current
-excitation.T_ambient = 40.0;
+excitation.T_ambient = 55.0;
 excitation.is_pwm = false;
 excitation.d_c = NaN;
 excitation.f = f;
