@@ -194,7 +194,7 @@ classdef CoreData < handle
 
             % map each sample to an array index corresponding to the material
             self.idx = get_integer_map(id_vec, 1:length(id_vec), id);
-                       
+                                   
             % merge the constant properties
             param_tmp = get_struct_assemble(param_tmp);
             

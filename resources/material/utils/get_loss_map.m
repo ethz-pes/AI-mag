@@ -43,4 +43,8 @@ else
     P_mat = get_interp(data_map, f_mat, B_ac_peak_mat, 1.*B_dc_mat, T_mat, false);
 end
 
+% check data
+P_vec = P_mat(:);
+assert(all(P_vec>0), 'invalid loss data')
+
 end

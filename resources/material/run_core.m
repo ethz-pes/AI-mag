@@ -10,7 +10,7 @@ addpath(genpath('utils'))
 close('all');
 
 % unique id
-id_vec = [97 87 49 95];
+id_vec = [49 87.1 87.2 95 97];
 
 % parse data
 data = {};
@@ -38,18 +38,26 @@ function material = get_data(id)
 
 % get values
 switch id
-    case 97
-        rho = 4850;
-        kappa = 7.5;
-    case 87
-        rho = 4850;
-        kappa = 7.0;
     case 49
         rho = 4750;
         kappa = 12.5;
+        filename = 'loss_map/N49_ac.mat';
+    case 87.1
+        rho = 4850;
+        kappa = 7.0;
+        filename = 'loss_map/N87_ac.mat';
+    case 87.2
+        rho = 4850;
+        kappa = 7.0;
+        filename = 'loss_map/N87_ac_dc.mat';
     case 95
         rho = 4900;
         kappa = 9.5;
+        filename = 'loss_map/N95_ac.mat';
+    case 97
+        rho = 4850;
+        kappa = 7.5;
+        filename = 'loss_map/N97_ac.mat';
     otherwise
         error('invalid id')
 end
@@ -67,7 +75,7 @@ material.param.T_max = 130.0; % maximum temperature
 material.param.c_offset = 0.3; % cost offset
 
 % load the loss map for AC flux (frequency, AC flux density, and temperature)
-data_map = load(['loss_map/N' num2str(id) '_ac.mat']);
+data_map = load(filename);
 
 % load the loss map for AC and DC flux (frequency, AC flux density, DC bias, and temperature)
 data_fact_dc = load('loss_map/N87_ac_dc.mat');
