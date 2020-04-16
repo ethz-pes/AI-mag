@@ -117,7 +117,7 @@ fom_limit.fact_rms = struct('min', 0.0, 'max', Inf);
 %    - core_id: id of the core material
 %    - iso_id: id of the insulation material
 material.winding_id = 100;
-material.core_id = 87.2;
+material.core_id = 87.3;
 material.iso_id = 1;
 
 % assign the data
