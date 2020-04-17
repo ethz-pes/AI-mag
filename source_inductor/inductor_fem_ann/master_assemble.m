@@ -30,7 +30,7 @@ fprintf('    n_sol = %d\n', n_sol)
 
 % save data
 fprintf('save\n')
-save(file_assemble, 'diff', 'n_sol', 'n_tot', 'inp', 'out_fem', 'out_approx', 'model_type', 'file_model')
+save(file_assemble, '-v7.3', 'diff', 'n_sol', 'n_tot', 'inp', 'out_fem', 'out_approx', 'model_type', 'file_model')
 
 % teardown
 fprintf('################## master_assemble\n')

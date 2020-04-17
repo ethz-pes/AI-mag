@@ -15,7 +15,8 @@ More precisely, the following **workflow** is implemented:
 The following performances are achieved:
 * The **average error** between the FEM simulations and the ANN predictions is **below 1%** 
 * The **worst-case error** between the FEM simulations and the ANN predictions is **below 8%** 
-* The tool is able for generate more than **5000 valid designs per second** on a laptop computer
+* The tool is able **generate 300'000 designs per second** on a laptop computer
+* The tool is able for compute **60'000 operating points per second** on a laptop computer
 
 ## Simplified Workflow
 
@@ -107,7 +108,7 @@ The tool is known to run with the following operating systems:
 
 The following softwares were used to generate resources but are not required to run the code:
 * Adobe Illustrator 2020 - generating the GUI artwork
-* Wolfram Mathematica 12 - generating analytical solutions
+* Wolfram Mathematica 12 - generating analytical expressions
 * PyCharm Community Edition 2019 - running and debugging the Python code
 
 ## Metrics

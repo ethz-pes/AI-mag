@@ -23,7 +23,7 @@ const = load(file_init);
 
 % save data
 fprintf('save\n')
-save(file_export, 'const', 'ann_ht', 'ann_mf')
+save(file_export, '-v7.3', 'const', 'ann_ht', 'ann_mf')
 
 % teardown
 fprintf('################## master_export\n')

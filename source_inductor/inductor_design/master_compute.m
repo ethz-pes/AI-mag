@@ -13,6 +13,9 @@ function master_compute(file_compute, file_export, sweep, n_split, fct, eval_ann
 %        - parallel: on different MATLAB workers
 %        - vectorized: many designs at the same time
 %
+%    Warning: The code use functions that are internally (multithreaded).
+%             Therefore, the speedup achieved with parallel MATLAB workers can be very low.
+%
 %    This function requires a running ANN Python Server (if this regression method is used):
 %        - run 'run_ann_server.py' with Python
 %        - use 'start_python_ann_server.bat' on MS Windows
@@ -79,7 +82,7 @@ fprintf('    n_sol = %d\n', n_sol)
 
 % save data
 fprintf('save\n')
-save(file_compute, 'diff', 'n_tot', 'n_compute', 'n_sol', 'id_design', 'fom', 'operating')
+save(file_compute, '-v7.3', 'diff', 'n_tot', 'n_compute', 'n_sol', 'id_design', 'fom', 'operating')
 
 fprintf('################## master_compute\n')
 

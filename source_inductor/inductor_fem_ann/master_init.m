@@ -19,7 +19,7 @@ fprintf('folder\n')
 
 % save data
 fprintf('save\n')
-save(file_init, '-struct', 'const')
+save(file_init, '-v7.3', '-struct', 'const')
 
 % teardown
 fprintf('################## master_init\n')

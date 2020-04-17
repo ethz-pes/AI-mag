@@ -19,7 +19,7 @@ end
 type = 'iso';
 
 % save material
-save('data/iso_data.mat', 'data', 'type')
+save('data/iso_data.mat', '-v7.3', 'data', 'type')
 
 end
 

@@ -13,6 +13,9 @@ function run_5_compute()
 %        - parallel: on different MATLAB workers
 %        - vectorized: many designs at the same time
 %
+%    Warning: The code use functions that are internally (multithreaded).
+%             Therefore, the speedup achieved with parallel MATLAB workers can be very low.
+%
 %    This function requires a running ANN Python Server (if this regression method is used):
 %        - run 'run_ann_server.py' with Python
 %        - use 'start_python_ann_server.bat' on MS Windows

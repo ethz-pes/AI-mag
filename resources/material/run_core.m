@@ -23,7 +23,7 @@ end
 type = 'core';
 
 % save material
-save('data/core_data.mat', 'data', 'type')
+save('data/core_data.mat', '-v7.3', 'data', 'type')
 
 end
 

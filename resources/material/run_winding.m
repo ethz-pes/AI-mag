@@ -19,7 +19,7 @@ end
 type = 'winding';
 
 % save material
-save('data/winding_data.mat', 'data', 'type')
+save('data/winding_data.mat', '-v7.3', 'data', 'type')
 
 end
 

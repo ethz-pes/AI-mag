@@ -54,7 +54,7 @@ obj.delete();
 
 % save data
 fprintf('save\n')
-save(file_ann, 'ann_input', 'ann_data', 'fom', 'model_type', 'file_model')
+save(file_ann, '-v7.3', 'ann_input', 'ann_data', 'fom', 'model_type', 'file_model')
 
 % teardown
 fprintf('################## master_train\n')

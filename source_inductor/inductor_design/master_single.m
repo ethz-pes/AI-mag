@@ -51,7 +51,7 @@ fprintf('    diff = %s\n', char(diff))
 
 % save data
 fprintf('save\n')
-save(file_single, 'fom', 'operating')
+save(file_single, '-v7.3', 'fom', 'operating')
 
 % gui
 fprintf('gui\n')
