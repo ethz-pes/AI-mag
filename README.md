@@ -59,10 +59,12 @@ The following code structure is considered:
 * [run_ann_server.py](run_ann_server.py) - Python ANN server for using Keras and TensorFlow from MATLAB
 * Shell script (Linux) and (batch) script (MS Windows) for starting the Python ANN server
 * Shell script (Linux) and (batch) script (MS Windows) for starting the COMSOL MATLAB Livelink
+* Readme and license files
 
 The example shows the complete workflow: FEM simulations, ANN training, design generation, and display with GUI:
 * The inductor of a DC-DC Buck converter is optimized
 * The converter has the following ratings: 2kW, 400V input voltage, 200V output voltage
+* The following parameters are optimized: frequency, geometry, air gap, number of turns, ripple
 
 ## Optimized Inductor
 
@@ -90,7 +92,7 @@ The tool is tested with the following COMSOL setup (for FEM simulations):
 * AC/DC Module (for the magnetic simulation)
 * Heat Transfer Module (for the thermal simulation)
 * CAD Import Module (for 3d geometry manipulation)
-* MATLAB Livelink
+* MATLAB Livelink (for communication with MATLAB)
 
 It should be noted that COMSOL is only required to run the FEM simulations, not for the ANN/regression or the inductor design evaluation.
 In other word, COMSOL is required to generate the ANN training set, but not for running the design tool.
@@ -126,6 +128,33 @@ Bourne Shell                     3              9              9             21
 SUM:                           108           2000           4994           5057
 -------------------------------------------------------------------------------
 ```
+
+# FAQ
+
+Do I need Python?
+* Only if the Keras/TensorFlow ANN engine is used.
+* Python is not required if the MATLAB ANN engine is used.
+
+Do I need COMSOL?
+* Only for generating the training/testing datasets for the ANN.
+* Only for computing inductor design with FEM (without ANN).
+* COMSOL is not required for designing inductors with ANN
+
+Can this toolbox handle big data?
+* Depending what is big data, few 10 millions of designs are definitely OK.
+* The memory management model (everything is stored in RAM) does not allow billions of samples.
+
+How fast is the code, do I need a powerful machine?
+* The computation of the inductors is fully parallelized and/or vectorized.
+* The code can compute tens of thousands inuductor design per second.
+* The training of the ANN takes some minutes.
+* The generation of the FEM training/testing sets takes some tens of hours.
+* The following laptop is used: Intel Core i7-8650U @ 1.90GHz / 16GB RAM
+
+Can this code run with GNU Octave?
+* The code is not compatible with GNU Octave.
+* The ANN library is not compatible with GNU Octave.
+* The COMSOL MATLAB Livelink is not compatible with GNU Octave.
 
 ## Author
 
