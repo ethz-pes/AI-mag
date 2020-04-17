@@ -37,7 +37,7 @@ fct.fct_filter_save = @(fom, operating, n_sol) operating.half_load.is_valid&oper
 %        - 'fem': get the FEM solution without the ANN/regression
 %        - 'approx': get the analytical solution without the ANN/regression
 eval_ann.geom_type = 'rel';
-eval_ann.eval_type = 'fem';
+eval_ann.eval_type = 'ann';
 
 % inductor data (data which are not only numeric and common for all the sample)
 data_compute.data_const = get_data_const();

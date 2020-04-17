@@ -110,6 +110,22 @@ The following softwares were used to generate resources but are not required to 
 * Wolfram Mathematica 12 - generating analytical solutions
 * PyCharm Community Edition 2019 - running and debugging the Python code
 
+## Metrics
+
+```
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+MATLAB                          90           1564           4539           4370
+Python                           8            365            446            450
+Markdown                         4             53              0            182
+DOS Batch                        3              9              0             34
+Bourne Shell                     3              9              9             21
+-------------------------------------------------------------------------------
+SUM:                           108           2000           4994           5057
+-------------------------------------------------------------------------------
+```
+
 ## Author
 
 **Thomas Guillod, ETH Zurich, Power Electronic Systems Laboratory** - [GitHub Profile](https://github.com/otvam)

@@ -19,7 +19,7 @@ function [eval_ann, data_compute] = get_design_data_single()
 %        - 'fem': get the FEM solution without the ANN/regression
 %        - 'approx': get the analytical solution without the ANN/regression
 eval_ann.geom_type = 'abs';
-eval_ann.eval_type = 'fem';
+eval_ann.eval_type = 'ann';
 
 % inductor data (data which are not only numeric)
 data_compute.data_const = get_data_const();
