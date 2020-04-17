@@ -34,6 +34,7 @@ fct.fct_filter_save = @(fom, operating, n_sol) operating.half_load.is_valid&oper
 %        - 'abs': absolute core, winding, and air gap length
 %    - eval_type: type of the ANN/regression evaluation
 %        - 'ann': get the result of the ANN/regression
+%        - 'fem': get the FEM solution without the ANN/regression
 %        - 'approx': get the analytical solution without the ANN/regression
 eval_ann.geom_type = 'rel';
 eval_ann.eval_type = 'ann';

@@ -16,9 +16,10 @@ function [eval_ann, data_compute] = get_design_data_single()
 %        - 'abs': absolute core, winding, and air gap length
 %    - eval_type: type of the ANN/regression evaluation
 %        - 'ann': get the result of the ANN/regression
+%        - 'fem': get the FEM solution without the ANN/regression
 %        - 'approx': get the analytical solution without the ANN/regression
 eval_ann.geom_type = 'abs';
-eval_ann.eval_type = 'ann';
+eval_ann.eval_type = 'fem';
 
 % inductor data (data which are not only numeric)
 data_compute.data_const = get_data_const();

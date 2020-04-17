@@ -11,13 +11,20 @@ classdef AnnFem < handle
     %        - The FEM simulations and the corresponding trained/fitted regression
     %        - The inductor design code, which query the simulation results of different designs
     %
+    %    Three type of evaluation are available:
+    %        - Get the result of the ANN/regression (main method)
+    %        - Get the FEM solution without the ANN/regression (mainly for verification)
+    %        - Get the analytical solution without the ANN/regression (mainly for verification)
+    %
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
     %% properties
     properties (SetAccess = private, GetAccess = public)
-        data_fem_ann % struct: contain the results of the magnetic and thermal ANN/regression
+        const % struct: contain the constant data for the model
         geom_type % str: type of the geometry variables ('abs' or 'rel')
         eval_type % str: get the result of the ANN/regression, FEM or, just the analytical solution ('ann', 'fem', or 'approx')
+        file_model_ht % str: path of the COMSOL file to be used for the thermal simulations
+        file_model_mf % str: path of the COMSOL file to be used for the magnetic simulations
         ann_manager_ht_obj % AnnManager: object managing the ANN/regression for the thermal data
         ann_manager_mf_obj % AnnManager: object managing the ANN/regression for the magnetic data
         is_geom % logical: if the a geometry has been set (or not)
@@ -40,13 +47,13 @@ classdef AnnFem < handle
             %        eval_type (str): get the result of the ANN/regression, FEM or, just the analytical solution ('ann', 'fem', or 'approx')
             
             % assign input
-            self.data_fem_ann = data_fem_ann;
             self.geom_type = geom_type;
             self.eval_type = eval_type;
-            
+            self.const = data_fem_ann.const;
+
             % create the regression engine and load the data
-            self.ann_manager_mf_obj = self.get_ann_manager(self.data_fem_ann.ann_mf, 'mf');
-            self.ann_manager_ht_obj = self.get_ann_manager(self.data_fem_ann.ann_ht, 'ht');
+            [self.file_model_mf, self.ann_manager_mf_obj] = self.get_ann_manager(data_fem_ann.ann_mf, 'mf');
+            [self.file_model_ht, self.ann_manager_ht_obj] = self.get_ann_manager(data_fem_ann.ann_ht, 'ht');
             
             % the geometry is not set yet
             self.is_geom = false;
@@ -114,7 +121,7 @@ classdef AnnFem < handle
     end
     
     methods (Access = private)
-        function ann_manager_obj = get_ann_manager(self, data, model_type)
+        function [file_model, ann_manager_obj] = get_ann_manager(self, data, model_type)
             % Create the ANN/regression engine and load the data.
             %
             %    Parameters:
@@ -122,11 +129,16 @@ classdef AnnFem < handle
             %        model_type (str): expected type of the simulation
             %
             %    Returns:
+            %        file_model (str): path of the COMSOL file to be used for the simulations
             %        ann_manager_obj (AnnManager): object managing the ANN/regression
 
+            % create ANN object
             assert(strcmp(data.model_type, model_type), 'invalid type')
             ann_manager_obj = AnnManager(data.ann_input);
             ann_manager_obj.load(data.ann_data);
+            
+            % get file name for COMSOL
+            file_model = data.file_model;
         end
 
         function [is_valid, fom] = get_model_type(self, excitation, model_type)
@@ -173,7 +185,7 @@ classdef AnnFem < handle
             
             % extend the input with additional data (without making any regression)
             var_type = struct('geom_type', self.geom_type, 'excitation_type', excitation_type);
-            [is_valid, inp] = fem_ann.get_extend_inp(self.data_fem_ann.const, model_type, var_type, self.n_sol, inp);
+            [is_valid, inp] = fem_ann.get_extend_inp(self.const, model_type, var_type, self.n_sol, inp);
         end
         
         function [is_valid, fom] = get_fom_wapper(self, model_type, is_valid, inp)
@@ -192,21 +204,30 @@ classdef AnnFem < handle
             switch model_type
                 case 'mf'
                     ann_manager_obj = self.ann_manager_mf_obj;
+                    file_model = self.file_model_mf;
                 case 'ht'
                     ann_manager_obj = self.ann_manager_ht_obj;
+                    file_model = self.file_model_ht;
                 otherwise
                     error('invalid type')
             end
 
-            % get the analytical approximation for scaling
-            out_approx = fem_ann.get_out_approx(model_type, inp);
+            % get the a first solution without ANN/regression
+            switch self.eval_type
+                case 'fem'                                        
+                    fom = fem_ann.get_out_fem(file_model, model_type, inp);
+                case {'ann', 'approx'}
+                    fom = fem_ann.get_out_approx(model_type, inp);
+                otherwise
+                    error('invalid data')
+            end
             
             % evaluate the ANN/regression
             switch self.eval_type
                 case 'ann'
-                    [is_valid_tmp, fom] = ann_manager_obj.predict_ann(self.n_sol, inp, out_approx);
-                case 'approx'
-                    [is_valid_tmp, fom] = ann_manager_obj.predict_nrm(self.n_sol, inp, out_approx);
+                    [is_valid_tmp, fom] = ann_manager_obj.predict_ann(self.n_sol, inp, fom);
+                case {'fem', 'approx'}
+                    [is_valid_tmp, fom] = ann_manager_obj.predict_nrm(self.n_sol, inp, fom);
                 otherwise
                     error('invalid data')
             end
