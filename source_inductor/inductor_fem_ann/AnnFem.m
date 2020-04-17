@@ -214,9 +214,15 @@ classdef AnnFem < handle
 
             % get the a first solution without ANN/regression
             switch self.eval_type
-                case 'fem'                                        
-                    fom = fem_ann.get_out_fem(file_model, model_type, inp);
+                case 'fem'
+                    % FEM does not support vector evaluation, loop throught the designs
+                    for i=1:length(self.n_sol)
+                        inp_tmp = get_struct_filter(inp, i);
+                        fom(i) = fem_ann.get_out_fem(file_model, model_type, inp_tmp);
+                    end                    
+                    fom = get_struct_assemble(fom);
                 case {'ann', 'approx'}
+                    % analytical approximation supports vector evaluation
                     fom = fem_ann.get_out_approx(model_type, inp);
                 otherwise
                     error('invalid data')

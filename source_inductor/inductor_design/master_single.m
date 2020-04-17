@@ -29,6 +29,9 @@ fprintf('################## master_single\n')
 fprintf('load\n')
 data_fem_ann = load(file_export);
 
+% time start
+tic = datetime('now');
+
 % create the object for evaluating the geometry, thermal, and loss models with ANN/regression
 fprintf('ann fem\n')
 ann_fem_obj = AnnFem(data_fem_ann, eval_ann.geom_type, eval_ann.eval_type);
@@ -36,6 +39,15 @@ ann_fem_obj = AnnFem(data_fem_ann, eval_ann.geom_type, eval_ann.eval_type);
 % compute the design
 fprintf('run\n')
 [fom, operating] = compute_design(ann_fem_obj, data_compute);
+
+% time out
+toc = datetime('now');
+diff = toc-tic;
+
+% display information about the design
+fprintf('info\n')
+fprintf('    single design\n')
+fprintf('    diff = %s\n', char(diff))
 
 % save data
 fprintf('save\n')
