@@ -16,7 +16,7 @@ fprintf('################## master_assemble\n')
 
 % load, assemble, and filter the FEM simulations
 fprintf('assemble\n')
-[diff, n_tot, n_sol, model_type, inp, out_fem] = fem_ann.get_assemble(folder_fem);
+[diff, n_tot, n_sol, model_type, file_model, inp, out_fem] = fem_ann.get_assemble(folder_fem);
 
 % compute the analytical results
 fprintf('approx\n')
@@ -30,7 +30,7 @@ fprintf('    n_sol = %d\n', n_sol)
 
 % save data
 fprintf('save\n')
-save(file_assemble, 'diff', 'n_sol', 'n_tot', 'inp', 'out_fem', 'out_approx', 'model_type')
+save(file_assemble, 'diff', 'n_sol', 'n_tot', 'inp', 'out_fem', 'out_approx', 'model_type', 'file_model')
 
 % teardown
 fprintf('################## master_assemble\n')

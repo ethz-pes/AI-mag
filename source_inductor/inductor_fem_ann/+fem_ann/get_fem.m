@@ -68,7 +68,7 @@ if make_computation==true
     fprintf('        compute: %s\n', char(diff))
     
     % save data with the hash
-    save(filename, 'inp', 'is_valid', 'model_type', 'var_type', 'out_fem', 'diff')
+    save(filename, 'inp', 'file_model', 'is_valid', 'model_type', 'var_type', 'out_fem', 'diff')
 end
 
 end

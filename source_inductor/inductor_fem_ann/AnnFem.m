@@ -17,7 +17,7 @@ classdef AnnFem < handle
     properties (SetAccess = private, GetAccess = public)
         data_fem_ann % struct: contain the results of the magnetic and thermal ANN/regression
         geom_type % str: type of the geometry variables ('abs' or 'rel')
-        eval_type % str: get the result of the ANN/regression or just the analytical solution ('ann' or 'approx')
+        eval_type % str: get the result of the ANN/regression, FEM or, just the analytical solution ('ann', 'fem', or 'approx')
         ann_manager_ht_obj % AnnManager: object managing the ANN/regression for the thermal data
         ann_manager_mf_obj % AnnManager: object managing the ANN/regression for the magnetic data
         is_geom % logical: if the a geometry has been set (or not)
@@ -37,7 +37,7 @@ classdef AnnFem < handle
             %    Parameters:
             %        data_fem_ann (struct): contain the results of the magnetic and thermal ANN/regression
             %        geom_type (str): type of the geometry variables ('abs' or 'rel')
-            %        eval_type (str): get the result of the ANN/regression or just the analytical solution ('ann' or 'approx')
+            %        eval_type (str): get the result of the ANN/regression, FEM or, just the analytical solution ('ann', 'fem', or 'approx')
             
             % assign input
             self.data_fem_ann = data_fem_ann;

@@ -28,6 +28,7 @@ inp = data_tmp.inp;
 out_fem = data_tmp.out_fem;
 out_approx = data_tmp.out_approx;
 model_type = data_tmp.model_type;
+file_model = data_tmp.file_model;
 
 % init the ANN/regression interface
 fprintf('create ann\n')
@@ -53,7 +54,7 @@ obj.delete();
 
 % save data
 fprintf('save\n')
-save(file_ann, 'ann_input', 'ann_data', 'fom', 'model_type')
+save(file_ann, 'ann_input', 'ann_data', 'fom', 'model_type', 'file_model')
 
 % teardown
 fprintf('################## master_train\n')
