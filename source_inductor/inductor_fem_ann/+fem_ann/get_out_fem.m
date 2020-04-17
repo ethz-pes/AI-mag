@@ -107,12 +107,12 @@ function data = get_global(model, expr)
 %        out_fem (struct): struct of vectors with the FEM results
 
 % evaluate the expression
-data_tmp = cell(1,length(expr));
-[data_tmp{:}] = model.mphglobal(expr, 'Complexout','on');
+data_raw = cell(1,length(expr));
+[data_raw{:}] = model.mphglobal(expr, 'Complexout','on');
 
 % assign the results
 for i=1:length(expr)
-    data_tmp = data_tmp{i};
+    data_tmp = data_raw{i};
     assert(length(data_tmp)==1 , 'invalid length')
     data.(expr{i}) = data_tmp;
 end
