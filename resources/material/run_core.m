@@ -113,7 +113,6 @@ param.extrap_bias.T = [25.0 100.0];
 material.interp.P_mat = get_loss_map(data_map, data_bias, param, material.interp); % loss matrix
    
 % assign
-id = get_map_str_to_int(id);
 data = struct('id', id, 'material', material);
 
 end

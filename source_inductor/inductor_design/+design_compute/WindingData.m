@@ -39,7 +39,7 @@ classdef WindingData < handle
             % assign input
             for i=1:length(material.data)
                 % extract the id to map it later
-                id_vec(i) = material.data{i}.id;
+                id_vec(i) = get_map_str_to_int(material.data{i}.id);
                 
                 % constant properties
                 param_tmp(i) = material.data{i}.material.param;

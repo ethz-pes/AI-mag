@@ -36,7 +36,6 @@ material.T_max = 130.0; % maximum temperature
 material.c_offset = 0.3; % cost offset
 
 % assign
-id = get_map_str_to_int(id);
 data = struct('id', id, 'material', material);
 
 end

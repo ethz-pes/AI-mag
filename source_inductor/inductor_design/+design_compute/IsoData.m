@@ -32,7 +32,7 @@ classdef IsoData < handle
             
             % extract data
             for i=1:length(material.data)
-                id_vec(i) = material.data{i}.id;
+                id_vec(i) = get_map_str_to_int(material.data{i}.id);
                 param_tmp(i) = material.data{i}.material;
             end
             
