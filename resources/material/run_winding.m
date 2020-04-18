@@ -5,15 +5,14 @@ function run_winding()
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
-% unique id
-id_vec = [50 71 100];
+% init
+addpath(genpath('utils'))
 
 % parse data
 data = {};
-for i=1:length(id_vec)
-   material = get_data(id_vec(i));
-   data{end+1} = struct('id', id_vec(i), 'material', material);
-end
+data{end+1} = get_data('50um');
+data{end+1} = get_data('71um');
+data{end+1} = get_data('100um');
 
 % material type
 type = 'winding';
@@ -23,26 +22,26 @@ save('data/winding_data.mat', '-v7.3', 'data', 'type')
 
 end
 
-function material = get_data(id)
+function data = get_data(id)
 % Generate the winding (litz wire) material data.
 %
 %    Parameters:
 %        id (int): material id
 %
 %    Returns:
-%        material (dict): material data
+%        data (struct): material id and data
 
 % get values
 switch id
-    case 50
+    case '50um'
         fill_litz = 0.47;
         d_strand = 50e-6;
         kappa_copper = 32.5;
-    case 71
+    case '71um'
         fill_litz = 0.49;
         d_strand = 71e-6;
         kappa_copper = 23.5;
-    case 100
+    case '100um'
         fill_litz = 0.51;
         d_strand = 100e-6;
         kappa_copper = 21.5;
@@ -73,5 +72,9 @@ material.param.P_scale_lf = 1.1; % scaling factor for LF losses
 material.param.P_scale_hf = 1.1; % scaling factor for HF losses
 material.param.T_max = 140.0; % maximum temperature
 material.param.c_offset = 0.3; % cost offset
+
+% assign
+id = get_map_str_to_int(id);
+data = struct('id', id, 'material', material);
 
 end

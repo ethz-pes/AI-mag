@@ -5,15 +5,12 @@ function run_iso()
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
-% unique id
-id_vec = [1 2];
+% init
+addpath(genpath('utils'))
 
 % parse data
 data = {};
-for i=1:length(id_vec)
-   material = get_data(id_vec(i));
-   data{end+1} = struct('id', id_vec(i), 'material', material);
-end
+data{end+1} = get_data('default');
 
 % material type
 type = 'iso';
@@ -23,31 +20,23 @@ save('data/iso_data.mat', '-v7.3', 'data', 'type')
 
 end
 
-function material = get_data(id)
+function data = get_data(id)
 % Generate the insulation material data.
 %
 %    Parameters:
-%        id (int): material id
+%        id (str): material id
 %
 %    Returns:
-%        material (struct): material data
-
-% get values
-switch id
-    case 1
-        rho = 1500;
-        kappa = 0.5;
-    case 2
-        rho = 1600;
-        kappa = 0.4;
-    otherwise
-        error('invalid id')
-end
+%        data (struct): material id and data
 
 % assign
-material.rho = rho; % volumetric density
-material.kappa = kappa; % cost per mass
+material.rho = 1500; % volumetric density
+material.kappa = 0.5; % cost per mass
 material.T_max = 130.0; % maximum temperature
 material.c_offset = 0.3; % cost offset
+
+% assign
+id = get_map_str_to_int(id);
+data = struct('id', id, 'material', material);
 
 end

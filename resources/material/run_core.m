@@ -7,59 +7,55 @@ function run_core()
 
 % init
 addpath(genpath('utils'))
-close('all');
-
-% unique id
-id_vec = [49 87.1 87.2 95 97];
 
 % parse data
 data = {};
-for i=1:length(id_vec)
-   material = get_data(id_vec(i));
-   data{end+1} = struct('id', id_vec(i), 'material', material);
-end
+data{end+1} = get_data('N49');
+data{end+1} = get_data('N87');
+data{end+1} = get_data('N95');
+data{end+1} = get_data('N97');
+data{end+1} = get_data('N87_meas');
 
 % material type
 type = 'core';
 
 % save material
 save('data/core_data.mat', '-v7.3', 'data', 'type')
-save('../../source_input/material/core_data.mat', '-v7.3', 'data', 'type')
 
 end
 
-function material = get_data(id)
+function data = get_data(id)
 % Generate the core (ferrite) material data.
 %
 %    Parameters:
 %        id (int): material id
 %
 %    Returns:
-%        material (struct): material data
+%        data (struct): material id and data
 
 % get values
 switch id
-    case 49
+    case 'N49'
         rho = 4750;
         kappa = 12.5;
         data_map = load('loss_map/N49_ac.mat');
         data_bias = load('loss_map/N87_ac_dc.mat');
-    case 87.1
+    case 'N87'
         rho = 4850;
         kappa = 7.0;
         data_map = load('loss_map/N87_ac.mat');
         data_bias = load('loss_map/N87_ac_dc.mat');
-    case 87.2
+    case 'N87_meas'
         rho = 4850;
         kappa = 7.0;
         data_map = load('loss_map/N87_ac_dc_wide.mat');
         data_bias = load('loss_map/N87_ac_dc_wide.mat');
-    case 95
+    case 'N95'
         rho = 4900;
         kappa = 9.5;
         data_map = load('loss_map/N95_ac.mat');
         data_bias = load('loss_map/N87_ac_dc.mat');
-    case 97
+    case 'N97'
         rho = 4850;
         kappa = 7.5;
         data_map = load('loss_map/N97_ac.mat');
@@ -116,4 +112,8 @@ param.extrap_bias.T = [25.0 100.0];
 % interpolate losses
 material.interp.P_mat = get_loss_map(data_map, data_bias, param, material.interp); % loss matrix
    
+% assign
+id = get_map_str_to_int(id);
+data = struct('id', id, 'material', material);
+
 end

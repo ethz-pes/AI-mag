@@ -117,9 +117,9 @@ fom_limit.fact_rms = struct('min', 0.0, 'max', Inf);
 %    - winding_id: id of the winding material
 %    - core_id: id of the core material
 %    - iso_id: id of the insulation material
-material.winding_id = 100;
-material.core_id = 87.2;
-material.iso_id = 1;
+material.winding_id = get_map_str_to_int('100um');
+material.core_id = get_map_str_to_int('N87_meas');
+material.iso_id = get_map_str_to_int('default');
 
 % assign the data
 data_vec.other = other;

@@ -11,14 +11,22 @@ function value_eval = get_integer_map(idx, value, idx_eval)
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
-% map value
-value_eval_tmp = interp1(idx, value, idx_eval, 'linear');
+% check that the mapping is possible
+assert(length(idx)==length(value), 'invalid mapping')
 
-% round indices
-value_eval = round(value_eval_tmp);
+%init
+is_ok_eval = false(1, length(idx_eval));
+value_eval = zeros(1, length(idx_eval));
 
-% check data
-assert(all(abs(value_eval_tmp-value_eval)<eps), 'invalid data')
-assert(all(isfinite(value_eval)), 'invalid data')
+% map
+for i=1:length(idx)
+    idx_tmp = idx_eval==idx(i);
+    
+    is_ok_eval(idx_tmp) = true;
+    value_eval(idx_tmp) = value(i);
+end
+
+% check that the mapping is complete
+assert(all(is_ok_eval==true), 'invalid mapping')
 
 end
