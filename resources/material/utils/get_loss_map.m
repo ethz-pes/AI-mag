@@ -31,7 +31,7 @@ if use_bias==true
     
     % DC bias correction factor
     fact = get_interp_bias(data_bias, f_mat, B_ac_peak_mat, 1.*B_dc_mat, T_mat, extrap_bias);
-    
+        
     % apply DC bias correction factor
     P_mat = fact.*P_mat;
 else

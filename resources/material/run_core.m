@@ -10,7 +10,7 @@ addpath(genpath('utils'))
 close('all');
 
 % unique id
-id_vec = [49 87.1 87.2 87.3 95 97];
+id_vec = [49 87.1 87.2 95 97];
 
 % parse data
 data = {};
@@ -24,6 +24,7 @@ type = 'core';
 
 % save material
 save('data/core_data.mat', '-v7.3', 'data', 'type')
+save('../../source_input/material/core_data.mat', '-v7.3', 'data', 'type')
 
 end
 
@@ -49,11 +50,6 @@ switch id
         data_map = load('loss_map/N87_ac.mat');
         data_bias = load('loss_map/N87_ac_dc.mat');
     case 87.2
-        rho = 4850;
-        kappa = 7.0;
-        data_map = load('loss_map/N87_ac_dc.mat');
-        data_bias = load('loss_map/N87_ac_dc.mat');
-    case 87.3
         rho = 4850;
         kappa = 7.0;
         data_map = load('loss_map/N87_ac_dc_wide.mat');
@@ -113,8 +109,8 @@ param.extrap_map.T = [];
 %    - T: limit the temperature for extrapolation..
 param.extrap_bias.fact = [1.0 4.0];
 param.extrap_bias.f = [10e3 270e3];
-param.extrap_bias.B_ac_peak = [10e-3 320e-3];
-param.extrap_bias.B_dc = [10e-3 300e-3];
+param.extrap_bias.B_ac_peak = [15e-3 320e-3];
+param.extrap_bias.B_dc = [15e-3 320e-3];
 param.extrap_bias.T = [25.0 100.0];
 
 % interpolate losses

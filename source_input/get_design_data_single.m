@@ -48,8 +48,8 @@ function data_vec = get_data_vec()
 %    - fill_pack: fill factor of the packing (not of the litz wire)
 geom.x_window = 10.15e-3;
 geom.y_window = 37.40e-3;
-geom.t_core = 17.20e-3;
-geom.z_core = 21.00e-3;
+geom.t_core = 17.00e-3;
+geom.z_core = 20.80e-3;
 geom.d_gap = 0.40e-3;
 geom.n_turn = 16;
 geom.fill_pack = 0.7;
@@ -118,7 +118,7 @@ fom_limit.fact_rms = struct('min', 0.0, 'max', Inf);
 %    - core_id: id of the core material
 %    - iso_id: id of the insulation material
 material.winding_id = 100;
-material.core_id = 87.3;
+material.core_id = 87.2;
 material.iso_id = 1;
 
 % assign the data
