@@ -21,6 +21,7 @@ type = 'core';
 
 % save material
 save('data/core_data.mat', '-v7.3', 'data', 'type')
+save('../../source_input/material/core_data.mat', '-v7.3', 'data', 'type')
 
 end
 
@@ -36,26 +37,36 @@ function data = get_data(id)
 % get values
 switch id
     case 'N49'
+        % loss map (without DC bias) from datasheet
+        % DC bias correction factor from N87 measurements (ETH Zurich, Power Electronic Systems Laboratory) 
         rho = 4750;
         kappa = 12.5;
         data_map = load('loss_map/N49_ac.mat');
         data_bias = load('loss_map/N87_ac_dc.mat');
     case 'N87'
+        % loss map (without DC bias) from datasheet
+        % DC bias correction factor from N87 measurements (ETH Zurich, Power Electronic Systems Laboratory)
         rho = 4850;
         kappa = 7.0;
         data_map = load('loss_map/N87_ac.mat');
         data_bias = load('loss_map/N87_ac_dc.mat');
     case 'N87_meas'
+        % N87 combined loss map
+        % Combine all the best data available at ETH Zurich, Power Electronic Systems Laboratory
         rho = 4850;
         kappa = 7.0;
-        data_map = load('loss_map/N87_ac_dc_wide.mat');
-        data_bias = load('loss_map/N87_ac_dc_wide.mat');
+        data_map = load('loss_map/N87_ac_dc_combine.mat');
+        data_bias = load('loss_map/N87_ac_dc_combine.mat');
     case 'N95'
+        % loss map (without DC bias) from datasheet
+        % DC bias correction factor from N87 measurements (ETH Zurich, Power Electronic Systems Laboratory)
         rho = 4900;
         kappa = 9.5;
         data_map = load('loss_map/N95_ac.mat');
         data_bias = load('loss_map/N87_ac_dc.mat');
     case 'N97'
+        % loss map (without DC bias) from datasheet
+        % DC bias correction factor from N87 measurements (ETH Zurich, Power Electronic Systems Laboratory)
         rho = 4850;
         kappa = 7.5;
         data_map = load('loss_map/N97_ac.mat');
@@ -72,7 +83,7 @@ material.param.kappa = kappa; % cost per mass
 material.param.fact_igse = 0.1; % factor for computing alpha and beta for IGSE (gradient in log scale)
 material.param.B_sat_max = 320e-3; % saturation flux density
 material.param.P_max = 1000e3; % maximum loss density
-material.param.P_scale = 1.1; % scaling factor for losses
+material.param.P_scale = 1.05; % scaling factor for losses (5% due to flux sharing on toroid)
 material.param.T_max = 130.0; % maximum temperature
 material.param.c_offset = 0.3; % cost offset
 
@@ -104,9 +115,9 @@ param.extrap_map.T = [];
 %    - B_dc: limit the DC flux density for extrapolation
 %    - T: limit the temperature for extrapolation..
 param.extrap_bias.fact = [1.0 4.0];
-param.extrap_bias.f = [10e3 270e3];
-param.extrap_bias.B_ac_peak = [15e-3 320e-3];
-param.extrap_bias.B_dc = [15e-3 320e-3];
+param.extrap_bias.f = [10e3 300e3];
+param.extrap_bias.B_ac_peak = [20e-3 320e-3];
+param.extrap_bias.B_dc = [20e-3 320e-3];
 param.extrap_bias.T = [25.0 100.0];
 
 % interpolate losses
