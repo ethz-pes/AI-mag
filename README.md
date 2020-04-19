@@ -43,7 +43,7 @@ The following performances are achieved:
 
 The following code structure is considered:
 * [resources](resources) - Different resources which are not directly used in the toolbox
-* [source_ann](source_ann) - ANN library for regression/fitting (standalone code with examples)
+* [source_ann](source_ann) - ANN library for regression/fitting (standalone code, see [README.md](source_ann/README.md))
 * [source_inductor](source_inductor) - Source code for the FEM/ANN inductor design tool
 * [source_input](source_input) - Input data and parameters defined by the user
 * [source_input](source_input) - Input data and parameters defined by the user
@@ -119,13 +119,13 @@ The following softwares were used to generate resources but are not required to 
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-MATLAB                          90           1564           4539           4370
+MATLAB                          92           1583           4619           4387
 Python                           8            365            446            450
-Markdown                         4             53              0            182
+Markdown                         4             61              0            220
 DOS Batch                        3              9              0             34
 Bourne Shell                     3              9              9             21
 -------------------------------------------------------------------------------
-SUM:                           108           2000           4994           5057
+SUM:                           110           2027           5074           5112
 -------------------------------------------------------------------------------
 ```
 
@@ -149,12 +149,17 @@ How fast is the code, do I need a powerful machine?
 * The code can compute tens of thousands inuductor design per second.
 * The training of the ANN takes some minutes.
 * The generation of the FEM training/testing sets takes some tens of hours.
-* The following laptop is used: Intel Core i7-8650U @ 1.90GHz / 16GB RAM
+* The following mid-range laptop is used: Intel Core i7-8650U @ 1.90GHz / 16GB RAM
 
 Can this code run with GNU Octave?
 * The code is not compatible with GNU Octave.
 * The ANN library is not compatible with GNU Octave.
 * The COMSOL MATLAB Livelink is not compatible with GNU Octave.
+
+Why the tool in MATLAB and Python and not only in Python?
+* Mainly due to the COMSOL MATLAB Livelink which is great on MATLAB
+* The MATLAB ANN engine is also simpler to begin than Keras/TensorFlow
+* Due to legacy code on MATLAB (some inductor models)
 
 ## Author
 
