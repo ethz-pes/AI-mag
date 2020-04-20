@@ -21,7 +21,6 @@ type = 'core';
 
 % save material
 save('data/core_data.mat', '-v7.3', 'data', 'type')
-save('../../source_input/material/core_data.mat', '-v7.3', 'data', 'type')
 
 end
 
@@ -41,6 +40,7 @@ switch id
         % DC bias correction factor from N87 measurements (ETH Zurich, Power Electronic Systems Laboratory) 
         rho = 4750;
         kappa = 12.5;
+        use_bias = true; 
         data_map = load('loss_map/N49_ac.mat');
         data_bias = load('loss_map/N87_ac_dc.mat');
     case 'N87'
@@ -48,6 +48,7 @@ switch id
         % DC bias correction factor from N87 measurements (ETH Zurich, Power Electronic Systems Laboratory)
         rho = 4850;
         kappa = 7.0;
+        use_bias = true;
         data_map = load('loss_map/N87_ac.mat');
         data_bias = load('loss_map/N87_ac_dc.mat');
     case 'N87_meas'
@@ -55,6 +56,7 @@ switch id
         % Combine all the best data available at ETH Zurich, Power Electronic Systems Laboratory
         rho = 4850;
         kappa = 7.0;
+        use_bias = false;
         data_map = load('loss_map/N87_ac_dc_combine.mat');
         data_bias = load('loss_map/N87_ac_dc_combine.mat');
     case 'N95'
@@ -62,6 +64,7 @@ switch id
         % DC bias correction factor from N87 measurements (ETH Zurich, Power Electronic Systems Laboratory)
         rho = 4900;
         kappa = 9.5;
+        use_bias = true;
         data_map = load('loss_map/N95_ac.mat');
         data_bias = load('loss_map/N87_ac_dc.mat');
     case 'N97'
@@ -69,6 +72,7 @@ switch id
         % DC bias correction factor from N87 measurements (ETH Zurich, Power Electronic Systems Laboratory)
         rho = 4850;
         kappa = 7.5;
+        use_bias = true;
         data_map = load('loss_map/N97_ac.mat');
         data_bias = load('loss_map/N87_ac_dc.mat');
     otherwise
@@ -94,7 +98,7 @@ material.interp.B_dc_vec = 0e-3:10e-3:320e-3; % DC flux density vector
 material.interp.T_vec = 20:10:140;  % temperature vector
 
 % use (or not) the a correction factor for the DC bias
-param.use_bias = true; 
+param.use_bias = use_bias;
 
 % extrapolation for the loss map
 %    - P: limit on the extrapolated losses
