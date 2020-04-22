@@ -17,7 +17,7 @@ disp_fom_sub('out_nrm', self.var_out, self.fom.out_nrm, 'set')
 disp_fom_sub('out_ann', self.var_out, self.fom.out_ann, 'set')
 
 % display and plot the error between two datasets
-disp_fom_sub('out_nrm / out_ref', self.var_out, self.fom.err_ann_nrm, 'err');
+disp_fom_sub('out_nrm / out_ref', self.var_out, self.fom.err_nrm_ref, 'err');
 disp_fom_sub('out_ann / out_ref', self.var_out, self.fom.err_ann_ref, 'err');
 
 end

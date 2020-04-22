@@ -17,7 +17,7 @@ self.fom.out_nrm = get_fom_set(self.var_out, self.out_nrm, self.idx_train, self.
 self.fom.out_ann = get_fom_set(self.var_out, self.out_ann, self.idx_train, self.idx_test);
 
 % get error metrics
-self.fom.err_ann_nrm = get_fom_err(self.var_out, self.out_nrm, self.out_ref, self.idx_train, self.idx_test);
+self.fom.err_nrm_ref = get_fom_err(self.var_out, self.out_nrm, self.out_ref, self.idx_train, self.idx_test);
 self.fom.err_ann_ref = get_fom_err(self.var_out, self.out_ann, self.out_ref, self.idx_train, self.idx_test);
 
 end
@@ -48,7 +48,6 @@ for i=1:length(var)
 end
 
 end
-
 
 function fom = get_fom_err(var, data_cmp, data_ref, idx_train, idx_test)
 % Compute the error between two datasets (avg, rms, min, max, std_dev).
