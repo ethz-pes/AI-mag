@@ -68,9 +68,9 @@ assert(islogical(is_valid_tmp), 'invalid predict data')
 assert(isstruct(out_nrm_tmp), 'invalid predict data')
 
 % evaluation of the regression
-[is_valid_tmp, out_nrm_tmp] = obj.predict_ann(n_sol, inp, out_nrm);
+[is_valid_tmp, out_ann_tmp] = obj.predict_ann(n_sol, inp, out_nrm);
 assert(islogical(is_valid_tmp), 'invalid predict data')
-assert(isstruct(out_nrm_tmp), 'invalid predict data')
+assert(isstruct(out_ann_tmp), 'invalid predict data')
 
 % delete the object
 obj.delete();
