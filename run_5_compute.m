@@ -4,7 +4,7 @@ function run_5_compute()
 %    Load the ANN/regression obtained with the FEM/ANN workflow.
 %    Sweep different inductor designs.
 %    Compute the inductor properties, thermal, losses, etc.
-%    
+%
 %    Use the ANN/regression are used for predicting:
 %        - the thermal model (hotspot and average temperatures)
 %        - the magnetic model (inductance, current density, flux density, and magnetic field)

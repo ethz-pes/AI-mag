@@ -7,7 +7,7 @@ classdef ParetoDisplay < handle
     %    Manage the text data for the clipboard with 'GuiClipboard'.
     %
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
-
+    
     %% properties
     properties (SetAccess = private, GetAccess = public)
         n_sol % int: number of provided solutions
@@ -31,10 +31,10 @@ classdef ParetoDisplay < handle
             %        fct_data (fct): function for getting the designs be plotted and getting the user defined custom figures of merit
             %        plot_param (struct): definition of the different plots
             %        text_param (struct): definition of variable to be shown in the text field
-
+            
             % get the designs be to plotted and the user defined custom figures of merit
             [is_plot, data_fom] = fct_data(length(id_design), fom, operating);
-                        
+            
             % assign the data
             self.n_sol = length(id_design);
             self.n_plot = nnz(is_plot);
@@ -101,7 +101,7 @@ classdef ParetoDisplay < handle
     end
     
     %% private
-    methods (Access = private)        
+    methods (Access = private)
         function plot_data_plt = get_plot_data(self, plot_param_plt)
             % Get the GUI data for a specific plot.
             %
@@ -110,7 +110,7 @@ classdef ParetoDisplay < handle
             %
             %    Returns:
             %        plot_data_plt (struct): data for plotting a specific Pareto front
-
+            
             % set the data (x, y, and color axis)
             [plot_data_plt.x_label, plot_data_plt.x_lim, plot_data_plt.x_data] = self.get_axis(plot_param_plt.x_var, plot_param_plt.x_lim);
             [plot_data_plt.y_label, plot_data_plt.y_lim, plot_data_plt.y_data] = self.get_axis(plot_param_plt.y_var, plot_param_plt.y_lim);
@@ -118,7 +118,7 @@ classdef ParetoDisplay < handle
             
             % save the id of the plots
             plot_data_plt.id_data = self.id_design(self.is_plot);
-                        
+            
             % axis type
             plot_data_plt.x_scale = plot_param_plt.x_scale;
             plot_data_plt.y_scale = plot_param_plt.y_scale;
@@ -142,7 +142,7 @@ classdef ParetoDisplay < handle
             %        label (str): axis label
             %        lim (vector): axis limit (scaled)
             %        data (vector): vector with the data along this axis
-
+            
             % extract the variable
             data_fom_tmp = self.data_fom.(var);
             
@@ -151,7 +151,7 @@ classdef ParetoDisplay < handle
             lim = data_fom_tmp.scale.*lim;
             label = sprintf('%s [%s]', data_fom_tmp.name, data_fom_tmp.unit);
         end
-                
+        
         function text_data_fom_tmp = get_text(self, text_param_tmp, idx)
             % Create a text block with a specified format for the selected design.
             %

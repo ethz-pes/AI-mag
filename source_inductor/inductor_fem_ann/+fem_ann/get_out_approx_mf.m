@@ -40,7 +40,7 @@ J_norm = J_tot./I_winding;
 % get the magnetic field in the winding (normalized per current unit), for the HF winding losses
 %    - no good simple analytical approximation exists
 %    - due to the air gap fringing this is a complex problem
-%    - use a simple estimation of the field (by M. Leibl) 
+%    - use a simple estimation of the field (by M. Leibl)
 %    - details: M. Leibl, "Three-Phase PFC Rectifier and High-Voltage Generator", 2017
 H_rms_x = I_winding./(2.*sqrt(3).*x_window);
 H_rms_y = I_winding./(2.*sqrt(3).*y_window);

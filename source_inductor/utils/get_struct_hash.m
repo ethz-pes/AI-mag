@@ -51,7 +51,7 @@ assert(numel(data)==1, 'invalid data')
 
 % hash field and values, ignore order of fields
 field = sort(fieldnames(data));
-for i=1:length(field)    
+for i=1:length(field)
     % hash field name
     hash = get_hash_value(hash, engine, field{i});
     

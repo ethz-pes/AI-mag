@@ -37,7 +37,7 @@ const.d_iso_max = 1.5e-3; % maximum insulation distance
 const.d_iso_fact = 0.1; % insulation distance relative to the window size
 
 % core corner fillet radius, relative relative to the air gap length, with boundaries
-const.r_fill_min = 0.25e-3; % minimum fillet radius 
+const.r_fill_min = 0.25e-3; % minimum fillet radius
 const.r_fill_max = 2.5e-3; % maximum fillet radius
 const.r_fill_fact = 0.05; % fillet radius relative relative to the air gap length
 

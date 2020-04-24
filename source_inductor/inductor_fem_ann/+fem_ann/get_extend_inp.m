@@ -147,7 +147,7 @@ fact_window = inp.fact_window;
 fact_core_window = inp.fact_core_window;
 fact_curve = inp.fact_curve;
 
-% solve the equation, get area product 
+% solve the equation, get area product
 %    - this constrain problem is solved with Mathematica
 %    - the solution is exported to MATLAB
 %    - the Mathematica source file is 'resources/geom_volume.nb'

@@ -23,7 +23,7 @@ function run_sub(model_type)
 %    Parameters:
 %        model_type (str): name of the physics to be solved
 
-% path of the folder where the results are stored 
+% path of the folder where the results are stored
 folder_fem = ['data/fem_' model_type];
 
 % path of the file to be written with the assembled data

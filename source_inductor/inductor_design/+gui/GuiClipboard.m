@@ -6,7 +6,7 @@ classdef GuiClipboard < handle
     %    This class manage text but do not access the operating system clipboard.
     %
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
-
+    
     %% properties
     properties (SetAccess = private, GetAccess = public)
         txt % str: current text in the memory
@@ -19,7 +19,7 @@ classdef GuiClipboard < handle
             %
             %    Init the clipboard.
             %    Text is empty.
-
+            
             self.txt = [];
         end
         

@@ -38,7 +38,7 @@ classdef IsoData < handle
             
             % map each sample to an array index corresponding to the material
             idx = get_integer_map(id_vec, 1:length(id_vec), id);
-                        
+            
             param_tmp = get_struct_assemble(param_tmp);
             
             % assign the data

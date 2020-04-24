@@ -19,7 +19,7 @@ classdef AnnManager < handle
     %        - 'matlab_ga': regression with genetic algorithm, for benchmark with ANN ('AnnEngineMatlabGa')
     %
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
-
+    
     %% properties / immutable
     properties (SetAccess = immutable, GetAccess = public)
         var_inp % cell: description of the input variables

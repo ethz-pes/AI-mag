@@ -23,7 +23,7 @@ elseif length(range)==2
     idx = data<v_min;
     data(idx) = v_min;
 else
-   error('invalid range') 
+    error('invalid range')
 end
 
 end

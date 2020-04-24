@@ -4,7 +4,7 @@ function master_single(file_single, file_export, eval_ann, data_compute)
 %    Load the ANN/regression obtained with the FEM/ANN workflow.
 %    Compute the specified design.
 %    Show the design with a GUI.
-%    
+%
 %    Use the ANN/regression are used for predicting:
 %        - the thermal model (hotspot and average temperatures)
 %        - the magnetic model (inductance, current density, flux density, and magnetic field)

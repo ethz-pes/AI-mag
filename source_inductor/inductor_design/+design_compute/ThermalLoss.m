@@ -16,7 +16,7 @@ classdef ThermalLoss < handle
     %        - summary: the trade-off is massively in favour of vector iteration
     %
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
-
+    
     %% properties
     properties (SetAccess = private, GetAccess = public)
         iter % struct: contains the control parameters
@@ -31,8 +31,8 @@ classdef ThermalLoss < handle
             %    Parameters:
             %        iter (struct): contains the control parameters
             %        fct (struct): contains the function handle for the thermal and loss models
-
-            self.iter = iter;            
+            
+            self.iter = iter;
             self.fct = fct;
         end
         
@@ -60,7 +60,7 @@ classdef ThermalLoss < handle
             end
         end
     end
-                
+    
     %% private
     methods (Access = private)
         function [operating, should_stop, is_valid, P_vec, T_vec] = get_iter_sub(self, operating, i_iter, P_vec, T_vec)
@@ -100,14 +100,14 @@ classdef ThermalLoss < handle
             % check the iteration
             ok_iter = i_iter>=self.iter.n_iter;
             ok_data = is_valid_T&is_valid_P;
-
+            
             % check the validity of the samples
             is_valid = (ok_data==true)&(ok_convergence==true);
             
             % check if the iteration should continue
             should_stop = (ok_iter==true)||all((ok_data==false)|(ok_convergence==true));
         end
-                
+        
         function [vec, ok_tol] = check_convergence(self, i_iter, vec_old, vec_new, update)
             % Check the convergence and update the matrices (with relaxation).
             %

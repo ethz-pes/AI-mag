@@ -307,7 +307,7 @@ classdef WindingData < handle
             
             % total fill factor (litz wire and packing)
             fill = self.param.fill_litz.*self.fill_pack;
-
+            
             % correct the losses with a factor and the winding fill factor
             fact_tmp = self.param.P_scale_lf./(fill.*sigma);
             
@@ -328,7 +328,7 @@ classdef WindingData < handle
             
             % total fill factor (litz wire and packing)
             fill = self.param.fill_litz.*self.fill_pack;
-
+            
             % proximity loss factor
             gr = (pi.^2.*self.param.d_strand.^6)./(128.*delta.^4);
             

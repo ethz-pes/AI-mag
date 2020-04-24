@@ -20,9 +20,9 @@ assert(isstruct(struct_in)==1, 'invalid data')
 % handle data
 struct_out = struct();
 field = fieldnames(struct_in);
-for i=1:length(field)    
+for i=1:length(field)
     struct_in_tmp = [struct_in.(field{i})];
-        
+    
     if isstruct(struct_in_tmp)
         % if struct, recursive call
         struct_out.(field{i}) = get_struct_assemble(struct_in_tmp);

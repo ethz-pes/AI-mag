@@ -62,7 +62,7 @@ function inp = get_mesh(inp)
 %    Returns:
 %        inp (struct): struct of vectors with the data
 
-% get the characteristic dimensions of the different bodies 
+% get the characteristic dimensions of the different bodies
 d_char_all = max([inp.x_box inp.y_box inp.z_box]);
 d_char_core = min([inp.t_core inp.z_core]);
 d_char_winding = min([inp.x_window inp.y_window inp.z_core]);

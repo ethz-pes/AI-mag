@@ -70,7 +70,7 @@ switch var.type
         % make the variable transformation of the bounds
         lb = get_var_trf(var.lb, var.var_trf, 'scale');
         ub = get_var_trf(var.ub, var.var_trf, 'scale');
-
+        
         % span the data in the transformed coordinate
         switch var.span
             case 'linear'

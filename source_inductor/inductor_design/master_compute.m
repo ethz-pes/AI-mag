@@ -4,7 +4,7 @@ function master_compute(file_compute, file_export, sweep, n_split, fct, eval_ann
 %    Load the ANN/regression obtained with the FEM/ANN workflow.
 %    Sweep different inductor designs.
 %    Compute the inductor properties, thermal, losses, etc.
-%    
+%
 %    Use the ANN/regression are used for predicting:
 %        - the thermal model (hotspot and average temperatures)
 %        - the magnetic model (inductance, current density, flux density, and magnetic field)
@@ -92,7 +92,7 @@ function [idx_chunk, n_sol, n_compute, fom, operating] = compute_chunk(var, idx_
 % Compute a chunk of vectorized inductor designs
 %
 %    A two steps workflow is used:
-%        - first, only the figures of merit are extracted (without evaluating the operating points) 
+%        - first, only the figures of merit are extracted (without evaluating the operating points)
 %        - filter the designs
 %        - then,  the figures of merit and the of the operating points are extracted
 %        - filter the designs

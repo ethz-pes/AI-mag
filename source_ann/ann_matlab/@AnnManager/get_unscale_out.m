@@ -26,7 +26,7 @@ for i=1:length(self.var_out)
     scale_tmp = out_nrm.(name_tmp);
     value_tmp = out_mat(i,:);
     
-    % denormalize and reverse transform 
+    % denormalize and reverse transform
     value_tmp = AnnManager.get_var_norm_value(value_tmp, norm_param_tmp, 'unscale');
     value_tmp = AnnManager.get_var_trf(value_tmp, var_trf_tmp, 'unscale');
     

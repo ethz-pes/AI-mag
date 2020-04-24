@@ -7,13 +7,13 @@ classdef GuiScatter < handle
     %    Callback when a point is selected with the mouse.
     %
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
-
+    
     %% properties
     properties (SetAccess = private, GetAccess = public)
         ax % axes: handle to the figure axis
         panel % uipanel: handle to uipanel containing the feature
         plot_data % struct: data and axis setup
-        callback % fct: callback when a point is selected with the mouse 
+        callback % fct: callback when a point is selected with the mouse
         h_pts % obj: handle of the scatter plot
         h_select % obj: handle of the scatter plot
         idx_perm % vector: permutation for keeping track of the plot order
@@ -95,7 +95,7 @@ classdef GuiScatter < handle
             %
             %    Parameters:
             %        id (int): id of the point to be highlighted
-
+            
             % get the vector
             id_vec = self.plot_data.id_data;
             x_vec = self.plot_data.x_data;
@@ -133,7 +133,7 @@ classdef GuiScatter < handle
             %        - ascending color value order
             %        - descending color value order
             %        - random order
-
+            
             % extract the color data and the order information
             c_vec = self.plot_data.c_data;
             order = self.plot_data.order;
@@ -159,8 +159,8 @@ classdef GuiScatter < handle
             %    Create axis.
             %    Manage toolbar.
             %    Manage format.
-
-                        % create axis
+            
+            % create axis
             self.ax = axes(self.panel);
             set(self.ax, 'Box', 'on');
             set(self.ax, 'FontSize', 10);
@@ -209,7 +209,7 @@ classdef GuiScatter < handle
             %    Make the plot.
             %    Set up the mouse click callback.
             %    Set up the plot to highlight a point.
-
+            
             % get the data (permutate them)
             x_vec = self.plot_data.x_data(self.idx_perm);
             y_vec = self.plot_data.y_data(self.idx_perm);
@@ -243,7 +243,7 @@ classdef GuiScatter < handle
             %    Parameters:
             %        obj (obj): scatter plot handle
             %        event (event): mouse click event
-
+            
             % check the object and event
             assert(isa(obj, 'matlab.graphics.chart.primitive.Scatter'), 'invalid click')
             assert(isa(event, 'matlab.graphics.eventdata.Hit'), 'invalid click')
@@ -252,7 +252,7 @@ classdef GuiScatter < handle
             currentPoint = get(self.ax, 'CurrentPoint');
             x_select = currentPoint(1,1);
             y_select = currentPoint(1,2);
-                        
+            
             % get the size of the axis in pixels
             pos = getpixelposition(self.ax);
             px_x = pos(3);
@@ -269,7 +269,7 @@ classdef GuiScatter < handle
             x_scale = self.plot_data.x_scale;
             y_scale = self.plot_data.y_scale;
             
-            % get the deviation in pixel between the click and the points 
+            % get the deviation in pixel between the click and the points
             d_px_x_vec = self.get_deviation(x_select, x_vec, x_lim, px_x, x_scale);
             d_px_y_vec = self.get_deviation(y_select, y_vec, y_lim, px_y, y_scale);
             
@@ -300,7 +300,7 @@ classdef GuiScatter < handle
             %        scale (str): axis type ('lin' or 'lin')
             %
             %    Returns:
-
+            
             % compute the distance between the click and the points and the axis span
             switch scale
                 case 'lin'
@@ -322,7 +322,7 @@ classdef GuiScatter < handle
             %
             %    Parameters:
             %        position (vector): position of the panel (normalized or pixels units)
-
+            
             if all(position>=0)&&all(position<=1)
                 set(self.panel, 'Units', 'normalized');
                 set(self.panel, 'Position', position);

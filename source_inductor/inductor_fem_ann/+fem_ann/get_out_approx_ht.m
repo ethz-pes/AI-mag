@@ -51,7 +51,7 @@ R_conv_winding_exposed = 1./(h_exposed.*S_winding_exposed);
 R_conv_winding_internal = 1./(h_internal.*S_winding_internal);
 R_extract_core = 1./((1./(R_conv_winding_exposed+R_iso_winding_exposed))+(1./(R_conv_winding_internal+R_iso_winding_internal)));
 
-% solve the linear thermal circuit 
+% solve the linear thermal circuit
 %    - this linear circuit is solved with Mathematica
 %    - the solution is exported to MATLAB
 %    - the Mathematica source file is 'resources/thermal_circuit.nb'

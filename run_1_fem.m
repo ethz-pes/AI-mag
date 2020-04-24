@@ -34,7 +34,7 @@ function run_sub(model_type)
 % path of the file containing the constant data
 file_init = 'data/init.mat';
 
-% path of the folder where the results are stored 
+% path of the folder where the results are stored
 folder_fem = ['data/fem_' model_type];
 
 % run the simulations with a regular grid with all the extreme cases

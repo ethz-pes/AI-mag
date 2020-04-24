@@ -6,7 +6,7 @@ function run_6_plot()
 %    Design can be selected with the mouse.
 %    Allow a multi-objective data exploration.
 %    Details on a specific design (geometry, operating points, etc.).
-%    
+%
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 init_toolbox();

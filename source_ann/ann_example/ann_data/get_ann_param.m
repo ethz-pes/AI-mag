@@ -78,10 +78,10 @@ ann_info.type = ann_type;
 % specific data used by the different algoritms
 switch ann_type
     case 'matlab_ann'
-         % function for creating the ANN
+        % function for creating the ANN
         ann_info.fct_model = @fct_model;
         
-         % function for training the ANN
+        % function for training the ANN
         ann_info.fct_train = @fct_train;
     case 'python_ann'
         % hostname of the Python ANN server
@@ -92,7 +92,7 @@ switch ann_type
         
         % timeout for Python ANN server requests
         ann_info.timeout = 240;
-
+        
         % tag to be passed for the training/fitting method
         %    activation: name of the activation function to be used
         %    n_layer: number of layers of the ANN
@@ -100,7 +100,7 @@ switch ann_type
         ann_info.tag_train.activation = 'relu';
         ann_info.tag_train.n_layer = 6;
         ann_info.tag_train.n_neuron = 64;
-case 'matlab_lsq'
+    case 'matlab_lsq'
         % options for the MATLAB 'lsqnonlin' function
         ann_info.options = struct(...
             'Display', 'off',...

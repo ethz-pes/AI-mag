@@ -17,7 +17,7 @@ classdef AnnFem < handle
     %        - Get the analytical solution without the ANN/regression (mainly for verification)
     %
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
-
+    
     %% properties
     properties (SetAccess = private, GetAccess = public)
         const % struct: contain the constant data for the model
@@ -50,7 +50,7 @@ classdef AnnFem < handle
             self.geom_type = geom_type;
             self.eval_type = eval_type;
             self.const = data_fem_ann.const;
-
+            
             % create the regression engine and load the data
             [self.file_model_mf, self.ann_manager_mf_obj] = self.get_ann_manager(data_fem_ann.ann_mf, 'mf');
             [self.file_model_ht, self.ann_manager_ht_obj] = self.get_ann_manager(data_fem_ann.ann_ht, 'ht');
@@ -65,7 +65,7 @@ classdef AnnFem < handle
             %    Parameters:
             %        n_sol (int): number of samples of the given geometry
             %        geom (struct): data of the given geometry
-
+            
             self.n_sol = n_sol;
             self.geom = geom;
             self.is_geom = true;
@@ -94,7 +94,7 @@ classdef AnnFem < handle
             %    Returns:
             %        is_valid (vector): validity of the different evaluated samples
             %        fom (struct): data with the ANN/regression simulation results
-
+            
             % check the state
             assert(self.is_geom==true, 'invalid state')
             
@@ -111,7 +111,7 @@ classdef AnnFem < handle
             %    Returns:
             %        is_valid (vector): validity of the different evaluated samples
             %        fom (struct): data with the ANN/regression simulation results
-
+            
             % check the state
             assert(self.is_geom==true, 'invalid state')
             
@@ -131,7 +131,7 @@ classdef AnnFem < handle
             %    Returns:
             %        file_model (str): path of the COMSOL file to be used for the simulations
             %        ann_manager_obj (AnnManager): object managing the ANN/regression
-
+            
             % create ANN object
             assert(strcmp(data.model_type, model_type), 'invalid type')
             ann_manager_obj = AnnManager(data.ann_input);
@@ -140,7 +140,7 @@ classdef AnnFem < handle
             % get file name for COMSOL
             file_model = data.file_model;
         end
-
+        
         function [is_valid, fom] = get_model_type(self, excitation, model_type)
             % Get the ANN/regression simulation results.
             %
@@ -151,7 +151,7 @@ classdef AnnFem < handle
             %    Returns:
             %        is_valid (vector): validity of the different evaluated samples
             %        fom (struct): data with the ANN/regression simulation results
-
+            
             % get data, merge the geometry and the provided excitation
             inp = get_struct_merge(self.geom, excitation);
             
@@ -172,7 +172,7 @@ classdef AnnFem < handle
             %    Returns:
             %        is_valid (vector): validity of the different evaluated samples
             %        inp (struct): merged data with additional info
-
+            
             % set the type of the excitation
             switch model_type
                 case 'none'
@@ -199,7 +199,7 @@ classdef AnnFem < handle
             %    Returns:
             %        is_valid (vector): validity of the different evaluated samples
             %        fom (struct): data with the ANN/regression simulation results
-
+            
             % get the selected model
             switch model_type
                 case 'mf'
@@ -211,7 +211,7 @@ classdef AnnFem < handle
                 otherwise
                     error('invalid type')
             end
-
+            
             % get the a first solution without ANN/regression
             switch self.eval_type
                 case 'fem'
@@ -219,7 +219,7 @@ classdef AnnFem < handle
                     for i=1:length(self.n_sol)
                         inp_tmp = get_struct_filter(inp, i);
                         fom(i) = fem_ann.get_out_fem(file_model, model_type, inp_tmp);
-                    end                    
+                    end
                     fom = get_struct_assemble(fom);
                 case {'ann', 'approx'}
                     % analytical approximation supports vector evaluation

@@ -30,7 +30,7 @@ classdef CoreData < handle
             %        material (struct): definition of the materials and the corresponding unique id
             %        id (vector): material id of each sample
             %        volume (vector): volume of the material for each sample
-
+            
             % check that the data are core data
             assert(strcmp(material.type, 'core'), 'invalid length')
             
@@ -68,7 +68,7 @@ classdef CoreData < handle
             %
             %    Returns:
             %        c (vector): cost of the different samples
-
+            
             % cost per volume
             lambda = self.param.rho.*self.param.kappa;
             
@@ -82,7 +82,7 @@ classdef CoreData < handle
             %
             %    Returns:
             %        T_max (vector): maximum operating temperature of the different samples
-
+            
             T_max = self.param.T_max;
         end
         
@@ -113,7 +113,7 @@ classdef CoreData < handle
             %    Returns:
             %        is_valid (vector): if the operating points are valid (or not)
             %        P (vector): losses of each sample (density multiplied with volume)
-
+            
             % interpolate the loss density
             [is_valid, P] = self.get_interp(f, B_ac_peak, B_dc, T);
             
@@ -168,7 +168,7 @@ classdef CoreData < handle
             %
             %    Parameters:
             %        interp (struct): interpolation data
-
+            
             % extract the data
             f_vec = interp.f_vec;
             B_ac_peak_vec = interp.B_ac_peak_vec;
@@ -191,10 +191,10 @@ classdef CoreData < handle
             %        id_vec (vector): id of the provided materials
             %        id (vector): material id of each sample
             %        param_tmp (array): array of structs with the constant properties of the provided materials
-
+            
             % map each sample to an array index corresponding to the material
             self.idx = get_integer_map(id_vec, 1:length(id_vec), id);
-                                   
+            
             % merge the constant properties
             param_tmp = get_struct_assemble(param_tmp);
             
@@ -212,7 +212,7 @@ classdef CoreData < handle
             %
             %    Returns:
             %        is_valid (vector): if the operating points are valid (with the additional checks)
-
+            
             % extract the limit
             P_max = self.param.P_max;
             B_sat_max = self.param.B_sat_max;
@@ -238,7 +238,7 @@ classdef CoreData < handle
             %        T (vector): operating temperature
             %
             %    Returns:
-            %        is_valid (vector): if the Steinmetz parameters are valid (or not) 
+            %        is_valid (vector): if the Steinmetz parameters are valid (or not)
             %        k (vector): Steinmetz parameter k
             %        alpha (vector): Steinmetz parameter alpha
             %        beta (vector): Steinmetz parameter beta
@@ -274,7 +274,7 @@ classdef CoreData < handle
             beta = log(P_B_ac_peak_1./P_B_ac_peak_2)./log(B_ac_peak_1./B_ac_peak_2);
             k = P_ref./((f.^alpha).*(B_ac_peak.^beta));
         end
-                
+        
         function P = compute_steinmetz_losses(self, k, alpha, beta, f, d_c, B_ac_peak)
             % Compute the losses with the IGSE (triangular flux).
             %
@@ -288,7 +288,7 @@ classdef CoreData < handle
             %
             %    Returns:
             %        P (vector): computed loss densities
-
+            
             % get the parameter from the Steinmetz parameters
             ki = self.compute_steinmetz_ki(k, alpha, beta);
             
@@ -320,7 +320,7 @@ classdef CoreData < handle
             t3 = 2.^(beta-alpha);
             ki = k./(t1.*t2.*t3);
         end
-
+        
         function [is_valid, P] = get_interp(self, f, B_ac_peak, B_dc, T)
             % Interpolate losses with the loss map for the different materials.
             %
@@ -333,7 +333,7 @@ classdef CoreData < handle
             %    Returns:
             %        is_valid (vector): if the interpolated points are valid (or not)
             %        P (vector): interpolated loss densities
-
+            
             % init, nothing is computed
             P = NaN(1, length(self.idx));
             is_valid = false(1, length(self.idx));
@@ -378,7 +378,7 @@ classdef CoreData < handle
             
             % clamp the data to avoid extrapolation
             %    - extrapolation of core loss data is dangerous
-            %    - if clamped, the points are invalid            
+            %    - if clamped, the points are invalid
             is_valid = true;
             [is_valid, f] = get_clamp(is_valid, f, interp.f_vec);
             [is_valid, B_ac_peak] = get_clamp(is_valid, B_ac_peak, interp.B_ac_peak_vec);

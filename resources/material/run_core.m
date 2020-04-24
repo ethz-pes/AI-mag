@@ -37,10 +37,10 @@ function data = get_data(id)
 switch id
     case 'N49'
         % loss map (without DC bias) from datasheet
-        % DC bias correction factor from N87 measurements (ETH Zurich, Power Electronic Systems Laboratory) 
+        % DC bias correction factor from N87 measurements (ETH Zurich, Power Electronic Systems Laboratory)
         rho = 4750;
         kappa = 12.5;
-        use_bias = true; 
+        use_bias = true;
         data_map = load('loss_map/N49_ac.mat');
         data_bias = load('loss_map/N87_ac_dc.mat');
     case 'N87'
@@ -126,7 +126,7 @@ param.extrap_bias.T = [25.0 100.0];
 
 % interpolate losses
 material.interp.P_mat = get_loss_map(data_map, data_bias, param, material.interp); % loss matrix
-   
+
 % assign
 data = struct('id', id, 'material', material);
 

@@ -14,7 +14,7 @@ fprintf('get data\n')
 ann_input = get_ann_param(ann_type);
 [n_sol, inp, out_ref, out_nrm] = get_ann_data();
 
-% create a AnnManager instance 
+% create a AnnManager instance
 fprintf('create object\n')
 obj = AnnManager(ann_input);
 

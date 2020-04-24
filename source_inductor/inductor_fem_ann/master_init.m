@@ -6,7 +6,7 @@ function master_init(file_init, const)
 %
 %    Parameters:
 %        file_init (str): path of the file to be written with the constant data
-%        const (struct): constant data to be saved 
+%        const (struct): constant data to be saved
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 

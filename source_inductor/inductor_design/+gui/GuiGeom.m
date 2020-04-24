@@ -20,7 +20,7 @@ classdef GuiGeom < handle
             %    Parameters:
             %        parent (obj): parent object to create the feature
             %        position (vector): position of the panel (normalized or pixels units)
-
+            
             % create panel
             self.panel = uipanel(parent, 'BorderType', 'none');
             self.set_position(position)
@@ -34,7 +34,7 @@ classdef GuiGeom < handle
             %
             %    Returns:
             %        panel (uipanel): handle to uipanel containing the feature
-
+            
             panel = self.panel;
         end
         
@@ -43,7 +43,7 @@ classdef GuiGeom < handle
             %
             %    Delete the axis.
             %    Delete of the children of the axis.
-
+            
             if ishandle(self.ax)
                 delete(self.ax);
             end
@@ -54,20 +54,20 @@ classdef GuiGeom < handle
             %
             %    Parameters:
             %        visible (logical): if the feature is visible (or not)
-
+            
             if visible==true
                 set(self.panel, 'Visible', 'on');
             else
                 set(self.panel, 'Visible', 'off');
             end
         end
-
+        
         function set_plot_geom_cross(self)
             % Cross the axis with red lines.
             %
             %    Setup the axis.
             %    Get the axis limit, and cross them.
-
+            
             % create new axis
             self.set_axis();
             
@@ -90,10 +90,10 @@ classdef GuiGeom < handle
             %    Parameters:
             %        plot_data (cell): cell with the different core, winding, and insulation
             %        fact (float): free space around the component compared to the size of the component
-
+            
             % create new axis
             self.set_axis();
-
+            
             % vector containing all the coordinates
             x_vec = [];
             y_vec = [];
@@ -118,7 +118,7 @@ classdef GuiGeom < handle
             %    Create axis.
             %    Manage toolbar.
             %    Manage format.
-
+            
             % create axis
             self.ax = axes(self.panel);
             set(self.ax, 'Box','on');
@@ -145,7 +145,7 @@ classdef GuiGeom < handle
             %    Returns:
             %        x_vec (vector): x coordinates of the element, for axis limit control
             %        y_vec (vector): y coordinates of the element, for axis limit control
-
+            
             % get the coordinates
             x_min = plot_data.pos(1)-plot_data.size(1)./2;
             x_max = plot_data.pos(1)+plot_data.size(1)./2;
@@ -155,7 +155,7 @@ classdef GuiGeom < handle
             % make the coordinate vector, for axis limit control
             x_vec = [x_min x_max];
             y_vec = [y_min y_max];
-
+            
             % make the plot data (position and relative curvature radius)
             r = 2.*plot_data.r./min(plot_data.size);
             vec = [x_min y_min x_max-x_min y_max-y_min];
@@ -190,7 +190,7 @@ classdef GuiGeom < handle
             %        x_vec (vector): vector with all x coordinates
             %        y_vec (vector): vector with all y coordinates
             %        fact (float): free space around the component compared to the size of the component
-
+            
             % get the component size
             dx = 1e3.*max(abs(x_vec));
             dy = 1e3.*max(abs(y_vec));
@@ -221,7 +221,7 @@ classdef GuiGeom < handle
             %
             %    Parameters:
             %        position (vector): position of the panel (normalized or pixels units)
-
+            
             if all(position>=0)&&all(position<=1)
                 set(self.panel, 'Units', 'normalized');
                 set(self.panel, 'Position', position);
