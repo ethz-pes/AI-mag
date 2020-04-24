@@ -87,10 +87,10 @@ if any(strcmp(model_type, {'ht', 'mf'}))
 end
 if strcmp(model_type, 'mf')    
     % permeability of the core for the FEM simulation
-    sweep.var.mu_core = struct('type', 'span', 'var_trf', 'lin', 'var_type', 'float', 'span', span, 'lb', 1500.0,  'ub', 2500.0, 'n', n);
+    sweep.var.mu_core = struct('type', 'span', 'var_trf', 'none', 'var_type', 'float', 'span', span, 'lb', 1500.0,  'ub', 2500.0, 'n', n);
 
     % beta (Steinmetz parameter) of the core for the FEM simulation
-    sweep.var.beta_core = struct('type', 'span', 'var_trf', 'lin', 'var_type', 'float', 'span', span, 'lb', 2.0,  'ub', 2.5, 'n', n);
+    sweep.var.beta_core = struct('type', 'span', 'var_trf', 'none', 'var_type', 'float', 'span', span, 'lb', 2.0,  'ub', 2.5, 'n', n);
 end
 if strcmp(model_type, 'ht')
     % total losses (core and winding) divided by the area of the boxed inductor
@@ -100,7 +100,7 @@ if strcmp(model_type, 'ht')
     sweep.var.p_ratio_winding_core = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 0.02,  'ub', 50.0, 'n', n);
     
     % convection coefficient reference value
-    sweep.var.h_convection = struct('type', 'span', 'var_trf', 'lin', 'var_type', 'float', 'span', span, 'lb', 15.0,  'ub', 30.0, 'n', n);
+    sweep.var.h_convection = struct('type', 'span', 'var_trf', 'none', 'var_type', 'float', 'span', span, 'lb', 15.0,  'ub', 30.0, 'n', n);
 end
 
 % COMSOL model path
