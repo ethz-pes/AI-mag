@@ -51,8 +51,11 @@ if any(strcmp(model_type, {'ht', 'mf'}))
     var_inp{end+1} = struct('name', 'V_box', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*10e-6, 'max', 1.01.*1000e-6);
 end
 if strcmp(model_type, 'mf')
-    % current density in the winding for the magnetic FEM simulation
-    var_inp{end+1} = struct('name', 'J_winding', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.001e6, 'max', 1.01.*20e6);
+    % permeability of the core for the FEM simulation
+    var_inp{end+1} = struct('name', 'mu_core', 'var_trf', 'lin', 'var_norm', 'min_max', 'min', 0.99.*1500.0, 'max', 1.01.*2500.0);
+   
+    % beta (Steinmetz parameter) of the core for the FEM simulation
+    var_inp{end+1} = struct('name', 'beta_core', 'var_trf', 'lin', 'var_norm', 'min_max', 'min', 0.99.*2.0, 'max', 1.01.*2.5);
 end
 if strcmp(model_type, 'ht')
     % total losses (core and winding) divided by the area of the boxed inductor
@@ -60,6 +63,9 @@ if strcmp(model_type, 'ht')
     
     % ratio between the winding losses and core losses
     var_inp{end+1} = struct('name', 'p_ratio_winding_core', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.02, 'max', 1.01.*50.0);
+
+    % convection coefficient reference value
+    var_inp{end+1} = struct('name', 'h_convection', 'var_trf', 'lin', 'var_norm', 'min_max', 'min', 0.99.*15.0, 'max', 1.01.*30.0);
 end
 
 % description of the output variables:

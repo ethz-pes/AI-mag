@@ -10,8 +10,7 @@ function const = get_fem_ann_data_init()
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % magnetic simulation
-const.mu_core = 2200; % permeability of the core for the FEM simulation
-const.beta_core = 2.4; % beta (Steinmetz parameter) of the core for the FEM simulation
+const.J_winding = 5e6; % current density in the winding for the magnetic FEM simulation
 
 % thermal simulation
 const.k_core = 5.0; % thermal conductivity of the core
@@ -20,7 +19,6 @@ const.k_winding_t = 20; % thermal conductivity of the winding (tangential direct
 const.k_winding_n = 0.3; % thermal conductivity of the winding (normal direction)
 const.k_contact = 0.1; % thermal conductivity of the winding/core/insulation contact
 const.d_contact = 100e-6; % physical gap for winding/core/insulation contact
-const.h_convection = 20.0; % convection coefficient reference value
 const.fact_exposed = 1.0; % convection scaling factor for the exposed area
 const.fact_internal = 0.25; % convection scaling factor for the semi-exposed area
 const.T_ambient = 0.0; % ambient temperature for the FEM simulation

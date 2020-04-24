@@ -50,7 +50,7 @@ end
 
 % struct with the description of a fixed variable
 %    - type: type of the variable ('fixed')
-%    - vec: vector with the values ('fixed')
+%    - vec: vector with the values
 % struct with the description of a variable with generation of the samples
 %    - type: type of the variable ('span')
 %    - var_trf: variable transformation applied to the variable
@@ -85,9 +85,12 @@ if any(strcmp(model_type, {'ht', 'mf'}))
     % inductor box volume
     sweep.var.V_box = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 10e-6,  'ub', 1000e-6, 'n', n);
 end
-if strcmp(model_type, 'mf')
-    % current density in the winding for the magnetic FEM simulation
-    sweep.var.J_winding = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 0.001e6,  'ub', 20e6, 'n', n);
+if strcmp(model_type, 'mf')    
+    % permeability of the core for the FEM simulation
+    sweep.var.mu_core = struct('type', 'span', 'var_trf', 'lin', 'var_type', 'float', 'span', span, 'lb', 1500.0,  'ub', 2500.0, 'n', n);
+
+    % beta (Steinmetz parameter) of the core for the FEM simulation
+    sweep.var.beta_core = struct('type', 'span', 'var_trf', 'lin', 'var_type', 'float', 'span', span, 'lb', 2.0,  'ub', 2.5, 'n', n);
 end
 if strcmp(model_type, 'ht')
     % total losses (core and winding) divided by the area of the boxed inductor
@@ -95,6 +98,9 @@ if strcmp(model_type, 'ht')
     
     % ratio between the winding losses and core losses
     sweep.var.p_ratio_winding_core = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 0.02,  'ub', 50.0, 'n', n);
+    
+    % convection coefficient reference value
+    sweep.var.h_convection = struct('type', 'span', 'var_trf', 'lin', 'var_type', 'float', 'span', span, 'lb', 15.0,  'ub', 30.0, 'n', n);
 end
 
 % COMSOL model path
