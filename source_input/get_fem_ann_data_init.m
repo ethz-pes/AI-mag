@@ -20,8 +20,9 @@ const.k_winding_t = 20; % thermal conductivity of the winding (tangential direct
 const.k_winding_n = 0.3; % thermal conductivity of the winding (normal direction)
 const.k_contact = 0.1; % thermal conductivity of the winding/core/insulation contact
 const.d_contact = 100e-6; % physical gap for winding/core/insulation contact
-const.h_exposed = 20.0; % convection coefficient fot the exposed area
-const.h_internal = 5.0; % convection coefficient fot the semi-exposed area
+const.h_convection = 20.0; % convection coefficient reference value
+const.fact_exposed = 1.0; % convection scaling factor for the exposed area
+const.fact_internal = 0.25; % convection scaling factor for the semi-exposed area
 const.T_ambient = 0.0; % ambient temperature for the FEM simulation
 
 % FEM mesh control

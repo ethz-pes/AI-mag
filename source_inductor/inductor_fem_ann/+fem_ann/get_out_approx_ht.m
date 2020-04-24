@@ -26,8 +26,9 @@ d_iso = inp.d_iso;
 k_core = inp.k_core;
 k_winding_n = inp.k_winding_n;
 k_iso = inp.k_iso;
-h_exposed = inp.h_exposed;
-h_internal = inp.h_internal;
+h_convection = inp.h_convection;
+fact_exposed = inp.fact_exposed;
+fact_internal = inp.fact_internal;
 T_ambient = inp.T_ambient;
 P_core = inp.P_core;
 P_winding = inp.P_winding;
@@ -42,13 +43,13 @@ R_iso_winding_internal = d_iso./(S_winding_internal.*k_iso);
 R_iso_winding_exposed = d_iso./(S_winding_exposed.*k_iso);
 
 % convection resistance of the core (exposed and semi-exposed area in parallel)
-R_conv_core_exposed = 1./(h_exposed.*S_core_exposed);
-R_conv_core_internal = 1./(h_internal.*S_core_internal);
+R_conv_core_exposed = 1./(fact_exposed.*h_convection.*S_core_exposed);
+R_conv_core_internal = 1./(fact_internal.*h_convection.*S_core_internal);
 R_extract_winding = 1./((1./R_conv_core_exposed)+(1./R_conv_core_internal));
 
 % convection resistance of the winding (in insulation resistance, exposed and semi-exposed area in parallel)
-R_conv_winding_exposed = 1./(h_exposed.*S_winding_exposed);
-R_conv_winding_internal = 1./(h_internal.*S_winding_internal);
+R_conv_winding_exposed = 1./(fact_exposed.*h_convection.*S_winding_exposed);
+R_conv_winding_internal = 1./(fact_internal.*h_convection.*S_winding_internal);
 R_extract_core = 1./((1./(R_conv_winding_exposed+R_iso_winding_exposed))+(1./(R_conv_winding_internal+R_iso_winding_internal)));
 
 % solve the linear thermal circuit
