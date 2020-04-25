@@ -1,4 +1,4 @@
-function master_assemble(file_assemble, folder_fem)
+function master_assemble(file_assemble, folder_fem, make_zip)
 % Assemble FEM simulations into a single file.
 %
 %    Load all the FEM results, assemble them.
@@ -8,6 +8,7 @@ function master_assemble(file_assemble, folder_fem)
 %    Parameters:
 %        file_assemble (str): path of the file to be written with the assembled data
 %        folder_fem (str): path of the folder to stored the results
+%        make_zip (logical): make a zip file and remove the folder (or not)
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
@@ -18,8 +19,11 @@ fprintf('################## master_assemble\n')
 fprintf('assemble\n')
 [diff, n_tot, n_sol, model_type, file_model, inp, out_fem] = fem_ann.get_assemble(folder_fem);
 
-fprintf('zip\n')
-fem_ann.get_zip(folder_fem);
+% make a zip file and remove the folder 
+if make_zip==true
+    fprintf('zip\n')
+    fem_ann.get_zip(folder_fem);
+end
 
 % compute the analytical results
 fprintf('approx\n')

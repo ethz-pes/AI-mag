@@ -29,7 +29,10 @@ folder_fem = ['data/fem_' model_type];
 % path of the file to be written with the assembled data
 file_assemble = ['data/' model_type '_assemble.mat'];
 
+% make a zip file and remove the folder (or not)
+make_zip = false;
+
 % assemble the data
-master_assemble(file_assemble, folder_fem)
+master_assemble(file_assemble, folder_fem, make_zip)
 
 end
