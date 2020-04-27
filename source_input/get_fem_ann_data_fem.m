@@ -1,4 +1,4 @@
-function [file_model, var_type, sweep, diff_max] = get_fem_ann_data_fem(model_type, sweep_mode)
+function [file_model, diff_max, var_type, sweep] = get_fem_ann_data_fem(model_type, sweep_mode)
 % Return the data required for the FEM simulations.
 %
 %    Define the variables and how to generate the samples.
@@ -10,14 +10,17 @@ function [file_model, var_type, sweep, diff_max] = get_fem_ann_data_fem(model_ty
 %
 %    Returns:
 %        file_model (str): path of the COMSOL file to be used for the simulations
+%        diff_max (duration): maximum simulation duration (for batching systems)
 %        var_type (struct): type of the different variables used in the solver
 %        sweep (struct): data controlling the samples generation
-%        diff_max (duration): maximum simulation duration (for batching systems)
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % check the input data
 assert(any(strcmp(model_type, {'ht', 'mf'})), 'invalid model_type')
+
+% maximum simulation duration (for batching systems)
+diff_max = duration('12:00', 'InputFormat', 'hh:mm');
 
 % control the samples generation
 switch sweep_mode
@@ -119,8 +122,5 @@ file_model = ['source_input/model/model_' model_type '.mph'];
 %        - 'abs': absolute excitation (current value, loss values, etc.)
 var_type.geom_type = 'rel';
 var_type.excitation_type = 'rel';
-
-% maximum simulation duration (for batching systems)
-diff_max = duration('00:03', 'InputFormat', 'hh:mm');
 
 end

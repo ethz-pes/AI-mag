@@ -66,7 +66,7 @@ The example shows the complete workflow: FEM simulations, ANN training, design g
 * The converter has the following ratings: 2kW, 400V input voltage, 200V output voltage
 * The following parameters are optimized: frequency, geometry, air gap, number of turns, ripple
 
-## Optimized Inductor
+## Inductor Optimization Capabilities
 
 Currently the following inductors are optimized:
 * E-core inductor with an air-gap (with fringing field)
@@ -112,6 +112,17 @@ The following softwares were used to generate resources but are not required to 
 * Adobe Illustrator 2020 - generating the GUI artwork
 * Wolfram Mathematica 12 - generating analytical expressions
 * PyCharm Community Edition 2019 - running and debugging the Python code
+
+## Releases
+
+The source code is available in the GitHub Git repository and contains:
+* All the code is included (MATLAB, Python, and COMSOL)
+* All the ressources (generation of material data, images, analytical equations, etc.) are included
+* The generated data (FEM solution, trained ANN, etc.) are NOT included
+
+The releases are available at GitHub and contains:
+* A stable version of the source code (code and ressources)
+* An archive containg the generated data (FEM solution, trained ANN, etc.)
 
 ## Metrics
 
@@ -170,6 +181,7 @@ Why the tool in MATLAB and Python and not only in Python?
 * Prof. J.W. Kolar, ETH Zurich, Power Electronic Systems Laboratory
 * P. Papamanolis, ETH Zurich, Power Electronic Systems Laboratory
 * The Pareto optimization team at ETH Zurich, Power Electronic Systems Laboratory
+* The Euler cluster team at ETH Zurich
 * Jan, from MATLAB File Exchange for the inspiration for the md5 hashing code
 * Keras and TensorFlow communities
 

@@ -1,10 +1,11 @@
-function master_fem(file_init, folder_fem, file_model, model_type, var_type, sweep, diff_max)
+function master_fem(file_init, folder_fem, file_model, model_type, diff_max, var_type, sweep)
 % Make many FEM simulations for different variable combinations.
 %
 %    Sweep different combinations.
 %    Extract the FEM results and save them.
 %
 %    This function saves the results during the solving process:
+%        - A maximum run time can be fixed (for cluster batching systems)
 %        - The results are stored with an hash
 %        - If the hash already exists the simulation is skiped
 %        - Therefore, this function can be interrupted and restarted
@@ -18,9 +19,9 @@ function master_fem(file_init, folder_fem, file_model, model_type, var_type, swe
 %        folder_fem (str): path of the folder where the results are stored
 %        file_model (str): path of the COMSOL file to be used for the simulations
 %        model_type (str): name of the physics to be solved
+%        diff_max (duration): maximum simulation duration (for batching systems)
 %        var_type (struct): type of the different variables used in the solver
 %        sweep (struct): data controlling the samples generation
-%        diff_max (duration): maximum simulation duration (for batching systems)
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
@@ -41,7 +42,7 @@ fprintf('folder\n')
 
 % make the simulations
 fprintf('fem\n')
-fem_ann.get_fem(folder_fem, file_model, model_type, var_type, n_sol, inp, const, diff_max);
+fem_ann.get_fem(folder_fem, file_model, model_type, diff_max, var_type, n_sol, inp, const);
 
 % teardown
 fprintf('################## master_fem\n')

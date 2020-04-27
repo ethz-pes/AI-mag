@@ -1,4 +1,4 @@
-function get_fem(folder_fem, file_model, model_type, var_type, n_sol, inp, const, diff_max)
+function get_fem(folder_fem, file_model, model_type, diff_max, var_type, n_sol, inp, const)
 % Make many FEM simulations for the given variable combinations.
 %
 %    The results are stored for every simulation with an hash as filename.
@@ -8,11 +8,11 @@ function get_fem(folder_fem, file_model, model_type, var_type, n_sol, inp, const
 %        folder_fem (str): path of the folder where the results are stored
 %        file_model (str): path of the COMSOL file to be used for the simulations
 %        model_type (str): name of the physics to be solved
+%        diff_max (duration): maximum simulation duration (for batching systems)
 %        var_type (struct): type of the different variables used in the solver
 %        n_sol (int): number of simulations to be done
 %        inp (struct): struct of vectors with the input combinations
 %        const (struct): struct of with the constant data
-%        diff_max (duration): maximum simulation duration (for batching systems)
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 

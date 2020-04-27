@@ -5,6 +5,7 @@ function run_1_fem()
 %    Extract the FEM results and save them.
 %
 %    This function saves the results during the solving process:
+%        - A maximum run time can be fixed (for cluster batching systems)
 %        - The results are stored with an hash
 %        - If the hash already exists the simulation is skiped
 %        - Therefore, this function can be interrupted and restarted
@@ -38,11 +39,11 @@ file_init = 'data/init.mat';
 folder_fem = ['data/fem_' model_type];
 
 % run the simulations with a regular grid with all the extreme cases
-[file_model, var_type, sweep, diff_max] = get_fem_ann_data_fem(model_type, 'extrema');
-master_fem(file_init, folder_fem, file_model, model_type, var_type, sweep, diff_max);
+[file_model, diff_max, var_type, sweep] = get_fem_ann_data_fem(model_type, 'extrema');
+master_fem(file_init, folder_fem, file_model, model_type, diff_max, var_type, sweep);
 
 % run the simulations with a random samples
-[file_model, var_type, sweep, diff_max] = get_fem_ann_data_fem(model_type, 'random');
-master_fem(file_init, folder_fem, file_model, model_type, var_type, sweep, diff_max);
+[file_model, diff_max, var_type, sweep] = get_fem_ann_data_fem(model_type, 'random');
+master_fem(file_init, folder_fem, file_model, model_type, diff_max, var_type, sweep);
 
 end
