@@ -20,22 +20,27 @@ function get_fem(folder_fem, file_model, model_type, var_type, n_sol, inp, const
 tic = datetime('now');
 
 for i=1:n_sol
-    fprintf('    %d / %d\n', i, n_sol)
-    
     % compute elapsed time
     toc = datetime('now');
     diff = toc-tic;
     
     % check elapsed time, abort if required
-    if diff>diff_max
+    if diff<diff_max
+        % display design progression
+        fprintf('    %d / %d\n', i, n_sol)
+        
+        % get a specific combination
+        inp_tmp =  get_struct_filter(inp, i);
+        
+        % simulate the selected input
+        get_out_sub(file_model, folder_fem, model_type, var_type, inp_tmp, const);
+    else
+        % display time information
+        fprintf('    time elapsed: %s / %s\n', char(diff), char(diff_max))
+        
+        % abort
         break
     end
-    
-    % get a specific combination
-    inp_tmp =  get_struct_filter(inp, i);
-    
-    % simulate the selected input
-    get_out_sub(file_model, folder_fem, model_type, var_type, inp_tmp, const);
 end
 
 end

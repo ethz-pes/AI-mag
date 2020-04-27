@@ -39,7 +39,7 @@ switch id
         % loss map (without DC bias) from datasheet
         % DC bias correction factor from N87 measurements (ETH Zurich, Power Electronic Systems Laboratory)
         mu = 1500;
-        beta = 2.4;
+        beta = 2.6;
         rho = 4750;
         kappa = 12.5;
         use_bias = true;
@@ -69,7 +69,7 @@ switch id
         % loss map (without DC bias) from datasheet
         % DC bias correction factor from N87 measurements (ETH Zurich, Power Electronic Systems Laboratory)
         mu = 3000;
-        beta = 2.4;
+        beta = 2.3;
         rho = 4900;
         kappa = 9.5;
         use_bias = true;

@@ -121,6 +121,6 @@ var_type.geom_type = 'rel';
 var_type.excitation_type = 'rel';
 
 % maximum simulation duration (for batching systems)
-diff_max = duration('12:00', 'InputFormat', 'hh:mm');
+diff_max = duration('00:03', 'InputFormat', 'hh:mm');
 
 end
