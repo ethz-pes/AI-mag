@@ -103,7 +103,7 @@ classdef CoreData < handle
             
             mu = self.param.mu;
         end
-
+        
         function beta = get_beta_steinmetz(self)
             % Get the beta of the Steinmetz parameters.
             %
@@ -112,7 +112,7 @@ classdef CoreData < handle
             
             beta = self.param.beta;
         end
-
+        
         function [is_valid, P] = get_losses_sin(self, f, B_ac_peak, B_dc, T)
             % Compute the losses with a sinus excitation.
             %

@@ -1,4 +1,4 @@
-function master_fem(file_init, folder_fem, file_model, model_type, var_type, sweep)
+function master_fem(file_init, folder_fem, file_model, model_type, var_type, sweep, diff_max)
 % Make many FEM simulations for different variable combinations.
 %
 %    Sweep different combinations.
@@ -20,6 +20,7 @@ function master_fem(file_init, folder_fem, file_model, model_type, var_type, swe
 %        model_type (str): name of the physics to be solved
 %        var_type (struct): type of the different variables used in the solver
 %        sweep (struct): data controlling the samples generation
+%        diff_max (duration): maximum simulation duration (for batching systems)
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
@@ -40,7 +41,7 @@ fprintf('folder\n')
 
 % make the simulations
 fprintf('fem\n')
-fem_ann.get_fem(folder_fem, file_model, model_type, var_type, n_sol, inp, const);
+fem_ann.get_fem(folder_fem, file_model, model_type, var_type, n_sol, inp, const, diff_max);
 
 % teardown
 fprintf('################## master_fem\n')

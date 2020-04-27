@@ -53,10 +53,10 @@ end
 if strcmp(model_type, 'mf')
     % current density in the winding for the magnetic FEM simulation
     var_inp{end+1} = struct('name', 'J_winding', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.001e6, 'max', 1.01.*20e6);
-
+    
     % permeability of the core for the FEM simulation
     var_inp{end+1} = struct('name', 'mu_core', 'var_trf', 'none', 'var_norm', 'min_max', 'min', 0.99.*1500.0, 'max', 1.01.*2500.0);
-   
+    
     % beta (Steinmetz parameter) of the core for the FEM simulation
     var_inp{end+1} = struct('name', 'beta_core', 'var_trf', 'none', 'var_norm', 'min_max', 'min', 0.99.*2.0, 'max', 1.01.*2.5);
 end
@@ -66,7 +66,7 @@ if strcmp(model_type, 'ht')
     
     % ratio between the winding losses and core losses
     var_inp{end+1} = struct('name', 'p_ratio_winding_core', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.02, 'max', 1.01.*50.0);
-
+    
     % convection coefficient reference value
     var_inp{end+1} = struct('name', 'h_convection', 'var_trf', 'none', 'var_norm', 'min_max', 'min', 0.99.*15.0, 'max', 1.01.*30.0);
 end
@@ -191,9 +191,9 @@ assert(isfinite(n_inp), 'invalid input')
 assert(isfinite(n_out), 'invalid output')
 
 % generate and parametrize the ANN
-model = fitnet(15);
+model = fitnet([10 10]);
 model.trainParam.min_grad = 1e-8;
-model.trainParam.epochs = 300;
+model.trainParam.epochs = 200;
 model.trainParam.max_fail = 25;
 model.divideParam.trainRatio = 0.8;
 model.divideParam.valRatio = 0.2;

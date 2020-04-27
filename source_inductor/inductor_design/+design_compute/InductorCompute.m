@@ -114,7 +114,7 @@ classdef InductorCompute < handle
             self.fom.material.winding_id = self.data_vec.material.winding_id;
             self.fom.material.iso_id = self.data_vec.material.iso_id;
             self.fom.material.h_convection = self.data_vec.other.h_convection;
-
+            
             % set the raw geometry
             self.fom.geom.z_core = geom.z_core;
             self.fom.geom.t_core = geom.t_core;
@@ -351,7 +351,7 @@ classdef InductorCompute < handle
             T_ambient = operating.excitation.T_ambient;
             P_core = operating.losses.P_core;
             P_winding = operating.losses.P_winding;
-
+            
             % get the parameters
             h_convection = self.fom.material.h_convection;
             

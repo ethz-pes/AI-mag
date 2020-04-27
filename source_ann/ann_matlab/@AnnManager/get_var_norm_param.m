@@ -10,6 +10,7 @@ function norm_param = get_var_norm_param(vec, type)
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
+% get scaling parameters
 switch type
     case 'none'
         norm_param.offset = 0;
@@ -28,6 +29,14 @@ switch type
         norm_param.scale = std(vec);
     otherwise
         error('invalid type')
+end
+
+% remove dangerous values
+if abs(norm_param.scale)<eps
+    norm_param.scale = 1;
+end
+if abs(norm_param.offset)<eps
+    norm_param.offset = 0;
 end
 
 end

@@ -1,4 +1,4 @@
-function [file_model, var_type, sweep] = get_fem_ann_data_fem(model_type, sweep_mode)
+function [file_model, var_type, sweep, diff_max] = get_fem_ann_data_fem(model_type, sweep_mode)
 % Return the data required for the FEM simulations.
 %
 %    Define the variables and how to generate the samples.
@@ -12,6 +12,7 @@ function [file_model, var_type, sweep] = get_fem_ann_data_fem(model_type, sweep_
 %        file_model (str): path of the COMSOL file to be used for the simulations
 %        var_type (struct): type of the different variables used in the solver
 %        sweep (struct): data controlling the samples generation
+%        diff_max (duration): maximum simulation duration (for batching systems)
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
@@ -85,13 +86,13 @@ if any(strcmp(model_type, {'ht', 'mf'}))
     % inductor box volume
     sweep.var.V_box = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 10e-6,  'ub', 1000e-6, 'n', n);
 end
-if strcmp(model_type, 'mf')    
+if strcmp(model_type, 'mf')
     % current density in the winding for the magnetic FEM simulation
     sweep.var.J_winding = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 0.001e6,  'ub', 20e6, 'n', n);
-
+    
     % permeability of the core for the FEM simulation
     sweep.var.mu_core = struct('type', 'span', 'var_trf', 'none', 'var_type', 'float', 'span', span, 'lb', 1500.0,  'ub', 3000.0, 'n', n);
-
+    
     % beta (Steinmetz parameter) of the core for the FEM simulation
     sweep.var.beta_core = struct('type', 'span', 'var_trf', 'none', 'var_type', 'float', 'span', span, 'lb', 2.0,  'ub', 2.8, 'n', n);
 end
@@ -118,5 +119,8 @@ file_model = ['source_input/model/model_' model_type '.mph'];
 %        - 'abs': absolute excitation (current value, loss values, etc.)
 var_type.geom_type = 'rel';
 var_type.excitation_type = 'rel';
+
+% maximum simulation duration (for batching systems)
+diff_max = duration('12:00', 'InputFormat', 'hh:mm');
 
 end

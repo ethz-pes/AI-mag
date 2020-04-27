@@ -1,4 +1,4 @@
-function get_fem(folder_fem, file_model, model_type, var_type, n_sol, inp, const)
+function get_fem(folder_fem, file_model, model_type, var_type, n_sol, inp, const, diff_max)
 % Make many FEM simulations for the given variable combinations.
 %
 %    The results are stored for every simulation with an hash as filename.
@@ -12,11 +12,24 @@ function get_fem(folder_fem, file_model, model_type, var_type, n_sol, inp, const
 %        n_sol (int): number of simulations to be done
 %        inp (struct): struct of vectors with the input combinations
 %        const (struct): struct of with the constant data
+%        diff_max (duration): maximum simulation duration (for batching systems)
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
+% simulation start time
+tic = datetime('now');
+
 for i=1:n_sol
     fprintf('    %d / %d\n', i, n_sol)
+    
+    % compute elapsed time
+    toc = datetime('now');
+    diff = toc-tic;
+    
+    % check elapsed time, abort if required
+    if diff>diff_max
+        break
+    end
     
     % get a specific combination
     inp_tmp =  get_struct_filter(inp, i);
