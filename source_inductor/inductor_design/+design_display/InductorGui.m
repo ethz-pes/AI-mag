@@ -160,7 +160,7 @@ classdef InductorGui < handle
             gui.GuiUtils.set_status(status, self.fom_data.is_valid);
             
             % text field, showing the figures of merits
-            gui_text_obj = gui.GuiText(panel_data, 10, [10, 25, 240]);
+            gui_text_obj = gui.GuiText(panel_data, 10, [10, 25, 230]);
             gui_text_obj.set_text(self.fom_data.text_data);
         end
         
@@ -179,7 +179,7 @@ classdef InductorGui < handle
                 text_data_tmp = self.operating_data.(field{i}).text_data;
                 
                 % create panel
-                gui_text_obj_tmp = gui.GuiText(panel_data, 10, [10, 25, 240]);
+                gui_text_obj_tmp = gui.GuiText(panel_data, 10, [10, 25, 230]);
                 gui_text_obj_tmp.set_text(text_data_tmp);
                 
                 % put the handle and the validity in a vector for the menu

@@ -95,6 +95,24 @@ classdef CoreData < handle
             B_sat_max = self.param.B_sat_max;
         end
         
+        function mu = get_permeability(self)
+            % Get the material permeability.
+            %
+            %    Returns:
+            %        mu (vector): material permeability
+            
+            mu = self.param.mu;
+        end
+
+        function beta = get_beta_steinmetz(self)
+            % Get the beta of the Steinmetz parameters.
+            %
+            %    Returns:
+            %        beta (vector): beta of the Steinmetz parameters
+            
+            beta = self.param.beta;
+        end
+
         function [is_valid, P] = get_losses_sin(self, f, B_ac_peak, B_dc, T)
             % Compute the losses with a sinus excitation.
             %

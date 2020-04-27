@@ -86,11 +86,14 @@ if any(strcmp(model_type, {'ht', 'mf'}))
     sweep.var.V_box = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 10e-6,  'ub', 1000e-6, 'n', n);
 end
 if strcmp(model_type, 'mf')    
+    % current density in the winding for the magnetic FEM simulation
+    sweep.var.J_winding = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 0.001e6,  'ub', 20e6, 'n', n);
+
     % permeability of the core for the FEM simulation
-    sweep.var.mu_core = struct('type', 'span', 'var_trf', 'none', 'var_type', 'float', 'span', span, 'lb', 1500.0,  'ub', 2500.0, 'n', n);
+    sweep.var.mu_core = struct('type', 'span', 'var_trf', 'none', 'var_type', 'float', 'span', span, 'lb', 1500.0,  'ub', 3000.0, 'n', n);
 
     % beta (Steinmetz parameter) of the core for the FEM simulation
-    sweep.var.beta_core = struct('type', 'span', 'var_trf', 'none', 'var_type', 'float', 'span', span, 'lb', 2.0,  'ub', 2.5, 'n', n);
+    sweep.var.beta_core = struct('type', 'span', 'var_trf', 'none', 'var_type', 'float', 'span', span, 'lb', 2.0,  'ub', 2.8, 'n', n);
 end
 if strcmp(model_type, 'ht')
     % total losses (core and winding) divided by the area of the boxed inductor

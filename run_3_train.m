@@ -14,8 +14,10 @@ function run_3_train()
 
 init_toolbox();
 
-%% run
+% run the thermal model
 run_sub('ht');
+
+% run the magnetic model
 run_sub('mf');
 
 end

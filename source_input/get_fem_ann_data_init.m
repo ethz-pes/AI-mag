@@ -9,9 +9,6 @@ function const = get_fem_ann_data_init()
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
-% magnetic simulation
-const.J_winding = 5e6; % current density in the winding for the magnetic FEM simulation
-
 % thermal simulation
 const.k_core = 5.0; % thermal conductivity of the core
 const.k_iso = 0.5; % thermal conductivity of the insulation

@@ -38,6 +38,8 @@ switch id
     case 'N49'
         % loss map (without DC bias) from datasheet
         % DC bias correction factor from N87 measurements (ETH Zurich, Power Electronic Systems Laboratory)
+        mu = 1500;
+        beta = 2.4;
         rho = 4750;
         kappa = 12.5;
         use_bias = true;
@@ -46,6 +48,8 @@ switch id
     case 'N87'
         % loss map (without DC bias) from datasheet
         % DC bias correction factor from N87 measurements (ETH Zurich, Power Electronic Systems Laboratory)
+        mu = 2200;
+        beta = 2.4;
         rho = 4850;
         kappa = 7.0;
         use_bias = true;
@@ -54,6 +58,8 @@ switch id
     case 'N87_meas'
         % N87 combined loss map
         % Combine all the best data available at ETH Zurich, Power Electronic Systems Laboratory
+        mu = 2200;
+        beta = 2.4;
         rho = 4850;
         kappa = 7.0;
         use_bias = false;
@@ -62,6 +68,8 @@ switch id
     case 'N95'
         % loss map (without DC bias) from datasheet
         % DC bias correction factor from N87 measurements (ETH Zurich, Power Electronic Systems Laboratory)
+        mu = 3000;
+        beta = 2.4;
         rho = 4900;
         kappa = 9.5;
         use_bias = true;
@@ -70,6 +78,8 @@ switch id
     case 'N97'
         % loss map (without DC bias) from datasheet
         % DC bias correction factor from N87 measurements (ETH Zurich, Power Electronic Systems Laboratory)
+        mu = 2300;
+        beta = 2.4;
         rho = 4850;
         kappa = 7.5;
         use_bias = true;
@@ -80,6 +90,8 @@ switch id
 end
 
 % assign param
+material.param.mu = mu; % material permeability
+material.param.beta = beta; % beta of the material (Steinmetz paramter)
 material.param.rho = rho; % volumetric density
 material.param.kappa = kappa; % cost per mass
 

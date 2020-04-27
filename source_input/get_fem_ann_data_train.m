@@ -51,6 +51,9 @@ if any(strcmp(model_type, {'ht', 'mf'}))
     var_inp{end+1} = struct('name', 'V_box', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*10e-6, 'max', 1.01.*1000e-6);
 end
 if strcmp(model_type, 'mf')
+    % current density in the winding for the magnetic FEM simulation
+    var_inp{end+1} = struct('name', 'J_winding', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.001e6, 'max', 1.01.*20e6);
+
     % permeability of the core for the FEM simulation
     var_inp{end+1} = struct('name', 'mu_core', 'var_trf', 'none', 'var_norm', 'min_max', 'min', 0.99.*1500.0, 'max', 1.01.*2500.0);
    
@@ -125,7 +128,7 @@ end
 %    - type: method used for selected the testing sample:
 %        - 'with_overlap': all the sample are in the testing dataset
 %        - 'no_overlap': the training sample are not in the testing dataset
-split_train_test.ratio_train = 0.5;
+split_train_test.ratio_train = 0.8;
 split_train_test.n_train_min = 5;
 split_train_test.n_test_min = 5;
 split_train_test.type = 'no_overlap';
@@ -188,7 +191,7 @@ assert(isfinite(n_inp), 'invalid input')
 assert(isfinite(n_out), 'invalid output')
 
 % generate and parametrize the ANN
-model = fitnet(8);
+model = fitnet(15);
 model.trainParam.min_grad = 1e-8;
 model.trainParam.epochs = 300;
 model.trainParam.max_fail = 25;

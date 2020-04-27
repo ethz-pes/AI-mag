@@ -113,6 +113,7 @@ classdef InductorDisplay < handle
             text{end+1} = sprintf('core_id = %s', get_map_int_to_str(fom_tmp.material.core_id));
             text{end+1} = sprintf('winding_id = %s', get_map_int_to_str(fom_tmp.material.winding_id));
             text{end+1} = sprintf('iso_id = %s', get_map_int_to_str(fom_tmp.material.iso_id));
+            text{end+1} = sprintf('h_convection = %.2f W/Cm2', fom_tmp.material.h_convection);
             text_data{end+1} = struct('title', 'material', 'text', {text});
             
             % geometrical figures of merit
