@@ -217,8 +217,9 @@ classdef AnnFem < handle
                 case 'fem'
                     % FEM does not support vector evaluation, loop throught the designs
                     for i=1:length(self.n_sol)
+                        model = mphload(file_model);
                         inp_tmp = get_struct_filter(inp, i);
-                        fom(i) = fem_ann.get_out_fem(file_model, model_type, inp_tmp);
+                        fom(i) = fem_ann.get_out_fem(model, model_type, inp_tmp);
                     end
                     fom = get_struct_assemble(fom);
                 case {'ann', 'approx'}

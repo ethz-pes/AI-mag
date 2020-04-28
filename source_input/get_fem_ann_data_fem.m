@@ -19,13 +19,13 @@ function [file_model, timing, var_type, sweep] = get_fem_ann_data_fem(model_type
 % check the input data
 assert(any(strcmp(model_type, {'ht', 'mf'})), 'invalid model_type')
 
-% struct controlling simulation time (for batching systems)
-%    - diff_sim_max: maximum simulation time
-%    - diff_license_max: maximum time to acquire a COMSOL license
-%    - diff_license_trial: time between two COMSOL license trials
-timing.diff_sim_max = duration('12:00', 'InputFormat', 'hh:mm');
-timing.diff_license_max = duration('02:00', 'InputFormat', 'hh:mm');
-timing.diff_license_trial = duration('00:30', 'InputFormat', 'mm:ss');
+% struct controlling the COMSOL license and model loading (for batching systems)
+%    - diff_trial: time between two COMSOL license trials
+%    - n_trial: maximum number if COMSOL license trials
+%    - n_reload: how often the COMSOL model is reloaded (trade-off between speed, license, and memory)
+timing.diff_trial = duration('00:30', 'InputFormat', 'mm:ss');
+timing.n_trial = 100;
+timing.n_reload = 10;
 
 % control the samples generation
 switch sweep_mode

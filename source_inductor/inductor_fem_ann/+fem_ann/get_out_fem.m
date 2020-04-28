@@ -1,8 +1,8 @@
-function out_fem = get_out_fem(file_model, model_type, inp)
+function out_fem = get_out_fem(model, model_type, inp)
 % Make a FEM simulation for given parameters, extract the results.
 %
 %    Parameters:
-%        file_model (str): path of the COMSOL file to be used for the simulations
+%        model (model): COMSOL model containg the physics
 %        model_type (str): name of the physics to be solved
 %        inp (struct): struct of scalars with the parameters
 %
@@ -31,9 +31,6 @@ switch model_type
     otherwise
         error('invalid type')
 end
-
-% load the COMSOL model
-model = mphload(file_model);
 
 % tag of the COMSOL solution and parameter node
 tag_sol = 'sol1';

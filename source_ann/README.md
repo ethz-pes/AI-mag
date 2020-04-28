@@ -39,7 +39,7 @@ The examples show the capabilities of the toolbox:
 ## Compatibility
 
 The toolbox is tested with the following MATLAB setup:
-* Tested with MATLAB R2018b
+* Tested with MATLAB R2018b or 2019a
 * Deep Learning Toolbox ("neural_network_toolbox")
 * Global Optimization Toolbox ("gads_toolbox")
 * Optimization Toolbox ("optimization_toolbox")

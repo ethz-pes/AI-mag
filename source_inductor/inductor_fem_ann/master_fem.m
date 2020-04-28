@@ -1,4 +1,4 @@
-function master_fem(file_init, folder_fem, file_model, model_type, diff_max, var_type, sweep)
+function master_fem(file_init, folder_fem, file_model, model_type, timing, var_type, sweep)
 % Make many FEM simulations for different variable combinations.
 %
 %    Sweep different combinations.
@@ -42,7 +42,7 @@ fprintf('folder\n')
 
 % make the simulations
 fprintf('fem\n')
-fem_ann.get_fem(folder_fem, file_model, model_type, diff_max, var_type, n_sol, inp, const);
+fem_ann.get_fem_vec(folder_fem, file_model, model_type, timing, var_type, n_sol, inp, const);
 
 % teardown
 fprintf('################## master_fem\n')

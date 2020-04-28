@@ -81,14 +81,14 @@ However, this toolbox is made in order to be **easily extended** with other indu
 ## Compatibility
 
 The tool is tested with the following MATLAB setup:
-* Tested with MATLAB R2018b
+* Tested with MATLAB R2018b or 2019a
 * Deep Learning Toolbox ("neural_network_toolbox")
 * Global Optimization Toolbox ("gads_toolbox")
 * Optimization Toolbox ("optimization_toolbox")
 * Signal Processing Toolbox ("signal_toolbox")
 
 The tool is tested with the following COMSOL setup (for FEM simulations):
-* COMSOL Multiphysics 5.4
+* COMSOL Multiphysics 5.4 or 5.5
 * AC/DC Module (for the magnetic simulation)
 * Heat Transfer Module (for the thermal simulation)
 * CAD Import Module (for 3d geometry manipulation)
