@@ -161,10 +161,15 @@ How fast is the code, do I need a powerful machine?
 * The generation of the FEM training/testing sets takes some tens of hours.
 * The following mid-range laptop is used: Intel Core i7-8650U @ 1.90GHz / 16GB RAM
 
+I have a powerful cluster, can I use it?
+* Yes, the code can run in parallel (multithreading and/or completely distributed).
+* The code has been run succesfully on a HPC cluster using LSF. 
+
 Can this code run with GNU Octave?
 * The code is not compatible with GNU Octave.
 * The ANN library is not compatible with GNU Octave.
 * The COMSOL MATLAB Livelink is not compatible with GNU Octave.
+* The GUI is not compatible with GNU Octave.
 
 Why the tool in MATLAB and Python and not only in Python?
 * Mainly due to the COMSOL MATLAB Livelink which is great on MATLAB

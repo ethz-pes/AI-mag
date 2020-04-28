@@ -212,7 +212,7 @@ classdef ParetoGui < handle
             
             % logo file
             %    - the logo is done with Illustrator
-            %    - the Mathematica source file is 'resources/logo_fem_ann.ai'
+            %    - the Illustrator source file is 'resources/artwork/logo_fem_ann.ai'
             filename = 'logo_fem_ann.png';
             
             % set the logo
@@ -305,7 +305,7 @@ classdef ParetoGui < handle
             
             % logo file
             %    - the logo is done with Illustrator
-            %    - the Mathematica source file is 'resources/logo_pes_ethz.ai'
+            %    - the Illustrator source file is 'resources/artwork/logo_pes_ethz.ai'
             filename = 'logo_pes_ethz.png';
             
             % set the logo

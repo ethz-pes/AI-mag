@@ -24,7 +24,7 @@ assert(any(strcmp(model_type, {'ht', 'mf'})), 'invalid model_type')
 %    - n_trial: maximum number if COMSOL license trials
 %    - n_reload: how often the COMSOL model is reloaded (trade-off between speed, license, and memory)
 timing.diff_trial = duration('00:30', 'InputFormat', 'mm:ss');
-timing.n_trial = 240;
+timing.n_trial = 120;
 timing.n_reload = 10;
 
 % control the samples generation
