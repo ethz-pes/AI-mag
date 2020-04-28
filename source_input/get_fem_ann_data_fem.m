@@ -1,4 +1,4 @@
-function [file_model, diff_max, var_type, sweep] = get_fem_ann_data_fem(model_type, sweep_mode)
+function [file_model, timing, var_type, sweep] = get_fem_ann_data_fem(model_type, sweep_mode)
 % Return the data required for the FEM simulations.
 %
 %    Define the variables and how to generate the samples.
@@ -10,7 +10,7 @@ function [file_model, diff_max, var_type, sweep] = get_fem_ann_data_fem(model_ty
 %
 %    Returns:
 %        file_model (str): path of the COMSOL file to be used for the simulations
-%        diff_max (duration): maximum simulation duration (for batching systems)
+%        timing (struct): struct controlling simulation time (for batching systems)
 %        var_type (struct): type of the different variables used in the solver
 %        sweep (struct): data controlling the samples generation
 %
@@ -19,8 +19,13 @@ function [file_model, diff_max, var_type, sweep] = get_fem_ann_data_fem(model_ty
 % check the input data
 assert(any(strcmp(model_type, {'ht', 'mf'})), 'invalid model_type')
 
-% maximum simulation duration (for batching systems)
-diff_max = duration('12:00', 'InputFormat', 'hh:mm');
+% struct controlling simulation time (for batching systems)
+%    - diff_sim_max: maximum simulation time
+%    - diff_license_max: maximum time to acquire a COMSOL license
+%    - diff_license_trial: time between two COMSOL license trials
+timing.diff_sim_max = duration('12:00', 'InputFormat', 'hh:mm');
+timing.diff_license_max = duration('02:00', 'InputFormat', 'hh:mm');
+timing.diff_license_trial = duration('00:30', 'InputFormat', 'mm:ss');
 
 % control the samples generation
 switch sweep_mode

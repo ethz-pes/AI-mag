@@ -19,7 +19,7 @@ function master_fem(file_init, folder_fem, file_model, model_type, diff_max, var
 %        folder_fem (str): path of the folder where the results are stored
 %        file_model (str): path of the COMSOL file to be used for the simulations
 %        model_type (str): name of the physics to be solved
-%        diff_max (duration): maximum simulation duration (for batching systems)
+%        timing (struct): struct controlling simulation time (for batching systems)
 %        var_type (struct): type of the different variables used in the solver
 %        sweep (struct): data controlling the samples generation
 %

@@ -1,4 +1,4 @@
-function get_fem(folder_fem, file_model, model_type, diff_max, var_type, n_sol, inp, const)
+function get_fem(folder_fem, file_model, model_type, timing, var_type, n_sol, inp, const)
 % Make many FEM simulations for the given variable combinations.
 %
 %    The results are stored for every simulation with an hash as filename.
@@ -8,7 +8,7 @@ function get_fem(folder_fem, file_model, model_type, diff_max, var_type, n_sol, 
 %        folder_fem (str): path of the folder where the results are stored
 %        file_model (str): path of the COMSOL file to be used for the simulations
 %        model_type (str): name of the physics to be solved
-%        diff_max (duration): maximum simulation duration (for batching systems)
+%        timing (struct): struct controlling simulation time (for batching systems)
 %        var_type (struct): type of the different variables used in the solver
 %        n_sol (int): number of simulations to be done
 %        inp (struct): struct of vectors with the input combinations
@@ -16,32 +16,43 @@ function get_fem(folder_fem, file_model, model_type, diff_max, var_type, n_sol, 
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
-% simulation start time
-tic = datetime('now');
+% get timing data
+diff_sim_max = timing.diff_sim_max;
+diff_license_max = timing.diff_license_max;
+diff_license_trial = timing.diff_license_trial;
 
-for i=1:n_sol
-    % compute elapsed time
-    toc = datetime('now');
-    diff = toc-tic;
-    
-    % check elapsed time, abort if required
-    if diff<diff_max
-        % display design progression
-        fprintf('    %d / %d\n', i, n_sol)
-        
-        % get a specific combination
-        inp_tmp =  get_struct_filter(inp, i);
-        
-        % simulate the selected input
-        get_out_sub(file_model, folder_fem, model_type, var_type, inp_tmp, const);
-    else
-        % display time information
-        fprintf('    time elapsed: %s / %s\n', char(diff), char(diff_max))
-        
-        % abort
-        break
-    end
+% acquire a COMSOL licence
+[model, has_license] = fem_ann.get_license(file_model, diff_license_max, diff_license_trial);
+
+% run the simulations, if a license is acquired
+if has_license==true
+    assert(isa(model, 'com.comsol.clientapi.impl.ModelClient'), 'invalid model')
+    fct = @(idx) get_fem_idx(folder_fem, file_model, model_type, var_type, inp, const, idx);
+    fem_ann.get_loop_time(n_sol, fct, diff_sim_max);
 end
+
+end
+
+function get_fem_idx(folder_fem, file_model, model_type, var_type, inp, const, idx)
+% Extract the variable and make a FEM simulation for a given index.
+%
+%    The results are stored for every simulation with an hash as filename.
+%    If the hash already exists the simulation is skiped.
+%
+%    Parameters:
+%        folder_fem (str): path of the folder where the results are stored
+%        file_model (str): path of the COMSOL file to be used for the simulations
+%        model_type (str): name of the physics to be solved
+%        var_type (struct): type of the different variables used in the solver
+%        inp (struct): struct of vectors with the input combinations
+%        const (struct): struct of with the constant data
+%        idx (integer): simulation index to be computed
+
+% get a specific combination
+inp_tmp =  get_struct_filter(inp, idx);
+
+% simulate the selected input
+get_out_sub(file_model, folder_fem, model_type, var_type, inp_tmp, const);
 
 end
 
