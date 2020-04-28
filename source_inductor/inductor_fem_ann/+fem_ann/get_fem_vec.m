@@ -36,7 +36,7 @@ for i=1:n_sol
         if is_ok==true
             fem_ann.get_fem_file(filename_tmp, file_model, model, model_type, var_type, inp_tmp, const);
         else
-            fprintf('    model failure / %d / %d / %s\n', i, n_sol, get_diff(tic))
+            fprintf('    model failure / %s\n', get_diff(tic))
             break;
         end
     end

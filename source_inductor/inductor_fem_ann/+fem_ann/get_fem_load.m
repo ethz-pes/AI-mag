@@ -31,17 +31,17 @@ n_reload = timing.n_reload;
 % check if load is required
 if isempty(model)||isempty(is_ok)||isempty(i_reload)
     % init, load is required
-    fprintf('        license / load\n')
+    fprintf('        load / load model\n')
     [model, is_ok] = get_load(file_model, diff_trial, n_trial);
     i_reload = 1;
 elseif i_reload==0
     % n_trial runs have been made, reload is required
-    fprintf('        license / load\n')
+    fprintf('        load / reload model\n')
     [model, is_ok] = get_load(file_model, diff_trial, n_trial);
     i_reload = i_reload+1;
 else
     % n_trial runs have not been made, reload is not required
-    fprintf('        license / pass\n')
+    fprintf('        load / keep model\n')
     i_reload = i_reload+1;
     i_reload = mod(i_reload, n_reload);
 end
@@ -66,7 +66,7 @@ tic = datetime('now');
 % try to load the model
 for i=1:n_trial
     % display
-    fprintf('        license / try / %d / %d / %s\n', i, n_trial, get_diff(tic))
+    fprintf('        load / try / %d / %d / %s\n', i, n_trial, get_diff(tic))
     
     % try to load a model
     try
@@ -87,9 +87,9 @@ end
 
 % status
 if is_ok==true
-    fprintf('        license / success / %d / %s\n', n_trial, get_diff(tic))
+    fprintf('        load / success / %s\n', get_diff(tic))
 else
-    fprintf('        license / failure / %d / %s\n', n_trial, get_diff(tic))
+    fprintf('        load / failure / %s\n', get_diff(tic))
 end
 
 end
