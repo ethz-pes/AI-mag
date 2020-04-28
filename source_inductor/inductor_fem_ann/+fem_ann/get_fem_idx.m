@@ -11,7 +11,7 @@ function [inp, is_hash, filename] = get_fem_idx(folder_fem, inp, idx)
 %
 %    Returns:
 %        inp (struct): struct of scalars with the selected input combination
-%        is_hash (logical): if the hash already exists (or not) 
+%        is_hash (logical): if the hash already exists (or not)
 %        filename (str): filename for the selected combination
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod

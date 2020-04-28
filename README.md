@@ -1,7 +1,7 @@
 # MATLAB Inductor Optimization with FEM/AMM
 
 **MATLAB** toolbox (using also COMSOL and Python) for **power electronic inductor optimization**. 
-The goal of this tool is to **combine** the **accuracy of the Finite Element Method** with the **evaluation speed** of a semi-numerical model by using **Artificial Neural Network (ANN)**.
+The goal of this tool is to **combine** the **accuracy of the Finite Element Method** with the **evaluation speed** of **Artificial Neural Network (ANN)**.
 This project is licensed under the **xxx License**.
 
 More precisely, the following **workflow** is implemented:
@@ -130,15 +130,14 @@ The releases are available at GitHub and contains:
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-MATLAB                          92           1583           4619           4387
+MATLAB                          96           1625           4750           4517
 Python                           8            365            446            450
-Markdown                         4             61              0            220
+Markdown                         4             65              0            233
 DOS Batch                        3              9              0             34
 Bourne Shell                     3              9              9             21
 -------------------------------------------------------------------------------
-SUM:                           110           2027           5074           5112
--------------------------------------------------------------------------------
-```
+SUM:                           114           2073           5205           5255
+-------------------------------------------------------------------------------```
 
 # FAQ
 
