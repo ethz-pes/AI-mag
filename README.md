@@ -162,8 +162,8 @@ How fast is the code, do I need a powerful machine?
 * The following mid-range laptop is used: Intel Core i7-8650U @ 1.90GHz / 16GB RAM
 
 I have a powerful cluster, can I use it?
-* Yes, the code can run in parallel (multithreading and/or completely distributed).
-* The code has been run succesfully on a HPC cluster using LSF. 
+* Yes, the code can run in parallel (multithreaded and/or completely distributed).
+* The code has been run succesfully on a HPC cluster (bith a LSF batching system). 
 
 Can this code run with GNU Octave?
 * The code is not compatible with GNU Octave.
