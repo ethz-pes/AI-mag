@@ -2,7 +2,7 @@
 
 **MATLAB** toolbox (using also COMSOL and Python) for **power electronic inductor optimization**. 
 The goal of this tool is to **combine** the **accuracy of the Finite Element Method** with the **evaluation speed** of **Artificial Neural Network (ANN)**.
-This project is licensed under the **xxx License**.
+This project is licensed under the **BSD License**.
 
 More precisely, the following **workflow** is implemented:
 * Simulating many designs with **FEM thermal and magnetic** simulations (COMSOL)
@@ -191,6 +191,7 @@ Why the tool in MATLAB and Python and not only in Python?
 * The Pareto optimization team at ETH Zurich, Power Electronic Systems Laboratory
 * The Euler cluster team at ETH Zurich
 * Jan, from MATLAB File Exchange for the inspiration for the md5 hashing code
+* Tim, from MATLAB File Exchange for the inspiration for the serialization code
 * Keras and TensorFlow communities
 
 ## License

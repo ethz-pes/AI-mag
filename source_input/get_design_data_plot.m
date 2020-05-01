@@ -30,7 +30,7 @@ plot_param.cost_correlation = get_plot_param('V_box', 'c_tot', 'f', [50e3 500e3]
 %    - var: cell of variables in the block, chosen from the data created by the extraction function
 text_param{1} = struct('title', 'fom', 'var', {{'V_box', 'A_box', 'm_tot', 'c_tot'}});
 text_param{2} = struct('title', 'circuit', 'var', {{'L', 'f', 'I_sat', 'I_rms'}});
-text_param{3} = struct('title', 'operating', 'var', {{'P_fl', 'P_hl', 'P_tot', 'T_max'}});
+text_param{3} = struct('title', 'operating', 'var', {{'P_fl', 'P_pl', 'P_mix', 'T_max'}});
 text_param{4} = struct('title', 'utilization', 'var', {{'I_peak_tot', 'I_rms_tot', 'r_peak_peak', 'fact_sat', 'fact_rms'}});
 
 end
@@ -105,9 +105,9 @@ L = fom.circuit.L;
 I_sat = fom.circuit.I_sat;
 I_rms = fom.circuit.I_rms;
 f_fl = operating.full_load.excitation.f;
-f_hl = operating.half_load.excitation.f;
+f_pl = operating.partial_load.excitation.f;
 data_fom.L = struct('value', L, 'name', 'L', 'scale', 1e6, 'unit', 'uH');
-data_fom.f = struct('value', (f_fl+f_hl)./2, 'name', 'f', 'scale', 1e-3, 'unit', 'kHz');
+data_fom.f = struct('value', (f_fl+f_pl)./2, 'name', 'f', 'scale', 1e-3, 'unit', 'kHz');
 data_fom.I_sat = struct('value', I_sat, 'name', 'I_sat', 'scale', 1.0, 'unit', 'A');
 data_fom.I_rms = struct('value', I_rms, 'name', 'I_rms', 'scale', 1.0, 'unit', 'A');
 
@@ -126,22 +126,22 @@ data_fom.fact_rms = struct('value', fact_rms, 'name', 'fact_rms', 'scale', 1e2, 
 % operating conditions
 P_fl = operating.full_load.losses.P_tot;
 T_fl = operating.full_load.thermal.T_max;
-P_hl = operating.half_load.losses.P_tot;
-T_hl = operating.half_load.thermal.T_max;
+P_pl = operating.partial_load.losses.P_tot;
+T_pl = operating.partial_load.thermal.T_max;
 data_fom.P_fl = struct('value', P_fl, 'name', 'P_fl', 'scale', 1.0, 'unit', 'W');
-data_fom.P_hl = struct('value', P_hl, 'name', 'P_hl', 'scale', 1.0, 'unit', 'W');
-data_fom.P_tot = struct('value', (P_fl+P_hl)./2, 'name', 'P_tot', 'scale', 1.0, 'unit', 'W');
-data_fom.T_max = struct('value', max(T_fl, T_hl), 'name', 'T_max', 'scale', 1.0, 'unit', 'C');
+data_fom.P_pl = struct('value', P_pl, 'name', 'P_pl', 'scale', 1.0, 'unit', 'W');
+data_fom.P_mix = struct('value', (P_fl+P_pl)./2, 'name', 'P_tot', 'scale', 1.0, 'unit', 'W');
+data_fom.T_max = struct('value', max(T_fl, T_pl), 'name', 'T_max', 'scale', 1.0, 'unit', 'C');
 
 % extract the validity information
 is_valid_fom = fom.is_valid;
 is_valid_fl = operating.full_load.is_valid;
-is_valid_hl = operating.half_load.is_valid;
+is_valid_pl = operating.partial_load.is_valid;
 
 % only select the valid design for the plots
 is_plot = true(1, n_sol);
 is_plot = is_plot&is_valid_fom;
 is_plot = is_plot&is_valid_fl;
-is_plot = is_plot&is_valid_hl;
+is_plot = is_plot&is_valid_pl;
 
 end

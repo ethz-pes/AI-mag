@@ -74,7 +74,7 @@ classdef InductorCompute < handle
             % Compute several operating points (losses and temperatures) for the different designs.
             %
             %    Parameters:
-            %        excitation (struct): struct containing the operating points (e.g., full load, half load)
+            %        excitation (struct): struct containing the operating points (e.g., full load, partial load)
             %
             %    Returns:
             %        operating (struct): struct containing the excitation, losses, and temperatures
