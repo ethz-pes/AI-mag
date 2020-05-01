@@ -106,6 +106,7 @@ However, the toolbox can work without Python, as long as the Python ANN engine i
 
 The tool is known to run with the following operating systems:
 * Linux Ubuntu 18.04.4 LTS
+* Linux CentOS 7.5
 * Microsoft Windows 10
 
 The following softwares were used to generate resources but are not required to run the code:
@@ -122,7 +123,7 @@ The source code is available in the GitHub Git repository and contains:
 
 The releases are available at GitHub and contains:
 * A stable version of the source code (code and ressources)
-* An archive containg the generated data (FEM solution, trained ANN, etc.)
+* An zip archive containg the generated data (FEM solution, trained ANN, etc.)
 
 ## Metrics
 

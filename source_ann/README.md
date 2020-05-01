@@ -54,6 +54,7 @@ However, the toolbox can work without Python (only MATLAB), as long as the Pytho
 
 The toolbox is known to run with the following operating systems:
 * Linux Ubuntu 18.04.4 LTS
+* Linux CentOS 7.5
 * Microsoft Windows 10
 
 # FAQ
