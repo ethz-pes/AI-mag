@@ -18,6 +18,6 @@ close('all')
 % print copyright
 fprintf('FEM/ANN Inductor Optimization\n')
 fprintf('    T. Guillod, Power Electronic Systems Laboratory\n')
-fprintf('    Copyright 2019-2020 ETH Zurich / xxx License\n')
+fprintf('    Copyright 2019-2020 ETH Zurich / BSD License\n')
 
 end

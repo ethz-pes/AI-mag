@@ -125,6 +125,8 @@ The releases are available at GitHub and contains:
 * A stable version of the source code (code and ressources)
 * An zip archive containg the generated data (FEM solution, trained ANN, etc.)
 
+All the releases (code and data) are on the [GitHub Repository](https://github.com/otvam/inductor_fem_ann).
+
 ## Metrics
 
 ```
@@ -139,6 +141,7 @@ Bourne Shell                     3              9              9             21
 -------------------------------------------------------------------------------
 SUM:                           114           2073           5205           5255
 -------------------------------------------------------------------------------```
+```
 
 # FAQ
 
@@ -179,7 +182,7 @@ Why the tool in MATLAB and Python and not only in Python?
 
 ## Author
 
-**Thomas Guillod, ETH Zurich, Power Electronic Systems Laboratory** - [GitHub Profile](https://github.com/otvam)
+* **Thomas Guillod, ETH Zurich, Power Electronic Systems Laboratory** - [GitHub Profile](https://github.com/otvam)
 
 ## Acknowledgement
 
@@ -192,5 +195,5 @@ Why the tool in MATLAB and Python and not only in Python?
 
 ## License
 
-* This project is licensed under the **xxx License**, see [LICENSE.md](LICENSE.md).
+* This project is licensed under the **BSD License**, see [LICENSE.md](LICENSE.md).
 * This project is copyrighted by: (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod.
