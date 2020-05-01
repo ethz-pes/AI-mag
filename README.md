@@ -98,7 +98,7 @@ It should be noted that COMSOL is only required to run the FEM simulations, not 
 In other word, COMSOL is required to generate the ANN training set, but not for running the design tool.
 
 The tool is tested with the following Python setup (for ANN with Keras and TensorFlow):
-* Tested with Python 3.6.8
+* Python 3.6.8
 * Numpy 1.18.1
 * TensorFlow 2.1.0
 

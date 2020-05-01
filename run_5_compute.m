@@ -34,7 +34,7 @@ run_sub('approx')
 end
 
 function run_sub(eval_type)
-% Run the FEM % Compute and plot a single inductor design (with different evaluation methods).
+% Compute many inductor inductor designs (with different evaluation methods).
 %
 %    Parameters:
 %        eval_type (str): type of the evaluation ('ann', or approx')

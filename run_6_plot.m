@@ -11,8 +11,22 @@ function run_6_plot()
 
 init_toolbox();
 
+% plot the data with ANN/regression
+run_sub('ann')
+
+% plot the data with analytical approximation
+run_sub('approx')
+
+end
+
+function run_sub(eval_type)
+% Display inductors design in a GUI (with different evaluation methods).
+%
+%    Parameters:
+%        eval_type (str): type of the evaluation ('ann', or approx')
+
 % path of the file contained the computed designs
-file_compute = 'data/compute.mat';
+file_compute = ['data/compute_' eval_type '.mat'];
 
 % get the GUI parameters
 [fct_data, plot_param, text_param] = get_design_data_plot();

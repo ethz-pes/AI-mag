@@ -46,7 +46,7 @@ The toolbox is tested with the following MATLAB setup:
 * Signal Processing Toolbox ("signal_toolbox")
 
 The toolbox is tested with the following Python setup:
-* Tested with Python 3.6.8
+* Python 3.6.8
 * Numpy 1.18.1
 * TensorFlow 2.1.0
 
