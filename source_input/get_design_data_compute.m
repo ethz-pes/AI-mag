@@ -1,10 +1,13 @@
-function [sweep, n_split, fct, eval_ann, data_compute] = get_design_data_compute()
+function [sweep, n_split, fct, eval_ann, data_compute] = get_design_data_compute(eval_type)
 % Return the data required for the computation of inductor designs.
 %
 %    Define the variables and how to generate the samples.
 %    How to evaluate the ANN/regression.
 %    How to filter the invalid design.
 %    Data required for the inductor evaluation.
+%
+%    Parameters:
+%        eval_type (str): type of the evaluation ('ann', or approx')
 %
 %    Returns:
 %        sweep (cell): data controlling the generation of the design combinations
