@@ -28,7 +28,7 @@ classdef IsoData < handle
             %        volume (vector): volume of the material for each sample
             
             % check that the data are insulation data
-            assert(strcmp(material.type, 'iso'), 'invalid length')
+            assert(strcmp(material.type, 'iso'), 'invalid material type')
             
             % extract data
             for i=1:length(material.data)

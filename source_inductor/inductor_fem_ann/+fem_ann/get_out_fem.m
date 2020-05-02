@@ -110,7 +110,7 @@ data_raw = cell(1,length(expr));
 % assign the results
 for i=1:length(expr)
     data_tmp = data_raw{i};
-    assert(length(data_tmp)==1 , 'invalid length')
+    assert(length(data_tmp)==1 , 'invalid FEM global evaluation size')
     data.(expr{i}) = data_tmp;
 end
 

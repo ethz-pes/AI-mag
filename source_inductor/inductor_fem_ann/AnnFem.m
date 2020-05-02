@@ -79,7 +79,7 @@ classdef AnnFem < handle
             %        geom (struct): data of the parsed geometry with extra data
             
             % check the state
-            assert(self.is_geom==true, 'invalid state')
+            assert(self.is_geom==true, 'invalid state: geometry is not set')
             
             % extend the data, get the validity
             [is_valid, geom] = self.get_extend_inp_wrapper('none', self.geom);
@@ -96,7 +96,7 @@ classdef AnnFem < handle
             %        fom (struct): data with the ANN/regression simulation results
             
             % check the state
-            assert(self.is_geom==true, 'invalid state')
+            assert(self.is_geom==true, 'invalid state: geometry is not set')
             
             % extend the results, get the validity
             [is_valid, fom] = self.get_model_type(excitation, 'mf');
@@ -113,7 +113,7 @@ classdef AnnFem < handle
             %        fom (struct): data with the ANN/regression simulation results
             
             % check the state
-            assert(self.is_geom==true, 'invalid state')
+            assert(self.is_geom==true, 'invalid state: geometry is not set')
             
             % extend the results, get the validity
             [is_valid, fom] = self.get_model_type(excitation, 'ht');
@@ -133,7 +133,7 @@ classdef AnnFem < handle
             %        ann_manager_obj (AnnManager): object managing the ANN/regression
             
             % create ANN object
-            assert(strcmp(data.model_type, model_type), 'invalid type')
+            assert(strcmp(data.model_type, model_type), 'invalid physics type')
             ann_manager_obj = AnnManager(data.ann_input);
             ann_manager_obj.load(data.ann_data);
             

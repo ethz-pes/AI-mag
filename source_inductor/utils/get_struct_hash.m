@@ -46,8 +46,8 @@ function hash = get_hash_struct(hash, engine, data)
 %        hash (vector): computed hash (vector format)
 
 % check type
-assert(isstruct(data), 'invalid data')
-assert(numel(data)==1, 'invalid data')
+assert(isstruct(data), 'invalid data type')
+assert(numel(data)==1, 'invalid data size')
 
 % hash field and values, ignore order of fields
 field = sort(fieldnames(data));
@@ -59,11 +59,11 @@ for i=1:length(field)
     value = data.(field{i});
     if isstruct(value)
         % if struct, recursive call
-        assert(numel(value)==1, 'invalid data')
+        assert(numel(value)==1, 'invalid data size')
         hash = get_hash_struct(hash, engine, value);
     elseif isnumeric(value)||islogical(value)
         % if struct, hash it
-        assert(size(value, 1)==1, 'invalid data')
+        assert(size(value, 1)==1, 'invalid data size')
         hash = get_hash_value(hash, engine, value);
     end
 end

@@ -10,8 +10,8 @@ function int = get_map_str_to_int(str)
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % check string
-assert(ischar(str), 'invalid string')
-assert(length(str)<=8, 'invalid string')
+assert(ischar(str), 'invalid data type')
+assert(length(str)<=8, 'invalid string length')
 
 % cast to bytes
 bytes_nb = uint8(str(:));

@@ -34,7 +34,7 @@ classdef WindingData < handle
             %        fill_pack (vector): fill factor of the packing (not of the litz wire) for each sample
             
             % check that the data are winding data
-            assert(strcmp(material.type, 'winding'), 'invalid length')
+            assert(strcmp(material.type, 'winding'), 'invalid material type')
             
             % assign input
             for i=1:length(material.data)

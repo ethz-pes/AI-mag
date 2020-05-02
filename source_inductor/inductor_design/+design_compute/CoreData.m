@@ -32,7 +32,7 @@ classdef CoreData < handle
             %        volume (vector): volume of the material for each sample
             
             % check that the data are core data
-            assert(strcmp(material.type, 'core'), 'invalid length')
+            assert(strcmp(material.type, 'core'), 'invalid material type')
             
             % parse the data for the different materials
             for i=1:length(material.data)

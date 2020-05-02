@@ -30,7 +30,7 @@ switch self.split_train_test.type
 end
 
 % check the size
-assert(nnz(self.idx_test)>=self.split_train_test.n_test_min, 'invalid number of solutions')
-assert(nnz(self.idx_train)>=self.split_train_test.n_train_min, 'invalid number of solutions')
+assert(nnz(self.idx_test)>=self.split_train_test.n_test_min, 'invalid number of test samples')
+assert(nnz(self.idx_train)>=self.split_train_test.n_train_min, 'invalid number of training samples')
 
 end

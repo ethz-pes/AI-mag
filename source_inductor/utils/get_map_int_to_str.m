@@ -10,8 +10,8 @@ function str = get_map_int_to_str(int)
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % check int
-assert(isa(int, 'uint64'), 'invalid int')
-assert(length(int)==1, 'invalid int')
+assert(isa(int, 'uint64'), 'invalid data type')
+assert(length(int)==1, 'invalid data type')
 
 % cast to bytes
 bytes = typecast(int, 'uint8');

@@ -43,8 +43,8 @@ classdef AnnEngineMatlabLsq < ann_engine.AnnEngineAbstract
             %        history (various): regression training/fitting record
             
             % check the data type
-            assert(isnumeric(model), 'invalid model')
-            assert(isstruct(history), 'invalid model')
+            assert(isnumeric(model), 'invalid model type')
+            assert(isstruct(history), 'invalid history type')
             
             % load the data
             self.ann_data.(name) = struct('model', model, 'history', history);
@@ -78,11 +78,11 @@ classdef AnnEngineMatlabLsq < ann_engine.AnnEngineAbstract
             n_sol_out = size(out, 2);
             
             % check the size
-            assert(n_sol_inp==n_sol_out, 'invalid size')
-            assert(n_sol_out>0, 'invalid size')
-            assert(n_sol_inp>0, 'invalid size')
-            assert(n_inp>0, 'invalid size')
-            assert(n_out>0, 'invalid size')
+            assert(n_sol_inp==n_sol_out, 'invalid number of samples')
+            assert(n_sol_out>0, 'invalid number of samples')
+            assert(n_sol_inp>0, 'invalid number of samples')
+            assert(n_inp>0, 'invalid number of inputs')
+            assert(n_out>0, 'invalid number of outputs')
             
             % fit with least square
             fct_err_tmp = @(x) self.fct_err(x, inp, out);
@@ -109,13 +109,13 @@ classdef AnnEngineMatlabLsq < ann_engine.AnnEngineAbstract
             % get and check the model
             model = self.ann_data.(name).model;
             history = self.ann_data.(name).history;
-            assert(isnumeric(model), 'invalid model')
-            assert(isstruct(history), 'invalid model')
+            assert(isnumeric(model), 'invalid model type')
+            assert(isstruct(history), 'invalid history type')
             
             % evaluate the model
             x = model;
             out = self.fct_fit(x, inp);
-            assert(size(inp, 2)==size(out, 2), 'invalid size')
+            assert(size(inp, 2)==size(out, 2), 'invalid number of samples')
         end
     end
 end

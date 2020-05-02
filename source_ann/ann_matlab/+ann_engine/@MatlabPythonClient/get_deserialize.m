@@ -30,7 +30,7 @@ assert(isa(bytes_array, 'uint8'), 'invalid data type')
 
 % deserialize data, at the end the bytes_array array should be empty
 [data, bytes_array] = deserialize_data(bytes_array);
-assert(isempty(bytes_array), 'invalid data length')
+assert(isempty(bytes_array), 'invalid byte array data length')
 
 end
 
@@ -213,7 +213,7 @@ function [bytes_array, bytes_tmp] = get_byte(bytes_array, n)
 %        bytes_tmp (bytes): read bytes (n bytes)
 
 
-assert(length(bytes_array)>=n, 'invalid data length')
+assert(length(bytes_array)>=n, 'invalid byte array data length')
 bytes_tmp = bytes_array(1:n);
 bytes_array = bytes_array(n+1:end);
 

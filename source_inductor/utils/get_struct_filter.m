@@ -16,8 +16,8 @@ function struct_out = get_struct_filter(struct_in, idx)
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % check type
-assert(isstruct(struct_in)==1, 'invalid data')
-assert(numel(struct_in)==1, 'invalid data')
+assert(isstruct(struct_in)==1, 'invalid data type')
+assert(numel(struct_in)==1, 'invalid data size')
 
 % filter data
 struct_out = struct();
@@ -27,11 +27,11 @@ for i=1:length(field)
     
     if isstruct(struct_in_tmp)
         % if struct, recursive call
-        assert(numel(struct_in_tmp)==1, 'invalid data')
+        assert(numel(struct_in_tmp)==1, 'invalid data size')
         struct_out.(field{i}) = get_struct_filter(struct_in_tmp, idx);
     elseif isnumeric(struct_in_tmp)||islogical(struct_in_tmp)
         % if vector, filter
-        assert(size(struct_in_tmp, 1)==1, 'invalid data')
+        assert(size(struct_in_tmp, 1)==1, 'invalid data size')
         struct_out.(field{i}) = struct_in_tmp(idx);
     else
         error('invalid data type')

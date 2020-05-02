@@ -12,7 +12,7 @@ function value_eval = get_integer_map(idx, value, idx_eval)
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % check that the mapping is possible
-assert(length(idx)==length(value), 'invalid mapping')
+assert(length(idx)==length(value), 'invalid mapping: data size')
 
 %init
 is_ok_eval = false(1, length(idx_eval));
@@ -27,6 +27,6 @@ for i=1:length(idx)
 end
 
 % check that the mapping is complete
-assert(all(is_ok_eval==true), 'invalid mapping')
+assert(all(is_ok_eval==true), 'invalid mapping: impossible mapping')
 
 end

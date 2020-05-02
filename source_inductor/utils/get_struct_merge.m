@@ -18,10 +18,10 @@ function struct_out = get_struct_merge(struct_in_1, struct_in_2)
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % check type
-assert(isstruct(struct_in_1)==1, 'invalid data')
-assert(isstruct(struct_in_2)==1, 'invalid data')
-assert(numel(struct_in_1)==1, 'invalid data')
-assert(numel(struct_in_2)==1, 'invalid data')
+assert(isstruct(struct_in_1)==1, 'invalid data type')
+assert(isstruct(struct_in_2)==1, 'invalid data type')
+assert(numel(struct_in_1)==1, 'invalid data size')
+assert(numel(struct_in_2)==1, 'invalid data size')
 
 % get field and data
 field_1 = fieldnames(struct_in_1);
@@ -59,13 +59,13 @@ if numel(data_in)==1
         % if struct, it's already good
     elseif isnumeric(data_out)||islogical(data_out)
         % if vector, check the size
-        assert(size(data_out, 1)==1, 'invalid data')
+        assert(size(data_out, 1)==1, 'invalid data size')
     else
         error('invalid data type or size')
     end
 elseif length(data_in)==2
     % if duplicate, it should be structs, recursive call
-    assert(all(cellfun(@isstruct, data_in)), 'invalid data')
+    assert(all(cellfun(@isstruct, data_in)), 'invalid data type')
     data_out = get_struct_merge(data_in{1}, data_in{2});
 else
         error('invalid data type or size')

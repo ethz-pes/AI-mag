@@ -83,8 +83,8 @@ classdef GuiUtils < handle
             n_margin_y = round((n_parent_y-n_img_y)./2);
             
             % the image should be smaller than the available space
-            assert(n_margin_x>=0, 'invalid data')
-            assert(n_margin_y>=0, 'invalid data')
+            assert(n_margin_x>=0, 'invalid image pixel margin')
+            assert(n_margin_y>=0, 'invalid image pixel margin')
             
             % resize the axis, center it, and display the image
             set(ax, 'Units', 'pixels', 'Position',[n_margin_x n_margin_y n_img_x n_img_y]);

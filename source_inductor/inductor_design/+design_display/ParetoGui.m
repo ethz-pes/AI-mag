@@ -282,7 +282,7 @@ classdef ParetoGui < handle
             %    Remove the selection.
             %    Force display callback.
             
-            assert(self.is_select==true, 'invalid button')
+            assert(self.is_select==true, 'invalid state: inductor id is not set')
             self.is_select = false;
             self.callback_display();
         end
@@ -293,7 +293,7 @@ classdef ParetoGui < handle
             %    A design should be selected.
             %    Open the GUI showing the details ('InductorGUI').
             
-            assert(self.is_select==true, 'invalid button')
+            assert(self.is_select==true, 'invalid state: inductor id is not set')
             self.inductor_gui_obj.open_gui();
         end
         

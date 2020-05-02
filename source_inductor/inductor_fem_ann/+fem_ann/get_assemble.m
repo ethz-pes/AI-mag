@@ -17,7 +17,7 @@ function [diff, n_tot, n_sol, model_type, file_model, inp, out_fem] = get_assemb
 
 % get MATLAB file in the directory
 filelist = dir([folder_fem filesep() '*.mat']);
-assert(isempty(filelist)==false, 'invalid data')
+assert(isempty(filelist)==false, 'invalid number of data to assemble (empty)')
 
 % for all the files
 for i=1:length(filelist)
@@ -45,12 +45,12 @@ out_fem = [out_fem{is_valid}];
 
 % all the simulations should have the same physics
 model_type = unique(model_type);
-assert(length(model_type)==1, 'invalid model_type')
+assert(length(model_type)==1, 'invalid physics type (not unique)')
 model_type = model_type{:};
 
 % all the simulations should have the same model file
 file_model = unique(file_model);
-assert(length(file_model)==1, 'invalid model_type')
+assert(length(file_model)==1, 'invalid FEM model file (not unique)')
 file_model = file_model{:};
 
 % transform the array of structs into structs of arrays

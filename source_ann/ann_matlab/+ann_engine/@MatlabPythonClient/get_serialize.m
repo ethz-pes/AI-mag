@@ -25,9 +25,6 @@ function bytes_array = get_serialize(data)
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
-% check the type
-% assert(isstruct(data), 'invalid data')
-
 % init the byte array
 bytes_array = uint8([]);
 

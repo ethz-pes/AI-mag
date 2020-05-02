@@ -41,7 +41,7 @@ end
 
 % check data
 P_vec = P_mat(:);
-assert(all(P_vec>0), 'invalid loss data')
+assert(all(P_vec>0), 'invalid loss negative data')
 
 end
 

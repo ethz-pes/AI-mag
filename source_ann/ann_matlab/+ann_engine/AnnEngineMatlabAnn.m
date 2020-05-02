@@ -37,8 +37,8 @@ classdef AnnEngineMatlabAnn < ann_engine.AnnEngineAbstract
             %        history (various): regression training/fitting record
             
             % check the data type
-            assert(isa(model, 'network'), 'invalid model')
-            assert(isstruct(history), 'invalid model')
+            assert(isa(model, 'network'), 'invalid model type')
+            assert(isstruct(history), 'invalid history type')
             
             % load the data
             self.ann_data.(name) = struct('model', model, 'history', history);
@@ -72,19 +72,19 @@ classdef AnnEngineMatlabAnn < ann_engine.AnnEngineAbstract
             n_sol_out = size(out, 2);
             
             % check and get the number of samples
-            assert(n_sol_inp==n_sol_out, 'invalid size')
+            assert(n_sol_inp==n_sol_out, 'invalid number of samples')
             n_sol = mean([n_sol_inp n_sol_out]);
             
             % get the ANN model
-            assert(n_sol>0, 'invalid size')
-            assert(n_inp>0, 'invalid size')
-            assert(n_out>0, 'invalid size')
+            assert(n_sol>0, 'invalid number of samples')
+            assert(n_inp>0, 'invalid number of inputs')
+            assert(n_out>0, 'invalid number of outputs')
             model = self.fct_model(n_sol, n_inp, n_out);
             [model, history] = self.fct_train(model, inp, out);
             
             % check the data type
-            assert(isa(model, 'network'), 'invalid model')
-            assert(isstruct(history), 'invalid model')
+            assert(isa(model, 'network'), 'invalid model type')
+            assert(isstruct(history), 'invalid history type')
         end
         
         function out = predict(self, name, inp)
@@ -100,12 +100,12 @@ classdef AnnEngineMatlabAnn < ann_engine.AnnEngineAbstract
             % get and check the model
             model = self.ann_data.(name).model;
             history = self.ann_data.(name).history;
-            assert(isa(model, 'network'), 'invalid model')
-            assert(isstruct(history), 'invalid model')
+            assert(isa(model, 'network'), 'invalid model type')
+            assert(isstruct(history), 'invalid history type')
             
             % evaluate the model
             out = model(inp);
-            assert(size(inp, 2)==size(out, 2), 'invalid size')
+            assert(size(inp, 2)==size(out, 2), 'invalid number of samples')
         end
     end
 end

@@ -43,7 +43,7 @@ classdef InductorDisplay < handle
             
             % get the array index corresponding to the id
             idx = self.id_design==id_select;
-            assert(nnz(idx)==1, 'invalid data')
+            assert(nnz(idx)==1, 'invalid inductor id')
             
             % filter to provided data
             fom_tmp = get_struct_filter(self.fom, idx);

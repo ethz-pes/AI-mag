@@ -133,7 +133,7 @@ classdef AnnManager < handle
             %    Returns:
             %        fom (struct): : figures of merit for the regression quality
             
-            assert(self.is_train==true, 'invalid state')
+            assert(self.is_train==true, 'invalid state: model is not trained')
             fom = self.fom;
         end
         
@@ -191,7 +191,7 @@ classdef AnnManager < handle
             
             % check the range, the provided data should be valid
             is_valid = self.get_range_inp(self.inp);
-            assert(all(is_valid==true), 'invalid inp')
+            assert(all(is_valid==true), 'invalid input training data range')
             
             % split the data between training and test set
             self.get_idx_split();
@@ -249,7 +249,7 @@ classdef AnnManager < handle
             %        out_nrm_tmp (struct): evaluated data (equal to the provided normalization data)
             
             % the regression has to be already trained/fitted
-            assert(self.is_train==true, 'invalid state')
+            assert(self.is_train==true, 'invalid state: model is not trained')
             
             % check validity of the input data
             is_valid_tmp = self.get_range_inp(inp_tmp);
@@ -272,7 +272,7 @@ classdef AnnManager < handle
             %        out_nrm_tmp (struct): evaluated data (obtained with the regression engine)
             
             % the regression has to be already trained/fitted
-            assert(self.is_train==true, 'invalid state')
+            assert(self.is_train==true, 'invalid state: model is not trained')
             
             % scale the input, run the regression, and unscale the output
             inp_mat_tmp = self.get_scale_inp(inp_tmp);

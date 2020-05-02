@@ -25,7 +25,7 @@ obj.train(n_sol, inp, out_ref, out_nrm);
 % get the figures of merit of the regression
 fprintf('get figures of merit\n')
 fom = obj.get_fom();
-assert(isstruct(fom), 'invalid fom')
+assert(isstruct(fom), 'invalid fom data type')
 
 % display and plot the figures of merit of the regression
 fprintf('display information\n')
@@ -64,13 +64,13 @@ obj.load(ann_data);
 
 % dummy evaluation with the normalization data, just check the data
 [is_valid_tmp, out_nrm_tmp] = obj.predict_nrm(n_sol, inp, out_nrm);
-assert(islogical(is_valid_tmp), 'invalid predict data')
-assert(isstruct(out_nrm_tmp), 'invalid predict data')
+assert(islogical(is_valid_tmp), 'invalid predict input data')
+assert(isstruct(out_nrm_tmp), 'invalid predict output type')
 
 % evaluation of the regression
 [is_valid_tmp, out_ann_tmp] = obj.predict_ann(n_sol, inp, out_nrm);
-assert(islogical(is_valid_tmp), 'invalid predict data')
-assert(isstruct(out_ann_tmp), 'invalid predict data')
+assert(islogical(is_valid_tmp), 'invalid predict input data')
+assert(isstruct(out_ann_tmp), 'invalid predict output type')
 
 % delete the object
 obj.delete();

@@ -15,7 +15,7 @@ function struct_out = get_struct_assemble(struct_in)
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % check type
-assert(isstruct(struct_in)==1, 'invalid data')
+assert(isstruct(struct_in)==1, 'invalid data type')
 
 % handle data
 struct_out = struct();
@@ -28,7 +28,7 @@ for i=1:length(field)
         struct_out.(field{i}) = get_struct_assemble(struct_in_tmp);
     else
         % if data, convert to a row vector
-        assert(size(struct_in_tmp, 1)==1, 'invalid data')
+        assert(size(struct_in_tmp, 1)==1, 'invalid data size')
         struct_out.(field{i}) = struct_in_tmp;
     end
 end

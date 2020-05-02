@@ -103,7 +103,7 @@ classdef GuiScatter < handle
             
             % find the selected point
             idx = id_vec==id;
-            assert(nnz(idx)==1, 'invalid data')
+            assert(nnz(idx)==1, 'invalid selected point id')
             x = x_vec(idx);
             y = y_vec(idx);
             
@@ -245,8 +245,8 @@ classdef GuiScatter < handle
             %        event (event): mouse click event
             
             % check the object and event
-            assert(isa(obj, 'matlab.graphics.chart.primitive.Scatter'), 'invalid click')
-            assert(isa(event, 'matlab.graphics.eventdata.Hit'), 'invalid click')
+            assert(isa(obj, 'matlab.graphics.chart.primitive.Scatter'), 'invalid click object')
+            assert(isa(event, 'matlab.graphics.eventdata.Hit'), 'invalid click event')
             
             % get the axis coordinate of the clicked point
             currentPoint = get(self.ax, 'CurrentPoint');
@@ -276,7 +276,7 @@ classdef GuiScatter < handle
             % find the nearest point
             d_px_vec = hypot(d_px_x_vec, d_px_y_vec);
             [d_px, idx] = min(d_px_vec);
-            assert(isfinite(d_px), 'invalid click')
+            assert(isfinite(d_px), 'invalid click pixel distance')
             
             % find the id of the selected point
             id = id_vec(idx);

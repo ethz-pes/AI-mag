@@ -45,7 +45,7 @@ classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
             
             % make request
             data_out = self.client_obj.run(data_inp);
-            assert(data_out.status==true, 'train error')
+            assert(data_out.status==true, 'loading Python error')
         end
         
         function unload(self, name)
@@ -60,7 +60,7 @@ classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
             
             % make request
             data_out = self.client_obj.run(data_inp);
-            assert(data_out.status==true, 'train error')
+            assert(data_out.status==true, 'unloading Python error')
         end
         
         function [model, history] = train(self, inp, out)
@@ -82,7 +82,7 @@ classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
             
             % make request
             data_out = self.client_obj.run(data_inp);
-            assert(data_out.status==true, 'train error')
+            assert(data_out.status==true, 'training Python error')
             
             % response data
             model = data_out.model;
@@ -106,7 +106,7 @@ classdef AnnEnginePythonAnn < ann_engine.AnnEngineAbstract
             
             % make request
             data_out = self.client_obj.run(data_inp);
-            assert(data_out.status==true, 'train error')
+            assert(data_out.status==true, 'prediction Python error')
             
             % response data
             out = data_out.out;

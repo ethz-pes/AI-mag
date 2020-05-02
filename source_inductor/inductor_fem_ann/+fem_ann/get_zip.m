@@ -8,7 +8,7 @@ function get_zip(folder_fem)
 
 % get MATLAB file in the directory
 filelist = dir([folder_fem filesep() '*.mat']);
-assert(isempty(filelist)==false, 'invalid data')
+assert(isempty(filelist)==false, 'invalid number of data to assemble (empty)')
 
 % get name
 file_fem = [folder_fem '.zip'];

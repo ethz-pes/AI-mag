@@ -116,8 +116,8 @@ end
 
 % check the size
 n_sol = unique(n_sol_vec);
-assert(length(n_sol)==1, 'invalid length')
-assert(n_sol<=n_sol_max, 'invalid length')
+assert(length(n_sol)==1, 'invalid sweep size (unequal variable size)')
+assert(n_sol<=n_sol_max, 'invalid sweep size (too many samples)')
 
 end
 
@@ -146,7 +146,7 @@ end
 
 % check the size
 n_sol = prod(n_sol_vec);
-assert(n_sol<=n_sol_max, 'invalid length')
+assert(n_sol<=n_sol_max, 'invalid sweep size (too many samples)')
 
 % get all combinations
 x_tmp = cell(1,length(x_cell));

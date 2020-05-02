@@ -58,7 +58,7 @@ classdef InductorGui < handle
             %        id_select (int): id of the design to be selected
             
             % get the data
-            assert(length(id_select)==1, 'invalid data');
+            assert(length(id_select)==1, 'invalid inductor id');
             [self.plot_data, self.fom_data, self.operating_data, self.txt] = self.inductor_display_obj.get_data_id(id_select);
             
             % set the id and switch the flag
@@ -87,7 +87,7 @@ classdef InductorGui < handle
             %   Check if data are existing.
             %   Open the GUI.
             
-            assert(self.is_select==true, 'inductor id is not set')
+            assert(self.is_select==true, 'invalid state: inductor id is not set')
             self.update_gui();
         end
     end

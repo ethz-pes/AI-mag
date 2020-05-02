@@ -17,7 +17,7 @@ function [file_model, timing, var_type, sweep] = get_fem_ann_data_fem(model_type
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % check the input data
-assert(any(strcmp(model_type, {'ht', 'mf'})), 'invalid model_type')
+assert(any(strcmp(model_type, {'ht', 'mf'})), 'invalid physics type')
 
 % struct controlling the COMSOL license and model loading (for batching systems)
 %    - diff_trial: time between two COMSOL license trials

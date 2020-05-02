@@ -85,7 +85,7 @@ classdef ParetoDisplay < handle
             
             % get the array index corresponding to the id
             idx = self.id_design==id_select;
-            assert(nnz(idx)==1, 'invalid data')
+            assert(nnz(idx)==1, 'invalid inductor id')
             
             % format the text data
             for i=1:length(self.text_param)

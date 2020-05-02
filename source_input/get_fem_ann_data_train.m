@@ -14,7 +14,7 @@ function ann_input = get_fem_ann_data_train(model_type, ann_type)
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % check the physics type
-assert(any(strcmp(model_type, {'ht', 'mf'})), 'invalid model_type')
+assert(any(strcmp(model_type, {'ht', 'mf'})), 'invalid physics type')
 
 % description of the input variables:
 %    - name: name of the variable
@@ -186,9 +186,9 @@ function model = fct_model(n_sol, n_inp, n_out)
 %        model (model): creating MATLAB ANN
 
 % check the data, the size information are not used in this example
-assert(isfinite(n_sol), 'invalid input')
-assert(isfinite(n_inp), 'invalid input')
-assert(isfinite(n_out), 'invalid output')
+assert(isfinite(n_sol), 'invalid number of samples')
+assert(isfinite(n_inp), 'invalid number of inputs')
+assert(isfinite(n_out), 'invalid number of outputs')
 
 % generate and parametrize the ANN
 model = fitnet([10 10]);
