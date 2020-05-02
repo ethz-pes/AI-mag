@@ -25,12 +25,12 @@ def fct_model(tag_train, n_sol, n_inp, n_out):
    """
 
     # check network size
-    assert isinstance(n_sol, int), 'invalid sample size'
-    assert isinstance(n_inp, int), 'invalid input size'
-    assert isinstance(n_out, int), 'invalid ouput size'
+    assert isinstance(n_sol, int), 'invalid number of samples'
+    assert isinstance(n_inp, int), 'invalid number of inputs'
+    assert isinstance(n_out, int), 'invalid number of outputs'
 
     # check tag_train data
-    assert isinstance(tag_train, dict), 'invalid tag_train'
+    assert isinstance(tag_train, dict), 'invalid training tag data'
     n_layer = int(tag_train['n_layer'])
     n_neuron = int(tag_train['n_neuron'])
     activation = tag_train['activation']
@@ -74,7 +74,7 @@ def fct_train(tag_train, model, inp, out):
    """
 
     # tag_train is not used for this training
-    assert isinstance(tag_train, dict), 'invalid tag_train'
+    assert isinstance(tag_train, dict), 'invalid training tag data'
 
     # compile and train
     model.compile(loss='mse', optimizer=keras.optimizers.Adam(lr=0.001), metrics=['mae', 'mse'])

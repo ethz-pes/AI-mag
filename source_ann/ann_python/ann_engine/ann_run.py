@@ -29,9 +29,9 @@ def train(inp, out, fct_model, fct_train):
     n_sol = {n_sol_inp, n_sol_out}.pop()
 
     # get ANN model
-    assert n_sol>0, 'invalid size'
-    assert n_inp>0, 'invalid size'
-    assert n_out>0, 'invalid size'
+    assert n_sol>0, 'invalid number of samples'
+    assert n_inp>0, 'invalid number of inputs'
+    assert n_out>0, 'invalid number of outputs'
     model = fct_model(n_sol, n_inp, n_out)
 
     #  transpose data due to Keras/TensorFlow format

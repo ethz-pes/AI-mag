@@ -23,12 +23,12 @@ def fct_model(tag_train, n_sol, n_inp, n_out):
    """
 
     # check network size
-    assert isinstance(n_sol, int), 'invalid sample size'
-    assert isinstance(n_inp, int), 'invalid input size'
-    assert isinstance(n_out, int), 'invalid ouput size'
+    assert isinstance(n_sol, int), 'invalid number of samples'
+    assert isinstance(n_inp, int), 'invalid number of inputs'
+    assert isinstance(n_out, int), 'invalid number of outputs'
 
     # check tag_train data (not used)
-    assert isinstance(tag_train, str), 'invalid tag_train'
+    assert isinstance(tag_train, str), 'invalid training tag data'
 
     # create the Keras/TensorFlow model
     model = keras.Sequential([
@@ -63,7 +63,7 @@ def fct_train(tag_train, model, inp, out):
    """
 
     # check tag_train data (not used)
-    assert isinstance(tag_train, str), 'invalid size'
+    assert isinstance(tag_train, str), 'invalid training tag data'
 
     # compile and train
     model.compile(loss='mse', optimizer=keras.optimizers.Adam(lr=0.001), metrics=['mae', 'mse'])

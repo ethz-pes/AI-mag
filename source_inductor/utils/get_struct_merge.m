@@ -68,7 +68,7 @@ elseif length(data_in)==2
     assert(all(cellfun(@isstruct, data_in)), 'invalid data type')
     data_out = get_struct_merge(data_in{1}, data_in{2});
 else
-        error('invalid data type or size')
+    error('invalid data type or size')
 end
 
 end

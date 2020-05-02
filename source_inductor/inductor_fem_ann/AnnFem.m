@@ -180,7 +180,7 @@ classdef AnnFem < handle
                 case {'mf', 'ht'}
                     excitation_type = 'abs';
                 otherwise
-        error('invalid physics type')
+                    error('invalid physics type')
             end
             
             % extend the input with additional data (without making any regression)
@@ -209,7 +209,7 @@ classdef AnnFem < handle
                     ann_manager_obj = self.ann_manager_ht_obj;
                     file_model = self.file_model_ht;
                 otherwise
-        error('invalid physics type')
+                    error('invalid physics type')
             end
             
             % get the a first solution without ANN/regression
