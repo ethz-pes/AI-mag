@@ -28,7 +28,7 @@ switch type
         norm_param.offset = mean(vec);
         norm_param.scale = std(vec);
     otherwise
-        error('invalid type')
+        error('invalid normalization method')
 end
 
 % remove dangerous values

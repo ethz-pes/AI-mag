@@ -125,7 +125,7 @@ switch type
     case 'abs'
         vec = abs(vec_cmp-vec_ref);
     otherwise
-        error('invalid data')
+        error('invalid error type')
 end
 
 % get metrics

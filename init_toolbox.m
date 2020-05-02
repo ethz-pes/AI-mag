@@ -16,11 +16,12 @@ addpath(genpath('source_input'))
 close('all')
 
 % print copyright
-fprintf('FEM/ANN Inductor Optimization\n')
 fprintf('       ____________________   ___\n')
 fprintf('      /  ________   ___   /__/  /    ETH Zurich\n')
 fprintf('     /  _____/  /  /  /  ___   /     Power Electronic\n')
 fprintf('    /_______/  /__/  /__/  /__/      Systems Laboratory\n')
+fprintf('\n')
+fprintf('    FEM/ANN Inductor Optimization\n')
 fprintf('\n')
 fprintf('    T. Guillod, Power Electronic Systems Laboratory\n')
 fprintf('    Copyright 2019-2020 ETH Zurich / BSD License\n')

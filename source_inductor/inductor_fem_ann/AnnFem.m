@@ -180,7 +180,7 @@ classdef AnnFem < handle
                 case {'mf', 'ht'}
                     excitation_type = 'abs';
                 otherwise
-                    error('invalid type')
+        error('invalid physics type')
             end
             
             % extend the input with additional data (without making any regression)
@@ -209,7 +209,7 @@ classdef AnnFem < handle
                     ann_manager_obj = self.ann_manager_ht_obj;
                     file_model = self.file_model_ht;
                 otherwise
-                    error('invalid type')
+        error('invalid physics type')
             end
             
             % get the a first solution without ANN/regression
@@ -226,7 +226,7 @@ classdef AnnFem < handle
                     % analytical approximation supports vector evaluation
                     fom = fem_ann.get_out_approx(model_type, inp);
                 otherwise
-                    error('invalid data')
+                    error('invalid evaluation method')
             end
             
             % evaluate the ANN/regression
@@ -236,7 +236,7 @@ classdef AnnFem < handle
                 case {'fem', 'approx'}
                     [is_valid_tmp, fom] = ann_manager_obj.predict_nrm(self.n_sol, inp, fom);
                 otherwise
-                    error('invalid data')
+                    error('invalid evaluation method')
             end
             
             % combine validity of the parameters and of the regression

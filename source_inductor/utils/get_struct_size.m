@@ -40,10 +40,10 @@ for i=1:length(field)
         elseif length(struct_in_tmp)==n
             struct_out.(field{i}) = struct_in_tmp;
         else
-            error('invalid size')
+        error('invalid data size')
         end
     else
-        error('invalid data')
+        error('invalid data type')
     end
 end
 

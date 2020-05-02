@@ -158,7 +158,7 @@ switch cls
     case {'logical', 'char', 'int8', 'uint8'}
         n_byte = 1;
     otherwise
-        error('invalid data type');
+        error('invalid data type')
 end
 
 end
@@ -196,7 +196,7 @@ switch b
     case 12
         cls = 'struct';
     otherwise
-        error('invalid data type');
+        error('invalid data type')
 end
 
 end

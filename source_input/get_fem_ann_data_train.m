@@ -162,7 +162,7 @@ switch ann_type
         % tag to be passed for the training/fitting method (not used in this example)
         ann_info.tag_train = 'none';
     otherwise
-        error('invalid data')
+        error('invalid evaluation method')
 end
 
 % assign the data

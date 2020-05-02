@@ -29,7 +29,7 @@ switch model_type
         %    - maximum temperature elevation of the insulation, for the thermal limit
         expr = {'dT_core_max', 'dT_core_avg', 'dT_winding_max', 'dT_winding_avg', 'dT_iso_max'};
     otherwise
-        error('invalid type')
+        error('invalid physics type')
 end
 
 % tag of the COMSOL solution and parameter node

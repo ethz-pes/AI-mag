@@ -86,7 +86,7 @@ switch id
         data_map = load('loss_map/N97_ac.mat');
         data_bias = load('loss_map/N87_ac_dc.mat');
     otherwise
-        error('invalid id')
+        error('invalid material id')
 end
 
 % assign param

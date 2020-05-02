@@ -32,7 +32,7 @@ switch type
         excitation.is_pwm = true;
         excitation.d_c = 0.5;
     otherwise
-        error('invalid type')
+        error('invalid waveform shape')
 end
 
 end

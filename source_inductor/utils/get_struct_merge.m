@@ -61,14 +61,14 @@ if numel(data_in)==1
         % if vector, check the size
         assert(size(data_out, 1)==1, 'invalid data')
     else
-        error('invalid size')
+        error('invalid data type or size')
     end
 elseif length(data_in)==2
     % if duplicate, it should be structs, recursive call
     assert(all(cellfun(@isstruct, data_in)), 'invalid data')
     data_out = get_struct_merge(data_in{1}, data_in{2});
 else
-    error('invalid data')
+        error('invalid data type or size')
 end
 
 end

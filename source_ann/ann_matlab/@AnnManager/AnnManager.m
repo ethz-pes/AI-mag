@@ -321,7 +321,7 @@ classdef AnnManager < handle
                     tag_train = self.ann_info.tag_train;
                     self.ann_engine_obj = ann_engine.AnnEnginePythonAnn(hostname, port, timeout, tag_train);
                 otherwise
-                    error('invalid engine')
+                    error('invalid ANN engine')
             end
         end
         

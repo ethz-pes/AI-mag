@@ -113,7 +113,7 @@ switch geom_type
         % get the air gap length
         inp.fact_gap = inp.d_gap./sqrt(inp.A_core);
     otherwise
-        error('invalid data')
+        error('invalid geometry type')
 end
 
 % compute the core corner fillet radius, relative relative to the air gap length, with boundaries
@@ -260,7 +260,7 @@ switch model_type
             case 'abs'
                 inp.J_winding = inp.I_winding./inp.A_winding;
             otherwise
-                error('invalid excitation_type')
+                error('invalid physics excitation')
         end
     case 'ht'
         % thermal model, the losses (core and winding) are the excitation
@@ -276,10 +276,10 @@ switch model_type
                 inp.p_density_tot = inp.P_tot./inp.A_box;
                 inp.p_ratio_winding_core = inp.P_winding./inp.P_core;
             otherwise
-                error('invalid excitation_type')
+                error('invalid physics excitation')
         end
     otherwise
-        error('invalid model_type')
+        error('invalid physics type')
 end
 
 end

@@ -31,7 +31,7 @@ classdef MatlabPythonClient < handle
             try
                 self.tcp = tcpclient(hostname, port, 'Timeout', timeout);
             catch
-                error('Connection failure: Python server : %s / %d', hostname, port)
+                error('connection failure: Python server : %s / %d', hostname, port)
             end
         end
         

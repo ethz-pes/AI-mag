@@ -177,7 +177,7 @@ switch cls
     case 'struct'
         b = 12;
     otherwise
-        error('invalid data type');
+        error('invalid data type')
 end
 
 end

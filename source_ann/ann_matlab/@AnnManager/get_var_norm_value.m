@@ -17,7 +17,7 @@ switch scale_unscale
     case 'unscale'
         vec_output = vec_input.*norm_param.scale+norm_param.offset;
     otherwise
-        error('invalid type')
+        error('invalid scaling / unscaling choice')
 end
 
 end

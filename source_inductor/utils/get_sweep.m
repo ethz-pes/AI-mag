@@ -30,7 +30,7 @@ switch sweep.type
     case 'all_combinations'
         [n_sol, var] = get_all(var, sweep.n_sol_max);
     otherwise
-        error('invalid sweep type')
+        error('invalid sweep combination method')
 end
 
 end
@@ -78,7 +78,7 @@ switch var.type
             case 'random'
                 vec = lb+(ub-lb).*rand(1, var.n);
             otherwise
-                error('invalid span')
+                error('invalid variable spanning method')
         end
         
         % unscale the variable (bounds were scaled)
@@ -87,7 +87,7 @@ switch var.type
         % make the type casting
         vec = get_type(vec, var.var_type);
     otherwise
-        error('invalid type')
+        error('invalid variable generation method')
 end
 
 end
@@ -191,7 +191,7 @@ switch type
         y_scl = sqrt(vec_input);
         y_unscale = vec_input.^2;
     otherwise
-        error('invalid type')
+        error('invalid variable transformation method')
 end
 
 switch scale_unscale
@@ -200,7 +200,7 @@ switch scale_unscale
     case 'unscale'
         vec_output = y_unscale;
     otherwise
-        error('invalid type')
+        error('invalid scaling / unscaling choice')
 end
 
 end
@@ -221,7 +221,7 @@ switch type
     case 'int'
         vec_output = round(vec_input);
     otherwise
-        error('invalid type')
+        error('invalid data type')
 end
 
 end

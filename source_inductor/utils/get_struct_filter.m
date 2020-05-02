@@ -34,7 +34,7 @@ for i=1:length(field)
         assert(size(struct_in_tmp, 1)==1, 'invalid data')
         struct_out.(field{i}) = struct_in_tmp(idx);
     else
-        error('invalid data')
+        error('invalid data type')
     end
 end
 

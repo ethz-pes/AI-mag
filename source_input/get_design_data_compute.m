@@ -89,7 +89,7 @@ switch sweep_mode
         % samples generation: linear
         span = 'random';
     otherwise
-        error('invalid sweep_type')
+        error('invalid sweep method')
 end
 
 % ratio between the height and width and the winding window

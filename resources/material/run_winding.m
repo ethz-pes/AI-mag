@@ -46,7 +46,7 @@ switch id
         d_strand = 100e-6;
         kappa_copper = 21.5;
     otherwise
-        error('invalid id')
+        error('invalid material id')
 end
 
 % conductivity interpolation

@@ -46,7 +46,7 @@ elseif isa(data, 'cell')
         disp_data_sub(level+1, name_tmp, data_tmp)
     end
 else
-    error('invalid type')
+    error('invalid data type')
 end
 
 end

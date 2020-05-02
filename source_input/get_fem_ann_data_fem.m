@@ -54,7 +54,7 @@ switch sweep_mode
         % samples generation: linear
         span = 'random';
     otherwise
-        error('invalid sweep_type')
+        error('invalid sweep method')
 end
 
 % struct with the description of a fixed variable

@@ -149,7 +149,7 @@ classdef GuiScatter < handle
                 case 'descend'
                     [v, self.idx_perm] = sort(c_vec, 'descend');
                 otherwise
-                    error('invalid data')
+                    error('invalid sorting method')
             end
         end
         
@@ -310,7 +310,7 @@ classdef GuiScatter < handle
                     d_vec = log10(v_select)-log10(v_vec);
                     d_lim = max(log10(v_lim))-min(log10(v_lim));
                 otherwise
-                    error('invalid scale')
+                    error('invalid axis scaling')
             end
             
             % calculate the number of pixels

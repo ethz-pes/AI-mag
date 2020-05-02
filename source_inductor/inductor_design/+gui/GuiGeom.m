@@ -171,7 +171,7 @@ classdef GuiGeom < handle
                 case 'insulation'
                     color = [0.5 0.5 0.0];
                 otherwise
-                    error('invalid data')
+                    error('invalid material type')
             end
             
             % plot the element, in mm

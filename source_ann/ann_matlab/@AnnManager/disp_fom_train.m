@@ -45,7 +45,7 @@ for i=1:length(var)
         case 'err'
             var_err_tmp = var{i}.var_err;
         otherwise
-            error('invalid type')
+            error('invalid dataset type')
     end
     fom_tmp = fom.(name_tmp);
     
@@ -93,7 +93,7 @@ switch type
         fprintf('        %s / avg = %.2f %% / rms = %.2f %% / std_dev = %.2f %% / min = %.2f %% / max = %.2f %% / prc_99 = %.2f %%\n',...
             tag, 1e2.*fom.v_avg, 1e2.*fom.v_rms, 1e2.*fom.v_std_dev, 1e2.*fom.v_min, 1e2.*fom.v_max, 1e2.*fom.v_prc_99)
     otherwise
-        error('invalid type')
+        error('invalid dataset type')
 end
 
 end
@@ -131,7 +131,7 @@ switch type
         vec_train = 1e2.*[fom_train.v_min fom_train.v_max fom_train.v_avg fom_train.v_prc_99];
         vec_test = 1e2.*[fom_test.v_min fom_test.v_max fom_test.v_avg fom_test.v_prc_99];
     otherwise
-        error('invalid type')
+        error('invalid dataset type')
 end
 plot(vec_train, zeros(1, length(vec_train)), 'sb', 'MarkerFaceColor', 'b')
 plot(vec_test, zeros(1, length(vec_test)), '*r', 'MarkerFaceColor', 'r')

@@ -16,7 +16,7 @@ switch model_type
     case 'ht'
         out_approx = fem_ann.get_out_approx_ht(inp);
     otherwise
-        error('invalid model')
+        error('invalid physics type')
 end
 
 end

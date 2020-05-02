@@ -26,7 +26,7 @@ switch self.split_train_test.type
         self.idx_train = idx_perm(1:n_train);
         self.idx_test = idx_perm(1:self.n_sol);
     otherwise
-        error('invalid type')
+        error('invalid splitting method')
 end
 
 % check the size
