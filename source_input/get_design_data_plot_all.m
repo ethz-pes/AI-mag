@@ -1,4 +1,4 @@
-function [fct_data, plot_param, text_param] = get_design_data_plot()
+function [fct_data, plot_param, text_param] = get_design_data_plot_all()
 % Return the data required for the Pareto plots of the inductor designs.
 %
 %    Define the variables.

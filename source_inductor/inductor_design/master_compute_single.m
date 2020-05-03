@@ -1,9 +1,8 @@
-function master_single(file_single, file_export, eval_ann, data_compute)
-% Compute and plot a single inductor design.
+function master_compute_single(file_compute_single, file_export, eval_ann, data_compute)
+% Compute a single inductor design.
 %
 %    Load the ANN/regression obtained with the FEM/ANN workflow.
 %    Compute the specified design.
-%    Show the design with a GUI.
 %
 %    Use the ANN/regression are used for predicting:
 %        - the thermal model (hotspot and average temperatures)
@@ -15,7 +14,7 @@ function master_single(file_single, file_export, eval_ann, data_compute)
 %        - use 'start_python_ann_server.sh' on Linux
 %
 %    Parameters:
-%        file_single (str): path of the file to be written with the computed single design
+%        file_compute_single (str): path of the file to be written with the computed single design
 %        file_export (str): path of the file containing the exported data from the FEM/ANN
 %        eval_ann (struct): data for controlling the evaluation of the ANN/regression
 %        data_compute (struct): data for the inductor design
@@ -23,7 +22,7 @@ function master_single(file_single, file_export, eval_ann, data_compute)
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % init
-fprintf('################## master_single\n')
+fprintf('################## master_compute_single\n')
 
 % load the FEM/ANN data
 fprintf('load\n')
@@ -51,13 +50,9 @@ fprintf('    diff = %s\n', char(diff))
 
 % save data
 fprintf('save\n')
-save(file_single, '-v7.3', 'fom', 'operating')
+save(file_compute_single, '-v7.3', 'fom', 'operating')
 
-% gui
-fprintf('gui\n')
-plot_design(fom, operating)
-
-fprintf('################## master_single\n')
+fprintf('################## master_compute_single\n')
 
 end
 
@@ -86,26 +81,5 @@ fom = inductor_compute_obj.get_fom();
 % compute the operating points
 excitation = data_compute.fct_excitation(fom);
 operating = inductor_compute_obj.get_operating(excitation);
-
-end
-
-function plot_design(fom, operating)
-% Display the computed design with a GUI.
-%
-%    Parameters:
-%        fom (struct): computed figures of merit
-%        operating (struct): computed operating points
-
-% single design is required
-id_design = 1;
-
-% create GUI object
-inductor_gui = design_display.InductorGui(id_design, fom, operating);
-
-% set design
-inductor_gui.set_id_select(id_design)
-
-% launch gui
-inductor_gui.open_gui()
 
 end

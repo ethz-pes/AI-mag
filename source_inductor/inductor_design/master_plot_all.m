@@ -1,5 +1,5 @@
-function master_plot(file_compute, fct_data, plot_param, text_param)
-% Display inductors design in a GUI.
+function master_plot_all(file_compute_all, fct_data, plot_param, text_param)
+% Display many inductors design in a GUI.
 %
 %    Start a GUI with several Pareto fronts.
 %    Plots can be customized.
@@ -8,7 +8,7 @@ function master_plot(file_compute, fct_data, plot_param, text_param)
 %    Details on a specific design (geometry, operating points, etc.).
 %
 %    Parameters:
-%        file_compute (str): path of the file contained the computed designs
+%        file_compute_all (str): path of the file contained the computed designs
 %        fct_data (fct): function for getting the designs be plotted and getting the user defined custom figures of merit
 %        plot_param (struct): definition of the different plots
 %        text_param (struct): definition of variable to be shown in the text field
@@ -16,11 +16,11 @@ function master_plot(file_compute, fct_data, plot_param, text_param)
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % init
-fprintf('################## master_plot\n')
+fprintf('################## master_plot_all\n')
 
 % load the designs
 fprintf('load\n')
-data_compute = load(file_compute);
+data_compute = load(file_compute_all);
 id_design = data_compute.id_design;
 fom = data_compute.fom;
 operating = data_compute.operating;
@@ -30,6 +30,6 @@ fprintf('gui\n')
 design_display.ParetoGui(id_design, fom, operating, fct_data, plot_param, text_param);
 
 % teardown
-fprintf('################## master_plot\n')
+fprintf('################## master_plot_all\n')
 
 end

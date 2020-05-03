@@ -1,4 +1,4 @@
-function [sweep, n_split, fct, eval_ann, data_compute] = get_design_data_compute(eval_type)
+function [sweep, n_split, fct, eval_ann, data_compute] = get_design_data_compute_all(eval_type)
 % Return the data required for the computation of inductor designs.
 %
 %    Define the variables and how to generate the samples.
@@ -28,8 +28,8 @@ n_split = 100e3;
 % struct with custom functions for filtering invalid designs:
 %    - fct_filter_compute: filter the valid designs from the figure of merit (without the operating points)
 %    - fct_filter_save: filter the valid designs from the figure of merit and the operating points
-fct.fct_filter_compute = @(fom, n_sol) fom.is_valid;
-fct.fct_filter_save = @(fom, operating, n_sol) operating.partial_load.is_valid&operating.full_load.is_valid;
+fct.fct_filter_compute = @(fom, n_sol) fct_filter_compute(fom, n_sol);
+fct.fct_filter_save = @(fom, operating, n_sol) fct_filter_save(fom, operating, n_sol);
 
 % data for controlling the evaluation of the ANN/regression:
 %    - geom_type: type of the geometry input variables
@@ -40,7 +40,7 @@ fct.fct_filter_save = @(fom, operating, n_sol) operating.partial_load.is_valid&o
 %        - 'fem': get the FEM solution without the ANN/regression
 %        - 'approx': get the analytical solution without the ANN/regression
 eval_ann.geom_type = 'rel';
-eval_ann.eval_type = 'ann';
+eval_ann.eval_type = eval_type;
 
 % inductor data (data which are not only numeric and common for all the sample)
 data_compute.data_const = get_design_data_const();
@@ -116,7 +116,7 @@ sweep.var.n_turn = struct('type', 'span', 'var_trf', 'log', 'var_type', 'int', '
 end
 
 function data_vec = get_data_vec(var, n_sol)
-% Function for getting the inductor data (struct of vectors with one value per sample)
+% Function for getting the inductor data (struct of vectors with one value per sample).
 %
 %    Parameters:
 %        var (struct): struct of vectors with the samples with all the combinations
@@ -150,7 +150,7 @@ data_vec = get_design_data_vec(geom, var.f);
 end
 
 function excitation = get_excitation(var, fom, n_sol)
-% Function for getting the operating points data (struct of struct of vectors with one value per sample)
+% Function for getting the operating points data (struct of struct of vectors with one value per sample).
 %
 %    Parameters:
 %        var (struct): struct of vectors with the samples with all the combinations
@@ -180,5 +180,46 @@ excitation.full_load = get_design_excitation(L, T_ambient, f, load_full_load, ty
 
 % data for partial load operation
 excitation.partial_load = get_design_excitation(L, T_ambient, f, load_partial_load, type);
+
+end
+
+function is_filter = fct_filter_compute(fom, n_sol)
+% Filter the design to be kept for the computation of the operating points.
+%
+%    Parameters:
+%        fom (struct): figures of merit of the designs
+%        n_sol (int): number of provided designs
+%
+%    Returns:
+%        is_filter (vector): vector of logical with the design to be kept
+
+% check size
+assert(isnumeric(n_sol), 'invalid number of samples')
+
+% select the designs
+is_filter = fom.is_valid;
+
+end
+
+function is_filter = fct_filter_save(fom, operating, n_sol)
+% Filter the design to be saved.
+%
+%    Parameters:
+%        fom (struct): figures of merit of the designs
+%        operating (struct): operating points of the designs
+%        n_sol (int): number of provided designs
+%
+%    Returns:
+%        is_filter (vector): vector of logical with the design to be saved
+
+% check size
+assert(isnumeric(n_sol), 'invalid number of samples')
+
+% select the designs
+is_filter = fom.is_valid;
+is_filter = is_filter&operating.partial_load.is_valid;
+is_filter = is_filter&operating.full_load.is_valid;
+is_filter = is_filter&(operating.partial_load.losses.P_tot<=4.0);
+is_filter = is_filter&(operating.full_load.losses.P_tot<=6.0);
 
 end

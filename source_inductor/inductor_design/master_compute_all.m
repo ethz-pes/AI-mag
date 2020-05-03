@@ -1,4 +1,4 @@
-function master_compute(file_compute, file_export, sweep, n_split, fct, eval_ann, data_compute)
+function master_compute_all(file_compute_all, file_export, sweep, n_split, fct, eval_ann, data_compute)
 % Compute many inductor inductor designs (properties, thermal, losses, etc.).
 %
 %    Load the ANN/regression obtained with the FEM/ANN workflow.
@@ -22,7 +22,7 @@ function master_compute(file_compute, file_export, sweep, n_split, fct, eval_ann
 %        - use 'start_python_ann_server.sh' on Linux
 %
 %    Parameters:
-%        file_compute (str): path of the file to be written with the computed designs
+%        file_compute_all (str): path of the file to be written with the computed designs
 %        file_export (str): path of the file containing the exported data from the FEM/ANN
 %        sweep (cell): data controlling the generation of the design combinations
 %        n_split (int): number of vectorized designs per computation
@@ -33,7 +33,7 @@ function master_compute(file_compute, file_export, sweep, n_split, fct, eval_ann
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % init
-fprintf('################## master_compute\n')
+fprintf('################## master_compute_all\n')
 
 % load the FEM/ANN data
 fprintf('load\n')
@@ -82,9 +82,9 @@ fprintf('    n_sol = %d\n', n_sol)
 
 % save data
 fprintf('save\n')
-save(file_compute, '-v7.3', 'diff', 'n_tot', 'n_compute', 'n_sol', 'id_design', 'fom', 'operating')
+save(file_compute_all, '-v7.3', 'diff', 'n_tot', 'n_compute', 'n_sol', 'id_design', 'fom', 'operating')
 
-fprintf('################## master_compute\n')
+fprintf('################## master_compute_all\n')
 
 end
 
@@ -96,7 +96,10 @@ function [idx_chunk, n_sol, n_compute, fom, operating] = compute_chunk(var, idx_
 %        - filter the designs
 %        - then,  the figures of merit and the of the operating points are extracted
 %        - filter the designs
-%        - with this workflow, it is possible to avoid the computation of operating points of rubbish designs
+%
+%    With this workflow, it is possible:
+%        - to avoid the computation of operating points of rubbish designs
+%        - to avoid the saving of invalid designs
 %
 %    Parameters:
 %        var (struct): struct of vectors with the samples with all the combinations

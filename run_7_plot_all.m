@@ -1,5 +1,5 @@
-function run_6_plot()
-% Display inductors design in a GUI.
+function run_7_plot_all()
+% Display many inductors design in a GUI.
 %
 %    Start a GUI with several Pareto fronts.
 %    Plots can be customized.
@@ -26,12 +26,12 @@ function run_sub(eval_type)
 %        eval_type (str): type of the evaluation ('ann', or approx')
 
 % path of the file contained the computed designs
-file_compute = ['data/compute_' eval_type '.mat'];
+file_compute = ['data/compute_all_' eval_type '.mat'];
 
 % get the GUI parameters
-[fct_data, plot_param, text_param] = get_design_data_plot();
+[fct_data, plot_param, text_param] = get_design_data_plot_all();
 
 % start the GUI
-master_plot(file_compute, fct_data, plot_param, text_param)
+master_plot_all(file_compute, fct_data, plot_param, text_param)
 
 end

@@ -1,4 +1,4 @@
-function [eval_ann, data_compute] = get_design_data_single(eval_type)
+function [eval_ann, data_compute] = get_design_data_compute_single(eval_type)
 % Return the data required for the computation of a single inductor design.
 %
 %    How to evaluate the ANN/regression.
@@ -36,7 +36,7 @@ data_compute.fct_excitation = @(fom) get_excitation(fom);
 end
 
 function data_vec = get_data_vec()
-% Function for getting the inductor data (struct of scalars)
+% Function for getting the inductor data (struct of scalars).
 %
 %    Returns:
 %        data_vec (struct:) struct of scalars
@@ -63,7 +63,7 @@ data_vec = get_design_data_vec(geom, 200e3);
 end
 
 function excitation = get_excitation(fom)
-% Function for getting the operating points data (struct of struct of scalars)
+% Function for getting the operating points data (struct of struct of scalars).
 %
 %    Parameters:
 %        fom (struct): computed inductor figures of merit

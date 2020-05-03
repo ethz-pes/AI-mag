@@ -1,4 +1,4 @@
-function run_5_compute()
+function run_5_compute_all()
 % Compute many inductor inductor designs (properties, thermal, losses, etc.).
 %
 %    Load the ANN/regression obtained with the FEM/ANN workflow.
@@ -43,12 +43,12 @@ function run_sub(eval_type)
 file_export = 'data/export.mat';
 
 % path of the file to be written with the computed designs
-file_compute = ['data/compute_' eval_type '.mat'];
+file_compute = ['data/compute_all_' eval_type '.mat'];
 
 % get the design parameters for the inductors
-[sweep, n_split, fct, eval_ann, data_compute] = get_design_data_compute(eval_type);
+[sweep, n_split, fct, eval_ann, data_compute] = get_design_data_compute_all(eval_type);
 
 % compute the inductor designs
-master_compute(file_compute, file_export, sweep, n_split, fct, eval_ann, data_compute)
+master_compute_all(file_compute, file_export, sweep, n_split, fct, eval_ann, data_compute)
 
 end

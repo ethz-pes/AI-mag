@@ -1,9 +1,8 @@
-function run_7_single()
-% Compute and plot a single inductor design.
+function run_6_compute_single()
+% Compute a single inductor design.
 %
 %    Load the ANN/regression obtained with the FEM/ANN workflow.
 %    Compute the specified design.
-%    Show the design with a GUI.
 %
 %    Use the ANN/regression (or FEM or analytical approximation) is used for predicting:
 %        - the thermal model (hotspot and average temperatures)
@@ -39,12 +38,12 @@ function run_sub(eval_type)
 file_export = 'data/export.mat';
 
 % path of the file to be written with the computed single design
-file_single = ['data/single_' eval_type '.mat'];
+file_single = ['data/compute_single_' eval_type '.mat'];
 
 % get the design parameters for the inductor
-[eval_ann, data_compute] = get_design_data_single(eval_type);
+[eval_ann, data_compute] = get_design_data_compute_single(eval_type);
 
 % compute and plot the inductor design
-master_single(file_single, file_export, eval_ann, data_compute)
+master_compute_single(file_single, file_export, eval_ann, data_compute)
 
 end

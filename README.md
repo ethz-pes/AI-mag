@@ -53,9 +53,10 @@ The following code structure is considered:
 * [run_2_assemble.m](run_2_assemble.m) - Assemble the FEM simulations results, add the analytical solutions
 * [run_3_train.m](run_3_train.m) - Train the regressions with ANNs with simulation results
 * [run_4_export.m](run_4_export.m) - Export the ANNs in prevision of the evaluation of inductor designs 
-* [run_5_compute.m](run_5_compute.m) - Simulate many inductor designs with the help of the ANNs
-* [run_6_plot.m](run_6_plot.m) - Plot the results in a GUI
-* [run_7_single.m](run_7_single.m) - Run and plot a single design
+* [run_5_compute_all.m](run_5_compute_all.m) - Simulate many inductor designs (ANN or ana. approx.)
+* [run_6_compute_single.m](run_6_compute_single.m) - Simulate a single inductor design (ANN or FEM or ana. approx)
+* [run_7_plot_all.m](run_7_plot_all.m) - Plot the optimization results (Pareto fronts) in a GUI
+* [run_8_plot_single.m](run_8_plot_single.m) - Display a single design in a GUI
 * [run_ann_server.py](run_ann_server.py) - Python ANN server for using Keras and TensorFlow from MATLAB
 * Shell script (Linux) and (batch) script (MS Windows) for starting the Python ANN server
 * Shell script (Linux) and (batch) script (MS Windows) for starting the COMSOL MATLAB Livelink
@@ -133,13 +134,13 @@ The releases are available at GitHub and contains:
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-MATLAB                          99           1618           4709           4500
+MATLAB                         101           1644           4767           4542
 Python                           8            365            446            450
-Markdown                         4             75              0            275
+Markdown                         4             74              0            277
 DOS Batch                        3              9              0             34
 Bourne Shell                     3              9              9             21
 -------------------------------------------------------------------------------
-SUM:                           117           2076           5164           5280
+SUM:                           119           2101           5222           5324
 -------------------------------------------------------------------------------
 ```
 

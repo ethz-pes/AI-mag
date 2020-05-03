@@ -1,5 +1,5 @@
 function data_vec = get_design_data_vec(geom, f)
-% Function for getting the inductor data (struct of scalars)
+% Function for getting the inductor data (struct of scalars).
 %
 %    Parameters:
 %        geom (struct): inductor geomtry information
