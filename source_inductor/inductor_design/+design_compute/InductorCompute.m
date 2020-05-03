@@ -356,7 +356,7 @@ classdef InductorCompute < handle
             h_convection = self.fom.material.h_convection;
             
             % get the thermal simulation results from the ANN/regression object
-            excitation_tmp = struct('h_convection', h_convection, 'P_winding', P_winding, 'P_core', P_core);
+            excitation_tmp = struct('h_convection', h_convection, 'P_winding', P_winding, 'P_core', P_core, 'T_ambient', T_ambient);
             [is_valid_tmp, fom_tmp] = self.ann_fem_obj.get_ht(excitation_tmp);
             
             % extract the hotspot temperature elevation

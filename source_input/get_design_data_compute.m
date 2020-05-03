@@ -43,7 +43,7 @@ eval_ann.geom_type = 'rel';
 eval_ann.eval_type = 'ann';
 
 % inductor data (data which are not only numeric and common for all the sample)
-data_compute.data_const = get_design_data_cons();
+data_compute.data_const = get_design_data_const();
 
 % function for getting the inductor data (struct of vectors with one value per sample)
 data_compute.fct_data_vec = @(var, n_sol) get_data_vec(var, n_sol);
@@ -176,9 +176,9 @@ load_partial_load = 0.5;
 type = 'pwm';
 
 % data for full load operation
-excitation.full_load = get_excitation_load(L, T_ambient, f, load_full_load, type);
+excitation.full_load = get_design_excitation(L, T_ambient, f, load_full_load, type);
 
 % data for partial load operation
-excitation.partial_load = get_excitation_load(L, T_ambient, f, load_partial_load, type);
+excitation.partial_load = get_design_excitation(L, T_ambient, f, load_partial_load, type);
 
 end

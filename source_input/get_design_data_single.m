@@ -25,7 +25,7 @@ eval_ann.geom_type = 'abs';
 eval_ann.eval_type = eval_type;
 
 % inductor data (data which are not only numeric)
-data_compute.data_const = get_design_data_cons();
+data_compute.data_const = get_design_data_const();
 
 % inductor data (struct of scalars)
 data_compute.data_vec = get_data_vec();

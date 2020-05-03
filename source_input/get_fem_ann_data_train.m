@@ -55,10 +55,10 @@ if strcmp(model_type, 'mf')
     var_inp{end+1} = struct('name', 'J_winding', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.001e6, 'max', 1.01.*20e6);
     
     % permeability of the core for the FEM simulation
-    var_inp{end+1} = struct('name', 'mu_core', 'var_trf', 'none', 'var_norm', 'min_max', 'min', 0.99.*1500.0, 'max', 1.01.*2500.0);
+    var_inp{end+1} = struct('name', 'mu_core', 'var_trf', 'none', 'var_norm', 'min_max', 'min', 0.99.*1500.0, 'max', 1.01.*3000.0);
     
     % beta (Steinmetz parameter) of the core for the FEM simulation
-    var_inp{end+1} = struct('name', 'beta_core', 'var_trf', 'none', 'var_norm', 'min_max', 'min', 0.99.*2.0, 'max', 1.01.*2.5);
+    var_inp{end+1} = struct('name', 'beta_core', 'var_trf', 'none', 'var_norm', 'min_max', 'min', 0.99.*2.0, 'max', 1.01.*2.8);
 end
 if strcmp(model_type, 'ht')
     % total losses (core and winding) divided by the area of the boxed inductor
@@ -71,7 +71,7 @@ if strcmp(model_type, 'ht')
     var_inp{end+1} = struct('name', 'h_convection', 'var_trf', 'none', 'var_norm', 'min_max', 'min', 0.99.*15.0, 'max', 1.01.*30.0);
 
     % ambient temperature
-    var_inp{end+1} = struct('name', 'h_convection', 'var_trf', 'none', 'var_norm', 'min_max', 'min', 0.99.*25.0, 'max', 1.01.*65.0);
+    var_inp{end+1} = struct('name', 'T_ambient', 'var_trf', 'none', 'var_norm', 'min_max', 'min', 0.99.*25.0, 'max', 1.01.*65.0);
 end
 
 % description of the output variables:
