@@ -113,6 +113,9 @@ if strcmp(model_type, 'ht')
     
     % convection coefficient reference value
     sweep.var.h_convection = struct('type', 'span', 'var_trf', 'none', 'var_type', 'float', 'span', span, 'lb', 15.0,  'ub', 30.0, 'n', n);
+
+    % ambient temperature
+    sweep.var.T_ambient = struct('type', 'span', 'var_trf', 'none', 'var_type', 'float', 'span', span, 'lb', 25.0,  'ub', 65.0, 'n', n);
 end
 
 % COMSOL model path

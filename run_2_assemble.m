@@ -30,7 +30,7 @@ folder_fem = ['data/fem_' model_type];
 file_assemble = ['data/' model_type '_assemble.mat'];
 
 % make a zip file and remove the folder (or not)
-make_zip = true;
+make_zip = false;
 
 % assemble the data
 master_assemble(file_assemble, folder_fem, make_zip)

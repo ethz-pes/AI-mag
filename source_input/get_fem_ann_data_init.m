@@ -18,7 +18,6 @@ const.k_contact = 0.1; % thermal conductivity of the winding/core/insulation con
 const.d_contact = 100e-6; % physical gap for winding/core/insulation contact
 const.fact_exposed = 1.0; % convection scaling factor for the exposed area
 const.fact_internal = 0.25; % convection scaling factor for the semi-exposed area
-const.T_ambient = 0.0; % ambient temperature for the FEM simulation
 
 % FEM mesh control
 const.n_mesh_min = 4; % minimum mesh size (how many times smaller than the smaller feature)
