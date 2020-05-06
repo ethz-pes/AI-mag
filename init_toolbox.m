@@ -12,6 +12,10 @@ addpath(genpath('source_ann'))
 addpath(genpath('source_inductor'))
 addpath(genpath('source_input'))
 
+% init random number generator
+rng('shuffle')
+gpurng('shuffle');
+
 % close figures
 close('all')
 

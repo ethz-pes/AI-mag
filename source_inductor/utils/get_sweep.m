@@ -17,9 +17,6 @@ function [n_sol, var] = get_sweep(sweep)
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
-% init random generator
-rng('shuffle');
-
 % get the vector for the different variables
 var = get_vector(sweep.var);
 

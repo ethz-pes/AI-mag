@@ -6,9 +6,6 @@ function get_idx_split(self)
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
-% init random generator with random number
-rng('shuffle');
-
 % get the size of the training datasets
 n_train = round(self.n_sol.*self.split_train_test.ratio_train);
 

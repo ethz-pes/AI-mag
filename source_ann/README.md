@@ -81,6 +81,10 @@ Can this toolbox handle big data?
 * Depending what is big data, few 10 millions of samples are definitely OK.
 * The memory management model (everything is stored in RAM) does not allow billions of samples.
 
+Why a custom variable scaling and transformation is implemented?
+* To offer more flexibility than the standard scaling.
+* To offer the same options with Keras/TensorFlow and the MATLAB Deep Learning ANN engine.
+
 The variable scaling and transformation looks complex, is it required?
 * Yes, proper scaling of the data is critical for ANNs.
 * For some datasets, without scaling, no proper training is possible.
