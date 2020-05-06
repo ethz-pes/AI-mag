@@ -105,7 +105,7 @@ function disp_hist(tag, fom_train, fom_test, type)
 %        tag (str): name of the variable
 %        fom_train (struct): figures of merit of the variable (training)
 %        fom_test (struct): figures of merit of the variable (testing)
-%        type (str): type of the variable ('set' or 'abs' or 'rel')
+%        type (str): type of the variable ('set' or 'rel_abs' or 'abs_abs' or 'rel_sign' or 'abs_sign')
 
 hold('on')
 switch type
@@ -116,14 +116,14 @@ switch type
         ylabel('n [1]')
         vec_train = [fom_train.v_min fom_train.v_max];
         vec_test = [fom_test.v_min fom_test.v_max];
-    case 'abs'
+    case {'abs_abs', 'abs_sign'}
         histogram(fom_train.vec)
         histogram(fom_test.vec)
         xlabel('x [1]')
         ylabel('n [1]')
         vec_train = [fom_train.v_min fom_train.v_max fom_train.v_avg fom_train.v_prc_99];
         vec_test = [fom_test.v_min fom_test.v_max fom_test.v_avg fom_test.v_prc_99];
-    case 'rel'
+    case {'rel_abs', 'rel_sign'}
         histogram(1e2.*fom_train.vec)
         histogram(1e2.*fom_test.vec)
         xlabel('err [%]')

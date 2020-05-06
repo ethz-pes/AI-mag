@@ -52,8 +52,8 @@ var_inp{end+1} = struct('name', 'x_2', 'var_trf', 'none', 'var_norm', 'min_max',
 %        - 'rel_abs': relative error (absolute value)
 %        - 'rel_sign': relative error (with sign)
 var_out = {};
-var_out{end+1} = struct('name', 'y_1', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel_sign');
-var_out{end+1} = struct('name', 'y_2', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel_sign');
+var_out{end+1} = struct('name', 'y_1', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel_abs');
+var_out{end+1} = struct('name', 'y_2', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel_abs');
 
 % control the splitting of the samples between training and testing:
 %    - ratio_train: ratio of the samples used for training
