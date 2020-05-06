@@ -47,11 +47,13 @@ var_inp{end+1} = struct('name', 'x_2', 'var_trf', 'none', 'var_norm', 'min_max',
 %        - 'std_dev': scale the variable with a 1 standard deviation
 %        - 'avg_std_dev': scale the variable with a 0 mean value and a 1 standard deviation
 %    - var_err: metric for computing the regression accuracy during post-processing
-%        - 'abs': absolute error
-%        - 'rel': relative error
+%        - 'abs_abs': absolute error (absolute value)
+%        - 'abs_sign': absolute error (with sign)
+%        - 'rel_abs': relative error (absolute value)
+%        - 'rel_sign': relative error (with sign)
 var_out = {};
-var_out{end+1} = struct('name', 'y_1', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
-var_out{end+1} = struct('name', 'y_2', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
+var_out{end+1} = struct('name', 'y_1', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel_sign');
+var_out{end+1} = struct('name', 'y_2', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel_sign');
 
 % control the splitting of the samples between training and testing:
 %    - ratio_train: ratio of the samples used for training

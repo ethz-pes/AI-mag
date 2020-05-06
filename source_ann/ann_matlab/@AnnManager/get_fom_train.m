@@ -109,7 +109,7 @@ function fom = get_var_err(vec_cmp, vec_ref, idx, type)
 %        vec_cmp (vector): first variable data (to be compared)
 %        vec_ref (struct): second variable data (reference)
 %        idx (vector): indices of the samples to be considered
-%        type (str): type of the error ('abs' or 'rel')
+%        type (str): type of the error ('rel_abs' or 'abs_abs' or 'rel_sign' or 'abs_sign')
 %
 %    Returns:
 %        fom (struct): figures of merit of the comparison between the variables
@@ -120,10 +120,14 @@ vec_ref = vec_ref(idx);
 
 % compute the error
 switch type
-    case 'rel'
+    case 'rel_abs'
         vec = abs(vec_cmp-vec_ref)./vec_ref;
-    case 'abs'
+    case 'abs_abs'
         vec = abs(vec_cmp-vec_ref);
+    case 'rel_sign'
+        vec = (vec_cmp-vec_ref)./vec_ref;
+    case 'abs_sign'
+        vec = (vec_cmp-vec_ref);
     otherwise
         error('invalid error type')
 end

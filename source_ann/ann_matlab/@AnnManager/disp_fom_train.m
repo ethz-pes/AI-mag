@@ -80,16 +80,16 @@ function disp_value(tag, fom, type)
 %    Parameters:
 %        tag (str): name of the variable
 %        fom (struct): figures of merit of the variable
-%        type (str): type of the variable ('set' or 'abs' or 'rel')
+%        type (str): type of the variable ('set' or 'rel_abs' or 'abs_abs' or 'rel_sign' or 'abs_sign')
 
 switch type
     case 'set'
         fprintf('        %s / avg = %.3e / rms = %.3e / std_dev = %.3e / min = %.3e / max = %.3e\n',...
             tag, fom.v_avg, fom.v_rms, fom.v_std_dev, fom.v_min, fom.v_max)
-    case 'abs'
+    case {'abs_abs', 'abs_sign'}
         fprintf('        %s / avg = %.3e / rms = %.3e / std_dev = %.3e / min = %.3e / max = %.3e / prc_99 = %.3e\n',...
             tag, fom.v_avg, fom.v_rms, fom.v_std_dev, fom.v_min, fom.v_max, fom.v_prc_99)
-    case 'rel'
+    case {'rel_abs', 'rel_sign'}
         fprintf('        %s / avg = %.2f %% / rms = %.2f %% / std_dev = %.2f %% / min = %.2f %% / max = %.2f %% / prc_99 = %.2f %%\n',...
             tag, 1e2.*fom.v_avg, 1e2.*fom.v_rms, 1e2.*fom.v_std_dev, 1e2.*fom.v_min, 1e2.*fom.v_max, 1e2.*fom.v_prc_99)
     otherwise

@@ -91,37 +91,39 @@ end
 %        - 'std_dev': scale the variable with a 1 standard deviation
 %        - 'avg_std_dev': scale the variable with a 0 mean value and a 1 standard deviation
 %    - var_err: metric for computing the regression accuracy during post-processing
-%        - 'abs': absolute error
-%        - 'rel': relative error
+%        - 'abs_abs': absolute error (absolute value)
+%        - 'abs_sign': absolute error (with sign)
+%        - 'rel_abs': relative error (absolute value)
+%        - 'rel_sign': relative error (with sign)
 var_out = {};
 if strcmp(model_type, 'mf')
     % inductance (for a single turn)
-    var_out{end+1} = struct('name', 'L_norm', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'L_norm', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel_sign');
     
     % quasi-RMS flux density, integral of B^beta, normalized for one turn and 1A, for the core losses
-    var_out{end+1} = struct('name', 'B_norm', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'B_norm', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel_sign');
     
     % RMS current density, integral of J^2, normalized for one turn and 1A, for the LF winding losses
-    var_out{end+1} = struct('name', 'J_norm', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'J_norm', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel_sign');
     
     % RMS magnetic density, integral of H^2, normalized for one turn and 1A, for the HF winding losses
-    var_out{end+1} = struct('name', 'H_norm', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'H_norm', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel_sign');
 end
 if strcmp(model_type, 'ht')
     % maximum temperature elevation of the core, for the thermal limit
-    var_out{end+1} = struct('name', 'dT_core_max', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'dT_core_max', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel_sign');
     
     % average temperature elevation of the core, for the losses
-    var_out{end+1} = struct('name', 'dT_core_avg', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'dT_core_avg', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel_sign');
     
     % maximum temperature elevation of the winding, for the thermal limit
-    var_out{end+1} = struct('name', 'dT_winding_max', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'dT_winding_max', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel_sign');
     
     % average temperature elevation of the winding, for the losses
-    var_out{end+1} = struct('name', 'dT_winding_avg', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'dT_winding_avg', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel_sign');
     
     % maximum temperature elevation of the insulation, for the thermal limit
-    var_out{end+1} = struct('name', 'dT_iso_max', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel');
+    var_out{end+1} = struct('name', 'dT_iso_max', 'use_nrm', true, 'var_trf', 'none', 'var_norm', 'min_max', 'var_err', 'rel_sign');
 end
 
 % control the splitting of the samples between training and testing:
