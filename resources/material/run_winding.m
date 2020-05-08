@@ -70,7 +70,7 @@ material.param.P_max = 1000e3; % maximum loss density
 material.param.J_rms_max = 15e6; % maximum rms current density
 material.param.P_scale_lf = 1.0; % scaling factor for LF losses
 material.param.P_scale_hf = 1.0; % scaling factor for HF losses
-material.param.T_max = 140.0; % maximum temperature
+material.param.T_max = 130.0; % maximum temperature
 material.param.c_offset = 0.3; % cost offset
 
 % assign

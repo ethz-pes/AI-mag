@@ -100,7 +100,7 @@ material.param.fact_igse = 0.1; % factor for computing alpha and beta for IGSE (
 material.param.B_sat_max = 320e-3; % saturation flux density
 material.param.P_max = 1000e3; % maximum loss density
 material.param.P_scale = 1.05; % scaling factor for losses (5% due to flux sharing on toroid)
-material.param.T_max = 130.0; % maximum temperature
+material.param.T_max = 110.0; % maximum temperature
 material.param.c_offset = 0.3; % cost offset
 
 % add values for losses interpolations
