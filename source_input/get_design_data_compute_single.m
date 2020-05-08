@@ -75,30 +75,21 @@ function excitation = get_excitation(fom)
 L = fom.circuit.L;
 
 % frequency vector
-f_vec = [200e3, 375e3, 500e3, 625e3, 750e3];
+f_vec = [300e3, 400e3, 500e3, 600e3];
 
-% get the measured points
-T_ambient = 55.0;
-load = 1.0;
-type = 'sinus';
-for i=1:length(f_vec)
-    tag = sprintf('meas_f_%.0fk', 1e-3.*f_vec(i));
-    excitation_tmp = get_design_excitation(L, T_ambient, f_vec(i), load, type);
-    excitation.(tag) = excitation_tmp;
-end
-
-% get the pareto points
+% operating conditions
 T_ambient = 40.0;
 load_full_load = 1.0;
 load_partial_load = 0.5;
-type = 'pwm';
+
+% assign excitation
 for i=1:length(f_vec)
     tag = sprintf('full_load_f_%.0fk', 1e-3.*f_vec(i));
-    excitation_tmp = get_design_excitation(L, T_ambient, f_vec(i), load_full_load, type);
+    excitation_tmp = get_design_excitation(L, T_ambient, f_vec(i), load_full_load);
     excitation.(tag) = excitation_tmp;
     
     tag = sprintf('partial_load_f_%.0fk', 1e-3.*f_vec(i));
-    excitation_tmp = get_design_excitation(L, T_ambient, f_vec(i), load_partial_load, type);
+    excitation_tmp = get_design_excitation(L, T_ambient, f_vec(i), load_partial_load);
     excitation.(tag) = excitation_tmp;
 end
 

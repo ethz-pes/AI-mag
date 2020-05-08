@@ -5,4 +5,3 @@
 *.venv
 **/__pycache__
 data/*
-source_paper/*

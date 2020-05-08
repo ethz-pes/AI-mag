@@ -105,7 +105,7 @@ sweep.var.fact_core_window = struct('type', 'span', 'var_trf', 'log', 'var_type'
 sweep.var.fact_gap = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 0.01,  'ub', 0.2, 'n', n);
 
 % inductor box volume
-sweep.var.V_box = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 20e-6,  'ub', 200e-6, 'n', n);
+sweep.var.V_box = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 10e-6,  'ub', 200e-6, 'n', n);
 
 % inductor operating frequency
 sweep.var.f = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 50e3,  'ub', 500e3, 'n', n);
@@ -173,13 +173,12 @@ f = var.f;
 T_ambient = 40.0;
 load_full_load = 1.0;
 load_partial_load = 0.5;
-type = 'pwm';
 
 % data for full load operation
-excitation.full_load = get_design_excitation(L, T_ambient, f, load_full_load, type);
+excitation.full_load = get_design_excitation(L, T_ambient, f, load_full_load);
 
 % data for partial load operation
-excitation.partial_load = get_design_excitation(L, T_ambient, f, load_partial_load, type);
+excitation.partial_load = get_design_excitation(L, T_ambient, f, load_partial_load);
 
 end
 

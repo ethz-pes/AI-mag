@@ -1,4 +1,4 @@
-function excitation = get_design_excitation(L, T_ambient, f, load, type)
+function excitation = get_design_excitation(L, T_ambient, f, load)
 % Function for getting a specific operating point.
 %
 %    Parameters:
@@ -6,7 +6,6 @@ function excitation = get_design_excitation(L, T_ambient, f, load, type)
 %        T_ambient (float): ambient temperature
 %        f (float): operating frequency
 %        load (float): operating point load (relative to full load)
-%        type (float): waveform type ('sinus' or 'pwm')
 %
 %    Returns:
 %        excitation (struct): struct containing the operating point
@@ -24,15 +23,7 @@ excitation.f = f;
 excitation.T_ambient = T_ambient;
 excitation.I_dc = load.*10.0;
 excitation.I_ac_peak = 200./(4.*f.*L);
-switch type
-    case 'sinus'
-        excitation.is_pwm = false;
-        excitation.d_c = NaN;
-    case 'pwm'
-        excitation.is_pwm = true;
-        excitation.d_c = 0.5;
-    otherwise
-        error('invalid waveform shape')
-end
+excitation.is_pwm = true;
+excitation.d_c = 0.5;
 
 end
