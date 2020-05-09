@@ -28,9 +28,9 @@ function run_sub(eval_type)
 %        eval_type (str): type of the evaluation ('fem', 'ann', or approx')
 
 % path of the file to be written with the computed single design
-file_single = ['data/compute_single_' eval_type '.mat'];
+file_compute_single = ['data/compute_single_' eval_type '.mat'];
 
-% compute and plot the inductor design
-master_plot_single(file_single)
+% plot a single inductor design
+master_plot_single(file_compute_single)
 
 end

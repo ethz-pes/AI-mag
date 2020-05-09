@@ -26,12 +26,12 @@ function run_sub(eval_type)
 %        eval_type (str): type of the evaluation ('ann', or approx')
 
 % path of the file contained the computed designs
-file_compute = ['data/compute_all_' eval_type '.mat'];
+file_compute_all = ['data/compute_all_' eval_type '.mat'];
 
 % get the GUI parameters
 [fct_data, plot_param, text_param] = get_design_data_plot_all();
 
 % start the GUI
-master_plot_all(file_compute, fct_data, plot_param, text_param)
+master_plot_all(file_compute_all, fct_data, plot_param, text_param)
 
 end

@@ -38,12 +38,12 @@ function run_sub(eval_type)
 file_export = 'data/export.mat';
 
 % path of the file to be written with the computed single design
-file_single = ['data/compute_single_' eval_type '.mat'];
+file_compute_single = ['data/compute_single_' eval_type '.mat'];
 
 % get the design parameters for the inductor
 [eval_ann, data_compute] = get_design_data_compute_single(eval_type);
 
-% compute and plot the inductor design
-master_compute_single(file_single, file_export, eval_ann, data_compute)
+% compute a single inductor design
+master_compute_single(file_compute_single, file_export, eval_ann, data_compute)
 
 end
