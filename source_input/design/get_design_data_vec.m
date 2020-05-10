@@ -67,8 +67,8 @@ fom_limit.I_rms = struct('min', 0.0, 'max', Inf);
 %    - fact_sat: total peak current with respect to the maximum saturation current
 %    - fact_rms: total RMS current with respect to the maximum RMS current
 fom_limit.stress = struct('I_dc', 10.0, 'V_t_area', 200./(2.*f), 'fact_rms', 1./sqrt(3));
-fom_limit.I_rms_tot = struct('min', 10.0, 'max', 100.*10.0);
-fom_limit.I_peak_tot = struct('min', 10.0, 'max', 100.*10.0);
+fom_limit.I_rms_tot = struct('min', 10.0, 'max', 200.*10.0);
+fom_limit.I_peak_tot = struct('min', 10.0, 'max', 200.*10.0);
 fom_limit.r_peak_peak = struct('min', 0.0, 'max', 3.0);
 fom_limit.fact_sat = struct('min', 0.0, 'max', 1.0);
 fom_limit.fact_rms = struct('min', 0.0, 'max', 1.0);
