@@ -199,3 +199,4 @@ Why the tool in MATLAB and Python and not only in Python?
 
 * This project is licensed under the **BSD License**, see [LICENSE.md](LICENSE.md).
 * This project is copyrighted by: (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod.
+* The "ETH Zurich" and "Power Electronic Systems Laboratory" logos are the property of their respective owners.
