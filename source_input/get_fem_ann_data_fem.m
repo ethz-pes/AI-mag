@@ -49,7 +49,7 @@ switch sweep_mode
         sweep.n_sol_max = 10e3;
         
         % samples per variables
-        n = 6000;
+        n = 5000;
         
         % samples generation: linear
         span = 'random';

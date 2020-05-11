@@ -16,7 +16,7 @@ The following performances are achieved:
 * The **average error** between the FEM simulations and the ANN predictions is **below 1%** 
 * The **worst-case error** between the FEM simulations and the ANN predictions is **below 8%** 
 * The tool is able **generate 300'000 designs per second** on a laptop computer
-* The tool is able for compute **60'000 operating points per second** on a laptop computer
+* The tool is able for compute **50'000 operating points per second** on a laptop computer
 
 ## Simplified Workflow
 
