@@ -169,16 +169,15 @@ L = fom.circuit.L;
 % extract the frequency
 f = var.f;
 
-% operating conditions
-T_ambient = 40.0;
+% load conditions
 load_full_load = 1.0;
 load_partial_load = 0.5;
 
 % data for full load operation
-excitation.full_load = get_design_excitation(L, T_ambient, f, load_full_load);
+excitation.full_load = get_design_excitation(L, f, load_full_load);
 
 % data for partial load operation
-excitation.partial_load = get_design_excitation(L, T_ambient, f, load_partial_load);
+excitation.partial_load = get_design_excitation(L, f, load_partial_load);
 
 end
 

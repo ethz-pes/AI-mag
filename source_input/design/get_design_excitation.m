@@ -1,9 +1,8 @@
-function excitation = get_design_excitation(L, T_ambient, f, load)
+function excitation = get_design_excitation(L, f, load)
 % Function for getting a specific operating point.
 %
 %    Parameters:
 %        L (float): inductance value
-%        T_ambient (float): ambient temperature
 %        f (float): operating frequency
 %        load (float): operating point load (relative to full load)
 %
@@ -20,7 +19,7 @@ function excitation = get_design_excitation(L, T_ambient, f, load)
 %    - is_pwm: is the waveform are sinus or PWM (triangular)
 %    - d_c: duty cycle
 excitation.f = f;
-excitation.T_ambient = T_ambient;
+excitation.T_ambient = 40.0;
 excitation.I_dc = load.*10.0;
 excitation.I_ac_peak = 200./(4.*f.*L);
 excitation.is_pwm = true;

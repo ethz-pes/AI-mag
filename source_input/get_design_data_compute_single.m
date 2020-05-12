@@ -77,19 +77,18 @@ L = fom.circuit.L;
 % frequency vector
 f_vec = [300e3, 400e3, 500e3, 600e3];
 
-% operating conditions
-T_ambient = 40.0;
+% load conditions
 load_full_load = 1.0;
 load_partial_load = 0.5;
 
 % assign excitation
 for i=1:length(f_vec)
     tag = sprintf('full_load_f_%.0fk', 1e-3.*f_vec(i));
-    excitation_tmp = get_design_excitation(L, T_ambient, f_vec(i), load_full_load);
+    excitation_tmp = get_design_excitation(L, f_vec(i), load_full_load);
     excitation.(tag) = excitation_tmp;
     
     tag = sprintf('partial_load_f_%.0fk', 1e-3.*f_vec(i));
-    excitation_tmp = get_design_excitation(L, T_ambient, f_vec(i), load_partial_load);
+    excitation_tmp = get_design_excitation(L, f_vec(i), load_partial_load);
     excitation.(tag) = excitation_tmp;
 end
 
