@@ -1,4 +1,9 @@
-# (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
+# Starts the ANN server for using Keras/TensorFlow from MATLAB.
+#
+#    This server answers requests from MATLAB (over TCP/IP).
+#    Train, load, evaluate Keras/TensorFlow neural networks.
+#
+#    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
