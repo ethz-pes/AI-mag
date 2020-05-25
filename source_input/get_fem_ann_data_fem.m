@@ -95,7 +95,7 @@ if any(strcmp(model_type, {'ht', 'mf'}))
     sweep.var.V_box = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 10e-6,  'ub', 1000e-6, 'n', n);
 end
 if strcmp(model_type, 'mf')
-    % total current in the inductor divided by the saturation current
+    % ratio between the inductor current and the saturation current
     sweep.var.r_sat = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 0.001,  'ub', 1.0, 'n', n);
     
     % permeability of the core for the FEM simulation
