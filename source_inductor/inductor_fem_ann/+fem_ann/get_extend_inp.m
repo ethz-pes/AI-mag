@@ -251,14 +251,21 @@ switch model_type
     case 'none'
         % no physics, do nothing
     case 'mf'
+        % compute the normalized inductance
+        mu0 = 4.*pi.*1e-7;
+        inp.L_norm = (mu0.*inp.A_core)./(2.*inp.d_gap);
+
+        % compute the saturation current
+        inp.I_sat = (inp.B_sat_core.*inp.A_core)./inp.L_norm;
+        
         % magnetic model, the current is the excitation
-        %    - 'rel': the current density is used, the current is added
-        %    - 'abs': the current is used, the current density is added
+        %    - 'rel': the ratio with the saturation current is given, the current is calculated
+        %    - 'abs': the current is used, the ratio with the saturation current is calculated
         switch excitation_type
-            case 'rel'
-                inp.I_winding = inp.J_winding.*inp.A_winding;
-            case 'abs'
-                inp.J_winding = inp.I_winding./inp.A_winding;
+            case 'rel'                
+                inp.I_winding = inp.r_sat.*inp.I_sat;
+            case 'abs'                
+                inp.r_sat = inp.I_winding./inp.I_sat;
             otherwise
                 error('invalid physics excitation')
         end
@@ -268,13 +275,13 @@ switch model_type
         %    - 'abs': the absolute losses are used, the loss sharing and density are added
         switch excitation_type
             case 'rel'
-                inp.P_tot = inp.p_density_tot.*inp.A_box;
-                inp.P_core = inp.P_tot.*(1./(1+inp.p_ratio_winding_core));
-                inp.P_winding = inp.P_tot.*(inp.p_ratio_winding_core./(1+inp.p_ratio_winding_core));
+                inp.P_tot = inp.p_surface.*inp.A_box;
+                inp.P_core = inp.P_tot.*(1./(1+inp.r_winding_core));
+                inp.P_winding = inp.P_tot.*(inp.r_winding_core./(1+inp.r_winding_core));
             case 'abs'
                 inp.P_tot = inp.P_winding+inp.P_core;
-                inp.p_density_tot = inp.P_tot./inp.A_box;
-                inp.p_ratio_winding_core = inp.P_winding./inp.P_core;
+                inp.p_surface = inp.P_tot./inp.A_box;
+                inp.r_winding_core = inp.P_winding./inp.P_core;
             otherwise
                 error('invalid physics excitation')
         end

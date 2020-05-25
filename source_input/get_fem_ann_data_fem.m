@@ -95,8 +95,8 @@ if any(strcmp(model_type, {'ht', 'mf'}))
     sweep.var.V_box = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 10e-6,  'ub', 1000e-6, 'n', n);
 end
 if strcmp(model_type, 'mf')
-    % current density in the winding for the magnetic FEM simulation
-    sweep.var.J_winding = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 0.001e6,  'ub', 20e6, 'n', n);
+    % total current in the inductor divided by the saturation current
+    sweep.var.r_sat = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 0.001,  'ub', 1.0, 'n', n);
     
     % permeability of the core for the FEM simulation
     sweep.var.mu_core = struct('type', 'span', 'var_trf', 'none', 'var_type', 'float', 'span', span, 'lb', 1500.0,  'ub', 3000.0, 'n', n);
@@ -106,10 +106,10 @@ if strcmp(model_type, 'mf')
 end
 if strcmp(model_type, 'ht')
     % total losses (core and winding) divided by the area of the boxed inductor
-    sweep.var.p_density_tot = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 0.001e4,  'ub', 1e4, 'n', n);
+    sweep.var.p_surface = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 0.001e4,  'ub', 1e4, 'n', n);
     
     % ratio between the winding losses and core losses
-    sweep.var.p_ratio_winding_core = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 0.02,  'ub', 50.0, 'n', n);
+    sweep.var.r_winding_core = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 0.02,  'ub', 50.0, 'n', n);
     
     % convection coefficient reference value
     sweep.var.h_convection = struct('type', 'span', 'var_trf', 'none', 'var_type', 'float', 'span', span, 'lb', 15.0,  'ub', 30.0, 'n', n);

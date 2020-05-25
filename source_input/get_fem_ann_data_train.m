@@ -65,7 +65,7 @@ if strcmp(model_type, 'ht')
     var_inp{end+1} = struct('name', 'p_density_tot', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.001e4, 'max', 1e4);
     
     % ratio between the winding losses and core losses
-    var_inp{end+1} = struct('name', 'p_ratio_winding_core', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.02, 'max', 1.01.*50.0);
+    var_inp{end+1} = struct('name', 'r_ratio_winding_core', 'var_trf', 'log', 'var_norm', 'min_max', 'min', 0.99.*0.02, 'max', 1.01.*50.0);
     
     % convection coefficient reference value
     var_inp{end+1} = struct('name', 'h_convection', 'var_trf', 'none', 'var_norm', 'min_max', 'min', 0.99.*15.0, 'max', 1.01.*30.0);
