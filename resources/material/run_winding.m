@@ -13,6 +13,7 @@ data = {};
 data{end+1} = get_data('50um');
 data{end+1} = get_data('71um');
 data{end+1} = get_data('100um');
+data{end+1} = get_data('200um');
 
 % material type
 type = 'winding';
@@ -45,6 +46,10 @@ switch id
         fill_litz = 0.51;
         d_strand = 100e-6;
         kappa_copper = 21.5;
+    case '200um'
+        fill_litz = 0.53;
+        d_strand = 200e-6;
+        kappa_copper = 19.0;
     otherwise
         error('invalid material id')
 end
