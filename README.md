@@ -1,7 +1,7 @@
 # mANNgnetics: Inductor Optimization with FEM/ANN
 
 **mANNgnetics** is a **MATLAB** toolbox (using also COMSOL and Python) for **power electronic inductor optimization**. 
-The goal of this tool is to **combine** the **accuracy of the Finite Element Method** with the **evaluation speed** of **Artificial Neural Network (ANN)**.
+The goal of this tool is to **combine** the **accuracy of the Finite Element Method (FEM)** with the **evaluation speed** of **Artificial Neural Network (ANN)**.
 This project is licensed under the **BSD License**.
 
 More precisely, the following **workflow** is implemented:
