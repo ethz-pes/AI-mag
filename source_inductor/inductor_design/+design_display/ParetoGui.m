@@ -212,8 +212,8 @@ classdef ParetoGui < handle
             
             % logo file
             %    - the logo is done with Illustrator
-            %    - the Illustrator source file is 'resources/artwork/logo_fem_ann.ai'
-            filename = 'logo_fem_ann.png';
+            %    - the Illustrator source file is 'resources/artwork/logo_manngnetic.ai'
+            filename = 'logo_manngnetic.png';
             
             % set the logo
             path = fileparts(mfilename('fullpath'));
