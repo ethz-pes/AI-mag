@@ -121,12 +121,12 @@ The source code is available in the GitHub Git repository and contains:
 * All the code is included (MATLAB, Python, and COMSOL)
 * All the ressources (generation of material data, images, analytical equations, etc.) are included
 * The generated data (FEM solution, trained ANN, etc.) are NOT included
-* [GitHub Repository](https://github.com/otvam/inductor_fem_ann)
+* [GitHub Repository](https://github.com/otvam/mANNgnetics)
 
 The releases are available at GitHub and contains:
 * A stable version of the source code (code and ressources)
 * An zip archive containg the generated data (FEM solution, trained ANN, etc.)
-* [GitHub Releases](https://github.com/otvam/inductor_fem_ann/releases)
+* [GitHub Releases](https://github.com/otvam/mANNgnetics/releases)
 
 ## Metrics
 
