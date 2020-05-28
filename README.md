@@ -177,9 +177,13 @@ Can this code run with GNU Octave?
 * The GUI is not compatible with GNU Octave.
 
 Why the tool in MATLAB and Python and not only in Python?
-* Mainly due to the COMSOL MATLAB Livelink which is great on MATLAB
-* The MATLAB ANN engine is also simpler to begin than Keras/TensorFlow
-* Due to legacy code on MATLAB (some inductor models)
+* Mainly due to the COMSOL MATLAB Livelink which is great on MATLAB.
+* The MATLAB ANN engine is also simpler to begin than Keras/TensorFlow.
+* Due to legacy code on MATLAB (some inductor models).
+
+Can I use another FEM solver (e.g., Ansys, OpenFOAM)?
+* The tool has been written in order to minimize the dependencies to COMSOL
+* Therefore, it would be easy to use another FEM solver.
 
 ## Author
 
