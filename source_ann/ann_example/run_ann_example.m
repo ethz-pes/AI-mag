@@ -21,8 +21,8 @@ close('all')
 
 % get the type of regression to be done
 fprintf('AnnManager Example\n')
-fprintf('    1 - ANN regression with MATLAB Deep Learning\n')
-fprintf('    2 - ANN regression with Python Keras and TensorFlow\n')
+fprintf('    1 - ANN regression with MATLAB (Deep Learning Toolbox)\n')
+fprintf('    2 - ANN regression with Python (Keras and TensorFlow)\n')
 fprintf('    3 - MATLAB regression with nonlinear least-squares\n')
 fprintf('    4 - MATLAB regression with genetic algorithm\n')
 idx = input('Enter your choice >> ');

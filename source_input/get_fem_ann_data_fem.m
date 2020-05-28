@@ -57,10 +57,14 @@ switch sweep_mode
         error('invalid sweep method')
 end
 
-% struct with the description of a fixed variable
+% struct with the description of a variable with a given fixed vector
 %    - type: type of the variable ('fixed')
 %    - vec: vector with the values
-% struct with the description of a variable with generation of the samples
+% struct with the description of a variable with random picks from a given discrete set
+%    - type: type of the variable ('randset')
+%    - set: values of the discrete set for the picks
+%    - n: number of samples to be generated for the variable
+% struct with the description of a variable with a regularly spaced span
 %    - type: type of the variable ('span')
 %    - var_trf: variable transformation applied to the variable
 %        - none: no transformation
@@ -77,7 +81,9 @@ end
 %        - 'random': random span (after variable transformation)
 %    - lb: variable lower bound
 %    - ub: variable upper bound
-%    - n: number of samples for the variable
+%    - n: number of samples to be generated for the variable
+sweep.var = struct();
+
 if any(strcmp(model_type, {'ht', 'mf'}))
     % ratio between the height and width and the winding window
     sweep.var.fact_window = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 2.0, 'ub', 4.0, 'n', n);

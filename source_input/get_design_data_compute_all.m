@@ -19,7 +19,7 @@ function [sweep, n_split, fct, eval_ann, data_compute] = get_design_data_compute
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % data controlling the generation of the design combinations
-sweep{1} = get_sweep('extrema');
+sweep{1} = get_sweep('grid');
 sweep{2} = get_sweep('random');
 
 % number of vectorized designs per computation
@@ -57,14 +57,14 @@ function sweep = get_sweep(sweep_mode)
 % Data for generating the variable combinations with different methods.
 %
 %    Parameters:
-%        sweep_mode (str): method for generating the variable combinations ('extrema' or 'random')
+%        sweep_mode (str): method for generating the variable combinations ('grid' or 'random')
 %
 %    Returns:
 %        sweep (struct): data controlling the generation of the design combinations
 
 % control the samples generation
 switch sweep_mode
-    case 'extrema'
+    case 'grid'
         % regular grid sweep (all combinations)
         sweep.type = 'all_combinations';
         
@@ -91,6 +91,33 @@ switch sweep_mode
     otherwise
         error('invalid sweep method')
 end
+
+% struct with the description of a variable with a given fixed vector
+%    - type: type of the variable ('fixed')
+%    - vec: vector with the values
+% struct with the description of a variable with random picks from a given discrete set
+%    - type: type of the variable ('randset')
+%    - set: values of the discrete set for the picks
+%    - n: number of samples to be generated for the variable
+% struct with the description of a variable with a regularly spaced span
+%    - type: type of the variable ('span')
+%    - var_trf: variable transformation applied to the variable
+%        - none: no transformation
+%        - rev: '1/x' transformation
+%        - log: 'log10(x)' transformation
+%        - exp: '10^x' transformation
+%        - square: 'x^2' transformation
+%        - sqrt: 'sqrt(2)' transformation
+%    - var_type: variable type
+%        - int: integer variable
+%        - float: real variable
+%    - span: generation method
+%        - 'linear': linear span (after variable transformation)
+%        - 'random': random span (after variable transformation)
+%    - lb: variable lower bound
+%    - ub: variable upper bound
+%    - n: number of samples to be generated for the variable
+sweep.var = struct();
 
 % ratio between the height and width and the winding window
 sweep.var.fact_window = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'span', span, 'lb', 2.0, 'ub', 4.0, 'n', n);

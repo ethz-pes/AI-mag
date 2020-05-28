@@ -4,9 +4,13 @@ function [n_sol, var] = get_sweep(sweep)
 %    Different sample generation methods are available:
 %        - Generates samples by combining vectors with only the provided combinations (deterministic or random)
 %        - Generates samples by combining vectors with all possible combinations (deterministic or random)
-%        - Generates samples completely randomly
 %
-%    For all the variables, different variable transformations are available.
+%    Three different methods are available for generating the variable samples:
+%        - Given fixed vector
+%        - Randompicks (with a given length) from a given discrete set 
+%        - Regularly spaced span
+%            -  Variables can be float or integer 
+%            -  Variable transformations (e.g., logarithmic, quadratic) are available
 %
 %    Parameters:
 %        sweep (struct): data controlling the samples generation
@@ -51,7 +55,7 @@ end
 end
 
 function vec = get_vec_vector(var)
-% Generates a evenly spaced vector or return a fixed vector (size fixed).
+% Generates a vector with samples (fixed, random picks from a set, or regularly spaced span).
 %
 %    Parameters:
 %        var (struct): data controlling the samples generation
@@ -63,6 +67,12 @@ switch var.type
     case 'fixed'
         % the vector is given: nothing to do
         vec = var.vec;
+    case 'randset'
+        % get the indices of the random picks within the set
+        idx = randi(length(var.set), 1, var.n);
+        
+        % get the values from the indices
+        vec = var.set(idx);
     case 'span'
         % make the variable transformation of the bounds
         lb = get_var_trf(var.lb, var.var_trf, 'scale');

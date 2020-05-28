@@ -2,7 +2,7 @@
 
 **mANNgnetics** is a **MATLAB** toolbox (using also COMSOL and Python) for **power electronic inductor optimization**. 
 The goal of this tool is to **combine** the **accuracy of the Finite Element Method (FEM)** with the **evaluation speed** of **Artificial Neural Network (ANN)**.
-This project is licensed under the **BSD License**.
+This project developed by the **Power Electronic Systems Laboratory at ETH Zurich** and is available under the **BSD License**. 
 
 More precisely, the following **workflow** is implemented:
 * Simulating many designs with **FEM thermal and magnetic** simulations (COMSOL)
@@ -14,7 +14,7 @@ More precisely, the following **workflow** is implemented:
 
 The following performances are achieved:
 * The **average error** between the FEM simulations and the ANN predictions is **below 1%** 
-* The **worst-case error** between the FEM simulations and the ANN predictions is **below 8%** 
+* The **worst-case error** between the FEM simulations and the ANN predictions is **below 3%** 
 * The tool is able **generate 300'000 designs per second** on a laptop computer
 * The tool is able for compute **50'000 operating points per second** on a laptop computer
 
@@ -77,7 +77,7 @@ Currently the following inductors are optimized:
 * Sinus or PWM excitation (with DC bias)
 * Coupled thermal/loss models
 
-However, this toolbox is made in order to be **easily extended** with other inductors types or with other magnetic components (e.g., transformers, chokes).
+However, this toolbox is made in order to be **easily extended** with other inductors types, magnetic components (e.g., transformers, chokes), or optimization method (e.g., genetic algoritm).
 
 ## Compatibility
 
@@ -134,13 +134,13 @@ The releases are available at GitHub and contains:
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-MATLAB                         101           1644           4767           4542
-Python                           8            365            446            450
-Markdown                         4             74              0            277
+MATLAB                         101           1648           4806           4539
+Python                           8            365            451            450
+Markdown                         4             75              0            281
 DOS Batch                        3              9              0             34
 Bourne Shell                     3              9              9             21
 -------------------------------------------------------------------------------
-SUM:                           119           2101           5222           5324
+SUM:                           119           2106           5266           5325
 -------------------------------------------------------------------------------
 ```
 
