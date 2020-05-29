@@ -182,8 +182,8 @@ classdef InductorDisplay < handle
             
             % applied excitation
             text = {};
+            text{end+1} = sprintf('type_id = %s', get_map_int_to_str(operating_pts.excitation.type_id));
             text{end+1} = sprintf('T_ambient = %.2f C', operating_pts.excitation.T_ambient);
-            text{end+1} = sprintf('is_pwm = %d', operating_pts.excitation.is_pwm);
             text{end+1} = sprintf('f = %.2f kHz', 1e-3.*operating_pts.excitation.f);
             text{end+1} = sprintf('d_c = %.2f %%', 1e2.*operating_pts.excitation.d_c);
             text{end+1} = sprintf('I_dc = %.2f A', operating_pts.excitation.I_dc);

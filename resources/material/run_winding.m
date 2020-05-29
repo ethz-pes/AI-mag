@@ -70,7 +70,6 @@ material.param.kappa_iso = 5.0; % cost per mass for the insulation
 material.param.kappa_copper = kappa_copper; % cost per mass for the copper
 
 % assign constant
-material.param.n_harm = 10; % number of harmonics for PWM losses
 material.param.P_max = 1000e3; % maximum loss density
 material.param.J_rms_max = 15e6; % maximum rms current density
 material.param.P_scale_lf = 1.0; % scaling factor for LF losses

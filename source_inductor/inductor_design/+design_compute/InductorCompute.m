@@ -449,7 +449,7 @@ classdef InductorCompute < handle
             T_core_avg = operating.thermal.T_core_avg;
             T_winding_avg = operating.thermal.T_winding_avg;
             f = operating.excitation.f;
-            is_pwm = operating.excitation.is_pwm;
+            type_id = operating.excitation.type_id;
             d_c = operating.excitation.d_c;
             
             % compute the different field values
@@ -460,23 +460,39 @@ classdef InductorCompute < handle
             H_ac_peak = H_norm.*I_ac_peak;
             B_ac_peak = B_norm.*I_ac_peak;
             
-            % get the losses with the material manager
-            if is_pwm==true
-                % triangular waveform, losses
-                [is_valid_core, P_core] = self.core_obj.get_losses_tri(f, d_c, B_ac_peak, B_dc, T_core_avg);
-                [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_tri(f, d_c, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);
-                
-                % triangular waveform, factor between peak and RMS
-                fact_rms = 1./sqrt(3);
-            else
-                % sinus, losses
-                [is_valid_core, P_core] = self.core_obj.get_losses_sin(f, B_ac_peak, B_dc, T_core_avg);
-                [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_sin(f, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);
-                
-                % sinus waveform, factor between peak and RMS
-                fact_rms = 1./sqrt(2);
-            end
+            % get the indices corresponding to the different waveform types
+            tri = get_map_str_to_int('tri');
+            sin = get_map_str_to_int('sin');
             
+            
+            keyboard
+            varargout = get_map_fct(id_set, id_vec, fct, input)
+            
+            tag = {'tri', 'sin'};
+            
+            
+            % get the losses with the material manager
+            
+            keyboard
+            switch g
+                case 'tri'
+                    % triangular waveform, losses
+                    [is_valid_core, P_core] = self.core_obj.get_losses_tri(f, d_c, B_ac_peak, B_dc, T_core_avg);
+                    [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_tri(f, d_c, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);
+                    
+                    % triangular waveform, factor between peak and RMS
+                    fact_rms = 1./sqrt(3);
+                case 'sin'
+                    % sinus, losses
+                    [is_valid_core, P_core] = self.core_obj.get_losses_sin(f, B_ac_peak, B_dc, T_core_avg);
+                    [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_sin(f, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);
+                    
+                    % sinus waveform, factor between peak and RMS
+                    fact_rms = 1./sqrt(2);
+                otherwise
+                    error('invalid waveform type')
+            end
+                        
             % compute the total current (AC and DC)
             I_peak_tot = I_dc+I_ac_peak;
             I_rms_tot = I_dc+fact_rms.*I_ac_peak;
