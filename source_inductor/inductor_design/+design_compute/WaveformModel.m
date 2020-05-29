@@ -33,19 +33,18 @@ classdef WaveformModel < handle
             self.id = struct('tri', tri, 'sin', sin, 'all', [tri, sin]);
         end
         
-        function fact_rms = get_fact_rms(self, type_id, d_c)
-            % Get the factor between peak and RMS values of the waveform.
+        function v_ac_rms = get_rms(self, type_id, v_ac_peak)
+            % Transform AC peak value into AC RMS value.
             %
             %    Parameters:
             %        type_id (vector): vector with the waveform type ids
-            %        d_c (vector): vector with the waveform duty cycle
+            %        v_ac_peak (vector): AC peak value
             %
             %    Returns:
-            %        fact_rms (vector): factor between peak and RMS values of the waveform
-            
-            
-            fct = @(type_id, d_c) get_fact_rms_sub(self, type_id, d_c);
-            fact_rms = get_map_fct(self.id.all, type_id, fct, {d_c});
+            %        v_ac_rms (vector): AC RMS value
+
+            fct = @(type_id, v_ac_peak) get_rms_sub(self, type_id, v_ac_peak);
+            v_ac_rms = get_map_fct(self.id.all, type_id, fct, {v_ac_peak});
         end
         
         function [freq, value] = get_waveform_harm(self, type_id, d_c)
@@ -85,21 +84,21 @@ classdef WaveformModel < handle
     
     %% private
     methods (Access = private)
-        function fact_rms = get_fact_rms_sub(self, type_id, d_c)
-            % Get the factor between peak and RMS values of the waveform (scalar id).
+        function v_ac_rms = get_rms_sub(self, type_id, v_ac_peak)
+            % Transform AC peak value into AC RMS value (scalar id).
             %
             %    Parameters:
             %        type_id (scalar): vector with the waveform type id
-            %        d_c (vector): vector with the waveform duty cycle
+            %        v_ac_peak (vector): AC peak value
             %
             %    Returns:
-            %        fact_rms (vector): factor between peak and RMS values of the waveform
+            %        v_ac_rms (vector): AC RMS value
             
             switch type_id
                 case self.id.tri
-                    fact_rms = (1./sqrt(3)).*ones(1, length(d_c));
+                    v_ac_rms = (1./sqrt(3)).*v_ac_peak;
                 case self.id.sin
-                    fact_rms = (1./sqrt(2)).*ones(1, length(d_c));
+                    v_ac_rms = (1./sqrt(2)).*v_ac_peak;
                 otherwise
                     error('invalid waveform id')
             end

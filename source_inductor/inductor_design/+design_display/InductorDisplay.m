@@ -141,15 +141,16 @@ classdef InductorDisplay < handle
             % magnetic data
             text = {};
             text{end+1} = sprintf('L = %.2f uH', 1e6.*fom_tmp.circuit.L);
+            text{end+1} = sprintf('V_t_area = %.2f Vms', 1e3.*fom_tmp.circuit.V_t_area);
             text{end+1} = sprintf('I_sat = %.2f A', fom_tmp.circuit.I_sat);
             text{end+1} = sprintf('I_rms = %.2f A', fom_tmp.circuit.I_rms);
-            text{end+1} = sprintf('V_t_area = %.2f Vms', 1e3.*fom_tmp.circuit.V_t_area);
             text_data{end+1} = struct('title', 'circuit', 'text', {text});
             
             % utilization indicator of the inductor
             text = {};
-            text{end+1} = sprintf('I_peak_tot = %.2f A', fom_tmp.utilization.I_peak_tot);
-            text{end+1} = sprintf('I_rms_tot = %.2f A', fom_tmp.utilization.I_rms_tot);
+            text{end+1} = sprintf('I_ac_peak = %.2f A', fom_tmp.utilization.I_ac_peak);
+            text{end+1} = sprintf('I_ac_rms = %.2f %%', 1e2.*fom_tmp.utilization.I_ac_rms);
+            text{end+1} = sprintf('I_dc = %.2f A', fom_tmp.utilization.I_dc);
             text{end+1} = sprintf('r_peak_peak = %.2f %%', 1e2.*fom_tmp.utilization.r_peak_peak);
             text{end+1} = sprintf('fact_sat = %.2f %%', 1e2.*fom_tmp.utilization.fact_sat);
             text{end+1} = sprintf('fact_rms = %.2f %%', 1e2.*fom_tmp.utilization.fact_rms);

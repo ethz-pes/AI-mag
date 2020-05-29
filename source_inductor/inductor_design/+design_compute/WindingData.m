@@ -120,7 +120,7 @@ classdef WindingData < handle
             %        - details: M. Leibl, "Three-Phase PFC Rectifier and High-Voltage Generator", 2017
             %
             %    The input should have the size of the number of samples.
-            %    RMS values are used for the Fourier harmonics.
+            %    Peak values are used for the Fourier harmonics.
             %
             %    The signals are given as matrices:
             %        - the columns represents the different samples
@@ -128,8 +128,8 @@ classdef WindingData < handle
             %
             %    Parameters:
             %        f_vec (matrix): matrix with the frequencies
-            %        J_vec (matrix): matrix with the current density RMS harmonics
-            %        H_vec (matrix): matrix with the magnetic field RMS harmonics
+            %        J_vec (matrix): matrix with the current density peak harmonics
+            %        H_vec (matrix): matrix with the magnetic field peak harmonics
             %        J_dc (vector): DC current density
             %        T (vector): operating temperature
             %
@@ -202,8 +202,8 @@ classdef WindingData < handle
             %
             %    Parameters:
             %        f_vec (matrix): matrix with the frequencies
-            %        J_vec (matrix): matrix with the current density RMS harmonics
-            %        H_vec (matrix): matrix with the magnetic field RMS harmonics
+            %        J_vec (matrix): matrix with the current density peak harmonics
+            %        H_vec (matrix): matrix with the magnetic field peak harmonics
             %
             %    Returns:
             %        f (vector): equivalent operating frequency
@@ -211,11 +211,11 @@ classdef WindingData < handle
             %        H_ac_rms (vector): AC RMS magnetic field
             
             % get the RMS values
-            J_ac_rms = sqrt(sum(J_vec.^2, 1));
-            H_ac_rms = sqrt(sum(H_vec.^2, 1));
+            J_ac_rms = sqrt(sum(J_vec.^2, 1))./sqrt(2);
+            H_ac_rms = sqrt(sum(H_vec.^2, 1))./sqrt(2);
             
             % get the equivalent operating frequency for the proximity losses
-            prox_factor = sqrt(sum(f_vec.^2.*H_vec.^2, 1));
+            prox_factor = sqrt(sum(f_vec.^2.*H_vec.^2, 1))./sqrt(2);
             f = prox_factor./H_ac_rms;            
         end
         

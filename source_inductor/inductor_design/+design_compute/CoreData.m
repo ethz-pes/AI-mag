@@ -112,8 +112,37 @@ classdef CoreData < handle
             
             beta = self.param.beta;
         end
-                
-        function [is_valid, P] = get_losses(self, t_vec, B_vec, T)
+        
+        function [is_valid, P] = get_losses_sin(self, f, B_ac_peak, B_dc, T)
+            % Compute the losses with a sinus excitation.
+            %
+            %    Use a loss map (temperature, frequency, AC flux, DC bias).
+            %        - interpolation between the loss points
+            %        - details: R. Burkart, "Advanced Modeling and Multi-Objective Optimization of Power Electronic Converter Systems", 2016
+            %
+            %    The input should have the size of the number of samples.
+            %
+            %    Parameters:
+            %        f (vector): frequency excitation vector
+            %        B_ac_peak (vector): peak AC flux density
+            %        B_dc (vector): DC flux density
+            %        T (vector): operating temperature
+            %
+            %    Returns:
+            %        is_valid (vector): if the operating points are valid (or not)
+            %        P (vector): losses of each sample (density multiplied with volume)
+            
+            % interpolate the loss density
+            [is_valid, P] = self.get_interp(f, B_ac_peak, B_dc, T);
+            
+            % check the validity of the obtained losses
+            is_valid = self.parse_losses(is_valid, P, B_ac_peak+B_dc);
+            
+            % from loss densities to losses
+            P = self.volume.*P;
+        end
+
+        function [is_valid, P] = get_losses_igse(self, t_vec, B_time_vec, B_loop_vec, T)
             % Compute the losses with an arbitrary excitation (iGSE).
             %
             %    Use a loss map (temperature, frequency, AC flux, DC bias).
@@ -125,6 +154,7 @@ classdef CoreData < handle
             %
             %    The input should have the size of the number of samples.
             %    The signal should be periodic (first point is equal to last point).
+            %    Minor loops are supported.
             %
             %    The signals are given as matrices:
             %        - the columns represents the different samples
@@ -132,7 +162,8 @@ classdef CoreData < handle
             %
             %    Parameters:
             %        t_vec (matrix): matrix with the times
-            %        B_vec (matrix): matrix with the time domain flux densities
+            %        B_time_vec (matrix): matrix with the time domain flux densities
+            %        B_loop_vec (matrix): matrix with the major/minor loop flux densities
             %        T (vector): operating temperature
             %
             %    Returns:
@@ -140,14 +171,18 @@ classdef CoreData < handle
             %        P (vector): losses of each sample (density multiplied with volume)
             
             % parse waveform
-            [f, B_dc, B_ac_peak] = self.get_param_waveform(t_vec, B_vec);
+            [f, B_dc, B_ac_peak] = self.get_param_waveform(t_vec, B_time_vec);
                         
             % interpolate the loss map, get the IGSE parameters
             [is_valid_interp, k, alpha, beta] = compute_steinmetz(self, f, B_ac_peak, B_dc, T);
             
             % apply the IGSE and get the loss density
-            [is_valid_value, P] = self.compute_losses_igse(k, alpha, beta, t_vec, B_vec);
+            P = self.compute_losses_igse(k, alpha, beta, t_vec, B_time_vec, B_loop_vec);
             
+            % check the validity of the obtained losses
+            B_peak_tot = max(abs(B_time_vec), [], 1);
+            is_valid_value = self.parse_losses(P, B_peak_tot);
+
             % from loss densities to losses
             P = self.volume.*P;
             
@@ -217,12 +252,12 @@ classdef CoreData < handle
             is_valid = is_valid&(B_peak_tot<=B_sat_max);
         end
         
-        function [f, B_dc, B_ac_peak] = get_param_waveform(self, t_vec, B_vec)
+        function [f, B_dc, B_ac_peak] = get_param_waveform(self, t_vec, B_time_vec)
             % Extract the parameters from the time domain waveform.
             %
             %    Parameters:
             %        t_vec (matrix): matrix with the times
-            %        B_vec (matrix): matrix with the flux densities
+            %        B_time_vec (matrix): matrix with the flux densities
             %
             %    Returns:
             %        f (vector): operating frequency
@@ -233,11 +268,11 @@ classdef CoreData < handle
             f = 1./(max(t_vec, [], 1)-min(t_vec, [], 1));
             
             % AC peak flux density
-            B_ac_peak = (max(B_vec, [], 1)-min(B_vec, [], 1))./2;
+            B_ac_peak = (max(B_time_vec, [], 1)-min(B_time_vec, [], 1))./2;
                         
             % DC flux density
             t_vec_diff = diff(t_vec, 1);
-            B_vec_avg = (B_vec(2:end,:)+B_vec(1:end-1,:))./2;
+            B_vec_avg = (B_time_vec(2:end,:)+B_time_vec(1:end-1,:))./2;
             B_dc = f.*abs(sum(t_vec_diff.*B_vec_avg, 1));
         end
 
@@ -294,18 +329,18 @@ classdef CoreData < handle
             k = P_ref./((f.^alpha).*(B_ac_peak.^beta));
         end
         
-        function [is_valid, P] = compute_losses_igse(self, k, alpha, beta, t_vec, B_vec)
-            % Compute the losses with the IGSE.
+        function P = compute_losses_igse(self, k, alpha, beta, t_vec, B_time_vec, B_loop_vec)
+            % Compute the losses with the iGSE.
             %
             %    Parameters:
             %        k (vector): Steinmetz parameter k
             %        alpha (vector): Steinmetz parameter alpha
             %        beta (vector): Steinmetz parameter beta
             %        t_vec (matrix): matrix with the times
-            %        B_vec (matrix): matrix with the flux densities
+            %        B_time_vec (matrix): matrix with the time domain flux densities
+            %        B_loop_vec (matrix): matrix with the major/minor loop flux densities
             %
             %    Returns:
-            %        is_valid (vector): if the computed losses are valid (or not)
             %        P (vector): computed loss densities
             
             % get the parameter from the Steinmetz parameters
@@ -315,22 +350,15 @@ classdef CoreData < handle
             t_vec_diff = diff(t_vec, 1);
             
             % find the flux variations
-            B_vec_diff = diff(B_vec, 1);
+            B_time_vec_diff = diff(B_time_vec, 1);
                         
-            % peak to peak flux density
-            B_peak_peak = max(B_vec, [], 1)-min(B_vec, [], 1);
-
             % frequency
             f = 1./(max(t_vec, [], 1)-min(t_vec, [], 1));
             
-            % apply IGSE
-            v_int = sum((abs(B_vec_diff./t_vec_diff).^alpha).*t_vec_diff, 1);
-            v_cst = f.*ki.*B_peak_peak.^(beta-alpha);
+            % apply iGSE
+            v_int = sum((abs(B_time_vec_diff./t_vec_diff).^alpha).*t_vec_diff, 1);
+            v_cst = f.*ki.*B_loop_vec.^(beta-alpha);
             P = v_cst.*v_int;
-            
-            % check the validity of the obtained losses
-            B_peak_tot = max(abs(B_vec), [], 1);
-            is_valid = self.parse_losses(P, B_peak_tot);
         end
         
         function ki = compute_steinmetz_ki(self, k, alpha, beta)

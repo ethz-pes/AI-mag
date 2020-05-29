@@ -221,8 +221,9 @@ classdef InductorCompute < handle
             fact_rms = I_rms_tot./I_rms;
             
             % assign the results
-            utilization.I_peak_tot = I_peak_tot;
-            utilization.I_rms_tot = I_rms_tot;
+            utilization.I_dc = I_dc;
+            utilization.I_ac_peak = I_ac_peak;
+            utilization.I_ac_rms = I_ac_rms;
             utilization.r_peak_peak = r_peak_peak;
             utilization.fact_sat = fact_sat;
             utilization.fact_rms = fact_rms;
@@ -243,8 +244,6 @@ classdef InductorCompute < handle
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.I_sat, self.data_vec.fom_limit.I_sat);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.I_rms, self.data_vec.fom_limit.I_rms);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.V_t_area, self.data_vec.fom_limit.V_t_area);
-            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.utilization.I_peak_tot, self.data_vec.fom_limit.I_peak_tot);
-            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.utilization.I_rms_tot, self.data_vec.fom_limit.I_rms_tot);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.utilization.r_peak_peak, self.data_vec.fom_limit.r_peak_peak);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.utilization.fact_sat, self.data_vec.fom_limit.fact_sat);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.utilization.fact_rms, self.data_vec.fom_limit.fact_rms);
@@ -302,7 +301,10 @@ classdef InductorCompute < handle
             %        operating (struct): struct containing the excitation, losses, and temperatures
             
             % add the excitation data, expand the data to the number of designs
-            operating.excitation = get_struct_size(excitation, self.n_sol);
+            excitation = get_struct_size(excitation, self.n_sol);
+            
+            % init, compute data which are independent of the iterations
+            operating = self.get_operating_init(excitation);
             
             % compute the coupled loss and thermal models
             [operating, is_valid_iter] = self.thermal_losses_iter_obj.get_iter(operating);
@@ -317,6 +319,63 @@ classdef InductorCompute < handle
             operating.is_valid_iter = is_valid_iter;
             operating.is_valid = is_valid_fom&is_valid_iter&is_valid_thermal&is_valid_core&is_valid_winding;
         end
+        
+        function operating = get_operating_init(self, excitation)
+            % Initialize an operating point with the data which are independent of the iterations.
+            %
+            %    Parameters:
+            %        excitation (struct): struct containing the operating point excitation
+            %
+            %    Returns:
+            %        operating (struct): struct with the operating point data
+            
+            % get component circuit parameters
+            B_norm = self.fom.circuit.B_norm;
+            J_norm = self.fom.circuit.J_norm;
+            H_norm = self.fom.circuit.H_norm;
+            I_sat = self.fom.circuit.I_sat;
+            I_rms = self.fom.circuit.I_rms;
+            
+            % get the applied stress
+            I_dc = excitation.I_dc;
+            I_ac_peak = excitation.I_ac_peak;
+            type_id = excitation.type_id;
+           
+            % get the factor between peak and RMS values
+            I_ac_rms = self.waveform_model_obj.get_rms(type_id, I_ac_peak);
+            
+            % compute the different field values
+            J_dc = J_norm.*I_dc;
+            B_dc = B_norm.*I_dc;
+            H_dc = H_norm.*I_dc;
+            J_ac_rms = J_norm.*I_ac_rms;
+            H_ac_rms = H_norm.*I_ac_rms;
+            B_ac_peak = B_norm.*I_ac_peak;
+                        
+            % compute the total current (AC and DC)
+            I_peak_tot = I_dc+I_ac_peak;
+            I_rms_tot = hypot(I_dc, I_ac_rms);
+                        
+            % assign the fields
+            operating.field.J_dc = J_dc;
+            operating.field.B_dc = B_dc;
+            operating.field.H_dc = H_dc;
+            operating.field.J_ac_rms = J_ac_rms;
+            operating.field.H_ac_rms = H_ac_rms;
+            operating.field.B_ac_peak = B_ac_peak;
+            
+            % assign the utilization factor (ripple, saturation, and RMS)
+            operating.utilization.I_dc = I_dc;
+            operating.utilization.I_ac_peak = I_ac_peak;
+            operating.utilization.I_ac_rms = I_ac_rms;
+            operating.utilization.r_peak_peak = (2.*I_ac_peak)./I_dc;
+            operating.utilization.fact_sat = I_peak_tot./I_sat;
+            operating.utilization.fact_rms = I_rms_tot./I_rms;
+            
+            % assign excitation
+            operating.excitation = excitation;
+        end
+        
         
         function operating = get_thermal_init(self, operating)
             % Init the thermal model for the starting the thermal/loss iterations.
@@ -445,8 +504,6 @@ classdef InductorCompute < handle
             B_norm = self.fom.circuit.B_norm;
             J_norm = self.fom.circuit.J_norm;
             H_norm = self.fom.circuit.H_norm;
-            I_sat = self.fom.circuit.I_sat;
-            I_rms = self.fom.circuit.I_rms;
             
             % get the applied stress
             I_dc = operating.excitation.I_dc;
@@ -456,54 +513,26 @@ classdef InductorCompute < handle
             f = operating.excitation.f;
             type_id = operating.excitation.type_id;
             d_c = operating.excitation.d_c;
-            
+                                   
             % compute the different field values
             J_dc = J_norm.*I_dc;
             B_dc = B_norm.*I_dc;
-            H_dc = H_norm.*I_dc;
             J_ac_peak = J_norm.*I_ac_peak;
             H_ac_peak = H_norm.*I_ac_peak;
             B_ac_peak = B_norm.*I_ac_peak;
             
-            % get the factor between peak and RMS values
-            fact_rms = self.waveform_model_obj.get_fact_rms(type_id, d_c);
+            % get the time domain waveform
+            [t_vec, B_vec] = self.waveform_model_obj.get_waveform_time(type_id, f, d_c, B_ac_peak, B_dc);
+            
+            % compute the core losses
+            [is_valid_core, P_core] = self.core_obj.get_losses(t_vec, B_vec, T_core_avg);
             
             % get the Fourier coefficient of the waveform
-            [freq, value_freq] = self.waveform_model_obj.get_waveform_harm(type_id, d_c);
+            [f_vec, J_vec, H_vec, J_dc] = self.waveform_model_obj.get_waveform_harm(type_id, f, d_c, J_ac_peak, H_ac_peak, J_dc);
             
-            % get the time domain waveform
-            [time, value_time] = self.waveform_model_obj.get_waveform_time(type_id, d_c);
-            
-
-            keyboard
-
-            
-            
-            % get the losses with the material manager
-            
-            switch g
-                case 'tri'
-                    % triangular waveform, losses
-                    [is_valid_core, P_core] = self.core_obj.get_losses_tri(f, d_c, B_ac_peak, B_dc, T_core_avg);
-                    [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_tri(f, d_c, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);
-                    
-                    % triangular waveform, factor between peak and RMS
-                    fact_rms = 1./sqrt(3);
-                case 'sin'
-                    % sinus, losses
-                    [is_valid_core, P_core] = self.core_obj.get_losses_sin(f, B_ac_peak, B_dc, T_core_avg);
-                    [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_sin(f, J_dc, J_ac_peak, H_ac_peak, T_winding_avg);
-                    
-                    % sinus waveform, factor between peak and RMS
-                    fact_rms = 1./sqrt(2);
-                otherwise
-                    error('invalid waveform type')
-            end
+            % compute the winding losses
+            [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_tri(f_vec, J_vec, H_vec, J_dc, T_winding_avg);
                         
-            % compute the total current (AC and DC)
-            I_peak_tot = I_dc+I_ac_peak;
-            I_rms_tot = I_dc+fact_rms.*I_ac_peak;
-            
             % get the total losses (scaling and offset)
             P_scale = self.data_vec.fom_data.P_scale;
             P_offset = self.data_vec.fom_data.P_offset;
@@ -518,25 +547,11 @@ classdef InductorCompute < handle
             operating.losses.P_winding_ac_hf = P_ac_hf;
             operating.losses.P_add = P_add;
             operating.losses.P_tot = P_tot;
-            
-            % assign the fields
-            operating.field.J_dc = J_dc;
-            operating.field.B_dc = B_dc;
-            operating.field.H_dc = H_dc;
-            operating.field.J_ac_peak = J_ac_peak;
-            operating.field.H_ac_peak = H_ac_peak;
-            operating.field.B_ac_peak = B_ac_peak;
-            
-            % assign the utilization factor (ripple, saturation, and RMS)
-            operating.utilization.I_peak_tot = I_peak_tot;
-            operating.utilization.I_rms_tot = I_rms_tot;
-            operating.utilization.r_peak_peak = (2.*I_ac_peak)./I_dc;
-            operating.utilization.fact_sat = I_peak_tot./I_sat;
-            operating.utilization.fact_rms = I_rms_tot./I_rms;
-            
+                                    
             % assign relative figures of merits (ratios)
             operating.fact.core_losses = P_core./P_tot;
             operating.fact.winding_losses = P_winding./P_tot;
+            operating.fact.add_losses = P_add./P_tot;
             operating.fact.winding_hf_res = (P_ac_lf+P_ac_hf)./P_ac_lf;
             
             % assign validity
