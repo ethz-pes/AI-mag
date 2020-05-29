@@ -32,6 +32,7 @@ classdef InductorCompute < handle
         winding_obj % WindingData: object mananaging the winding properties
         iso_obj % IsoData: object mananaging the insulation properties
         thermal_losses_iter_obj % ThermalLossIter: object mananaging the thermal/loss coupling
+        waveform_model_obj % WaveformModel: object for managing the waveforms
     end
     
     %% public
@@ -58,7 +59,7 @@ classdef InductorCompute < handle
             self.init_geom_material()
             self.init_magnetic()
             self.init_limit()
-            self.init_thermal_loss()
+            self.init_thermal_loss_waveform()
         end
         
         function fom = get_fom(self)
@@ -269,11 +270,12 @@ classdef InductorCompute < handle
         end
         
         
-        function init_thermal_loss(self)
-            % Init the termal/loss iterator.
+        function init_thermal_loss_waveform(self)
+            % Init the thermal/loss iterator and the waveform model.
             %
             %    Get the different functions describing the loss and thermal models.
-            %    Create the termal/loss object.
+            %    Create the thermal/loss object.
+            %    Create the waveform model object.
             
             fct.fct_init = @(operating) self.get_thermal_init(operating);
             fct.get_thermal = @(operating) self.get_thermal(operating);
@@ -281,6 +283,9 @@ classdef InductorCompute < handle
             fct.get_thermal_vec = @(operating) self.get_thermal_vec(operating);
             fct.get_losses_vec = @(operating) self.get_losses_vec(operating);
             self.thermal_losses_iter_obj = design_compute.ThermalLossIter(self.data_const.iter, fct);
+
+            self.thermal_losses_iter_obj = design_compute.ThermalLossIter(self.data_const.iter, fct);
+            self.waveform_model_obj = design_compute.WaveformModel(self.data_const.waveform);
         end
         
     end
@@ -460,20 +465,22 @@ classdef InductorCompute < handle
             H_ac_peak = H_norm.*I_ac_peak;
             B_ac_peak = B_norm.*I_ac_peak;
             
-            % get the indices corresponding to the different waveform types
-            tri = get_map_str_to_int('tri');
-            sin = get_map_str_to_int('sin');
+            % get the factor between peak and RMS values
+            fact_rms = self.waveform_model_obj.get_fact_rms(type_id, d_c);
             
+            % get the Fourier coefficient of the waveform
+            [freq, value_freq] = self.waveform_model_obj.get_waveform_harm(type_id, d_c);
             
+            % get the time domain waveform
+            [time, value_time] = self.waveform_model_obj.get_waveform_time(type_id, d_c);
+            
+
             keyboard
-            varargout = get_map_fct(id_set, id_vec, fct, input)
-            
-            tag = {'tri', 'sin'};
+
             
             
             % get the losses with the material manager
             
-            keyboard
             switch g
                 case 'tri'
                     % triangular waveform, losses

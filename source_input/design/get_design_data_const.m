@@ -23,9 +23,9 @@ data_const.iter.thermal.tol_rel = 0.05;
 data_const.iter.thermal.relax = 1.0;
 
 % data controlling the waveform generation:
-%     - n_harm: number of harmonics for the Fourier series
+%     - n_freq: number of harmonics for the Fourier series
 %     - n_time: maximum number of iterations
-data_const.waveform.n_harm = 10;
+data_const.waveform.n_freq = 10;
 data_const.waveform.n_time = 20;
 
 % data containing the material (core, winding, and insulation) data:

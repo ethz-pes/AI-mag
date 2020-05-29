@@ -24,7 +24,7 @@ function varargout = get_map_fct(id_set, id_vec, fct, input)
 
 % initialize the output
 for i=1:nargout
-    varargout{i} = NaN(1, length(id_vec));
+    varargout{i} = [];
 end
 
 % check the input
@@ -54,7 +54,7 @@ for i=1:length(id_set)
     
     % assign the output
     for j=1:nargout
-        varargout{j}(idx) = varargout_tmp{j};
+        varargout{j}(:,idx) = varargout_tmp{j};
     end
     
     % set the flag
