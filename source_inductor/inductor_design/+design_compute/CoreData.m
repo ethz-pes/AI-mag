@@ -112,70 +112,47 @@ classdef CoreData < handle
             
             beta = self.param.beta;
         end
-        
-        function [is_valid, P] = get_losses_sin(self, f, B_ac_peak, B_dc, T)
-            % Compute the losses with a sinus excitation.
+                
+        function [is_valid, P] = get_losses(self, t_vec, B_vec, T)
+            % Compute the losses with an arbitrary excitation (iGSE).
             %
             %    Use a loss map (temperature, frequency, AC flux, DC bias).
             %        - interpolation between the loss points
-            %        - details: R. Burkart, "Advanced Modeling and Multi-Objective Optimization of Power Electronic Converter Systems", 2016
-            %
-            %    The input should have the size of the number of samples.
-            %
-            %    Parameters:
-            %        f (vector): frequency excitation vector
-            %        B_ac_peak (vector): peak AC flux density
-            %        B_dc (vector): DC flux density
-            %        T (vector): operating temperature
-            %
-            %    Returns:
-            %        is_valid (vector): if the operating points are valid (or not)
-            %        P (vector): losses of each sample (density multiplied with volume)
-            
-            % interpolate the loss density
-            [is_valid, P] = self.get_interp(f, B_ac_peak, B_dc, T);
-            
-            % check the validity of the obtained losses
-            is_valid = self.parse_losses(is_valid, P, B_ac_peak+B_dc);
-            
-            % from loss densities to losses
-            P = self.volume.*P;
-        end
-        
-        function [is_valid, P] = get_losses_tri(self, f, d_c, B_ac_peak, B_dc, T)
-            % Compute the losses with a PWM excitation (triangular flux).
-            %
-            %    Use a loss map (temperature, frequency, AC flux, DC bias).
-            %        - interpolation between the loss points
-            %        - extract the local IGSE parameters
-            %        - compute the losses with IGSE
+            %        - extract the local iGSE parameters
+            %        - compute the losses with iGSE
             %        - details: K. Venkatachalam, "Accurate Prediction of Ferrite Core Loss with Nonsinusoidal Waveforms Using Only Steinmetz Parameters", 2002
             %        - details: R. Burkart, "Advanced Modeling and Multi-Objective Optimization of Power Electronic Converter Systems", 2016
             %
             %    The input should have the size of the number of samples.
+            %    The signal should be periodic (first point is equal to last point).
+            %
+            %    The signals are given as matrices:
+            %        - the columns represents the different samples
+            %        - the rows represents the time sampling
             %
             %    Parameters:
-            %        f (vector): frequency excitation vector
-            %        d_c (vector): duty cycle of the triangular shape
-            %        B_ac_peak (vector): peak AC flux density
-            %        B_dc (vector): DC flux density
+            %        t_vec (matrix): matrix with the times
+            %        B_vec (matrix): matrix with the time domain flux densities
             %        T (vector): operating temperature
             %
             %    Returns:
             %        is_valid (vector): if the operating points are valid (or not)
             %        P (vector): losses of each sample (density multiplied with volume)
             
+            % parse waveform
+            [f, B_dc, B_ac_peak] = self.get_param_waveform(t_vec, B_vec);
+                        
             % interpolate the loss map, get the IGSE parameters
-            [is_valid, k, alpha, beta] = compute_steinmetz(self, f, B_ac_peak, B_dc, T);
+            [is_valid_interp, k, alpha, beta] = compute_steinmetz(self, f, B_ac_peak, B_dc, T);
             
             % apply the IGSE and get the loss density
-            P = self.compute_steinmetz_losses(k, alpha, beta, f, d_c, B_ac_peak);
-            
-            % check the validity of the obtained losses
-            is_valid = self.parse_losses(is_valid, P, B_ac_peak+B_dc);
+            [is_valid_value, P] = self.compute_losses_igse(k, alpha, beta, t_vec, B_vec);
             
             % from loss densities to losses
             P = self.volume.*P;
+            
+            % check validity
+            is_valid = is_valid_interp&is_valid_value;
         end
     end
     
@@ -220,11 +197,10 @@ classdef CoreData < handle
             self.param = get_struct_filter(param_tmp, self.idx);
         end
         
-        function is_valid = parse_losses(self, is_valid, P, B_peak_tot)
+        function is_valid = parse_losses(self, P, B_peak_tot)
             % Check the validity of loss points.
             %
             %    Parameters:
-            %        is_valid (vector): if the operating points are valid (from the interpolation)
             %        P (vector): loss density
             %        B_peak_tot (vector): peak flux density (AC and DC)
             %
@@ -236,10 +212,35 @@ classdef CoreData < handle
             B_sat_max = self.param.B_sat_max;
             
             % check the loss density and the peak flux density
+            is_valid = true;
             is_valid = is_valid&(P<=P_max);
             is_valid = is_valid&(B_peak_tot<=B_sat_max);
         end
         
+        function [f, B_dc, B_ac_peak] = get_param_waveform(self, t_vec, B_vec)
+            % Extract the parameters from the time domain waveform.
+            %
+            %    Parameters:
+            %        t_vec (matrix): matrix with the times
+            %        B_vec (matrix): matrix with the flux densities
+            %
+            %    Returns:
+            %        f (vector): operating frequency
+            %        B_dc (vector): DC flux density
+            %        B_ac_peak (vector): AC peak flux density
+            
+            % frequency
+            f = 1./(max(t_vec, [], 1)-min(t_vec, [], 1));
+            
+            % AC peak flux density
+            B_ac_peak = (max(B_vec, [], 1)-min(B_vec, [], 1))./2;
+                        
+            % DC flux density
+            t_vec_diff = diff(t_vec, 1);
+            B_vec_avg = (B_vec(2:end,:)+B_vec(1:end-1,:))./2;
+            B_dc = f.*abs(sum(t_vec_diff.*B_vec_avg, 1));
+        end
+
         function [is_valid, k, alpha, beta] = compute_steinmetz(self, f, B_ac_peak, B_dc, T)
             % Compute the losses with the Steinmetz parameters from the loss map.
             %
@@ -286,40 +287,50 @@ classdef CoreData < handle
             is_valid = is_valid&is_valid_tmp;
             [is_valid_tmp, P_B_ac_peak_2] = self.get_interp(f, B_ac_peak_2, B_dc, T);
             is_valid = is_valid&is_valid_tmp;
-            
+                        
             % with the gradients and the losses, compute the Steinmetz parameters
             alpha = log(P_f_1./P_f_2)./log(f_1./f_2);
             beta = log(P_B_ac_peak_1./P_B_ac_peak_2)./log(B_ac_peak_1./B_ac_peak_2);
             k = P_ref./((f.^alpha).*(B_ac_peak.^beta));
         end
         
-        function P = compute_steinmetz_losses(self, k, alpha, beta, f, d_c, B_ac_peak)
-            % Compute the losses with the IGSE (triangular flux).
+        function [is_valid, P] = compute_losses_igse(self, k, alpha, beta, t_vec, B_vec)
+            % Compute the losses with the IGSE.
             %
             %    Parameters:
             %        k (vector): Steinmetz parameter k
             %        alpha (vector): Steinmetz parameter alpha
             %        beta (vector): Steinmetz parameter beta
-            %        f (vector): frequency excitation vector
-            %        d_c (vector): duty cycle of the triangular shape
-            %        B_ac_peak (vector): peak AC flux density
+            %        t_vec (matrix): matrix with the times
+            %        B_vec (matrix): matrix with the flux densities
             %
             %    Returns:
+            %        is_valid (vector): if the computed losses are valid (or not)
             %        P (vector): computed loss densities
             
             % get the parameter from the Steinmetz parameters
             ki = self.compute_steinmetz_ki(k, alpha, beta);
+                       
+            % find the time intervals
+            t_vec_diff = diff(t_vec, 1);
             
+            % find the flux variations
+            B_vec_diff = diff(B_vec, 1);
+                        
             % peak to peak flux density
-            t_1 = d_c./f;
-            t_2 = (1-d_c)./f;
-            B_ac_peak_ac_peak = 2.*B_ac_peak;
+            B_peak_peak = max(B_vec, [], 1)-min(B_vec, [], 1);
+
+            % frequency
+            f = 1./(max(t_vec, [], 1)-min(t_vec, [], 1));
             
-            % apply IGSE integral, for the special case of a triangular flux
-            v_1 = (abs(B_ac_peak_ac_peak./t_1).^alpha).*t_1;
-            v_2 = (abs(B_ac_peak_ac_peak./t_2).^alpha).*t_2;
-            v_cst = f.*ki.*B_ac_peak_ac_peak.^(beta-alpha);
-            P = v_cst.*(v_1+v_2);
+            % apply IGSE
+            v_int = sum((abs(B_vec_diff./t_vec_diff).^alpha).*t_vec_diff, 1);
+            v_cst = f.*ki.*B_peak_peak.^(beta-alpha);
+            P = v_cst.*v_int;
+            
+            % check the validity of the obtained losses
+            B_peak_tot = max(abs(B_vec), [], 1);
+            is_valid = self.parse_losses(P, B_peak_tot);
         end
         
         function ki = compute_steinmetz_ki(self, k, alpha, beta)

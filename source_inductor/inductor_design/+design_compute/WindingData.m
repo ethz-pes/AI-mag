@@ -106,12 +106,12 @@ classdef WindingData < handle
             %
             %    Returns:
             %        J_rms_max (vector): maximum current density of the different samples
-            
+                        
             J_rms_max = self.param.J_rms_max;
         end
         
-        function [is_valid, P, P_dc, P_ac_lf, P_ac_hf] = get_losses_sin(self, f, J_dc, J_ac_peak, H_ac_peak, T)
-            % Compute the losses with a sinus excitation.
+        function [is_valid, P, P_dc, P_ac_lf, P_ac_hf] = get_losses(self, f_vec, J_vec, H_vec, J_dc, T)
+            % Compute the losses with an arbitrary excitation (Fourier).
             %
             %    The following effects are considered.
             %        - temperature dependence of the conductivity
@@ -120,12 +120,17 @@ classdef WindingData < handle
             %        - details: M. Leibl, "Three-Phase PFC Rectifier and High-Voltage Generator", 2017
             %
             %    The input should have the size of the number of samples.
+            %    RMS values are used for the Fourier harmonics.
+            %
+            %    The signals are given as matrices:
+            %        - the columns represents the different samples
+            %        - the rows represents the frequency sampling
             %
             %    Parameters:
-            %        f (vector): frequency excitation vector
+            %        f_vec (matrix): matrix with the frequencies
+            %        J_vec (matrix): matrix with the current density RMS harmonics
+            %        H_vec (matrix): matrix with the magnetic field RMS harmonics
             %        J_dc (vector): DC current density
-            %        J_ac_peak (vector): peak AC current density
-            %        B_dc (vector): DC flux density
             %        T (vector): operating temperature
             %
             %    Returns:
@@ -135,45 +140,23 @@ classdef WindingData < handle
             %        P_ac_lf (vector): AC LF losses (density multiplied with volume)
             %        P_ac_hf (vector): AC HF losses (density multiplied with volume)
             
-            % get factor describing the waveform shape
-            [fact_lf, fact_hf] = self.get_fact_sin();
+            % parse waveform
+            [f, J_ac_rms, H_ac_rms] = self.get_param_waveform(f_vec, J_vec, H_vec);
+            
+            % get the conductivity
+            [is_valid_interp, sigma] = self.get_interp(T);
             
             % get the losses
-            [is_valid, P, P_dc, P_ac_lf, P_ac_hf] = self.get_losses(f, J_dc, J_ac_peak, H_ac_peak, T, fact_lf, fact_hf);
-        end
-        
-        function [is_valid, P, P_dc, P_ac_lf, P_ac_hf] = get_losses_tri(self, f, d_c, J_dc, J_ac_peak, H_ac_peak, T)
-            % Compute the losses with a PWM excitation (triangular current).
-            %
-            %    The following effects are considered.
-            %        - temperature dependence of the conductivity
-            %        - DC losses
-            %        - AC LF losses and AC HF losses (proximity losses)
-            %        - Losses of the harmonics
-            %        - details: M. Leibl, "Three-Phase PFC Rectifier and High-Voltage Generator", 2017
-            %
-            %    The input should have the size of the number of samples.
-            %
-            %    Parameters:
-            %        f (vector): frequency excitation vector
-            %        d_c (vector): duty cycle of the triangular shape
-            %        J_dc (vector): DC current density
-            %        J_ac_peak (vector): peak AC current density
-            %        B_dc (vector): DC flux density
-            %        T (vector): operating temperature
-            %
-            %    Returns:
-            %        is_valid (vector): if the operating points are valid (or not)
-            %        P (vector): losses of each sample (density multiplied with volume)
-            %        P_dc (vector): DC losses (density multiplied with volume)
-            %        P_ac_lf (vector): AC LF losses (density multiplied with volume)
-            %        P_ac_hf (vector): AC HF losses (density multiplied with volume)
+            [is_valid_value, P, P_dc, P_ac_lf, P_ac_hf] = self.get_losses_sub(f, J_ac_rms, H_ac_rms, J_dc, sigma);
             
-            % get factor describing the waveform shape
-            [fact_lf, fact_hf] = self.get_fact_tri(d_c);
+            % from loss densities to losses
+            P = self.volume.*P;
+            P_dc = self.volume.*P_dc;
+            P_ac_lf = self.volume.*P_ac_lf;
+            P_ac_hf = self.volume.*P_ac_hf;
             
-            % get the losses
-            [is_valid, P, P_dc, P_ac_lf, P_ac_hf] = self.get_losses(f, J_dc, J_ac_peak, H_ac_peak, T, fact_lf, fact_hf);
+            % check validity
+            is_valid = is_valid_interp&is_valid_value;
         end
     end
     
@@ -214,17 +197,37 @@ classdef WindingData < handle
             self.param = get_struct_filter(param_tmp, self.idx);
         end
         
-        function [is_valid, P, P_dc, P_ac_lf, P_ac_hf] = get_losses(self, f, J_dc, J_ac_peak, H_ac_peak, T, fact_lf, fact_hf)
+        function [f, J_ac_rms, H_ac_rms] = get_param_waveform(self, f_vec, J_vec, H_vec)
+            % Extract the parameters from the frequency domain waveform.
+            %
+            %    Parameters:
+            %        f_vec (matrix): matrix with the frequencies
+            %        J_vec (matrix): matrix with the current density RMS harmonics
+            %        H_vec (matrix): matrix with the magnetic field RMS harmonics
+            %
+            %    Returns:
+            %        f (vector): equivalent operating frequency
+            %        J_ac_rms (vector): AC RMS current density
+            %        H_ac_rms (vector): AC RMS magnetic field
+            
+            % get the RMS values
+            J_ac_rms = sqrt(sum(J_vec.^2, 1));
+            H_ac_rms = sqrt(sum(H_vec.^2, 1));
+            
+            % get the equivalent operating frequency for the proximity losses
+            prox_factor = sqrt(sum(f_vec.^2.*H_vec.^2, 1));
+            f = prox_factor./H_ac_rms;            
+        end
+        
+        function [is_valid, P, P_dc, P_ac_lf, P_ac_hf] = get_losses_sub(self, f, J_ac_rms, H_ac_rms, J_dc, sigma)
             % Compute the losses with a a given waveform.
             %
             %    Parameters:
             %        f (vector): frequency excitation vector
+            %        J_ac_rms (vector): AC RMS current density
+            %        H_ac_rms (vector): AC RMS magnetic field
             %        J_dc (vector): DC current density
-            %        J_ac_peak (vector): peak AC current density
-            %        B_dc (vector): DC flux density
-            %        T (vector): operating temperature
-            %        fact_lf (vector): waveform shape factor (peak to RMS) for LF losses
-            %        fact_hf (vector): waveform shape factor (peak to RMS and harmonics) for HF losses
+            %        sigma (vector): electrical conductivity
             %
             %    Returns:
             %        is_valid (vector): if the operating points are valid (or not)
@@ -232,37 +235,27 @@ classdef WindingData < handle
             %        P_dc (vector): DC losses (density multiplied with volume)
             %        P_ac_lf (vector): AC LF losses (density multiplied with volume)
             %        P_ac_hf (vector): AC HF losses (density multiplied with volume)
-            
-            % get the conductivity
-            [is_valid, sigma] = self.get_interp(T);
-            
+                        
             % compute the skin depth
             delta = self.get_delta(sigma, f);
             
             % get the different loss components (DC, AC LF, and AC HF)
             P_dc = self.compute_lf_losses(sigma, J_dc);
-            P_ac_lf = self.compute_lf_losses(sigma, J_ac_peak.*fact_lf);
-            P_ac_hf = self.compute_hf_losses(sigma, delta, H_ac_peak.*fact_hf);
+            P_ac_lf = self.compute_lf_losses(sigma, J_ac_rms);
+            P_ac_hf = self.compute_hf_losses(sigma, delta, H_ac_rms);
             
             % get the total losses and the total RMS current density
             P = P_dc+P_ac_lf+P_ac_hf;
-            J_rms_tot = hypot(J_ac_peak.*fact_lf, J_dc);
+            J_rms_tot = hypot(J_ac_rms, J_dc);
             
             % check the validity of the obtained losses
-            is_valid = self.parse_losses(is_valid, P, J_rms_tot, delta);
-            
-            % from loss densities to losses
-            P = self.volume.*P;
-            P_dc = self.volume.*P_dc;
-            P_ac_lf = self.volume.*P_ac_lf;
-            P_ac_hf = self.volume.*P_ac_hf;
+            is_valid = self.parse_losses(P, J_rms_tot, delta);
         end
         
-        function is_valid = parse_losses(self, is_valid, P, J_rms_tot, delta)
+        function is_valid = parse_losses(self, P, J_rms_tot, delta)
             % Check the validity of loss points.
             %
             %    Parameters:
-            %        is_valid (vector): if the operating points are valid (from the interpolation)
             %        P (vector): loss density
             %        J_rms_tot (vector): RMS current density (AC and DC)
             %        delta (vector): skin depth
@@ -276,6 +269,7 @@ classdef WindingData < handle
             delta_min = self.param.delta_min;
             
             % check the loss density, the current density, and the skin depth
+            is_valid = true;
             is_valid = is_valid&(P<=P_max);
             is_valid = is_valid&(J_rms_tot<=J_rms_max);
             is_valid = is_valid&(delta>=delta_min);
@@ -338,52 +332,7 @@ classdef WindingData < handle
             % compute the losses
             P = fact_tmp.*(H_rms.^2);
         end
-        
-        function [fact_lf, fact_hf] = get_fact_sin(self)
-            % Compute the waveform shape factor for sinus.
-            %
-            %    Return:
-            %        fact_lf (vector): waveform shape factor (peak to RMS) for LF losses
-            %        fact_hf (vector): waveform shape factor (peak to RMS and harmonics) for HF losses
-            
-            % sqrt(2) between peak and RMS
-            fact_lf = 1./sqrt(2);
-            
-            % sqrt(2) between peak and RMS, no harmonics
-            fact_hf = 1./sqrt(2);
-        end
-        
-        function [fact_lf, fact_hf] = get_fact_tri(self, d_c)
-            % Compute the waveform shape factor for sinus.
-            %
-            %    Parameters:
-            %        d_c (vector): duty cycle of the triangular shape
-            %
-            %    Return:
-            %        fact_lf (vector): waveform shape factor (peak to RMS) for LF losses
-            %        fact_hf (vector): waveform shape factor (peak to RMS and harmonics) for HF losses
-            
-            % harmonic vector
-            n = 1:self.param.n_harm;
-            
-            % reciprocal of the duty cycle, better for the Fourier series
-            m = 1./d_c;
-            
-            % for all the samples, compute all the Fourier series coefficients
-            [n, m] = ndgrid(n, m);
-            coeff = -(2.*(-1).^n.*m.^2)./(n.^2.*(m-1).*pi.^2).*sin((n.*(m-1).*pi)./m);
-            
-            % for the LF losss, sum of square, RMS value
-            sum_lf = sum(coeff.^2, 1);
-            
-            % for the HF losses, scale with the square of the frequency
-            sum_hf = sum(n.^2.*coeff.^2, 1);
-            
-            % sum the contributions, sqrt(2) between peak and RMS
-            fact_lf = sqrt(sum_lf)./sqrt(2);
-            fact_hf = sqrt(sum_hf)./sqrt(2);
-        end
-        
+                        
         function [is_valid, sigma] = get_interp(self, T)
             % Interpolate electrical conductivities for the different materials.
             %
