@@ -16,7 +16,7 @@ classdef InductorCompute < handle
     %    The code is completely vectorized: compute many designs at the same time.
     %
     %    The material are managed by 'CoreData', 'WindingData', and 'IsoData'.
-    %    The thermal/loss iteration is managed by 'ThermalLoss'.
+    %    The thermal/loss iteration is managed by 'ThermalLossIter'.
     %    The ANN/regression for the thermal and magnetic parameters is managed by 'AnnFem'.
     %
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
@@ -31,7 +31,7 @@ classdef InductorCompute < handle
         core_obj % CoreData: object mananaging the core properties
         winding_obj % WindingData: object mananaging the winding properties
         iso_obj % IsoData: object mananaging the insulation properties
-        thermal_losses_obj % ThermalLoss: object mananaging the thermal/loss coupling
+        thermal_losses_iter_obj % ThermalLossIter: object mananaging the thermal/loss coupling
     end
     
     %% public
@@ -280,7 +280,7 @@ classdef InductorCompute < handle
             fct.get_losses = @(operating) self.get_losses(operating);
             fct.get_thermal_vec = @(operating) self.get_thermal_vec(operating);
             fct.get_losses_vec = @(operating) self.get_losses_vec(operating);
-            self.thermal_losses_obj = design_compute.ThermalLoss(self.data_const.iter, fct);
+            self.thermal_losses_iter_obj = design_compute.ThermalLossIter(self.data_const.iter, fct);
         end
         
     end
@@ -300,7 +300,7 @@ classdef InductorCompute < handle
             operating.excitation = get_struct_size(excitation, self.n_sol);
             
             % compute the coupled loss and thermal models
-            [operating, is_valid_iter] = self.thermal_losses_obj.get_iter(operating);
+            [operating, is_valid_iter] = self.thermal_losses_iter_obj.get_iter(operating);
             
             % extract the different validity flags
             is_valid_fom = self.fom.is_valid;

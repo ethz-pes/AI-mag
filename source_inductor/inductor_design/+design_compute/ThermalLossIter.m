@@ -1,4 +1,4 @@
-classdef ThermalLoss < handle
+classdef ThermalLossIter < handle
     % Class for controlling iteration between thermal model and loss model.
     %
     %    The thermal model and loss model are typically coupled.
@@ -25,7 +25,7 @@ classdef ThermalLoss < handle
     
     %% public
     methods (Access = public)
-        function self = ThermalLoss(iter, fct)
+        function self = ThermalLossIter(iter, fct)
             % Constructor.
             %
             %    Parameters:
