@@ -110,7 +110,7 @@ classdef WindingData < handle
             J_rms_max = self.param.J_rms_max;
         end
         
-        function [is_valid, P, P_dc, P_ac_lf, P_ac_hf] = get_losses(self, f_vec, J_vec, H_vec, J_dc, T)
+        function [is_valid, P, P_dc, P_ac_lf, P_ac_hf] = get_losses(self, f_vec, J_freq_vec, H_freq_vec, J_dc, T)
             % Compute the losses with an arbitrary excitation (Fourier).
             %
             %    The following effects are considered.
@@ -128,8 +128,8 @@ classdef WindingData < handle
             %
             %    Parameters:
             %        f_vec (matrix): matrix with the frequencies
-            %        J_vec (matrix): matrix with the current density peak harmonics
-            %        H_vec (matrix): matrix with the magnetic field peak harmonics
+            %        J_freq_vec (matrix): matrix with the current density peak harmonics
+            %        H_freq_vec (matrix): matrix with the magnetic field peak harmonics
             %        J_dc (vector): DC current density
             %        T (vector): operating temperature
             %
@@ -141,7 +141,7 @@ classdef WindingData < handle
             %        P_ac_hf (vector): AC HF losses (density multiplied with volume)
             
             % parse waveform
-            [f, J_ac_rms, H_ac_rms] = self.get_param_waveform(f_vec, J_vec, H_vec);
+            [f, J_ac_rms, H_ac_rms] = self.get_param_waveform(f_vec, J_freq_vec, H_freq_vec);
             
             % get the conductivity
             [is_valid_interp, sigma] = self.get_interp(T);
@@ -197,13 +197,13 @@ classdef WindingData < handle
             self.param = get_struct_filter(param_tmp, self.idx);
         end
         
-        function [f, J_ac_rms, H_ac_rms] = get_param_waveform(self, f_vec, J_vec, H_vec)
+        function [f, J_ac_rms, H_ac_rms] = get_param_waveform(self, f_vec, J_freq_vec, H_freq_vec)
             % Extract the parameters from the frequency domain waveform.
             %
             %    Parameters:
             %        f_vec (matrix): matrix with the frequencies
-            %        J_vec (matrix): matrix with the current density peak harmonics
-            %        H_vec (matrix): matrix with the magnetic field peak harmonics
+            %        J_freq_vec (matrix): matrix with the current density peak harmonics
+            %        H_freq_vec (matrix): matrix with the magnetic field peak harmonics
             %
             %    Returns:
             %        f (vector): equivalent operating frequency
@@ -211,11 +211,11 @@ classdef WindingData < handle
             %        H_ac_rms (vector): AC RMS magnetic field
             
             % get the RMS values
-            J_ac_rms = sqrt(sum(J_vec.^2, 1))./sqrt(2);
-            H_ac_rms = sqrt(sum(H_vec.^2, 1))./sqrt(2);
+            J_ac_rms = sqrt(sum(J_freq_vec.^2, 1))./sqrt(2);
+            H_ac_rms = sqrt(sum(H_freq_vec.^2, 1))./sqrt(2);
             
             % get the equivalent operating frequency for the proximity losses
-            prox_factor = sqrt(sum(f_vec.^2.*H_vec.^2, 1))./sqrt(2);
+            prox_factor = sqrt(sum(f_vec.^2.*H_freq_vec.^2, 1))./sqrt(2);
             f = prox_factor./H_ac_rms;            
         end
         

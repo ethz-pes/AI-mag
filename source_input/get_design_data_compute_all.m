@@ -26,10 +26,12 @@ sweep{2} = get_sweep('random');
 n_split = 100e3;
 
 % struct with custom functions for filtering invalid designs:
-%    - fct_filter_compute: filter the valid designs from the figure of merit (without the operating points)
-%    - fct_filter_save: filter the valid designs from the figure of merit and the operating points
-fct.fct_filter_compute = @(fom, n_sol) fct_filter_compute(fom, n_sol);
-fct.fct_filter_save = @(fom, operating, n_sol) fct_filter_save(fom, operating, n_sol);
+%    - fct_filter_var: filter the valid designs from the input variables (without the figures of merit)
+%    - fct_filter_fom: filter the valid designs from the figures of merit (without the operating points)
+%    - fct_filter_operating: filter the valid designs from the figure of merit and the operating points
+fct.fct_filter_var = @(var, n_sol) fct_filter_var(var, n_sol);
+fct.fct_filter_fom = @(var, fom, n_sol) fct_filter_fom(var, fom, n_sol);
+fct.fct_filter_operating = @(var, fom, operating, n_sol) fct_filter_operating(var, fom, operating, n_sol);
 
 % data for controlling the evaluation of the ANN/regression:
 %    - geom_type: type of the geometry input variables
@@ -146,7 +148,7 @@ function data_vec = get_data_vec(var, n_sol)
 % Function for getting the inductor data (struct of vectors with one value per sample).
 %
 %    Parameters:
-%        var (struct): struct of vectors with the samples with all the combinations
+%        var (struct): struct of vectors with the samples (all the combinations)
 %        n_sol (int): number of designs
 %
 %    Returns:
@@ -180,7 +182,7 @@ function excitation = get_excitation(var, fom, n_sol)
 % Function for getting the operating points data (struct of struct of vectors with one value per sample).
 %
 %    Parameters:
-%        var (struct): struct of vectors with the samples with all the combinations
+%        var (struct): struct of vectors with the samples (all the combinations)
 %        fom (struct): computed inductor figures of merit
 %        n_sol (int): number of designs
 %
@@ -208,10 +210,30 @@ excitation.partial_load = get_design_excitation(L, f, load_partial_load);
 
 end
 
-function is_filter = fct_filter_compute(fom, n_sol)
-% Filter the design to be kept for the computation of the operating points.
+function is_filter = fct_filter_var(var, n_sol)
+% Filter the design to be kept after the generation of the variables combinations.
 %
 %    Parameters:
+%        var (struct): struct of vectors with the samples (all the combinations)
+%        n_sol (int): number of provided designs
+%
+%    Returns:
+%        is_filter (vector): vector of logical with the design to be kept
+
+% check
+assert(isstruct(var), 'invalid var data type')
+assert(isnumeric(n_sol), 'invalid number of samples')
+
+% filter
+is_filter = true(1, n_sol);
+
+end
+
+function is_filter = fct_filter_fom(var, fom, n_sol)
+% Filter the design to be kept after the computation of the figures of merit.
+%
+%    Parameters:
+%        var (struct): struct of vectors with the samples (all the combinations)
 %        fom (struct): figures of merit of the designs
 %        n_sol (int): number of provided designs
 %
@@ -219,17 +241,47 @@ function is_filter = fct_filter_compute(fom, n_sol)
 %        is_filter (vector): vector of logical with the design to be kept
 
 % check size
+assert(isstruct(var), 'invalid var data type')
+assert(isstruct(fom), 'invalid var data type')
 assert(isnumeric(n_sol), 'invalid number of samples')
 
 % select the designs
-is_filter = fom.is_valid;
+is_filter = fct_filter_var(var, n_sol);
+
+% check the validity of the figures of merit
+is_filter = is_filter&fom.is_valid;
+
+% extract the properties
+f = var.f;
+L = fom.circuit.L;
+I_sat = fom.circuit.I_sat;
+I_rms = fom.circuit.I_rms;
+
+% param
+I_dc = 10.0;
+V_pwm = 200.0;
+
+% get the peak to peak current
+I_peak_peak = V_pwm./(2.*f.*L);
+
+% get the peak current (DC+AC)
+I_peak_tot = I_dc+V_pwm./(4.*f.*L);
+
+% get the RMS current (DC+AC)
+I_rms_tot = hypot(I_dc, V_pwm./(sqrt(3).*4.*f.*L));
+
+% select the designs
+is_filter = is_filter&(I_peak_tot<=I_sat);
+is_filter = is_filter&(I_rms_tot<=I_rms);
+is_filter = is_filter&(I_peak_peak<=3.*I_dc);
 
 end
 
-function is_filter = fct_filter_save(fom, operating, n_sol)
+function is_filter = fct_filter_operating(var, fom, operating, n_sol)
 % Filter the design to be saved.
 %
 %    Parameters:
+%        var (struct): struct of vectors with the samples (all the combinations)
 %        fom (struct): figures of merit of the designs
 %        operating (struct): operating points of the designs
 %        n_sol (int): number of provided designs
@@ -238,12 +290,19 @@ function is_filter = fct_filter_save(fom, operating, n_sol)
 %        is_filter (vector): vector of logical with the design to be saved
 
 % check size
+assert(isstruct(var), 'invalid var data type')
+assert(isstruct(fom), 'invalid var data type')
+assert(isstruct(operating), 'invalid var data type')
 assert(isnumeric(n_sol), 'invalid number of samples')
 
 % select the designs
-is_filter = fom.is_valid;
+is_filter = fct_filter_fom(var, fom, n_sol);
+
+% check the validity of the operating points
 is_filter = is_filter&operating.partial_load.is_valid;
 is_filter = is_filter&operating.full_load.is_valid;
+
+% filter the values
 is_filter = is_filter&(operating.partial_load.losses.P_tot<=4.0);
 is_filter = is_filter&(operating.full_load.losses.P_tot<=6.0);
 

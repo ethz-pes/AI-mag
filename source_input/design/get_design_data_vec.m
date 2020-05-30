@@ -52,24 +52,9 @@ fom_limit.V_box = struct('min', 0.0, 'max', 200e-6);
 %    - I_sat: maximum saturation current
 %    - I_rms: maximum RMS current
 fom_limit.L = struct('min', 0.0, 'max', Inf);
-fom_limit.V_t_area = struct('min', 0.0, 'max', Inf);
-fom_limit.I_sat = struct('min', 0.0, 'max', Inf);
-fom_limit.I_rms = struct('min', 0.0, 'max', Inf);
-
-% bounds for the inductor utilization
-%    - stress: stress applied to the inductor for evaluating the utilization
-%        - I_dc: applied DC current
-%        - V_t_area: applied voltage time product
-%        - fact_rms: factor between the peak current and the RMS current
-%    - I_rms_tot: total RMS current (AC and DC)
-%    - I_peak_tot: total peak current (AC and DC)
-%    - r_peak_peak: peak to peak ripple
-%    - fact_sat: total peak current with respect to the maximum saturation current
-%    - fact_rms: total RMS current with respect to the maximum RMS current
-fom_limit.stress = struct('I_dc', 10.0, 'V_t_area', 200./(2.*f), 'fact_rms', 1./sqrt(3));
-fom_limit.r_peak_peak = struct('min', 0.0, 'max', 3.0);
-fom_limit.fact_sat = struct('min', 0.0, 'max', 1.0);
-fom_limit.fact_rms = struct('min', 0.0, 'max', 1.0);
+fom_limit.V_t_area = struct('min', 0.0, 'max', 200./(2.*f));
+fom_limit.I_sat = struct('min', 10.0, 'max', Inf);
+fom_limit.I_rms = struct('min', 10.0, 'max', Inf);
 
 % inductor geometry
 %    - winding_id: id of the winding material

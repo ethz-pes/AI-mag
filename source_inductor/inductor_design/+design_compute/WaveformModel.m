@@ -1,5 +1,5 @@
 classdef WaveformModel < handle
-    % Class for generating the waveform for the loss computation.
+    % Class for generating AC waveforms for the operating points.
     %
     %    Generate the following parameters:
     %        - factor between peak and RMS
@@ -7,6 +7,8 @@ classdef WaveformModel < handle
     %        - time domain for the core losses
     %
     %    The code is completely vectorized.
+    %    All the generated waveforms should not feature DC components.
+    %    DC components are added separetely.
     %
     %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
     
@@ -33,18 +35,18 @@ classdef WaveformModel < handle
             self.id = struct('tri', tri, 'sin', sin, 'all', [tri, sin]);
         end
         
-        function v_ac_rms = get_rms(self, type_id, v_ac_peak)
-            % Transform AC peak value into AC RMS value.
+        function I_ac_rms = get_rms(self, type_id, I_ac_peak)
+            % Transform AC peak current into AC RMS current.
             %
             %    Parameters:
             %        type_id (vector): vector with the waveform type ids
-            %        v_ac_peak (vector): AC peak value
+            %        I_ac_peak (vector): AC peak current
             %
             %    Returns:
-            %        v_ac_rms (vector): AC RMS value
+            %        I_ac_rms (vector): AC RMS current
 
-            fct = @(type_id, v_ac_peak) get_rms_sub(self, type_id, v_ac_peak);
-            v_ac_rms = get_map_fct(self.id.all, type_id, fct, {v_ac_peak});
+            fct = @(type_id, I_ac_peak) get_rms_sub(self, type_id, I_ac_peak);
+            I_ac_rms = get_map_fct(self.id.all, type_id, fct, {I_ac_peak});
         end
         
         function [freq, value] = get_waveform_harm(self, type_id, d_c)
@@ -84,21 +86,21 @@ classdef WaveformModel < handle
     
     %% private
     methods (Access = private)
-        function v_ac_rms = get_rms_sub(self, type_id, v_ac_peak)
-            % Transform AC peak value into AC RMS value (scalar id).
+        function I_ac_rms = get_rms_sub(self, type_id, I_ac_peak)
+            % Transform AC peak current into AC RMS current (scalar id).
             %
             %    Parameters:
             %        type_id (scalar): vector with the waveform type id
-            %        v_ac_peak (vector): AC peak value
+            %        I_ac_peak (vector): AC peak current
             %
             %    Returns:
-            %        v_ac_rms (vector): AC RMS value
+            %        I_ac_rms (vector): AC RMS current
             
             switch type_id
                 case self.id.tri
-                    v_ac_rms = (1./sqrt(3)).*v_ac_peak;
+                    I_ac_rms = (1./sqrt(3)).*I_ac_peak;
                 case self.id.sin
-                    v_ac_rms = (1./sqrt(2)).*v_ac_peak;
+                    I_ac_rms = (1./sqrt(2)).*I_ac_peak;
                 otherwise
                     error('invalid waveform id')
             end

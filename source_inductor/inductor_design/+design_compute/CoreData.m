@@ -113,36 +113,7 @@ classdef CoreData < handle
             beta = self.param.beta;
         end
         
-        function [is_valid, P] = get_losses_sin(self, f, B_ac_peak, B_dc, T)
-            % Compute the losses with a sinus excitation.
-            %
-            %    Use a loss map (temperature, frequency, AC flux, DC bias).
-            %        - interpolation between the loss points
-            %        - details: R. Burkart, "Advanced Modeling and Multi-Objective Optimization of Power Electronic Converter Systems", 2016
-            %
-            %    The input should have the size of the number of samples.
-            %
-            %    Parameters:
-            %        f (vector): frequency excitation vector
-            %        B_ac_peak (vector): peak AC flux density
-            %        B_dc (vector): DC flux density
-            %        T (vector): operating temperature
-            %
-            %    Returns:
-            %        is_valid (vector): if the operating points are valid (or not)
-            %        P (vector): losses of each sample (density multiplied with volume)
-            
-            % interpolate the loss density
-            [is_valid, P] = self.get_interp(f, B_ac_peak, B_dc, T);
-            
-            % check the validity of the obtained losses
-            is_valid = self.parse_losses(is_valid, P, B_ac_peak+B_dc);
-            
-            % from loss densities to losses
-            P = self.volume.*P;
-        end
-
-        function [is_valid, P] = get_losses_igse(self, t_vec, B_time_vec, B_loop_vec, T)
+        function [is_valid, P] = get_losses(self, t_vec, B_time_vec, B_loop_vec, T)
             % Compute the losses with an arbitrary excitation (iGSE).
             %
             %    Use a loss map (temperature, frequency, AC flux, DC bias).
@@ -355,7 +326,7 @@ classdef CoreData < handle
             % frequency
             f = 1./(max(t_vec, [], 1)-min(t_vec, [], 1));
             
-            % apply iGSE
+            % apply icode wveGSE
             v_int = sum((abs(B_time_vec_diff./t_vec_diff).^alpha).*t_vec_diff, 1);
             v_cst = f.*ki.*B_loop_vec.^(beta-alpha);
             P = v_cst.*v_int;

@@ -58,14 +58,15 @@ fprintf('split\n')
 fprintf('run\n')
 parfor i=1:n_chunk
     fprintf('    %d / %d\n', i, n_chunk)
-    [id_design{i}, n_sol(i), n_compute(i), fom(i), operating(i)] = compute_chunk(var, idx_chunk{i}, fct, ann_fem_obj, data_compute);
+    [track(i), fom(i), operating(i)] = compute_chunk(var, idx_chunk{i}, fct, ann_fem_obj, data_compute);
 end
 
 % assemble the data computed in parallel
 fprintf('assemble\n')
-id_design = [id_design{:}];
-n_sol = sum(n_sol);
-n_compute = sum(n_compute);
+id_design = [track.id_design];
+n_sol = sum([track.n_sol]);
+n_filter_var = sum([track.n_filter_var]);
+n_filter_fom = sum([track.n_filter_fom]);
 fom = get_struct_assemble(fom);
 operating = get_struct_assemble(operating);
 
@@ -77,18 +78,19 @@ diff = toc-tic;
 fprintf('info\n')
 fprintf('    diff = %s\n', char(diff))
 fprintf('    n_tot = %d\n', n_tot)
-fprintf('    n_compute = %d\n', n_compute)
+fprintf('    n_filter_var = %d\n', n_filter_var)
+fprintf('    n_filter_fom = %d\n', n_filter_fom)
 fprintf('    n_sol = %d\n', n_sol)
 
 % save data
 fprintf('save\n')
-save(file_compute_all, '-v7.3', 'diff', 'n_tot', 'n_compute', 'n_sol', 'id_design', 'fom', 'operating')
+save(file_compute_all, '-v7.3', 'diff', 'n_tot', 'n_filter_var', 'n_filter_fom', 'n_sol', 'id_design', 'fom', 'operating')
 
 fprintf('################## master_compute_all\n')
 
 end
 
-function [idx_chunk, n_sol, n_compute, fom, operating] = compute_chunk(var, idx_chunk, fct, ann_fem_obj, data_compute)
+function [track, fom, operating] = compute_chunk(var, idx_chunk, fct, ann_fem_obj, data_compute)
 % Compute a chunk of vectorized inductor designs
 %
 %    A two steps workflow is used:
@@ -102,56 +104,65 @@ function [idx_chunk, n_sol, n_compute, fom, operating] = compute_chunk(var, idx_
 %        - to avoid the saving of invalid designs
 %
 %    Parameters:
-%        var (struct): struct of vectors with the samples with all the combinations
+%        var (struct): struct of vectors with the samples (all the combinations)
 %        idx_chunk (vector): indices of the designs belonging in the chunk
 %        fct (struct): struct with custom functions for filtering invalid designs
 %        ann_fem_obj (AnnFEM): instance of the ANN/regression engine for thermal and magnetic model
 %        data_compute (struct): data for the inductor designs
 %
 %    Returns:
-%        idx_chunk (vector): indices of the valid designs (to keep track of their id)
-%        n_sol (int): number of valid designs
-%        n_compute (int): number of computed designs
+%        track (struct): struct with the indices of the valid designs and the number of designs(to keep track of their ids)
 %        fom (struct): figures of merit of the valid designs
 %        operating (struct): operating points of the valid designs
 
-% compute the figures of merit of the inductors (without evaluating the operating points)
-fom = compute_fom(var, idx_chunk, ann_fem_obj, data_compute);
+% get the chunk
+var =  get_struct_filter(var, idx_chunk);
 
-% filter the inductors with the obtained data
-is_valid = fct.fct_filter_compute(fom, length(idx_chunk));
+% apply the filter of the variables
+is_valid = fct.fct_filter_var(var, length(idx_chunk));
+var = get_struct_filter(var, is_valid);
 idx_chunk = idx_chunk(is_valid);
-n_compute = length(idx_chunk);
+n_filter_var = length(idx_chunk);
+
+% compute the figures of merit of the inductors (without evaluating the operating points)
+[var, fom] = compute_fom(var, n_filter_var, ann_fem_obj, data_compute);
+
+% filter the inductors with the figures of merit
+is_valid = fct.fct_filter_fom(var, fom, n_filter_var);
+var = get_struct_filter(var, is_valid);
+idx_chunk = idx_chunk(is_valid);
+n_filter_fom = length(idx_chunk);
 
 % for the resulting designs, compute the figures of merit and the operating points
-[fom, operating] = compute_operating(var, idx_chunk, ann_fem_obj, data_compute);
+[fom, operating] = compute_operating(var, n_filter_fom, ann_fem_obj, data_compute);
 
-% filter the inductors with the obtained data
-is_valid = fct.fct_filter_save(fom, operating, length(idx_chunk));
+% filter the inductors with the operating points
+is_valid = fct.fct_filter_operating(var, fom, operating, n_filter_var);
+fom = get_struct_filter(fom, is_valid);
+operating = get_struct_filter(operating, is_valid);
 idx_chunk = idx_chunk(is_valid);
 n_sol = length(idx_chunk);
 
-% assign the results
-fom = get_struct_filter(fom, is_valid);
-operating = get_struct_filter(operating, is_valid);
+% assign tracking data
+track.id_design = idx_chunk;
+track.n_sol = n_sol;
+track.n_filter_fom = n_filter_fom;
+track.n_filter_var = n_filter_var;
 
 end
 
-function fom = compute_fom(var, idx_chunk, ann_fem_obj, data_compute)
+function [var, fom] = compute_fom(var, n_sol, ann_fem_obj, data_compute)
 % Compute the figures of merit of the inductors (without evaluating the operating points)
 %
 %    Parameters:
-%        var (struct): struct of vectors with the samples with all the combinations
-%        idx_chunk (vector): indices of the designs belonging in the chunk
+%        var (struct): struct of vectors with the samples (all the combinations)
+%        n_sol (integer): number of samples
 %        ann_fem_obj (AnnFEM): instance of the ANN/regression engine for thermal and magnetic model
 %        data_compute (struct): data for the inductor designs
 %
 %    Returns:
+%        var (struct): struct of vectors with the samples (all the combinations)
 %        fom (struct): computed figures of merit
-
-% get the selected designs
-var =  get_struct_filter(var, idx_chunk);
-n_sol = length(idx_chunk);
 
 % get the inductor data
 data_const = data_compute.data_const;
@@ -163,22 +174,19 @@ fom = inductor_compute_obj.get_fom();
 
 end
 
-function [fom, operating] = compute_operating(var, idx_chunk, ann_fem_obj, data_compute)
+function [var, fom, operating] = compute_operating(var, n_sol, ann_fem_obj, data_compute)
 % Compute the figures of merit and the operating points of the inductors
 %
 %    Parameters:
-%        var (struct): struct of vectors with the samples with all the combinations
-%        idx_chunk (vector): indices of the designs belonging in the chunk
+%        var (struct): struct of vectors with the samples (all the combinations)
+%        n_sol (integer): number of samples
 %        ann_fem_obj (AnnFEM): instance of the ANN/regression engine for thermal and magnetic model
 %        data_compute (struct): data for the inductor designs
 %
 %    Returns:
+%        var (struct): struct of vectors with the samples (all the combinations)
 %        fom (struct): computed figures of merit
 %        operating (struct): computed operating points
-
-% get the selected designs
-var =  get_struct_filter(var, idx_chunk);
-n_sol = length(idx_chunk);
 
 % get the inductor data
 data_const = data_compute.data_const;

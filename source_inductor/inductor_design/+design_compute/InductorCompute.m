@@ -182,51 +182,6 @@ classdef InductorCompute < handle
             self.fom.circuit.I_sat = B_sat_max./self.fom.circuit.B_norm;
             self.fom.circuit.I_rms = J_rms_max./self.fom.circuit.J_norm;
             self.fom.circuit.V_t_area = self.fom.circuit.L.*self.fom.circuit.I_sat;
-            
-            % set the utilization of the component compared to the applied stress
-            self.fom.utilization = self.get_utilization(self.data_vec.fom_limit.stress, self.fom.circuit);
-        end
-        
-        function utilization = get_utilization(self, stress, circuit)
-            % Get the utilization of the component compared to the applied stress.
-            %
-            %    Parameters:
-            %        stress (struct): stresses applied to the components
-            %        circuit (struct): magnetic properties of the components
-            %
-            %    Return:
-            %        utilization (struct): utilization factors of the components
-            
-            % extract the stress
-            V_t_area = stress.V_t_area;
-            I_dc = stress.I_dc;
-            fact_rms = stress.fact_rms;
-            
-            % extract the properties
-            L = circuit.L;
-            I_sat = circuit.I_sat;
-            I_rms = circuit.I_rms;
-            
-            % get the AC ripple current
-            I_ac_peak = (1./(2.*L)).*V_t_area;
-            I_ac_rms = I_ac_peak.*fact_rms;
-            
-            % get the total AC and DC currents
-            I_peak_tot = I_dc+I_ac_peak;
-            I_rms_tot = hypot(I_dc, I_ac_rms);
-            
-            % get the utilization factor (ripple, saturation, and RMS)
-            r_peak_peak = (2.*I_ac_peak)./I_dc;
-            fact_sat = I_peak_tot./I_sat;
-            fact_rms = I_rms_tot./I_rms;
-            
-            % assign the results
-            utilization.I_dc = I_dc;
-            utilization.I_ac_peak = I_ac_peak;
-            utilization.I_ac_rms = I_ac_rms;
-            utilization.r_peak_peak = r_peak_peak;
-            utilization.fact_sat = fact_sat;
-            utilization.fact_rms = fact_rms;
         end
         
         function init_limit(self)
@@ -244,9 +199,6 @@ classdef InductorCompute < handle
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.I_sat, self.data_vec.fom_limit.I_sat);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.I_rms, self.data_vec.fom_limit.I_rms);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.V_t_area, self.data_vec.fom_limit.V_t_area);
-            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.utilization.r_peak_peak, self.data_vec.fom_limit.r_peak_peak);
-            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.utilization.fact_sat, self.data_vec.fom_limit.fact_sat);
-            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.utilization.fact_rms, self.data_vec.fom_limit.fact_rms);
             self.fom.is_valid_limit = is_valid_limit;
             
             % validity of the different designs
@@ -522,13 +474,13 @@ classdef InductorCompute < handle
             B_ac_peak = B_norm.*I_ac_peak;
             
             % get the time domain waveform
-            [t_vec, B_vec] = self.waveform_model_obj.get_waveform_time(type_id, f, d_c, B_ac_peak, B_dc);
+            [t_vec, B_vec] = self.waveform_model_obj.get_waveform_time(type_id, f, d_c, B_ac_peak);
             
             % compute the core losses
-            [is_valid_core, P_core] = self.core_obj.get_losses(t_vec, B_vec, T_core_avg);
+            [is_valid_core, P_core] = self.core_obj.get_losses(t_vec, B_vec+B_dc, T_core_avg);
             
             % get the Fourier coefficient of the waveform
-            [f_vec, J_vec, H_vec, J_dc] = self.waveform_model_obj.get_waveform_harm(type_id, f, d_c, J_ac_peak, H_ac_peak, J_dc);
+            [f_vec, J_vec, H_vec] = self.waveform_model_obj.get_waveform_harm(type_id, f, d_c, J_ac_peak, H_ac_peak);
             
             % compute the winding losses
             [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_tri(f_vec, J_vec, H_vec, J_dc, T_winding_avg);
