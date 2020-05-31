@@ -54,6 +54,12 @@ switch id
         error('invalid material id')
 end
 
+% maximum frequency (radius is equal to skin depth)
+mu0_const = 4.*pi.*1e-7;
+sigma = 5.8e7;
+delta = 0.5.*d_strand;
+f_max = 1./(pi.*mu0_const.*sigma.*delta.^2); % maximum frequency
+
 % conductivity interpolation
 material.interp.T_vec = [20 46 72 98 124 150]; % temperature vector
 material.interp.sigma_vec = 1e7.*[5.800 5.262 4.816 4.439 4.117 3.839]; % conductivity vector
@@ -61,7 +67,7 @@ material.interp.sigma_vec = 1e7.*[5.800 5.262 4.816 4.439 4.117 3.839]; % conduc
 % assign param
 material.param.fill_litz = fill_litz; % fill factor of the litz wire itself (not of the packing)
 material.param.d_strand = d_strand; % strand diameter
-material.param.delta_min = 0.5.*d_strand; % minimum skin depth
+material.param.f_max = f_max; % maximum frequency
 
 % assign density
 material.param.rho_copper = 8960; % volumetric density for copper

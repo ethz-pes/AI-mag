@@ -147,7 +147,11 @@ classdef WindingData < handle
             [is_valid_interp, sigma] = self.get_interp(T);
             
             % get the losses
-            [is_valid_value, P, P_dc, P_ac_lf, P_ac_hf] = self.get_losses_sub(f, J_ac_rms, H_ac_rms, J_dc, sigma);
+            [P, P_dc, P_ac_lf, P_ac_hf] = self.get_losses_sub(f, J_ac_rms, H_ac_rms, J_dc, sigma);
+            
+            % check the validity of the obtained losses
+            J_rms_tot = hypot(J_ac_rms, J_dc);
+            is_valid_value = self.parse_losses(P, J_rms_tot, f);
             
             % from loss densities to losses
             P = self.volume.*P;
@@ -219,7 +223,7 @@ classdef WindingData < handle
             f = prox_factor./H_ac_rms;            
         end
         
-        function [is_valid, P, P_dc, P_ac_lf, P_ac_hf] = get_losses_sub(self, f, J_ac_rms, H_ac_rms, J_dc, sigma)
+        function [P, P_dc, P_ac_lf, P_ac_hf] = get_losses_sub(self, f, J_ac_rms, H_ac_rms, J_dc, sigma)
             % Compute the losses with a a given waveform.
             %
             %    Parameters:
@@ -246,13 +250,9 @@ classdef WindingData < handle
             
             % get the total losses and the total RMS current density
             P = P_dc+P_ac_lf+P_ac_hf;
-            J_rms_tot = hypot(J_ac_rms, J_dc);
-            
-            % check the validity of the obtained losses
-            is_valid = self.parse_losses(P, J_rms_tot, delta);
         end
         
-        function is_valid = parse_losses(self, P, J_rms_tot, delta)
+        function is_valid = parse_losses(self, P, J_rms_tot, f)
             % Check the validity of loss points.
             %
             %    Parameters:
@@ -266,13 +266,13 @@ classdef WindingData < handle
             % extract the limit
             P_max = self.param.P_max;
             J_rms_max = self.param.J_rms_max;
-            delta_min = self.param.delta_min;
+            f_max = self.param.f_max;
             
             % check the loss density, the current density, and the skin depth
             is_valid = true;
             is_valid = is_valid&(P<=P_max);
             is_valid = is_valid&(J_rms_tot<=J_rms_max);
-            is_valid = is_valid&(delta>=delta_min);
+            is_valid = is_valid&(f<=f_max);
         end
         
         function delta = get_delta(self, sigma, f)

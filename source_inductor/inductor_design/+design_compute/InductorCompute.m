@@ -52,7 +52,7 @@ classdef InductorCompute < handle
             self.data_const = data_const;
             self.ann_fem_obj = ann_fem_obj;
             
-            % make sure that all the samples are the right dimension
+            % make sure that all the samples have the right dimension
             self.data_vec = get_struct_size(self.data_vec, self.n_sol);
             
             % init the different objects
@@ -114,7 +114,6 @@ classdef InductorCompute < handle
             self.fom.material.core_id = self.data_vec.material.core_id;
             self.fom.material.winding_id = self.data_vec.material.winding_id;
             self.fom.material.iso_id = self.data_vec.material.iso_id;
-            self.fom.material.h_convection = self.data_vec.other.h_convection;
             
             % set the raw geometry
             self.fom.geom.z_core = geom.z_core;
@@ -220,23 +219,22 @@ classdef InductorCompute < handle
             is_valid_tmp = is_valid_min&is_valid_max;
         end
         
-        
         function init_thermal_loss_waveform(self)
             % Init the thermal/loss iterator and the waveform model.
             %
             %    Get the different functions describing the loss and thermal models.
             %    Create the thermal/loss object.
             %    Create the waveform model object.
-            
-            fct.fct_init = @(operating) self.get_thermal_init(operating);
+
+            % thermal/loss iteration
             fct.get_thermal = @(operating) self.get_thermal(operating);
             fct.get_losses = @(operating) self.get_losses(operating);
             fct.get_thermal_vec = @(operating) self.get_thermal_vec(operating);
             fct.get_losses_vec = @(operating) self.get_losses_vec(operating);
             self.thermal_losses_iter_obj = design_compute.ThermalLossIter(self.data_const.iter, fct);
 
-            self.thermal_losses_iter_obj = design_compute.ThermalLossIter(self.data_const.iter, fct);
-            self.waveform_model_obj = design_compute.WaveformModel(self.data_const.waveform);
+            % waveform model
+            self.waveform_model_obj = design_compute.WaveformModel(self.data_const.signal);
         end
         
     end
@@ -252,7 +250,7 @@ classdef InductorCompute < handle
             %    Returns:
             %        operating (struct): struct containing the excitation, losses, and temperatures
             
-            % add the excitation data, expand the data to the number of designs
+            % make sure that all the samples have the right dimension
             excitation = get_struct_size(excitation, self.n_sol);
             
             % init, compute data which are independent of the iterations
@@ -281,6 +279,15 @@ classdef InductorCompute < handle
             %    Returns:
             %        operating (struct): struct with the operating point data
             
+            operating = struct();
+            operating = self.get_thermal_init(operating, excitation.thermal);
+            operating = self.get_waveform_init(operating, excitation.waveform);
+        end
+        
+        function operating = get_waveform_init(self, operating, excitation)
+            % set the waveform
+            self.waveform_model_obj.set_excitation(excitation);
+            
             % get component circuit parameters
             B_norm = self.fom.circuit.B_norm;
             J_norm = self.fom.circuit.J_norm;
@@ -288,56 +295,26 @@ classdef InductorCompute < handle
             I_sat = self.fom.circuit.I_sat;
             I_rms = self.fom.circuit.I_rms;
             
-            % get the applied stress
-            I_dc = excitation.I_dc;
-            I_ac_peak = excitation.I_ac_peak;
-            type_id = excitation.type_id;
-           
-            % get the factor between peak and RMS values
-            I_ac_rms = self.waveform_model_obj.get_rms(type_id, I_ac_peak);
-            
-            % compute the different field values
-            J_dc = J_norm.*I_dc;
-            B_dc = B_norm.*I_dc;
-            H_dc = H_norm.*I_dc;
-            J_ac_rms = J_norm.*I_ac_rms;
-            H_ac_rms = H_norm.*I_ac_rms;
-            B_ac_peak = B_norm.*I_ac_peak;
-                        
-            % compute the total current (AC and DC)
-            I_peak_tot = I_dc+I_ac_peak;
-            I_rms_tot = hypot(I_dc, I_ac_rms);
-                        
-            % assign the fields
-            operating.field.J_dc = J_dc;
-            operating.field.B_dc = B_dc;
-            operating.field.H_dc = H_dc;
-            operating.field.J_ac_rms = J_ac_rms;
-            operating.field.H_ac_rms = H_ac_rms;
-            operating.field.B_ac_peak = B_ac_peak;
-            
-            % assign the utilization factor (ripple, saturation, and RMS)
-            operating.utilization.I_dc = I_dc;
-            operating.utilization.I_ac_peak = I_ac_peak;
-            operating.utilization.I_ac_rms = I_ac_rms;
-            operating.utilization.r_peak_peak = (2.*I_ac_peak)./I_dc;
-            operating.utilization.fact_sat = I_peak_tot./I_sat;
-            operating.utilization.fact_rms = I_rms_tot./I_rms;
-            
-            % assign excitation
-            operating.excitation = excitation;
+            % get the waveform
+            operating.waveform = self.waveform_model_obj.get_waveform(I_sat, I_rms);
+            operating.field = self.waveform_model_obj.get_field(J_norm, H_norm, B_norm);
         end
         
         
-        function operating = get_thermal_init(self, operating)
+        function operating = get_thermal_init(self, operating, excitation)
             % Init the thermal model for the starting the thermal/loss iterations.
             %
             %    Parameters:
             %        operating (struct): struct with the operating point data
+            %        excitation (struct): struct with the thermal excitation data
             %
             %    Returns:
             %        operating (struct): struct with the operating point data
             
+            % set the excitation
+            thermal.T_ambient = excitation.T_ambient;
+            thermal.h_convection = excitation.h_convection;
+
             % the temperature is constant and is an initial guess
             thermal.T_core_max = self.data_vec.other.T_core_init;
             thermal.T_core_avg = self.data_vec.other.T_core_init;
@@ -345,7 +322,7 @@ classdef InductorCompute < handle
             thermal.T_winding_avg = self.data_vec.other.T_winding_init;
             thermal.T_iso_max = (self.data_vec.other.T_core_init+self.data_vec.other.T_winding_init)./2;
             thermal.T_max = max(self.data_vec.other.T_core_init, self.data_vec.other.T_winding_init);
-            
+
             % check the bounds and assign
             operating.is_valid_thermal = self.check_thermal_limit(thermal);
             operating.thermal = thermal;
@@ -369,7 +346,7 @@ classdef InductorCompute < handle
             P_winding = operating.losses.P_winding;
             
             % get the parameters
-            h_convection = self.fom.material.h_convection;
+            h_convection = operating.excitation.thermal.h_convection;
             
             % get the thermal simulation results from the ANN/regression object
             excitation_tmp = struct('h_convection', h_convection, 'P_winding', P_winding, 'P_core', P_core, 'T_ambient', T_ambient);
@@ -380,6 +357,7 @@ classdef InductorCompute < handle
             dT_max = max(dT_mat, [], 1);
             
             % assign the absolute temperature values
+            thermal.T_ambient = T_ambient;
             thermal.T_core_max = T_ambient+fom_tmp.dT_core_max;
             thermal.T_core_avg = T_ambient+fom_tmp.dT_core_avg;
             thermal.T_winding_max = T_ambient+fom_tmp.dT_winding_max;
@@ -427,6 +405,7 @@ classdef InductorCompute < handle
             
             % temperature matrix (number of temperatures x number of samples)
             T_vec = [...
+                operating.thermal.T_ambient;...
                 operating.thermal.T_core_max;...
                 operating.thermal.T_core_avg;...
                 operating.thermal.T_winding_max;...
@@ -458,32 +437,20 @@ classdef InductorCompute < handle
             H_norm = self.fom.circuit.H_norm;
             
             % get the applied stress
-            I_dc = operating.excitation.I_dc;
-            I_ac_peak = operating.excitation.I_ac_peak;
             T_core_avg = operating.thermal.T_core_avg;
             T_winding_avg = operating.thermal.T_winding_avg;
-            f = operating.excitation.f;
-            type_id = operating.excitation.type_id;
-            d_c = operating.excitation.d_c;
-                                   
-            % compute the different field values
-            J_dc = J_norm.*I_dc;
-            B_dc = B_norm.*I_dc;
-            J_ac_peak = J_norm.*I_ac_peak;
-            H_ac_peak = H_norm.*I_ac_peak;
-            B_ac_peak = B_norm.*I_ac_peak;
-            
+                                               
             % get the time domain waveform
-            [t_vec, B_vec] = self.waveform_model_obj.get_waveform_time(type_id, f, d_c, B_ac_peak);
+            [t_vec, B_time_vec, B_loop_vec, B_dc] = self.waveform_model_obj.get_core(B_norm);
             
             % compute the core losses
-            [is_valid_core, P_core] = self.core_obj.get_losses(t_vec, B_vec+B_dc, T_core_avg);
+            [is_valid_core, P_core] = self.core_obj.get_losses(t_vec, B_time_vec, B_loop_vec, B_dc, T_core_avg);
             
             % get the Fourier coefficient of the waveform
-            [f_vec, J_vec, H_vec] = self.waveform_model_obj.get_waveform_harm(type_id, f, d_c, J_ac_peak, H_ac_peak);
+            [f_vec, J_freq_vec, H_freq_vec, J_dc] = self.waveform_model_obj.get_winding(J_norm, H_norm);
             
             % compute the winding losses
-            [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses_tri(f_vec, J_vec, H_vec, J_dc, T_winding_avg);
+            [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses(f_vec, J_freq_vec, H_freq_vec, J_dc, T_winding_avg);
                         
             % get the total losses (scaling and offset)
             P_scale = self.data_vec.fom_data.P_scale;

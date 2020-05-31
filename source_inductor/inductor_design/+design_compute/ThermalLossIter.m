@@ -51,7 +51,6 @@ classdef ThermalLossIter < handle
             should_stop = false;
             P_vec = [];
             T_vec = [];
-            operating = self.fct.fct_init(operating);
             
             % run the iteration
             while should_stop==false

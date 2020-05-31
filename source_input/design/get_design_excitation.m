@@ -11,18 +11,22 @@ function excitation = get_design_excitation(L, f, load)
 %
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
-% excitation data
-%    - f: operating frequency
+% thermal paramters
+%    - h_convection: convection coefficient reference value
 %    - T_ambient: ambient temperature
+excitation.thermal.h_convection = 20.0;
+excitation.thermal.T_ambient = 40.0;
+
+% circuit parameters
+%    - f: operating frequency
 %    - I_dc: DC current
 %    - I_ac_peak: AC peak current
-%    - type_id: id of the waveform shape ('sin' or 'tri')
 %    - d_c: duty cycle
-excitation.type_id = get_map_str_to_int('tri');
-excitation.f = f;
-excitation.T_ambient = 40.0;
-excitation.I_dc = load.*10.0;
-excitation.I_ac_peak = 200./(4.*f.*L);
-excitation.d_c = 0.5;
+%    - type_id: id of the waveform shape ('sin' or 'tri')
+excitation.waveform.f = f;
+excitation.waveform.I_dc = load.*10.0;
+excitation.waveform.I_peak_peak = 200./(2.*f.*L);
+excitation.waveform.d_c = 0.5;
+excitation.waveform.type_id = get_map_str_to_int('tri');
 
 end

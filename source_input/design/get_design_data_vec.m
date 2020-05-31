@@ -14,11 +14,9 @@ function data_vec = get_design_data_vec(geom, f)
 %    - T_winding_init: initial guess for the winding temperature
 %    - T_core_init: initial guess for the core temperature
 %    - I_test: test current for computing the magnetic circuit
-%    - h_convection: convection coefficient reference value
 other.T_winding_init = 80.0;
 other.T_core_init = 80.0;
 other.I_test = 10.0;
-other.h_convection = 20.0;
 
 % inductor scaling factor for the figures of merit
 %    - m_scale: scaling factor for the total mass

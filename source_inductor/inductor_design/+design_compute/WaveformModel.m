@@ -14,168 +14,252 @@ classdef WaveformModel < handle
     
     %% properties
     properties (SetAccess = private, GetAccess = public)
-        waveform % struct: contains the control parameters
-        id % struct: struct with the waveform ids
+        signal % struct: contains the control parameters
+        is_set % logical: if the waveform has been set (or not)
+        param % struct: waveform parameters (RMS, peak, dc, etc.)
+        time % struct: time domain waveform (without DC)
+        freq % struct: frequency domain waveform (without DC)
     end
     
     %% public
     methods (Access = public)
-        function self = WaveformModel(waveform)
+        function self = WaveformModel(signal)
             % Constructor.
             %
             %    Parameters:
-            %        waveform (struct): contains the control parameters
+            %        signal (struct): contains the control parameters
             
             % assign data
-            self.waveform = waveform;
+            self.signal = signal;
             
-            % compute the id
-            tri = get_map_str_to_int('tri');
-            sin = get_map_str_to_int('sin');
-            self.id = struct('tri', tri, 'sin', sin, 'all', [tri, sin]);
+            % init, no waveform
+            self.param = struct();
+            self.time = struct();
+            self.freq = struct();
+            
+            % set the flag, no waveform is set
+            self.is_set = false;
         end
         
-        function I_ac_rms = get_rms(self, type_id, I_ac_peak)
-            % Transform AC peak current into AC RMS current.
-            %
-            %    Parameters:
-            %        type_id (vector): vector with the waveform type ids
-            %        I_ac_peak (vector): AC peak current
-            %
-            %    Returns:
-            %        I_ac_rms (vector): AC RMS current
+        function set_excitation(self, excitation)
+            % find the type
+            type_id = unique(excitation.type_id);
+            assert(length(type_id)==1, 'invalid waveform type')
+            
+            % set the waveform
+            switch type_id
+                case get_map_str_to_int('tri')
+                    f = excitation.f;
+                    d_c = excitation.d_c;
+                    I_dc = excitation.I_dc;
+                    I_peak_peak = excitation.I_peak_peak;
+                    
+                    self.param = self.get_param_tri(f, I_dc, I_peak_peak);
+                    self.freq = self.get_freq_tri(f, d_c, I_peak_peak);
+                    self.time = self.get_time_tri(f, d_c, I_peak_peak);
+                case get_map_str_to_int('sin')
+                    f = excitation.f;
+                    I_dc = excitation.I_dc;
+                    I_peak_peak = excitation.I_peak_peak;
+                    
+                    self.param = self.get_param_sin(f, I_dc, I_peak_peak);
+                    self.freq = self.get_freq_sin(f, I_peak_peak);
+                    self.time = self.get_time_sin(f, I_peak_peak);
+                otherwise
+                    error('invalid waveform type')
+            end
+            
+            % set the flag, wave is set
+            self.is_set = true;
+        end
+        
+        function waveform = get_waveform(self, I_sat, I_rms)
+            % copy basic parameters
+            waveform.f = self.param.f;
+            waveform.I_dc = self.param.I_dc;
+            waveform.I_peak_peak = self.param.I_peak_peak;
+            waveform.I_ac_rms = self.param.I_ac_rms;
+            waveform.I_all_peak = self.param.I_all_peak;
+            waveform.I_all_rms = self.param.I_all_rms;
+            
+            % compute utilization factor
+            waveform.r_peak_peak = self.param.I_peak_peak./self.param.I_dc;
+            waveform.fact_sat = self.param.I_all_peak./I_sat;
+            waveform.fact_rms = self.param.I_all_rms./I_rms;
+        end
+        
+        function field = get_field(self, J_norm, H_norm, B_norm)
+            % compute the different DC field values
+            field.J_dc = J_norm.*self.param.I_dc;
+            field.B_dc = B_norm.*self.param.I_dc;
+            field.H_dc = H_norm.*self.param.I_dc;
+            
+            % compute the different AC field values
+            field.J_ac_rms = J_norm.*self.param.I_ac_rms;
+            field.H_ac_rms = H_norm.*self.param.I_ac_rms;
+            field.B_peak_peak = B_norm.*self.param.I_peak_peak;
+        end
+        
+        function [t_vec, B_time_vec, B_loop_vec, B_dc] = get_core(self, B_norm)
+            % expand the vector into a matrix
+            B_norm = repmat(B_norm, [self.signal.n_time 1]);
+            
+            % compute the applied core excitation in time domain
+            t_vec = self.time.t_vec;            
+            B_time_vec = self.time.I_time_vec.*B_norm;
+            B_loop_vec = self.time.I_loop_vec.*B_norm;
+            B_dc = self.param.I_dc.*B_norm;
+        end
+        
+        function [f_vec, J_freq_vec, H_freq_vec, J_dc] = get_winding(self, J_norm, H_norm)
+            % expand the vector into a matrix
+            J_norm = repmat(J_norm, [self.signal.n_freq 1]);
+            H_norm = repmat(H_norm, [self.signal.n_freq 1]);
 
-            fct = @(type_id, I_ac_peak) get_rms_sub(self, type_id, I_ac_peak);
-            I_ac_rms = get_map_fct(self.id.all, type_id, fct, {I_ac_peak});
-        end
-        
-        function [freq, value] = get_waveform_harm(self, type_id, d_c)
-            % Get the harmonics of the waveform.
-            %
-            %    Both the frequency and the amplitude are normalized.
-            %
-            %    Parameters:
-            %        type_id (vector): vector with the waveform type ids
-            %        d_c (vector): vector with the waveform duty cycle
-            %
-            %    Returns:
-            %        freq (matrix): frequencies (row) for the different samples (col)
-            %        value (matrix): RMS harmonics (row) for the different samples (col)
-            
-            fct = @(type_id, d_c) get_waveform_harm_sub(self, type_id, d_c);
-            [freq, value] = get_map_fct(self.id.all, type_id, fct, {d_c});
-        end
-        
-        function [time, value] = get_waveform_time(self, type_id, d_c)
-            % Get the time domain representation of the waveform.
-            %
-            %    Both the frequency and the amplitude are normalized.
-            %
-            %    Parameters:
-            %        type_id (vector): vector with the waveform type ids
-            %        d_c (vector): vector with the waveform duty cycle
-            %
-            %    Returns:
-            %        time (matrix): time information (row) for the different samples (col)
-            %        value (matrix): amplitude information (row) for the different samples (col)
-            
-            fct = @(type_id, d_c) get_waveform_time_sub(self, type_id, d_c);
-            [time, value] = get_map_fct(self.id.all, type_id, fct, {d_c});
+            % compute the applied winding excitation in frequency domain
+            f_vec = self.freq.f_vec;
+            J_freq_vec = self.freq.I_freq_vec.*J_norm;
+            H_freq_vec = self.freq.I_freq_vec.*H_norm;
+            J_dc = self.param.I_dc.*J_norm;
         end
     end
     
     %% private
     methods (Access = private)
-        function I_ac_rms = get_rms_sub(self, type_id, I_ac_peak)
-            % Transform AC peak current into AC RMS current (scalar id).
-            %
-            %    Parameters:
-            %        type_id (scalar): vector with the waveform type id
-            %        I_ac_peak (vector): AC peak current
-            %
-            %    Returns:
-            %        I_ac_rms (vector): AC RMS current
+        function param = get_param_tri(self, f, I_dc, I_peak_peak)
+            % compute param
+            I_ac_rms = I_peak_peak./(2.*sqrt(3));
+            I_all_peak = I_dc+(I_peak_peak./2);
+            I_all_rms = hypot(I_dc, I_ac_rms);
             
-            switch type_id
-                case self.id.tri
-                    I_ac_rms = (1./sqrt(3)).*I_ac_peak;
-                case self.id.sin
-                    I_ac_rms = (1./sqrt(2)).*I_ac_peak;
-                otherwise
-                    error('invalid waveform id')
-            end
+            % assign param
+            param.f = f;
+            param.I_dc = I_dc;
+            param.I_peak_peak = I_peak_peak;
+            param.I_ac_rms = I_ac_rms;
+            param.I_all_peak = I_all_peak;
+            param.I_all_rms = I_all_rms;
         end
         
-        function [freq, value] = get_waveform_harm_sub(self, type_id, d_c)
-            % Get the harmonics of the waveform (scalar id).
-            %
-            %    Both the frequency and the amplitude are normalized.
-            %
-            %    Parameters:
-            %        type_id (scalar): vector with the waveform type ids
-            %        d_c (vector): vector with the waveform duty cycle
-            %
-            %    Returns:
-            %        freq (matrix): frequencies (row) for the different samples (col)
-            %        value (matrix): RMS harmonics (row) for the different samples (col)
+        function param = get_param_sin(self, f, I_dc, I_peak_peak)
+            % compute param
+            I_ac_rms = I_peak_peak./(2.*sqrt(2));
+            I_all_peak = I_dc+(I_peak_peak./2);
+            I_all_rms = hypot(I_dc, I_ac_rms);
             
-            % harmonic vector
-            freq = 1:self.waveform.n_freq;
+            % assign param
+            param.f = f;
+            param.I_dc = I_dc;
+            param.I_peak_peak = I_peak_peak;
+            param.I_ac_rms = I_ac_rms;
+            param.I_all_peak = I_all_peak;
+            param.I_all_rms = I_all_rms;
+        end
+        
+        function freq = get_freq_tri(self, f, d_c, I_peak_peak)
+            % get the frequency vector
+            [n_vec, f_vec] = self.get_frequency(f);
+            
+            % reciprocal of the duty cycle matrix
+            d_c_vec = repmat(1./d_c, [self.signal.n_freq 1]);
+            
+            % cofficient (Fourier series)
+            I_freq_vec = abs((2.*(-1).^n_vec.*d_c_vec.^2)./(n_vec.^2.*(d_c_vec-1).*pi.^2).*sin((n_vec.*(d_c_vec-1).*pi)./d_c_vec));
+            
+            % scale the values
+            I_freq_vec = I_freq_vec.*(I_peak_peak./2);
+            
+            % assign freq
+            freq.f_vec = f_vec;
+            freq.I_freq_vec = I_freq_vec;
+        end
+        
+        function freq = get_freq_sin(self, f, I_peak_peak)
+            % get the frequency vector
+            [n_vec, f_vec] = self.get_frequency(f);
+            
+            % cofficient (Fourier series)
+            I_freq_vec = NaN(size(n_vec));
+            I_freq_vec(n_vec==1) = 1;
+            I_freq_vec(n_vec~=1) = 0;
+            
+            % scale the values
+            I_freq_vec = I_freq_vec.*(I_peak_peak./2);
+            
+            % assign freq
+            freq.f_vec = f_vec;
+            freq.I_freq_vec = I_freq_vec;
+        end
+        
+        function time = get_time_tri(self, f, d_c, I_peak_peak)
+            % get the time vector
+            [d_vec, t_vec] = self.get_time(f);
+            
+            % the duty cycle matrix
+            d_c_vec = repmat(d_c, [self.signal.n_time 1]);
                         
-            % initialize the matrix (frequency, reciprocal of the duty cycle)
-            [freq, duty] = ndgrid(freq, 1./d_c);
+            % compute the rise and fall parts
+            I_rise_vec = -1+2.*d_vec./d_c_vec;
+            I_fall_vec = +1-2.*(d_vec-d_c_vec)./(1-d_c_vec);
             
-            % compute the Fourier series coefficients
-            switch type_id
-                case self.id.tri
-                    value = -(2.*(-1).^freq.*duty.^2)./(freq.^2.*(duty-1).*pi.^2).*sin((freq.*(duty-1).*pi)./duty);
-                case self.id.sin
-                    value = NaN(size(freq));
-                    value(freq==1) = 1;
-                    value(freq~=1) = 0;
-                otherwise
-                    error('invalid waveform id')
-            end
+            % get the indices
+            idx_rise = d_vec<=d_c_vec;
+            idx_fall = d_vec>=d_c_vec;
             
-            % transform peak to RMS coefficient
-            value = value./sqrt(2);
+            % assign the values
+            I_time_vec = NaN(size(d_vec));
+            I_loop_vec = 2.*ones(size(d_vec));
+            I_time_vec(idx_rise) = I_rise_vec(idx_rise);
+            I_time_vec(idx_fall) = I_fall_vec(idx_fall);
+            
+            % scale the values
+            I_time_vec = I_time_vec.*(I_peak_peak./2);
+            I_loop_vec = I_loop_vec.*(I_peak_peak./2);
+
+            % assign freq
+            time.t_vec = t_vec;
+            time.I_time_vec = I_time_vec;
+            time.I_loop_vec = I_loop_vec;
         end
         
-        function [time, value] = get_waveform_time_sub(self, type_id, d_c)
-            % Get the time domain representation of the waveform (scalar id).
-            %
-            %    Both the frequency and the amplitude are normalized.
-            %
-            %    Parameters:
-            %        type_id (scalar): vector with the waveform type ids
-            %        d_c (vector): vector with the waveform duty cycle
-            %
-            %    Returns:
-            %        time (matrix): time information (row) for the different samples (col)
-            %        value (matrix): amplitude information (row) for the different samples (col)
+        function time = get_time_sin(self, f, I_peak_peak)
+            % get the time vector
+            [d_vec, t_vec] = self.get_time(f);
+                                    
+            % assign the values
+            I_time_vec = sin(2.*pi.*n_vec);
+            I_loop_vec = 2.*ones(size(d_vec));
             
-            % time vector
-            time = (0:(self.waveform.n_time-1))./self.waveform.n_time;
+            % scale the values
+            I_time_vec = I_time_vec.*(I_peak_peak./2);
+            I_loop_vec = I_loop_vec.*(I_peak_peak./2);
 
-            % initialize the matrix (time, duty cycle)
-            [time, duty] = ndgrid(time, d_c);
+            % assign freq
+            time.t_vec = t_vec;
+            time.I_time_vec = I_time_vec;
+            time.I_loop_vec = I_loop_vec;
+        end
+        
+        function [n_vec, f_vec] = get_frequency(self, f)
+            % harmonics (normalized)
+            n = 1:self.signal.n_freq;
             
-            % compute time domain values
-            switch type_id
-                case self.id.tri
-                    % compute the rise and fall parts
-                    value_rise = -1+2.*time./duty;
-                    value_fall = +1-2.*(time-duty)./(1-duty);
-                    
-                    % assign the values
-                    value = NaN(size(time));
-                    value(time<=duty) = value_rise(time<=duty);
-                    value(time>=duty) = value_fall(time>=duty);
-                case self.id.sin
-                    value = sin(2.*pi.*time);
-                otherwise
-                    error('invalid waveform id')
-            end
+            % span the matrix
+            [n_vec, f_vec] = ndgrid(n, f);
+            
+            % scale the frequency vector
+            f_vec = n_vec.*f_vec;
+        end
+        
+        function [d_vec, t_vec] = get_time(self, f)
+            % time (normalized)
+            d = linspace(0, 1, self.signal.n_time);
+            
+            % span the matrix
+            [d_vec, f_vec] = ndgrid(d, f);
+            
+            % scale the frequency vector
+            t_vec = d_vec./f_vec;
         end
     end
 end

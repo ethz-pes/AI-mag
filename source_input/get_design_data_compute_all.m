@@ -258,22 +258,22 @@ I_sat = fom.circuit.I_sat;
 I_rms = fom.circuit.I_rms;
 
 % param
-I_dc = 10.0;
-V_pwm = 200.0;
+I_circuit_dc = 10.0;
+V_circuit_pwm = 200.0;
 
 % get the peak to peak current
-I_peak_peak = V_pwm./(2.*f.*L);
+I_circuit_peak_peak = V_circuit_pwm./(2.*f.*L);
 
 % get the peak current (DC+AC)
-I_peak_tot = I_dc+V_pwm./(4.*f.*L);
+I_circuit_peak = I_circuit_dc+V_circuit_pwm./(4.*f.*L);
 
 % get the RMS current (DC+AC)
-I_rms_tot = hypot(I_dc, V_pwm./(sqrt(3).*4.*f.*L));
+I_circuit_rms = hypot(I_circuit_dc, V_circuit_pwm./(sqrt(3).*4.*f.*L));
 
 % select the designs
-is_filter = is_filter&(I_peak_tot<=I_sat);
-is_filter = is_filter&(I_rms_tot<=I_rms);
-is_filter = is_filter&(I_peak_peak<=3.*I_dc);
+is_filter = is_filter&(I_circuit_peak<=I_sat);
+is_filter = is_filter&(I_circuit_rms<=I_rms);
+is_filter = is_filter&(I_circuit_peak_peak<=3.*I_circuit_dc);
 
 end
 
