@@ -234,7 +234,7 @@ classdef InductorCompute < handle
             self.thermal_losses_iter_obj = design_compute.ThermalLossIter(self.data_const.iter, fct);
 
             % waveform model
-            self.waveform_model_obj = design_compute.WaveformModel(self.data_const.signal);
+            self.waveform_model_obj = design_compute.WaveformModel(self.data_const.signal, self.n_sol);
         end
         
     end
@@ -341,13 +341,11 @@ classdef InductorCompute < handle
             %        operating (struct): struct with the operating point data
             
             % get operating condition
-            T_ambient = operating.excitation.T_ambient;
+            T_ambient = operating.thermal.T_ambient;
+            h_convection = operating.thermal.h_convection;
             P_core = operating.losses.P_core;
             P_winding = operating.losses.P_winding;
-            
-            % get the parameters
-            h_convection = operating.excitation.thermal.h_convection;
-            
+                        
             % get the thermal simulation results from the ANN/regression object
             excitation_tmp = struct('h_convection', h_convection, 'P_winding', P_winding, 'P_core', P_core, 'T_ambient', T_ambient);
             [is_valid_tmp, fom_tmp] = self.ann_fem_obj.get_ht(excitation_tmp);
@@ -358,6 +356,7 @@ classdef InductorCompute < handle
             
             % assign the absolute temperature values
             thermal.T_ambient = T_ambient;
+            thermal.h_convection = h_convection;
             thermal.T_core_max = T_ambient+fom_tmp.dT_core_max;
             thermal.T_core_avg = T_ambient+fom_tmp.dT_core_avg;
             thermal.T_winding_max = T_ambient+fom_tmp.dT_winding_max;

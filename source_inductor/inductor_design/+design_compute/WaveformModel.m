@@ -15,6 +15,7 @@ classdef WaveformModel < handle
     %% properties
     properties (SetAccess = private, GetAccess = public)
         signal % struct: contains the control parameters
+                n_sol % int: number of designs or samples
         is_set % logical: if the waveform has been set (or not)
         param % struct: waveform parameters (RMS, peak, dc, etc.)
         time % struct: time domain waveform (without DC)
@@ -23,7 +24,7 @@ classdef WaveformModel < handle
     
     %% public
     methods (Access = public)
-        function self = WaveformModel(signal)
+        function self = WaveformModel(signal, n_sol)
             % Constructor.
             %
             %    Parameters:
@@ -31,6 +32,7 @@ classdef WaveformModel < handle
             
             % assign data
             self.signal = signal;
+            self.n_sol = n_sol;
             
             % init, no waveform
             self.param = struct();
@@ -102,24 +104,24 @@ classdef WaveformModel < handle
         
         function [t_vec, B_time_vec, B_loop_vec, B_dc] = get_core(self, B_norm)
             % expand the vector into a matrix
-            B_norm = repmat(B_norm, [self.signal.n_time 1]);
+            B_norm_vec = repmat(B_norm, [self.signal.n_time 1]);
             
             % compute the applied core excitation in time domain
             t_vec = self.time.t_vec;            
-            B_time_vec = self.time.I_time_vec.*B_norm;
-            B_loop_vec = self.time.I_loop_vec.*B_norm;
+            B_time_vec = self.time.I_time_vec.*B_norm_vec;
+            B_loop_vec = self.time.I_loop_vec.*B_norm_vec;
             B_dc = self.param.I_dc.*B_norm;
         end
         
         function [f_vec, J_freq_vec, H_freq_vec, J_dc] = get_winding(self, J_norm, H_norm)
             % expand the vector into a matrix
-            J_norm = repmat(J_norm, [self.signal.n_freq 1]);
-            H_norm = repmat(H_norm, [self.signal.n_freq 1]);
+            J_norm_vec = repmat(J_norm, [self.signal.n_freq 1]);
+            H_norm_vec = repmat(H_norm, [self.signal.n_freq 1]);
 
             % compute the applied winding excitation in frequency domain
             f_vec = self.freq.f_vec;
-            J_freq_vec = self.freq.I_freq_vec.*J_norm;
-            H_freq_vec = self.freq.I_freq_vec.*H_norm;
+            J_freq_vec = self.freq.I_freq_vec.*J_norm_vec;
+            H_freq_vec = self.freq.I_freq_vec.*H_norm_vec;
             J_dc = self.param.I_dc.*J_norm;
         end
     end
@@ -179,7 +181,7 @@ classdef WaveformModel < handle
             [n_vec, f_vec] = self.get_frequency(f);
             
             % cofficient (Fourier series)
-            I_freq_vec = NaN(size(n_vec));
+            I_freq_vec = NaN(self.signal.n_freq, self.n_sol);
             I_freq_vec(n_vec==1) = 1;
             I_freq_vec(n_vec~=1) = 0;
             
@@ -207,8 +209,8 @@ classdef WaveformModel < handle
             idx_fall = d_vec>=d_c_vec;
             
             % assign the values
-            I_time_vec = NaN(size(d_vec));
-            I_loop_vec = 2.*ones(size(d_vec));
+            I_time_vec = NaN(self.signal.n_time, self.n_sol);
+            I_loop_vec = 2.*ones(self.signal.n_time, self.n_sol);
             I_time_vec(idx_rise) = I_rise_vec(idx_rise);
             I_time_vec(idx_fall) = I_fall_vec(idx_fall);
             
@@ -227,8 +229,8 @@ classdef WaveformModel < handle
             [d_vec, t_vec] = self.get_time(f);
                                     
             % assign the values
-            I_time_vec = sin(2.*pi.*n_vec);
-            I_loop_vec = 2.*ones(size(d_vec));
+            I_time_vec = sin(2.*pi.*d_vec);
+            I_loop_vec = 2.*ones(self.signal.n_time, self.n_sol);
             
             % scale the values
             I_time_vec = I_time_vec.*(I_peak_peak./2);

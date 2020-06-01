@@ -267,6 +267,10 @@ classdef CoreData < handle
             % init, erverything is valid
             is_valid = true;
             
+            % get absolute values
+            B_dc = abs(B_dc);
+            B_ac_peak = abs(B_ac_peak);
+            
             % compute the points where the gradient should be computed
             fact_igse = self.param.fact_igse;
             f_1 = f.*(1+fact_igse);
@@ -318,15 +322,16 @@ classdef CoreData < handle
                         
             % find the flux variations
             B_time_vec_diff = B_time_vec(2:end,:)-B_time_vec(1:end-1,:);
-            B_loop_vec_diff = (B_time_vec(2:end,:)+B_time_vec(1:end-1,:))./2;
+            B_loop_vec_diff = (B_loop_vec(2:end,:)+B_loop_vec(1:end-1,:))./2;
                         
             % frequency
             f = 1./(max(t_vec, [], 1)-min(t_vec, [], 1));
             
-            % apply icode wveGSE
-            v_int = sum((abs(B_time_vec_diff./t_vec_diff).^alpha).*t_vec_diff, 1);
-            v_cst = f.*ki.*B_loop_vec_diff.^(beta-alpha);
-            P = v_cst.*v_int;
+            % apply the iGSE
+            v_int = ki.*(abs(B_loop_vec_diff).^(beta-alpha)).*(abs(B_time_vec_diff./t_vec_diff).^alpha);
+            
+            % integrate the losses
+            P = f.*sum(v_int.*t_vec_diff, 1);
         end
         
         function ki = compute_steinmetz_ki(self, k, alpha, beta)

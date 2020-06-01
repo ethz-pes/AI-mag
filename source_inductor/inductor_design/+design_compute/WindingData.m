@@ -243,6 +243,11 @@ classdef WindingData < handle
             % compute the skin depth
             delta = self.get_delta(sigma, f);
             
+            % get absolute values
+            J_dc = abs(J_dc);
+            J_ac_rms = abs(J_ac_rms);
+            H_ac_rms = abs(H_ac_rms);
+
             % get the different loss components (DC, AC LF, and AC HF)
             P_dc = self.compute_lf_losses(sigma, J_dc);
             P_ac_lf = self.compute_lf_losses(sigma, J_ac_rms);

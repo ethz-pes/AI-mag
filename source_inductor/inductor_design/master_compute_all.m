@@ -134,10 +134,10 @@ idx_chunk = idx_chunk(is_valid);
 n_filter_fom = length(idx_chunk);
 
 % for the resulting designs, compute the figures of merit and the operating points
-[fom, operating] = compute_operating(var, n_filter_fom, ann_fem_obj, data_compute);
+[var, fom, operating] = compute_operating(var, n_filter_fom, ann_fem_obj, data_compute);
 
 % filter the inductors with the operating points
-is_valid = fct.fct_filter_operating(var, fom, operating, n_filter_var);
+is_valid = fct.fct_filter_operating(var, fom, operating, n_filter_fom);
 fom = get_struct_filter(fom, is_valid);
 operating = get_struct_filter(operating, is_valid);
 idx_chunk = idx_chunk(is_valid);
