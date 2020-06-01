@@ -2,7 +2,7 @@ function out_fem = get_out_fem(model, model_type, inp)
 % Make a FEM simulation for given parameters, extract the results.
 %
 %    Parameters:
-%        model (model): COMSOL model containg the physics
+%        model (model): COMSOL model containing the physics
 %        model_type (str): name of the physics to be solved
 %        inp (struct): struct of scalars with the parameters
 %

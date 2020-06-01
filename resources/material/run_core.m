@@ -91,7 +91,7 @@ end
 
 % assign param
 material.param.mu = mu; % material permeability
-material.param.beta = beta; % beta of the material (Steinmetz paramter)
+material.param.beta = beta; % beta of the material (Steinmetz parameter)
 material.param.rho = rho; % volumetric density
 material.param.kappa = kappa; % cost per mass
 

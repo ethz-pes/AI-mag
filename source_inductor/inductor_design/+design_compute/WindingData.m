@@ -3,8 +3,7 @@ classdef WindingData < handle
     %
     %    Map the different unique id with the corresponding data.
     %    Get constant properties (mass, cost, current density, etc.).
-    %    Get the losses for sinus current (HF losses, with DC biais).
-    %    Get the losses for triangular current (HF losses, with DC biais).
+    %    Get the losses for arbitrary current waveforms (HF losses, with DC biais).
     %    The code is completely vectorized.
     %
     %    The input data required by this class require a defined format:
@@ -111,7 +110,7 @@ classdef WindingData < handle
         end
         
         function [is_valid, P, P_dc, P_ac_lf, P_ac_hf] = get_losses(self, f_vec, J_freq_vec, H_freq_vec, J_dc, T)
-            % Compute the losses with an arbitrary excitation (Fourier).
+            % Compute the losses with an arbitrary excitation (using Fourier series).
             %
             %    The following effects are considered.
             %        - temperature dependence of the conductivity
@@ -120,11 +119,12 @@ classdef WindingData < handle
             %        - details: M. Leibl, "Three-Phase PFC Rectifier and High-Voltage Generator", 2017
             %
             %    The input should have the size of the number of samples.
-            %    Peak values are used for the Fourier harmonics.
+            %    Peak values are used for the Fourier harmonics (only AC, no DC component).
             %
-            %    The signals are given as matrices:
+            %    The Fourier signals are given as matrices:
             %        - the columns represents the different samples
             %        - the rows represents the frequency sampling
+            %        - The Fourier coefficients are only AC (no DC component)
             %
             %    Parameters:
             %        f_vec (matrix): matrix with the frequencies
@@ -140,7 +140,7 @@ classdef WindingData < handle
             %        P_ac_lf (vector): AC LF losses (density multiplied with volume)
             %        P_ac_hf (vector): AC HF losses (density multiplied with volume)
             
-            % parse waveform
+            % parse waveform, get the equivelent frequency and the RMS values
             [f, J_ac_rms, H_ac_rms] = self.get_param_waveform(f_vec, J_freq_vec, H_freq_vec);
             
             % get the conductivity
@@ -204,6 +204,10 @@ classdef WindingData < handle
         function [f, J_ac_rms, H_ac_rms] = get_param_waveform(self, f_vec, J_freq_vec, H_freq_vec)
             % Extract the parameters from the frequency domain waveform.
             %
+            %    RMS values are computed for both the current density and the magnetic field.
+            %    The equivalent frequency is computed from the magnetic field harmonics.
+            %    The equivalent frequency is computed with a square frequency dependency of the HF losses.
+            %
             %    Parameters:
             %        f_vec (matrix): matrix with the frequencies
             %        J_freq_vec (matrix): matrix with the current density peak harmonics
@@ -227,14 +231,13 @@ classdef WindingData < handle
             % Compute the losses with a a given waveform.
             %
             %    Parameters:
-            %        f (vector): frequency excitation vector
+            %        f (vector): equivalent operating frequency
             %        J_ac_rms (vector): AC RMS current density
             %        H_ac_rms (vector): AC RMS magnetic field
             %        J_dc (vector): DC current density
             %        sigma (vector): electrical conductivity
             %
             %    Returns:
-            %        is_valid (vector): if the operating points are valid (or not)
             %        P (vector): losses of each sample (density multiplied with volume)
             %        P_dc (vector): DC losses (density multiplied with volume)
             %        P_ac_lf (vector): AC LF losses (density multiplied with volume)
@@ -263,7 +266,7 @@ classdef WindingData < handle
             %    Parameters:
             %        P (vector): loss density
             %        J_rms_tot (vector): RMS current density (AC and DC)
-            %        delta (vector): skin depth
+            %        f (vector): equivalent operating frequency
             %
             %    Returns:
             %        is_valid (vector): if the operating points are valid (with the additional checks)
@@ -295,7 +298,7 @@ classdef WindingData < handle
         end
         
         function P = compute_lf_losses(self, sigma, J_rms)
-            % Compute the LF losses.
+            % Compute the LF losses (Ohm's law).
             %
             %    Parameters:
             %        sigma (vector): electrical conductivity
@@ -315,7 +318,7 @@ classdef WindingData < handle
         end
         
         function P = compute_hf_losses(self, sigma, delta, H_rms)
-            % Compute the HF losses (litz wire proximity effect).
+            % Compute the HF losses (litz wire proximity effect, asymptotic aproox.).
             %
             %    Parameters:
             %        sigma (vector): electrical conductivity

@@ -46,7 +46,7 @@ fom_limit.V_box = struct('min', 0.0, 'max', 200e-6);
 
 % bounds for the circuit figures of merit
 %    - L: inductance
-%    - V_t_sat_sat: saturation voltage time product
+%    - V_t_sat_sat: saturation voltage time product (complete hysteresis loop)
 %    - I_sat: maximum saturation current
 %    - I_rms: maximum RMS current
 fom_limit.L = struct('min', 0.0, 'max', Inf);

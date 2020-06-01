@@ -4,7 +4,7 @@ function get_fem_file(filename, file_model, model, model_type, var_type, inp, co
 %    Parameters:
 %        filename (str): path of the file to be created with the results
 %        file_model (str): path of the COMSOL file
-%        model (model): COMSOL model containg the physics
+%        model (model): COMSOL model containing the physics
 %        model_type (str): name of the physics to be solved
 %        var_type (struct): type of the different variables used in the solver
 %        inp (struct): struct of scalars with the selected input combination

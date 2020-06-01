@@ -3,8 +3,7 @@ classdef CoreData < handle
     %
     %    Map the different unique id with the corresponding data.
     %    Get constant properties (mass, cost, saturation, etc.).
-    %    Get the losses for sinus flux (lossmap, with DC biais).
-    %    Get the losses for triangular flux (IGGE, lossmap, with DC biais).
+    %    Get the losses for arbitrary current waveforms (iGSE, lossmap, with DC biais).
     %    The code is completely vectorized.
     %
     %    The input data required by this class require a defined format:
@@ -124,25 +123,28 @@ classdef CoreData < handle
             %        - details: R. Burkart, "Advanced Modeling and Multi-Objective Optimization of Power Electronic Converter Systems", 2016
             %
             %    The input should have the size of the number of samples.
-            %    The signal should be periodic (first point is equal to last point).
-            %    Minor loops are supported.
+            %    Minor loops are supported with the iGSE.
+            %    The amplitudes of the loops should be given (not computed by this code).
+            %    For the loops, the peak to peak amplitude is considered. 
             %
-            %    The signals are given as matrices:
+            %    The time signals are given as matrices:
             %        - the columns represents the different samples
             %        - the rows represents the time sampling
+            %        - the first point and last points are t=0 and t=1/f
+            %        - the signal should be periodic (first point is equal to last point)
             %
             %    Parameters:
             %        t_vec (matrix): matrix with the times
             %        B_time_vec (matrix): matrix with the time domain flux densities
             %        B_loop_vec (matrix): matrix with the major/minor loop flux densities
-            %        B_dc (matrix): vector with the DC flux densities
+            %        B_dc (vector): DC flux densities
             %        T (vector): operating temperature
             %
             %    Returns:
             %        is_valid (vector): if the operating points are valid (or not)
             %        P (vector): losses of each sample (density multiplied with volume)
             
-            % parse waveform
+            % parse waveform, get the frequency and the AC peak value
             [f, B_ac_peak] = self.get_param_waveform(t_vec, B_time_vec);
                         
             % interpolate the loss map, get the IGSE parameters
@@ -227,13 +229,15 @@ classdef CoreData < handle
         function [f, B_ac_peak] = get_param_waveform(self, t_vec, B_time_vec)
             % Extract the parameters from the time domain waveform.
             %
+            %    The frequency is extracted from the time sampling.
+            %    The AC peak value is the peak to peak value over two.
+            %
             %    Parameters:
             %        t_vec (matrix): matrix with the times
-            %        B_time_vec (matrix): matrix with the flux densities
+            %        B_time_vec (matrix): matrix with the time domain flux densities
             %
             %    Returns:
             %        f (vector): operating frequency
-            %        B_dc (vector): DC flux density
             %        B_ac_peak (vector): AC peak flux density
 
             % frequency
@@ -246,15 +250,15 @@ classdef CoreData < handle
         function [is_valid, k, alpha, beta] = compute_steinmetz(self, f, B_ac_peak, B_dc, T)
             % Compute the losses with the Steinmetz parameters from the loss map.
             %
-            %    The Steinmetz paramters are extracted with the following methods:
+            %    The Steinmetz parameters are extracted with the following methods:
             %        - The losses are computed for: B_ac_peak*(1+eps) and B_ac_peak/(1+eps)
             %        - The losses are computed for: f*(1+eps) and f/(1+eps)
             %        - Then, alpha and represents the gradients (in log scale)
             %        - Finally, k is set in order to get the right absolute value of the losses
             %
             %    Parameters:
-            %        f (vector): frequency excitation vector
-            %        B_ac_peak (vector): peak AC flux density
+            %        f (vector): operating frequency
+            %        B_ac_peak (vector): AC peak flux density
             %        B_dc (vector): DC flux density
             %        T (vector): operating temperature
             %
@@ -324,10 +328,10 @@ classdef CoreData < handle
             B_time_vec_diff = B_time_vec(2:end,:)-B_time_vec(1:end-1,:);
             B_loop_vec_diff = (B_loop_vec(2:end,:)+B_loop_vec(1:end-1,:))./2;
                         
-            % frequency
+            % get the frequency
             f = 1./(max(t_vec, [], 1)-min(t_vec, [], 1));
             
-            % apply the iGSE
+            % apply the iGSE (time dependent losses)
             v_int = ki.*(abs(B_loop_vec_diff).^(beta-alpha)).*(abs(B_time_vec_diff./t_vec_diff).^alpha);
             
             % integrate the losses

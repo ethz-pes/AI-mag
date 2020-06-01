@@ -8,7 +8,7 @@ classdef InductorCompute < handle
     %        - check the validity of the design
     %        - compute many operating points
     %        - core loss map (DC bias) and winding losses (proximity losses)
-    %        - sinus or PWM excitation
+    %        - sinus or triangular current excitation
     %        - thermal/loss coupling
     %
     %    Both the magnetic and the thermal model are powered by a ANN data-driven model.
@@ -177,7 +177,7 @@ classdef InductorCompute < handle
             self.fom.circuit.H_norm = self.fom.geom.n_turn.*fom_mf.H_norm;
             self.fom.circuit.L = self.fom.geom.n_turn.^2.*fom_mf.L_norm;
             
-            % set the saturation and RMS current properties
+            % set the saturation, RMS current, and voltage time area properties
             B_sat_max = self.core_obj.get_flux_density();
             J_rms_max = self.winding_obj.get_current_density();
             self.fom.circuit.I_sat = B_sat_max./self.fom.circuit.B_norm;
@@ -192,7 +192,7 @@ classdef InductorCompute < handle
             %    This function does not compute losses, it is just a rough filter.
             
             % check if the figures of merit are in the right range
-            is_valid_limit = true(1, self.n_sol);
+            is_valid_limit = true;
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.volume.V_box, self.data_vec.fom_limit.V_box);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.cost.c_tot, self.data_vec.fom_limit.c_tot);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.mass.m_tot, self.data_vec.fom_limit.m_tot);
@@ -236,7 +236,7 @@ classdef InductorCompute < handle
             self.thermal_losses_iter_obj = design_compute.ThermalLossIter(self.data_const.iter, fct);
 
             % waveform model
-            self.waveform_model_obj = design_compute.WaveformModel(self.data_const.signal, self.n_sol);
+            self.waveform_model_obj = design_compute.WaveformModel(self.n_sol, self.data_const.signal);
         end
         
     end
@@ -255,7 +255,7 @@ classdef InductorCompute < handle
             % make sure that all the samples have the right dimension
             excitation = get_struct_size(excitation, self.n_sol);
             
-            % init, compute data which are independent of the iterations
+            % init, compute the data which are independent of the iterations
             operating = self.get_operating_init(excitation);
             
             % compute the coupled loss and thermal models
@@ -275,6 +275,9 @@ classdef InductorCompute < handle
         function operating = get_operating_init(self, excitation)
             % Initialize an operating point with the data which are independent of the iterations.
             %
+            %    Compute the waveforms and the associated figures of merit.
+            %    Initialize the thermal data for the first thermal loss iteration.
+            %
             %    Parameters:
             %        excitation (struct): struct containing the operating point excitation
             %
@@ -282,15 +285,24 @@ classdef InductorCompute < handle
             %        operating (struct): struct with the operating point data
             
             operating = struct();
-            operating = self.get_thermal_init(operating, excitation.thermal);
             operating = self.get_waveform_init(operating, excitation.waveform);
+            operating = self.get_thermal_init(operating, excitation.thermal);
         end
         
         function operating = get_waveform_init(self, operating, excitation)
+            % Compute the waveforms and the associated figures of merit.
+            %
+            %    Parameters:
+            %        operating (struct): struct with the operating point data
+            %        excitation (struct): struct containing the waveform parameters
+            %
+            %    Returns:
+            %        operating (struct): struct with the operating point data
+
             % set the waveform
             self.waveform_model_obj.set_excitation(excitation);
             
-            % get component circuit parameters
+            % get the inductor circuit and field parameters
             B_norm = self.fom.circuit.B_norm;
             J_norm = self.fom.circuit.J_norm;
             H_norm = self.fom.circuit.H_norm;
@@ -298,11 +310,12 @@ classdef InductorCompute < handle
             I_sat = self.fom.circuit.I_sat;
             I_rms = self.fom.circuit.I_rms;
             
-            % get the waveform
+            % get the current waveform parameters
             operating.waveform = self.waveform_model_obj.get_waveform(L, I_sat, I_rms);
+            
+            % get the inductor field values
             operating.field = self.waveform_model_obj.get_field(J_norm, H_norm, B_norm);
         end
-        
         
         function operating = get_thermal_init(self, operating, excitation)
             % Init the thermal model for the starting the thermal/loss iterations.
@@ -314,7 +327,7 @@ classdef InductorCompute < handle
             %    Returns:
             %        operating (struct): struct with the operating point data
             
-            % set the excitation
+            % get the ambient condition
             thermal.T_ambient = excitation.T_ambient;
             thermal.h_convection = excitation.h_convection;
 
@@ -345,7 +358,7 @@ classdef InductorCompute < handle
             %    Returns:
             %        operating (struct): struct with the operating point data
             
-            % get operating condition
+            % get the ambient condition and the losses
             T_ambient = operating.thermal.T_ambient;
             h_convection = operating.thermal.h_convection;
             P_core = operating.losses.P_core;
@@ -373,12 +386,14 @@ classdef InductorCompute < handle
         end
         
         function [thermal, is_valid_thermal] = check_thermal_limit(self, thermal, is_valid_thermal)
-            % Check the validity of the temperatures.
+            % Compute the thermal stress and check the validity of the temperatures.
             %
             %    Parameters:
             %        thermal (struct): struct with the thermal data
+            %        is_valid_thermal (vector): if the temperatures are valid (or not)
             %
             %    Returns:
+            %        thermal (struct): struct with the thermal data
             %        is_valid_thermal (vector): if the temperatures are valid (or not)
             
             % get the limits
@@ -386,7 +401,7 @@ classdef InductorCompute < handle
             T_winding_max = self.winding_obj.get_temperature();
             T_iso_max = self.iso_obj.get_temperature();
             
-            % compute max
+            % extract the differemt temperatures
             T_ambient = thermal.T_ambient;
             T_core = max(thermal.T_core_max, thermal.T_core_avg);
             T_winding = max(thermal.T_winding_max, thermal.T_winding_avg);
@@ -397,8 +412,10 @@ classdef InductorCompute < handle
             is_valid_winding = T_winding<=T_winding_max;
             is_valid_iso = T_iso<=T_iso_max;
             
-            % check the thermal utilization            
+            % assign the maximum temperature
             thermal.T_max = max([T_core ; T_winding ; T_iso], [], 1);
+            
+            % check the thermal utilization (temperature elevation compared to the limit)          
             thermal.stress_core = (T_core-T_ambient)./(T_core_max-T_ambient);
             thermal.stress_winding = (T_winding-T_ambient)./(T_winding_max-T_ambient);
             thermal.stress_iso = (T_iso-T_ambient)./(T_iso_max-T_ambient);
@@ -437,7 +454,6 @@ classdef InductorCompute < handle
             %
             %    Core losses with the core data manager.
             %    Winding losses with the winding data manager.
-            %    Compute different figures of merit.
             %
             %    Parameters:
             %        operating (struct): struct with the operating point data
@@ -445,22 +461,22 @@ classdef InductorCompute < handle
             %    Returns:
             %        operating (struct): struct with the operating point data
             
-            % get component circuit parameters
+            % get inductor field parameters
             B_norm = self.fom.circuit.B_norm;
             J_norm = self.fom.circuit.J_norm;
             H_norm = self.fom.circuit.H_norm;
             
-            % get the applied stress
+            % get the applied temperatures
             T_core_avg = operating.thermal.T_core_avg;
             T_winding_avg = operating.thermal.T_winding_avg;
                                                
-            % get the time domain waveform
+            % get the stress applied to the core (time domain)
             [t_vec, B_time_vec, B_loop_vec, B_dc] = self.waveform_model_obj.get_core(B_norm);
             
             % compute the core losses
             [is_valid_core, P_core] = self.core_obj.get_losses(t_vec, B_time_vec, B_loop_vec, B_dc, T_core_avg);
             
-            % get the Fourier coefficient of the waveform
+            % get the stress applied to the winding (Fourier harmonics)
             [f_vec, J_freq_vec, H_freq_vec, J_dc] = self.waveform_model_obj.get_winding(J_norm, H_norm);
             
             % compute the winding losses
