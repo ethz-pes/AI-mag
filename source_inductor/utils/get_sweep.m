@@ -7,9 +7,9 @@ function [n_sol, var] = get_sweep(sweep)
 %
 %    Three different methods are available for generating the variable samples:
 %        - Given fixed vector
-%        - Randompicks (with a given length) from a given discrete set 
+%        - Randompicks (with a given length) from a given discrete set
 %        - Regularly spaced span
-%            -  Variables can be float or integer 
+%            -  Variables can be float or integer
 %            -  Variable transformations (e.g., logarithmic, quadratic) are available
 %
 %    Parameters:

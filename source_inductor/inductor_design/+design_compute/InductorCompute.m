@@ -125,13 +125,13 @@ classdef InductorCompute < handle
             self.fom.geom.r_curve = geom.r_curve;
             self.fom.geom.n_turn = geom.n_turn;
             self.fom.geom.fill_pack = geom.fill_pack;
-                        
+            
             % set the area
             self.fom.area.A_iso = geom.A_iso;
             self.fom.area.A_core = geom.A_core;
             self.fom.area.A_winding = geom.A_winding;
             self.fom.area.A_box = geom.A_box;
-
+            
             % set the volume (scaling and offset for the global value)
             V_offset = self.data_vec.fom_data.V_offset;
             V_scale = self.data_vec.fom_data.V_scale;
@@ -227,14 +227,14 @@ classdef InductorCompute < handle
             %    Get the different functions describing the loss and thermal models.
             %    Create the thermal/loss object.
             %    Create the waveform model object.
-
+            
             % thermal/loss iteration
             fct.get_thermal = @(operating) self.get_thermal(operating);
             fct.get_losses = @(operating) self.get_losses(operating);
             fct.get_thermal_vec = @(operating) self.get_thermal_vec(operating);
             fct.get_losses_vec = @(operating) self.get_losses_vec(operating);
             self.thermal_losses_iter_obj = design_compute.ThermalLossIter(self.data_const.iter, fct);
-
+            
             % waveform model
             self.waveform_model_obj = design_compute.WaveformModel(self.n_sol, self.data_const.signal);
         end
@@ -298,7 +298,7 @@ classdef InductorCompute < handle
             %
             %    Returns:
             %        operating (struct): struct with the operating point data
-
+            
             % set the waveform
             self.waveform_model_obj.set_excitation(excitation);
             
@@ -330,14 +330,14 @@ classdef InductorCompute < handle
             % get the ambient condition
             thermal.T_ambient = excitation.T_ambient;
             thermal.h_convection = excitation.h_convection;
-
+            
             % the temperature is constant and is an initial guess
             thermal.T_core_max = self.data_vec.other.T_core_init;
             thermal.T_core_avg = self.data_vec.other.T_core_init;
             thermal.T_winding_max = self.data_vec.other.T_winding_init;
             thermal.T_winding_avg = self.data_vec.other.T_winding_init;
             thermal.T_iso_max = (self.data_vec.other.T_core_init+self.data_vec.other.T_winding_init)./2;
-
+            
             % add the utilization and check the bounds
             [thermal, is_valid_thermal] = self.check_thermal_limit(thermal, true);
             
@@ -363,7 +363,7 @@ classdef InductorCompute < handle
             h_convection = operating.thermal.h_convection;
             P_core = operating.losses.P_core;
             P_winding = operating.losses.P_winding;
-                        
+            
             % get the thermal simulation results from the ANN/regression object
             excitation_tmp = struct('h_convection', h_convection, 'P_winding', P_winding, 'P_core', P_core, 'T_ambient', T_ambient);
             [is_valid_thermal, fom_tmp] = self.ann_fem_obj.get_ht(excitation_tmp);
@@ -415,7 +415,7 @@ classdef InductorCompute < handle
             % assign the maximum temperature
             thermal.T_max = max([T_core ; T_winding ; T_iso], [], 1);
             
-            % check the thermal utilization (temperature elevation compared to the limit)          
+            % check the thermal utilization (temperature elevation compared to the limit)
             thermal.stress_core = (T_core-T_ambient)./(T_core_max-T_ambient);
             thermal.stress_winding = (T_winding-T_ambient)./(T_winding_max-T_ambient);
             thermal.stress_iso = (T_iso-T_ambient)./(T_iso_max-T_ambient);
@@ -469,7 +469,7 @@ classdef InductorCompute < handle
             % get the applied temperatures
             T_core_avg = operating.thermal.T_core_avg;
             T_winding_avg = operating.thermal.T_winding_avg;
-                                               
+            
             % get the stress applied to the core (time domain)
             [t_vec, B_time_vec, B_loop_vec, B_dc] = self.waveform_model_obj.get_core(B_norm);
             
@@ -481,7 +481,7 @@ classdef InductorCompute < handle
             
             % compute the winding losses
             [is_valid_winding, P_winding, P_dc, P_ac_lf, P_ac_hf] = self.winding_obj.get_losses(f_vec, J_freq_vec, H_freq_vec, J_dc, T_winding_avg);
-                        
+            
             % get the total losses (scaling and offset)
             P_scale = self.data_vec.fom_data.P_scale;
             P_offset = self.data_vec.fom_data.P_offset;
@@ -496,7 +496,7 @@ classdef InductorCompute < handle
             operating.losses.P_winding_ac_hf = P_ac_hf;
             operating.losses.P_add = P_add;
             operating.losses.P_tot = P_tot;
-                                    
+            
             % assign relative figures of merits (ratios)
             operating.losses.core_losses = P_core./P_tot;
             operating.losses.winding_losses = P_winding./P_tot;

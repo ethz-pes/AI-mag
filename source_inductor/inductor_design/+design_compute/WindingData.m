@@ -105,7 +105,7 @@ classdef WindingData < handle
             %
             %    Returns:
             %        J_rms_max (vector): maximum current density of the different samples
-                        
+            
             J_rms_max = self.param.J_rms_max;
         end
         
@@ -224,7 +224,7 @@ classdef WindingData < handle
             
             % get the equivalent operating frequency for the proximity losses
             prox_factor = sqrt(sum(f_vec.^2.*H_freq_vec.^2, 1))./sqrt(2);
-            f = prox_factor./H_ac_rms;            
+            f = prox_factor./H_ac_rms;
         end
         
         function [P, P_dc, P_ac_lf, P_ac_hf] = get_losses_sub(self, f, J_ac_rms, H_ac_rms, J_dc, sigma)
@@ -242,7 +242,7 @@ classdef WindingData < handle
             %        P_dc (vector): DC losses (density multiplied with volume)
             %        P_ac_lf (vector): AC LF losses (density multiplied with volume)
             %        P_ac_hf (vector): AC HF losses (density multiplied with volume)
-                        
+            
             % compute the skin depth
             delta = self.get_delta(sigma, f);
             
@@ -250,7 +250,7 @@ classdef WindingData < handle
             J_dc = abs(J_dc);
             J_ac_rms = abs(J_ac_rms);
             H_ac_rms = abs(H_ac_rms);
-
+            
             % get the different loss components (DC, AC LF, and AC HF)
             P_dc = self.compute_lf_losses(sigma, J_dc);
             P_ac_lf = self.compute_lf_losses(sigma, J_ac_rms);
@@ -340,7 +340,7 @@ classdef WindingData < handle
             % compute the losses
             P = fact_tmp.*(H_rms.^2);
         end
-                        
+        
         function [is_valid, sigma] = get_interp(self, T)
             % Interpolate electrical conductivities for the different materials.
             %

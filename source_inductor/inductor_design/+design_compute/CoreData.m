@@ -125,7 +125,7 @@ classdef CoreData < handle
             %    The input should have the size of the number of samples.
             %    Minor loops are supported with the iGSE.
             %    The amplitudes of the loops should be given (not computed by this code).
-            %    For the loops, the peak to peak amplitude is considered. 
+            %    For the loops, the peak to peak amplitude is considered.
             %
             %    The time signals are given as matrices:
             %        - the columns represents the different samples
@@ -146,7 +146,7 @@ classdef CoreData < handle
             
             % parse waveform, get the frequency and the AC peak value
             [f, B_ac_peak] = self.get_param_waveform(t_vec, B_time_vec);
-                        
+            
             % interpolate the loss map, get the IGSE parameters
             [is_valid_interp, k, alpha, beta] = compute_steinmetz(self, f, B_ac_peak, B_dc, T);
             
@@ -156,7 +156,7 @@ classdef CoreData < handle
             % check the validity of the obtained losses
             B_peak_tot = max(abs(B_time_vec+B_dc), [], 1);
             is_valid_value = self.parse_losses(P, B_peak_tot);
-
+            
             % from loss densities to losses
             P = self.volume.*P;
             
@@ -239,14 +239,14 @@ classdef CoreData < handle
             %    Returns:
             %        f (vector): operating frequency
             %        B_ac_peak (vector): AC peak flux density
-
+            
             % frequency
             f = 1./(max(t_vec, [], 1)-min(t_vec, [], 1));
             
             % AC peak flux density
             B_ac_peak = (max(B_time_vec, [], 1)-min(B_time_vec, [], 1))./2;
         end
-
+        
         function [is_valid, k, alpha, beta] = compute_steinmetz(self, f, B_ac_peak, B_dc, T)
             % Compute the losses with the Steinmetz parameters from the loss map.
             %
@@ -297,7 +297,7 @@ classdef CoreData < handle
             is_valid = is_valid&is_valid_tmp;
             [is_valid_tmp, P_B_ac_peak_2] = self.get_interp(f, B_ac_peak_2, B_dc, T);
             is_valid = is_valid&is_valid_tmp;
-                        
+            
             % with the gradients and the losses, compute the Steinmetz parameters
             alpha = log(P_f_1./P_f_2)./log(f_1./f_2);
             beta = log(P_B_ac_peak_1./P_B_ac_peak_2)./log(B_ac_peak_1./B_ac_peak_2);
@@ -320,14 +320,14 @@ classdef CoreData < handle
             
             % get the parameter from the Steinmetz parameters
             ki = self.compute_steinmetz_ki(k, alpha, beta);
-                       
+            
             % find the time intervals
             t_vec_diff = t_vec(2:end,:)-t_vec(1:end-1,:);
-                        
+            
             % find the flux variations
             B_time_vec_diff = B_time_vec(2:end,:)-B_time_vec(1:end-1,:);
             B_loop_vec_diff = (B_loop_vec(2:end,:)+B_loop_vec(1:end-1,:))./2;
-                        
+            
             % get the frequency
             f = 1./(max(t_vec, [], 1)-min(t_vec, [], 1));
             

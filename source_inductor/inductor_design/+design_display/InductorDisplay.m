@@ -108,7 +108,7 @@ classdef InductorDisplay < handle
             text{end+1} = sprintf('fill_pack = %.2f %%', 1e2.*fom_tmp.geom.fill_pack);
             text{end+1} = sprintf('n_turn = %d', fom_tmp.geom.n_turn);
             text_data{end+1} = struct('title', 'geom', 'text', {text});
-                        
+            
             % material data
             text = {};
             text{end+1} = sprintf('core_id = %s', get_map_int_to_str(fom_tmp.material.core_id));
@@ -139,7 +139,7 @@ classdef InductorDisplay < handle
             text{end+1} = sprintf('m_tot = %.2f g', 1e3.*fom_tmp.mass.m_tot);
             text{end+1} = sprintf('c_tot = %.2f $', fom_tmp.cost.c_tot);
             text_data{end+1} = struct('title', 'mass / cost', 'text', {text});
-                        
+            
             % magnetic data
             text = {};
             text{end+1} = sprintf('L = %.2f uH', 1e6.*fom_tmp.circuit.L);
@@ -175,7 +175,7 @@ classdef InductorDisplay < handle
             text{end+1} = sprintf('is_valid_core = %d', operating_pts.is_valid_core);
             text{end+1} = sprintf('is_valid_winding = %d', operating_pts.is_valid_winding);
             text_data{end+1} = struct('title', 'is_valid', 'text', {text});
-                        
+            
             % applied excitation
             text = {};
             text{end+1} = sprintf('type_id = %s', get_map_int_to_str(operating_pts.waveform.type_id));
@@ -190,7 +190,7 @@ classdef InductorDisplay < handle
             text{end+1} = sprintf('fact_sat = %.2f %%', 1e2.*operating_pts.waveform.fact_sat);
             text{end+1} = sprintf('fact_rms = %.2f %%', 1e2.*operating_pts.waveform.fact_rms);
             text_data{end+1} = struct('title', 'waveform', 'text', {text});
-
+            
             % physical fields
             text = {};
             text{end+1} = sprintf('J_dc = %.2f A/mm2', 1e-6.*operating_pts.field.J_dc);
@@ -200,7 +200,7 @@ classdef InductorDisplay < handle
             text{end+1} = sprintf('B_dc = %.2f mT', 1e3.*operating_pts.field.B_dc);
             text{end+1} = sprintf('B_peak_peak = %.2f mT', 1e3.*operating_pts.field.B_peak_peak);
             text_data{end+1} = struct('title', 'field', 'text', {text});
-                        
+            
             % temperatures
             text = {};
             text{end+1} = sprintf('h_convection = %.2f W/Km2', operating_pts.thermal.h_convection);

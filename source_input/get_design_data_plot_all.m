@@ -29,9 +29,8 @@ plot_param.cost_correlation = get_plot_param('V_box', 'c_tot', 'f', [50e3 500e3]
 %    - title: title of the block in the text field
 %    - var: cell of variables in the block, chosen from the data created by the extraction function
 text_param{1} = struct('title', 'fom', 'var', {{'V_box', 'A_box', 'm_tot', 'c_tot'}});
-text_param{2} = struct('title', 'circuit', 'var', {{'L', 'f', 'I_sat', 'I_rms'}});
-text_param{3} = struct('title', 'operating', 'var', {{'P_fl', 'P_pl', 'P_mix', 'T_max'}});
-text_param{4} = struct('title', 'utilization', 'var', {{'I_peak_tot', 'I_rms_tot', 'r_peak_peak', 'fact_sat', 'fact_rms'}});
+text_param{2} = struct('title', 'circuit', 'var', {{'L', 'I_sat', 'I_rms', 'V_t_sat_sat'}});
+text_param{3} = struct('title', 'operating', 'var', {{'f', 'P_mix', 'P_fl', 'P_pl', 'T_fl', 'T_pl'}});
 
 end
 
@@ -104,34 +103,25 @@ data_fom.c_tot = struct('value', c_tot, 'name', 'c_tot', 'scale', 1.0, 'unit', '
 L = fom.circuit.L;
 I_sat = fom.circuit.I_sat;
 I_rms = fom.circuit.I_rms;
-f_fl = operating.full_load.excitation.f;
-f_pl = operating.partial_load.excitation.f;
+V_t_sat_sat = fom.circuit.V_t_sat_sat;
 data_fom.L = struct('value', L, 'name', 'L', 'scale', 1e6, 'unit', 'uH');
-data_fom.f = struct('value', (f_fl+f_pl)./2, 'name', 'f', 'scale', 1e-3, 'unit', 'kHz');
 data_fom.I_sat = struct('value', I_sat, 'name', 'I_sat', 'scale', 1.0, 'unit', 'A');
 data_fom.I_rms = struct('value', I_rms, 'name', 'I_rms', 'scale', 1.0, 'unit', 'A');
-
-% utilization data
-I_peak_tot = fom.utilization.I_peak_tot;
-I_rms_tot = fom.utilization.I_rms_tot;
-r_peak_peak = fom.utilization.r_peak_peak;
-fact_sat = fom.utilization.fact_sat;
-fact_rms = fom.utilization.fact_rms;
-data_fom.I_peak_tot = struct('value', I_peak_tot, 'name', 'I_peak_tot', 'scale', 1.0, 'unit', 'A');
-data_fom.I_rms_tot = struct('value', I_rms_tot, 'name', 'I_rms_tot', 'scale', 1.0, 'unit', 'A');
-data_fom.r_peak_peak = struct('value', r_peak_peak, 'name', 'r_peak_peak', 'scale', 1e2, 'unit', '%');
-data_fom.fact_sat = struct('value', fact_sat, 'name', 'fact_sat', 'scale', 1e2, 'unit', '%');
-data_fom.fact_rms = struct('value', fact_rms, 'name', 'fact_rms', 'scale', 1e2, 'unit', '%');
+data_fom.V_t_sat_sat = struct('value', V_t_sat_sat, 'name', 'V_t_sat_sat', 'scale', 1e3, 'unit', 'Vms');
 
 % operating conditions
 P_fl = operating.full_load.losses.P_tot;
 T_fl = operating.full_load.thermal.T_max;
 P_pl = operating.partial_load.losses.P_tot;
 T_pl = operating.partial_load.thermal.T_max;
+f_fl = operating.full_load.waveform.f;
+f_pl = operating.partial_load.waveform.f;
+data_fom.f = struct('value', (f_fl+f_pl)./2, 'name', 'f', 'scale', 1e-3, 'unit', 'kHz');
+data_fom.P_mix = struct('value', (P_fl+P_pl)./2, 'name', 'P_mix', 'scale', 1.0, 'unit', 'W');
 data_fom.P_fl = struct('value', P_fl, 'name', 'P_fl', 'scale', 1.0, 'unit', 'W');
 data_fom.P_pl = struct('value', P_pl, 'name', 'P_pl', 'scale', 1.0, 'unit', 'W');
-data_fom.P_mix = struct('value', (P_fl+P_pl)./2, 'name', 'P_tot', 'scale', 1.0, 'unit', 'W');
-data_fom.T_max = struct('value', max(T_fl, T_pl), 'name', 'T_max', 'scale', 1.0, 'unit', 'C');
+data_fom.T_fl = struct('value', T_fl, 'name', 'T_fl', 'scale', 1.0, 'unit', 'C');
+data_fom.T_pl = struct('value', T_pl, 'name', 'T_pl', 'scale', 1.0, 'unit', 'C');
 
 % extract the validity information
 is_valid_fom = fom.is_valid;

@@ -254,7 +254,7 @@ switch model_type
         % compute the normalized inductance
         mu0 = 4.*pi.*1e-7;
         inp.L_norm = (mu0.*inp.A_core)./(2.*inp.d_gap);
-
+        
         % compute the saturation current
         inp.I_sat = (inp.B_sat_core.*inp.A_core)./inp.L_norm;
         
@@ -262,9 +262,9 @@ switch model_type
         %    - 'rel': the ratio with the saturation current is given, the current is calculated
         %    - 'abs': the current is used, the ratio with the saturation current is calculated
         switch excitation_type
-            case 'rel'                
+            case 'rel'
                 inp.I_winding = inp.r_sat.*inp.I_sat;
-            case 'abs'                
+            case 'abs'
                 inp.r_sat = inp.I_winding./inp.I_sat;
             otherwise
                 error('invalid physics excitation')
