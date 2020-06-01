@@ -124,12 +124,14 @@ classdef InductorCompute < handle
             self.fom.geom.d_iso = geom.d_iso;
             self.fom.geom.r_curve = geom.r_curve;
             self.fom.geom.n_turn = geom.n_turn;
-            
+            self.fom.geom.fill_pack = geom.fill_pack;
+                        
             % set the area
+            self.fom.area.A_iso = geom.A_iso;
             self.fom.area.A_core = geom.A_core;
             self.fom.area.A_winding = geom.A_winding;
             self.fom.area.A_box = geom.A_box;
-            
+
             % set the volume (scaling and offset for the global value)
             V_offset = self.data_vec.fom_data.V_offset;
             V_scale = self.data_vec.fom_data.V_scale;
@@ -180,7 +182,7 @@ classdef InductorCompute < handle
             J_rms_max = self.winding_obj.get_current_density();
             self.fom.circuit.I_sat = B_sat_max./self.fom.circuit.B_norm;
             self.fom.circuit.I_rms = J_rms_max./self.fom.circuit.J_norm;
-            self.fom.circuit.V_t_area = self.fom.circuit.L.*self.fom.circuit.I_sat;
+            self.fom.circuit.V_t_sat_sat = 2.*self.fom.circuit.L.*self.fom.circuit.I_sat;
         end
         
         function init_limit(self)
@@ -197,7 +199,7 @@ classdef InductorCompute < handle
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.L, self.data_vec.fom_limit.L);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.I_sat, self.data_vec.fom_limit.I_sat);
             is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.I_rms, self.data_vec.fom_limit.I_rms);
-            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.V_t_area, self.data_vec.fom_limit.V_t_area);
+            is_valid_limit = is_valid_limit&self.init_is_valid_check(self.fom.circuit.V_t_sat_sat, self.data_vec.fom_limit.V_t_sat_sat);
             self.fom.is_valid_limit = is_valid_limit;
             
             % validity of the different designs
@@ -292,11 +294,12 @@ classdef InductorCompute < handle
             B_norm = self.fom.circuit.B_norm;
             J_norm = self.fom.circuit.J_norm;
             H_norm = self.fom.circuit.H_norm;
+            L = self.fom.circuit.L;
             I_sat = self.fom.circuit.I_sat;
             I_rms = self.fom.circuit.I_rms;
             
             % get the waveform
-            operating.waveform = self.waveform_model_obj.get_waveform(I_sat, I_rms);
+            operating.waveform = self.waveform_model_obj.get_waveform(L, I_sat, I_rms);
             operating.field = self.waveform_model_obj.get_field(J_norm, H_norm, B_norm);
         end
         
@@ -321,10 +324,12 @@ classdef InductorCompute < handle
             thermal.T_winding_max = self.data_vec.other.T_winding_init;
             thermal.T_winding_avg = self.data_vec.other.T_winding_init;
             thermal.T_iso_max = (self.data_vec.other.T_core_init+self.data_vec.other.T_winding_init)./2;
-            thermal.T_max = max(self.data_vec.other.T_core_init, self.data_vec.other.T_winding_init);
 
-            % check the bounds and assign
-            operating.is_valid_thermal = self.check_thermal_limit(thermal);
+            % add the utilization and check the bounds
+            [thermal, is_valid_thermal] = self.check_thermal_limit(thermal, true);
+            
+            % assign the thermal data
+            operating.is_valid_thermal = is_valid_thermal;
             operating.thermal = thermal;
         end
         
@@ -348,11 +353,7 @@ classdef InductorCompute < handle
                         
             % get the thermal simulation results from the ANN/regression object
             excitation_tmp = struct('h_convection', h_convection, 'P_winding', P_winding, 'P_core', P_core, 'T_ambient', T_ambient);
-            [is_valid_tmp, fom_tmp] = self.ann_fem_obj.get_ht(excitation_tmp);
-            
-            % extract the hotspot temperature elevation
-            dT_mat = [fom_tmp.dT_core_max ; fom_tmp.dT_core_avg ; fom_tmp.dT_winding_max ; fom_tmp.dT_winding_avg ; fom_tmp.dT_iso_max];
-            dT_max = max(dT_mat, [], 1);
+            [is_valid_thermal, fom_tmp] = self.ann_fem_obj.get_ht(excitation_tmp);
             
             % assign the absolute temperature values
             thermal.T_ambient = T_ambient;
@@ -362,14 +363,16 @@ classdef InductorCompute < handle
             thermal.T_winding_max = T_ambient+fom_tmp.dT_winding_max;
             thermal.T_winding_avg = T_ambient+fom_tmp.dT_winding_avg;
             thermal.T_iso_max = T_ambient+fom_tmp.dT_iso_max;
-            thermal.T_max = T_ambient+dT_max;
             
-            % check the bounds and assign
-            operating.is_valid_thermal = is_valid_tmp&self.check_thermal_limit(thermal);
+            % add the utilization and check the bounds
+            [thermal, is_valid_thermal] = self.check_thermal_limit(thermal, is_valid_thermal);
+            
+            % assign the thermal data
+            operating.is_valid_thermal = is_valid_thermal;
             operating.thermal = thermal;
         end
         
-        function is_valid_thermal = check_thermal_limit(self, thermal)
+        function [thermal, is_valid_thermal] = check_thermal_limit(self, thermal, is_valid_thermal)
             % Check the validity of the temperatures.
             %
             %    Parameters:
@@ -383,13 +386,25 @@ classdef InductorCompute < handle
             T_winding_max = self.winding_obj.get_temperature();
             T_iso_max = self.iso_obj.get_temperature();
             
+            % compute max
+            T_ambient = thermal.T_ambient;
+            T_core = max(thermal.T_core_max, thermal.T_core_avg);
+            T_winding = max(thermal.T_winding_max, thermal.T_winding_avg);
+            T_iso = thermal.T_iso_max;
+            
             % check if the limits are respected
-            is_valid_core = (thermal.T_core_max<=T_core_max)&(thermal.T_core_avg<=T_core_max);
-            is_valid_winding = (thermal.T_winding_max<=T_winding_max)&(thermal.T_winding_avg<=T_winding_max);
-            is_valid_iso = thermal.T_iso_max<=T_iso_max;
+            is_valid_core = T_core<=T_core_max;
+            is_valid_winding = T_winding<=T_winding_max;
+            is_valid_iso = T_iso<=T_iso_max;
+            
+            % check the thermal utilization            
+            thermal.T_max = max([T_core ; T_winding ; T_iso], [], 1);
+            thermal.stress_core = (T_core-T_ambient)./(T_core_max-T_ambient);
+            thermal.stress_winding = (T_winding-T_ambient)./(T_winding_max-T_ambient);
+            thermal.stress_iso = (T_iso-T_ambient)./(T_iso_max-T_ambient);
             
             % assign the results
-            is_valid_thermal = is_valid_core&is_valid_winding&is_valid_iso;
+            is_valid_thermal = is_valid_thermal&is_valid_core&is_valid_winding&is_valid_iso;
         end
         
         function [T_vec, is_valid] = get_thermal_vec(self, operating)
@@ -467,10 +482,10 @@ classdef InductorCompute < handle
             operating.losses.P_tot = P_tot;
                                     
             % assign relative figures of merits (ratios)
-            operating.fact.core_losses = P_core./P_tot;
-            operating.fact.winding_losses = P_winding./P_tot;
-            operating.fact.add_losses = P_add./P_tot;
-            operating.fact.winding_hf_res = (P_ac_lf+P_ac_hf)./P_ac_lf;
+            operating.losses.core_losses = P_core./P_tot;
+            operating.losses.winding_losses = P_winding./P_tot;
+            operating.losses.add_losses = P_add./P_tot;
+            operating.losses.winding_hf_res = (P_ac_lf+P_ac_hf)./P_ac_lf;
             
             % assign validity
             operating.is_valid_core = is_valid_core;

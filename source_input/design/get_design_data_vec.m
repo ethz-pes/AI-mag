@@ -46,11 +46,11 @@ fom_limit.V_box = struct('min', 0.0, 'max', 200e-6);
 
 % bounds for the circuit figures of merit
 %    - L: inductance
-%    - V_t_area: saturation voltage time product
+%    - V_t_sat_sat: saturation voltage time product
 %    - I_sat: maximum saturation current
 %    - I_rms: maximum RMS current
 fom_limit.L = struct('min', 0.0, 'max', Inf);
-fom_limit.V_t_area = struct('min', 0.0, 'max', 200./(2.*f));
+fom_limit.V_t_sat_sat = struct('min', 200./(2.*f), 'max', Inf);
 fom_limit.I_sat = struct('min', 10.0, 'max', Inf);
 fom_limit.I_rms = struct('min', 10.0, 'max', Inf);
 

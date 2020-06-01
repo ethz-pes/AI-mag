@@ -14,10 +14,10 @@ init_toolbox();
 run_sub('ann')
 
 % run model with analytical approximation
-run_sub('approx')
+% run_sub('approx')
 
 % run model with FEM simulation
-run_sub('fem')
+% run_sub('fem')
 
 end
 

@@ -15,8 +15,9 @@ classdef WaveformModel < handle
     %% properties
     properties (SetAccess = private, GetAccess = public)
         signal % struct: contains the control parameters
-                n_sol % int: number of designs or samples
+        n_sol % int: number of designs or samples
         is_set % logical: if the waveform has been set (or not)
+        type_id % vector: id defining the waveform shape
         param % struct: waveform parameters (RMS, peak, dc, etc.)
         time % struct: time domain waveform (without DC)
         freq % struct: frequency domain waveform (without DC)
@@ -35,6 +36,7 @@ classdef WaveformModel < handle
             self.n_sol = n_sol;
             
             % init, no waveform
+            self.type_id = [];
             self.param = struct();
             self.time = struct();
             self.freq = struct();
@@ -45,11 +47,12 @@ classdef WaveformModel < handle
         
         function set_excitation(self, excitation)
             % find the type
-            type_id = unique(excitation.type_id);
-            assert(length(type_id)==1, 'invalid waveform type')
+            self.type_id = excitation.type_id;
             
             % set the waveform
-            switch type_id
+            type_id_tmp = unique(self.type_id);
+            assert(length(type_id_tmp)==1, 'invalid waveform type')
+            switch type_id_tmp
                 case get_map_str_to_int('tri')
                     f = excitation.f;
                     d_c = excitation.d_c;
@@ -75,7 +78,10 @@ classdef WaveformModel < handle
             self.is_set = true;
         end
         
-        function waveform = get_waveform(self, I_sat, I_rms)
+        function waveform = get_waveform(self, L, I_sat, I_rms)
+            % copy the id
+            waveform.type_id = self.type_id;
+            
             % copy basic parameters
             waveform.f = self.param.f;
             waveform.I_dc = self.param.I_dc;
@@ -88,6 +94,7 @@ classdef WaveformModel < handle
             waveform.r_peak_peak = self.param.I_peak_peak./self.param.I_dc;
             waveform.fact_sat = self.param.I_all_peak./I_sat;
             waveform.fact_rms = self.param.I_all_rms./I_rms;
+            waveform.V_t_area = self.param.I_peak_peak.*L;
         end
         
         function field = get_field(self, J_norm, H_norm, B_norm)

@@ -105,19 +105,21 @@ classdef InductorDisplay < handle
             text{end+1} = sprintf('d_gap = %.2f mm', 1e3.*fom_tmp.geom.d_gap);
             text{end+1} = sprintf('d_iso = %.2f mm', 1e3.*fom_tmp.geom.d_iso);
             text{end+1} = sprintf('r_curve = %.2f mm', 1e3.*fom_tmp.geom.r_curve);
+            text{end+1} = sprintf('fill_pack = %.2f %%', 1e2.*fom_tmp.geom.fill_pack);
             text{end+1} = sprintf('n_turn = %d', fom_tmp.geom.n_turn);
             text_data{end+1} = struct('title', 'geom', 'text', {text});
-            
+                        
             % material data
             text = {};
             text{end+1} = sprintf('core_id = %s', get_map_int_to_str(fom_tmp.material.core_id));
             text{end+1} = sprintf('winding_id = %s', get_map_int_to_str(fom_tmp.material.winding_id));
             text{end+1} = sprintf('iso_id = %s', get_map_int_to_str(fom_tmp.material.iso_id));
-            text{end+1} = sprintf('h_convection = %.2f W/Km2', fom_tmp.material.h_convection);
             text_data{end+1} = struct('title', 'material', 'text', {text});
             
             % geometrical figures of merit
             text = {};
+            text{end+1} = sprintf('A_iso = %.2f cm2', 1e4.*fom_tmp.area.A_iso);
+            text{end+1} = sprintf('V_iso = %.2f cm3', 1e6.*fom_tmp.volume.V_iso);
             text{end+1} = sprintf('A_core = %.2f cm2', 1e4.*fom_tmp.area.A_core);
             text{end+1} = sprintf('V_core = %.2f cm3', 1e6.*fom_tmp.volume.V_core);
             text{end+1} = sprintf('A_winding = %.2f cm2', 1e4.*fom_tmp.area.A_winding);
@@ -137,24 +139,17 @@ classdef InductorDisplay < handle
             text{end+1} = sprintf('m_tot = %.2f g', 1e3.*fom_tmp.mass.m_tot);
             text{end+1} = sprintf('c_tot = %.2f $', fom_tmp.cost.c_tot);
             text_data{end+1} = struct('title', 'mass / cost', 'text', {text});
-            
+                        
             % magnetic data
             text = {};
             text{end+1} = sprintf('L = %.2f uH', 1e6.*fom_tmp.circuit.L);
-            text{end+1} = sprintf('V_t_area = %.2f Vms', 1e3.*fom_tmp.circuit.V_t_area);
+            text{end+1} = sprintf('V_t_sat_sat = %.2f Vms', 1e3.*fom_tmp.circuit.V_t_sat_sat);
             text{end+1} = sprintf('I_sat = %.2f A', fom_tmp.circuit.I_sat);
             text{end+1} = sprintf('I_rms = %.2f A', fom_tmp.circuit.I_rms);
+            text{end+1} = sprintf('J_norm = %.2f 1/mm2', 1e-6.*fom_tmp.circuit.H_norm);
+            text{end+1} = sprintf('H_norm = %.2f 1/mm', 1e-3.*fom_tmp.circuit.H_norm);
+            text{end+1} = sprintf('B_norm = %.2f mT/A', 1e3.*fom_tmp.circuit.B_norm);
             text_data{end+1} = struct('title', 'circuit', 'text', {text});
-            
-            % utilization indicator of the inductor
-            text = {};
-            text{end+1} = sprintf('I_ac_peak = %.2f A', fom_tmp.utilization.I_ac_peak);
-            text{end+1} = sprintf('I_ac_rms = %.2f %%', 1e2.*fom_tmp.utilization.I_ac_rms);
-            text{end+1} = sprintf('I_dc = %.2f A', fom_tmp.utilization.I_dc);
-            text{end+1} = sprintf('r_peak_peak = %.2f %%', 1e2.*fom_tmp.utilization.r_peak_peak);
-            text{end+1} = sprintf('fact_sat = %.2f %%', 1e2.*fom_tmp.utilization.fact_sat);
-            text{end+1} = sprintf('fact_rms = %.2f %%', 1e2.*fom_tmp.utilization.fact_rms);
-            text_data{end+1} = struct('title', 'utilization', 'text', {text});
             
             % assign the block and the status
             data.is_valid = fom_tmp.is_valid;
@@ -180,35 +175,45 @@ classdef InductorDisplay < handle
             text{end+1} = sprintf('is_valid_core = %d', operating_pts.is_valid_core);
             text{end+1} = sprintf('is_valid_winding = %d', operating_pts.is_valid_winding);
             text_data{end+1} = struct('title', 'is_valid', 'text', {text});
-            
+                        
             % applied excitation
             text = {};
-            text{end+1} = sprintf('type_id = %s', get_map_int_to_str(operating_pts.excitation.type_id));
-            text{end+1} = sprintf('T_ambient = %.2f C', operating_pts.excitation.T_ambient);
-            text{end+1} = sprintf('f = %.2f kHz', 1e-3.*operating_pts.excitation.f);
-            text{end+1} = sprintf('d_c = %.2f %%', 1e2.*operating_pts.excitation.d_c);
-            text{end+1} = sprintf('I_dc = %.2f A', operating_pts.excitation.I_dc);
-            text{end+1} = sprintf('I_ac_peak = %.2f A', operating_pts.excitation.I_ac_peak);
-            text_data{end+1} = struct('title', 'excitation', 'text', {text});
-            
+            text{end+1} = sprintf('type_id = %s', get_map_int_to_str(operating_pts.waveform.type_id));
+            text{end+1} = sprintf('f = %.2f kHz', 1e-3.*operating_pts.waveform.f);
+            text{end+1} = sprintf('I_dc = %.2f A', operating_pts.waveform.I_dc);
+            text{end+1} = sprintf('I_all_peak = %.2f A', operating_pts.waveform.I_all_peak);
+            text{end+1} = sprintf('I_peak_peak = %.2f A', operating_pts.waveform.I_peak_peak);
+            text{end+1} = sprintf('I_ac_rms = %.2f A', operating_pts.waveform.I_ac_rms);
+            text{end+1} = sprintf('I_all_rms = %.2f A', operating_pts.waveform.I_all_rms);
+            text{end+1} = sprintf('V_t_area = %.2f Vms', 1e3.*operating_pts.waveform.V_t_area);
+            text{end+1} = sprintf('r_peak_peak = %.2f %%', 1e2.*operating_pts.waveform.r_peak_peak);
+            text{end+1} = sprintf('fact_sat = %.2f %%', 1e2.*operating_pts.waveform.fact_sat);
+            text{end+1} = sprintf('fact_rms = %.2f %%', 1e2.*operating_pts.waveform.fact_rms);
+            text_data{end+1} = struct('title', 'waveform', 'text', {text});
+
             % physical fields
             text = {};
             text{end+1} = sprintf('J_dc = %.2f A/mm2', 1e-6.*operating_pts.field.J_dc);
-            text{end+1} = sprintf('J_ac_peak = %.2f A/mm2', 1e-6.*operating_pts.field.J_ac_peak);
-            text{end+1} = sprintf('B_dc = %.2f mT', 1e3.*operating_pts.field.B_dc);
-            text{end+1} = sprintf('B_ac_peak = %.2f mT', 1e3.*operating_pts.field.B_ac_peak);
+            text{end+1} = sprintf('J_ac_rms = %.2f A/mm2', 1e-6.*operating_pts.field.J_ac_rms);
             text{end+1} = sprintf('H_dc = %.2f A/mm', 1e-3.*operating_pts.field.H_dc);
-            text{end+1} = sprintf('H_ac_peak = %.2f A/mm', 1e-3.*operating_pts.field.H_ac_peak);
+            text{end+1} = sprintf('H_ac_rms = %.2f A/mm', 1e-3.*operating_pts.field.H_ac_rms);
+            text{end+1} = sprintf('B_dc = %.2f mT', 1e3.*operating_pts.field.B_dc);
+            text{end+1} = sprintf('B_peak_peak = %.2f mT', 1e3.*operating_pts.field.B_peak_peak);
             text_data{end+1} = struct('title', 'field', 'text', {text});
-            
+                        
             % temperatures
             text = {};
+            text{end+1} = sprintf('h_convection = %.2f W/Km2', operating_pts.thermal.h_convection);
+            text{end+1} = sprintf('T_ambient = %.2f C', operating_pts.thermal.T_ambient);
             text{end+1} = sprintf('T_core_max = %.2f C', operating_pts.thermal.T_core_max);
             text{end+1} = sprintf('T_core_avg = %.2f C', operating_pts.thermal.T_core_avg);
             text{end+1} = sprintf('T_winding_max = %.2f C', operating_pts.thermal.T_winding_max);
             text{end+1} = sprintf('T_winding_avg = %.2f C', operating_pts.thermal.T_winding_avg);
             text{end+1} = sprintf('T_iso_max = %.2f C', operating_pts.thermal.T_iso_max);
             text{end+1} = sprintf('T_max = %.2f C', operating_pts.thermal.T_max);
+            text{end+1} = sprintf('stress_core = %.2f %%', 1e2.*operating_pts.thermal.stress_core);
+            text{end+1} = sprintf('stress_winding = %.2f %%', 1e2.*operating_pts.thermal.stress_winding);
+            text{end+1} = sprintf('stress_iso = %.2f %%', 1e2.*operating_pts.thermal.stress_iso);
             text_data{end+1} = struct('title', 'thermal', 'text', {text});
             
             % losses
@@ -220,23 +225,11 @@ classdef InductorDisplay < handle
             text{end+1} = sprintf('P_winding_ac_hf = %.2f W', operating_pts.losses.P_winding_ac_hf);
             text{end+1} = sprintf('P_add = %.2f W', operating_pts.losses.P_add);
             text{end+1} = sprintf('P_tot = %.2f W', operating_pts.losses.P_tot);
+            text{end+1} = sprintf('core_losses = %.2f %%', 1e2.*operating_pts.losses.core_losses);
+            text{end+1} = sprintf('winding_losses = %.2f %%', 1e2.*operating_pts.losses.winding_losses);
+            text{end+1} = sprintf('add_losses = %.2f %%', 1e2.*operating_pts.losses.add_losses);
+            text{end+1} = sprintf('winding_hf_res = %.2f x', operating_pts.losses.winding_hf_res);
             text_data{end+1} = struct('title', 'losses', 'text', {text});
-            
-            % utilization indicator of the operating point
-            text = {};
-            text{end+1} = sprintf('I_peak_tot = %.2f A', operating_pts.utilization.I_peak_tot);
-            text{end+1} = sprintf('I_rms_tot = %.2f A', operating_pts.utilization.I_rms_tot);
-            text{end+1} = sprintf('r_peak_peak = %.2f %%', 1e2.*operating_pts.utilization.r_peak_peak);
-            text{end+1} = sprintf('fact_sat = %.2f %%', 1e2.*operating_pts.utilization.fact_sat);
-            text{end+1} = sprintf('fact_rms = %.2f %%', 1e2.*operating_pts.utilization.fact_rms);
-            text_data{end+1} = struct('title', 'utilization', 'text', {text});
-            
-            % interesting ratios
-            text = {};
-            text{end+1} = sprintf('core_losses = %.2f %%', 1e2.*operating_pts.fact.core_losses);
-            text{end+1} = sprintf('winding_losses = %.2f %%', 1e2.*operating_pts.fact.winding_losses);
-            text{end+1} = sprintf('winding_hf_res = %.2f x', operating_pts.fact.winding_hf_res);
-            text_data{end+1} = struct('title', 'fact', 'text', {text});
             
             % assign the block and the status
             data.is_valid = operating_pts.is_valid;
