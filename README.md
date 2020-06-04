@@ -1,6 +1,6 @@
 # AI-mag: Inductor Optimization with FEM/ANN
 
-[**https://ai-mag.github.io/**](https://ai-mag.github.io)
+[**https://ai-mag.github.io**](https://ai-mag.github.io)
 
 **AI-mag** is a **MATLAB** toolbox (using also COMSOL and Python) for **power electronic inductor optimization**. 
 The goal of this tool is to **combine** the **accuracy of the Finite Element Method (FEM)** with the **evaluation speed** of **Artificial Neural Network (ANN)**.

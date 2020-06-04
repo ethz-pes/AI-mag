@@ -100,7 +100,7 @@ classdef InductorGui < handle
             %   Set the data.
             
             % open the window
-            name = sprintf('InductorDisplay / id_design = %d', self.id_select);
+            name = sprintf('AI-mag / InductorDisplay / id_design = %d', self.id_select);
             fig = gui.GuiUtils.get_gui(self.id_fig, [200 200 1390 800], name);
             
             % geometry plot panel

@@ -83,7 +83,7 @@ classdef ParetoGui < handle
             %   Set the data.
             
             % open the window
-            name = sprintf('InductorPareto');
+            name = sprintf('AI-mag / InductorPareto');
             fig = gui.GuiUtils.get_gui(self.id_fig, [200 200 1390 600], name);
             
             % no scatter plot until now
