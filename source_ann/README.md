@@ -60,7 +60,7 @@ The toolbox is known to run with the following operating systems:
 # FAQ
 
 Why a custom TCP/IP communication is used and not the provided Python interface of MATLAB?
-* Keras and TensorFlow has specific Python version requirements, they are huge library.
+* Keras and TensorFlow has specific Python version requirements, they are huge libraries.
 * The Python interface of MATLAB has also requirements for the Python version.
 * Additionally, importing TensorFlow from MATLAB causes crashes with some Python environnement.
 * Finally, this choice limits the coupling between the MATLAB and Python code.

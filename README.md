@@ -1,8 +1,10 @@
-# mANNgnetics: Inductor Optimization with FEM/ANN
+# AI-mag: Inductor Optimization with FEM/ANN
 
-**mANNgnetics** is a **MATLAB** toolbox (using also COMSOL and Python) for **power electronic inductor optimization**. 
+[**https://ai-mag.github.io/**](https://ai-mag.github.io)
+
+**AI-mag** is a **MATLAB** toolbox (using also COMSOL and Python) for **power electronic inductor optimization**. 
 The goal of this tool is to **combine** the **accuracy of the Finite Element Method (FEM)** with the **evaluation speed** of **Artificial Neural Network (ANN)**.
-This project developed by the **Power Electronic Systems Laboratory at ETH Zurich** and is available under the **BSD License**. 
+This project developed by the **Power Electronic Systems Laboratory at ETH Zurich** and is available under the **BSD License**.
 
 More precisely, the following **workflow** is implemented:
 * Simulating many designs with **FEM thermal and magnetic** simulations (COMSOL)
@@ -121,12 +123,12 @@ The source code is available in the GitHub Git repository and contains:
 * All the code is included (MATLAB, Python, and COMSOL)
 * All the ressources (generation of material data, images, analytical equations, etc.) are included
 * The generated data (FEM solution, trained ANN, etc.) are NOT included
-* [GitHub Repository](https://github.com/otvam/mANNgnetics)
+* [GitHub Repository](https://github.com/otvam/AI-mag)
 
 The releases are available at GitHub and contains:
 * A stable version of the source code (code and ressources)
 * An zip archive containg the generated data (FEM solution, trained ANN, etc.)
-* [GitHub Releases](https://github.com/otvam/mANNgnetics/releases)
+* [GitHub Releases](https://github.com/otvam/AI-mag/releases)
 
 ## Metrics
 

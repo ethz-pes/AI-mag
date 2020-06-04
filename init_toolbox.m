@@ -20,15 +20,17 @@ gpurng('shuffle');
 close('all')
 
 % print copyright
+fprintf('################## AI-mag\n')
 fprintf('       ____________________   ___\n')
 fprintf('      /  ________   ___   /__/  /    ETH Zurich\n')
 fprintf('     /  _____/  /  /  /  ___   /     Power Electronic\n')
 fprintf('    /_______/  /__/  /__/  /__/      Systems Laboratory\n')
 fprintf('\n')
-fprintf('    mANNgnetics: Inductor Optimization with FEM/ANN\n')
+fprintf('    AI-mag: Inductor Optimization with FEM/ANN\n')
 fprintf('\n')
 fprintf('    T. Guillod, Power Electronic Systems Laboratory\n')
 fprintf('    Copyright 2019-2020 ETH Zurich / BSD License\n')
 fprintf('\n')
+fprintf('################## AI-mag\n')
 
 end
