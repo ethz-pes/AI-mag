@@ -57,7 +57,7 @@ The toolbox is known to run with the following operating systems:
 * Linux CentOS 7.5
 * Microsoft Windows 10
 
-# FAQ
+## FAQ
 
 Why a custom TCP/IP communication is used and not the provided Python interface of MATLAB?
 * Keras and TensorFlow has specific Python version requirements, they are huge libraries.

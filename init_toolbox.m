@@ -19,18 +19,33 @@ gpurng('shuffle');
 % close figures
 close('all')
 
-% print copyright
-fprintf('################## AI-mag\n')
-fprintf('       ____________________   ___\n')
-fprintf('      /  ________   ___   /__/  /    ETH Zurich\n')
-fprintf('     /  _____/  /  /  /  ___   /     Power Electronic\n')
-fprintf('    /_______/  /__/  /__/  /__/      Systems Laboratory\n')
-fprintf('\n')
-fprintf('    AI-mag: Inductor Optimization with FEM/ANN\n')
-fprintf('\n')
-fprintf('    T. Guillod, Power Electronic Systems Laboratory\n')
-fprintf('    Copyright 2019-2020 ETH Zurich / BSD License\n')
-fprintf('\n')
-fprintf('################## AI-mag\n')
+% define header and copyright
+txt = {};
+txt{end+1} = '  ________________________________________________________';
+txt{end+1} = ' |       _________   ___                                  |';
+txt{end+1} = ' |      /  ___   /  /  /         _ __ ___   __ _  __ _    |';
+txt{end+1} = ' |     /  /__/  /  /  /   ____  | `_ ` _ \ / _` |/ _` |   |';
+txt{end+1} = ' |    /  ___   /  /  /   /___/  | | | | | | (_| | (_| |   |';
+txt{end+1} = ' |   /__/  /__/  /__/           |_| |_| |_|\__,_|\__, |   |';
+txt{end+1} = ' |                                               |___/    |';
+txt{end+1} = ' |________________________________________________________|';
+txt{end+1} = ' |                                                        |';
+txt{end+1} = ' |   AI-mag: Inductor Optimization with FEM/ANN           |';
+txt{end+1} = ' |________________________________________________________|';
+txt{end+1} = ' |      ____________________   ___                        |';
+txt{end+1} = ' |     /  ________   ___   /__/  /   ETH Zurich           |';
+txt{end+1} = ' |    /  _____/  /  /  /  ___   /    Power Electronic     |';
+txt{end+1} = ' |   /_______/  /__/  /__/  /__/     Systems Laboratory   |';
+txt{end+1} = ' |________________________________________________________|';
+txt{end+1} = ' |                                                        |';
+txt{end+1} = ' |   T. Guillod, Power Electronic Systems Laboratory      |';
+txt{end+1} = ' |   Copyright 2019-2020 ETH Zurich / BSD License         |';
+txt{end+1} = ' |________________________________________________________|';
+txt{end+1} = ' ';
+
+% display
+for i=1:length(txt)
+    fprintf('%s\n', txt{i})
+end
 
 end
