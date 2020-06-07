@@ -1,4 +1,4 @@
-# AI-mag: Inductor Optimization with FEM/ANN
+# AI-mag: Inductor Modeling and Design with FEM/ANN
 
 [**https://ai-mag.github.io**](https://ai-mag.github.io)
 
