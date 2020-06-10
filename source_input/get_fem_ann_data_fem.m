@@ -78,7 +78,8 @@ end
 %        - float: real variable
 %    - span: generation method
 %        - 'linear': linear span (after variable transformation)
-%        - 'random': random span (after variable transformation)
+%        - 'random': uniform random span (after variable transformation)
+%        - 'normal': normal random span (after variable transformation)
 %    - lb: variable lower bound
 %    - ub: variable upper bound
 %    - n: number of samples to be generated for the variable

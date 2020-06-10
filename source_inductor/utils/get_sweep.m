@@ -80,10 +80,12 @@ switch var.type
         
         % span the data in the transformed coordinate
         switch var.span
-            case 'linear'
+            case 'lin'
                 vec = linspace(lb, ub, var.n);
             case 'random'
                 vec = lb+(ub-lb).*rand(1, var.n);
+            case 'normal'
+                vec = (ub+lb)./2+(ub-lb)./2.*randn(1, var.n);
             otherwise
                 error('invalid variable spanning method')
         end

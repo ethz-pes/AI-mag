@@ -22,8 +22,8 @@ fct_data = @get_data;
 %    - the variable are chosen from the data created by the extraction function
 %    - control of the format
 plot_param.full_load_losses = get_plot_param('V_box', 'P_fl', 'f', [50e3 500e3]);
-plot_param.mass_correlation = get_plot_param('V_box', 'm_tot', 'f', [50e3 500e3]);
-plot_param.cost_correlation = get_plot_param('V_box', 'c_tot', 'f', [50e3 500e3]);
+plot_param.mass_correlation = get_plot_param('V_box', 'm_tot', 'P_fl', [0 6.0]);
+plot_param.cost_correlation = get_plot_param('V_box', 'c_tot', 'P_fl', [0 6.0]);
 
 % format for displaying the figures of merit of the selected design
 %    - title: title of the block in the text field
