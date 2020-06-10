@@ -126,8 +126,8 @@ The source code is available in the GitHub Git repository and contains:
 * [GitHub Repository](https://github.com/otvam/AI-mag)
 
 The releases are available at GitHub and contains:
-* A stable version of the source code (code and ressources)
-* An zip archive containg the generated data (FEM solution, trained ANN, etc.)
+* A archive (zip or tar.gz) containing a stable version of the source code (code and ressources)
+* An archive (zip or tar.gz) containing the generated data (FEM solution, trained ANN, etc.)
 * [GitHub Releases](https://github.com/otvam/AI-mag/releases)
 
 ## Metrics
@@ -136,13 +136,13 @@ The releases are available at GitHub and contains:
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-MATLAB                         102           1724           5017           4713
+MATLAB                         105           1775           5115           4817
 Python                           8            365            451            450
-Markdown                         4             77              0            285
+Markdown                         6             90              0            320
 DOS Batch                        3              9              0             34
 Bourne Shell                     3              9              9             21
 -------------------------------------------------------------------------------
-SUM:                           120           2184           5477           5503
+SUM:                           125           2248           5575           5642
 -------------------------------------------------------------------------------
 ```
 

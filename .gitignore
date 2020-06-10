@@ -1,7 +1,13 @@
+# temporary files
 *.lock
 *.pyc
 *.asv
+
+# pycharm folder
 *.idea
-*.venv
-**/__pycache__
+
+# folder with data
 data/*
+
+# release folder
+resources/maintenance/release_archive
