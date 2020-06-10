@@ -71,10 +71,10 @@ switch sweep_mode
         sweep.type = 'all_combinations';
         
         % maximum sumber of resulting sample
-        sweep.n_sol_max = 10e6;
+        sweep.n_sol_max = 100e3;
         
-        % two samples per variables (extreme case)
-        n = 5;
+        % samples per variables (extreme case)
+        n = 3;
         
         % samples generation: linear
         span = 'linear';
@@ -83,10 +83,10 @@ switch sweep_mode
         sweep.type = 'specified_combinations';
         
         % maximum sumber of resulting sample
-        sweep.n_sol_max = 10e6;
+        sweep.n_sol_max = 5e6;
         
         % samples per variables
-        n = 1e6;
+        n = 500e3;
         
         % samples generation: linear
         span = 'random';
@@ -142,6 +142,32 @@ sweep.var.f = struct('type', 'span', 'var_trf', 'log', 'var_type', 'float', 'spa
 % inductor number of turns
 sweep.var.n_turn = struct('type', 'span', 'var_trf', 'log', 'var_type', 'int', 'span', span, 'lb', 2, 'ub', 75, 'n', n);
 
+% id of the core material
+core_id = [...
+    get_map_str_to_int('N87'),...
+    get_map_str_to_int('N95'),...
+    get_map_str_to_int('N97'),...
+    ];
+
+% id of the winding material
+winding_id = [...
+    get_map_str_to_int('71um'),...
+    get_map_str_to_int('100um'),...
+    get_map_str_to_int('200um'),...
+    ];
+
+% sweep for the discrete variables (core and winding materials)
+switch sweep_mode
+    case 'grid'
+        sweep.var.core_id = struct('type', 'fixed', 'vec', core_id);
+        sweep.var.winding_id = struct('type', 'fixed', 'vec', winding_id);
+    case 'random'
+        sweep.var.core_id = struct('type', 'randset', 'set', core_id, 'n', n);
+        sweep.var.winding_id = struct('type', 'randset', 'set', winding_id, 'n', n);
+    otherwise
+        error('invalid sweep method')
+end
+
 end
 
 function data_vec = get_data_vec(var, n_sol)
@@ -173,8 +199,19 @@ geom.V_box = var.V_box;
 geom.n_turn = var.n_turn;
 geom.fill_pack = 0.7;
 
+% inductor material
+%    - winding_id: id of the winding material
+%    - core_id: id of the core material
+%    - iso_id: id of the insulation material
+material.winding_id = var.winding_id;
+material.core_id = var.core_id;
+material.iso_id = get_map_str_to_int('default');
+
+% operating frequency
+f = var.f;
+
 % get the all the data (with the selected frequency)
-data_vec = get_design_data_vec(geom, var.f);
+data_vec = get_design_data_vec(geom, material, f);
 
 end
 

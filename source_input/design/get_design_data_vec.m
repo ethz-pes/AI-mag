@@ -1,8 +1,9 @@
-function data_vec = get_design_data_vec(geom, f)
+function data_vec = get_design_data_vec(geom, material, f)
 % Function for getting the inductor data (struct of scalars).
 %
 %    Parameters:
-%        geom (struct): inductor geomtry information
+%        geom (struct): inductor geometry information
+%        material (struct): inductor material information
 %        f (float): operating frequency
 %
 %    Returns:
@@ -53,14 +54,6 @@ fom_limit.L = struct('min', 0.0, 'max', Inf);
 fom_limit.V_t_sat_sat = struct('min', 200./(2.*f), 'max', Inf);
 fom_limit.I_sat = struct('min', 10.0, 'max', Inf);
 fom_limit.I_rms = struct('min', 10.0, 'max', Inf);
-
-% inductor geometry
-%    - winding_id: id of the winding material
-%    - core_id: id of the core material
-%    - iso_id: id of the insulation material
-material.winding_id = get_map_str_to_int('100um');
-material.core_id = get_map_str_to_int('N87_meas');
-material.iso_id = get_map_str_to_int('default');
 
 % assign the data
 data_vec.other = other;

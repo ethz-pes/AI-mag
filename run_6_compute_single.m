@@ -24,7 +24,7 @@ run_sub('ann')
 run_sub('approx')
 
 % run model with FEM simulation
-% run_sub('fem')
+run_sub('fem')
 
 end
 

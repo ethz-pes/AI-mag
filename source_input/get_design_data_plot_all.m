@@ -28,9 +28,11 @@ plot_param.cost_correlation = get_plot_param('V_box', 'c_tot', 'f', [50e3 500e3]
 % format for displaying the figures of merit of the selected design
 %    - title: title of the block in the text field
 %    - var: cell of variables in the block, chosen from the data created by the extraction function
-text_param{1} = struct('title', 'fom', 'var', {{'V_box', 'A_box', 'm_tot', 'c_tot'}});
-text_param{2} = struct('title', 'circuit', 'var', {{'L', 'I_sat', 'I_rms', 'V_t_sat_sat'}});
-text_param{3} = struct('title', 'operating', 'var', {{'f', 'P_mix', 'P_fl', 'P_pl', 'T_fl', 'T_pl'}});
+text_param = {};
+text_param{end+1} = struct('title', 'fom', 'var', {{'V_box', 'A_box', 'm_tot', 'c_tot'}});
+text_param{end+1} = struct('title', 'material', 'var', {{'winding_id', 'core_id'}});
+text_param{end+1} = struct('title', 'circuit', 'var', {{'L', 'I_sat', 'I_rms', 'V_t_sat_sat'}});
+text_param{end+1} = struct('title', 'operating', 'var', {{'f', 'P_mix', 'P_fl', 'P_pl', 'T_fl', 'T_pl'}});
 
 end
 
@@ -94,20 +96,26 @@ A_box = fom.area.A_box;
 V_box = fom.volume.V_box;
 m_tot = fom.mass.m_tot;
 c_tot = fom.cost.c_tot;
-data_fom.V_box = struct('value', V_box, 'name', 'V_box', 'scale', 1e6, 'unit', 'cm3');
-data_fom.A_box = struct('value', A_box, 'name', 'A_box', 'scale', 1e4, 'unit', 'cm2');
-data_fom.m_tot = struct('value', m_tot, 'name', 'm_tot', 'scale', 1e3, 'unit', 'g');
-data_fom.c_tot = struct('value', c_tot, 'name', 'c_tot', 'scale', 1.0, 'unit', '$');
+data_fom.V_box = struct('value', V_box, 'name', 'V_box', 'type', 'numeric', 'scale', 1e6, 'unit', 'cm3');
+data_fom.A_box = struct('value', A_box, 'name', 'A_box', 'type', 'numeric', 'scale', 1e4, 'unit', 'cm2');
+data_fom.m_tot = struct('value', m_tot, 'name', 'm_tot', 'type', 'numeric', 'scale', 1e3, 'unit', 'g');
+data_fom.c_tot = struct('value', c_tot, 'name', 'c_tot', 'type', 'numeric', 'scale', 1.0, 'unit', '$');
+
+% extract the material
+core_id = fom.material.core_id;
+winding_id = fom.material.winding_id;
+data_fom.core_id = struct('value', core_id, 'name', 'core_id', 'type', 'str');
+data_fom.winding_id = struct('value', winding_id, 'name', 'winding_id', 'type', 'str');
 
 % circuit data
 L = fom.circuit.L;
 I_sat = fom.circuit.I_sat;
 I_rms = fom.circuit.I_rms;
 V_t_sat_sat = fom.circuit.V_t_sat_sat;
-data_fom.L = struct('value', L, 'name', 'L', 'scale', 1e6, 'unit', 'uH');
-data_fom.I_sat = struct('value', I_sat, 'name', 'I_sat', 'scale', 1.0, 'unit', 'A');
-data_fom.I_rms = struct('value', I_rms, 'name', 'I_rms', 'scale', 1.0, 'unit', 'A');
-data_fom.V_t_sat_sat = struct('value', V_t_sat_sat, 'name', 'V_t_sat_sat', 'scale', 1e3, 'unit', 'Vms');
+data_fom.L = struct('value', L, 'name', 'L', 'type', 'numeric', 'scale', 1e6, 'unit', 'uH');
+data_fom.I_sat = struct('value', I_sat, 'name', 'I_sat', 'type', 'numeric', 'scale', 1.0, 'unit', 'A');
+data_fom.I_rms = struct('value', I_rms, 'name', 'I_rms', 'type', 'numeric', 'scale', 1.0, 'unit', 'A');
+data_fom.V_t_sat_sat = struct('value', V_t_sat_sat, 'name', 'V_t_sat_sat', 'type', 'numeric', 'scale', 1e3, 'unit', 'Vms');
 
 % operating conditions
 P_fl = operating.full_load.losses.P_tot;
@@ -116,12 +124,12 @@ P_pl = operating.partial_load.losses.P_tot;
 T_pl = operating.partial_load.thermal.T_max;
 f_fl = operating.full_load.waveform.f;
 f_pl = operating.partial_load.waveform.f;
-data_fom.f = struct('value', (f_fl+f_pl)./2, 'name', 'f', 'scale', 1e-3, 'unit', 'kHz');
-data_fom.P_mix = struct('value', (P_fl+P_pl)./2, 'name', 'P_mix', 'scale', 1.0, 'unit', 'W');
-data_fom.P_fl = struct('value', P_fl, 'name', 'P_fl', 'scale', 1.0, 'unit', 'W');
-data_fom.P_pl = struct('value', P_pl, 'name', 'P_pl', 'scale', 1.0, 'unit', 'W');
-data_fom.T_fl = struct('value', T_fl, 'name', 'T_fl', 'scale', 1.0, 'unit', 'C');
-data_fom.T_pl = struct('value', T_pl, 'name', 'T_pl', 'scale', 1.0, 'unit', 'C');
+data_fom.f = struct('value', (f_fl+f_pl)./2, 'name', 'f', 'type', 'numeric', 'scale', 1e-3, 'unit', 'kHz');
+data_fom.P_mix = struct('value', (P_fl+P_pl)./2, 'name', 'P_mix', 'type', 'numeric', 'scale', 1.0, 'unit', 'W');
+data_fom.P_fl = struct('value', P_fl, 'name', 'P_fl', 'type', 'numeric', 'scale', 1.0, 'unit', 'W');
+data_fom.P_pl = struct('value', P_pl, 'name', 'P_pl', 'type', 'numeric', 'scale', 1.0, 'unit', 'W');
+data_fom.T_fl = struct('value', T_fl, 'name', 'T_fl', 'type', 'numeric', 'scale', 1.0, 'unit', 'C');
+data_fom.T_pl = struct('value', T_pl, 'name', 'T_pl', 'type', 'numeric', 'scale', 1.0, 'unit', 'C');
 
 % extract the validity information
 is_valid_fom = fom.is_valid;

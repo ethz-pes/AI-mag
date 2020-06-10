@@ -169,13 +169,33 @@ classdef ParetoDisplay < handle
             % for each variable, select the name, data, and unit
             for i=1:length(var)
                 data_fom_tmp = self.data_fom.(var{i});
-                
-                value = data_fom_tmp.scale.*data_fom_tmp.value(idx);
-                text{i} = sprintf('%s = %.3f %s', data_fom_tmp.name, value, data_fom_tmp.unit);
+                text{i} = self.get_fom_str(data_fom_tmp, idx);
             end
             
             % create the text block
             text_data_fom_tmp = struct('title', title, 'text', {text});
+        end
+        
+        function str_tmp = get_fom_str(self, data_fom_tmp, idx)
+            % Parse a variable into a string.
+            %
+            %    Parameters:
+            %        data_fom_tmp (struct): variable to be parsed
+            %        idx (int): index of the selected design
+            %
+            %    Returns:
+            %        str_tmp (str): parsed variable
+        
+            switch data_fom_tmp.type
+                case 'numeric'
+                    value = data_fom_tmp.scale.*data_fom_tmp.value(idx);
+                    str_tmp = sprintf('%s = %.3f %s', data_fom_tmp.name, value, data_fom_tmp.unit);
+                case 'str'
+                    value = get_map_int_to_str(data_fom_tmp.value(idx));
+                    str_tmp = sprintf('%s = %s', data_fom_tmp.name, value);
+                otherwise
+                    error('invalid variable type')
+            end
         end
     end
 end

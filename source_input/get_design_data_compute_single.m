@@ -57,8 +57,19 @@ geom.d_gap = 0.40e-3;
 geom.n_turn = 16;
 geom.fill_pack = 0.7;
 
-% get the all the data (with the minimum frequency)
-data_vec = get_design_data_vec(geom, 200e3);
+% inductor material
+%    - winding_id: id of the winding material
+%    - core_id: id of the core material
+%    - iso_id: id of the insulation material
+material.winding_id = get_map_str_to_int('100um');
+material.core_id = get_map_str_to_int('N87_meas');
+material.iso_id = get_map_str_to_int('default');
+
+% minimum frequency
+f = 300e3;
+
+% get the all the data
+data_vec = get_design_data_vec(geom, material, f);
 
 end
 
