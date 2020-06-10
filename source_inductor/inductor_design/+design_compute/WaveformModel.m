@@ -59,9 +59,19 @@ classdef WaveformModel < handle
             self.type_id = excitation.type_id;
             
             % set the waveform for the different unique type
-            type_id_tmp = unique(self.type_id);
-            assert(length(type_id_tmp)==1, 'invalid waveform type')
+            if self.n_sol==0
+                type_id_tmp = 'empty';
+            else
+                type_id_tmp = unique(self.type_id);
+                assert(length(type_id_tmp)==1, 'invalid waveform type')
+            end
+            
             switch type_id_tmp
+                case 'empty'
+                    % no data
+                    self.param = self.get_param_empty();
+                    self.freq = self.get_freq_empty();
+                    self.time = self.get_time_empty();
                 case get_map_str_to_int('tri')
                     % triangular waveform data
                     f = excitation.f;
@@ -220,6 +230,20 @@ classdef WaveformModel < handle
     
     %% private
     methods (Access = private)
+        function param = get_param_empty(self)
+            % Get the parameters of an empty waveform (dummy function).
+            %
+            %    Returns:
+            %        param (struct): struct with the parameters
+            
+            param.f = zeros(1,0);
+            param.I_dc = zeros(1,0);
+            param.I_peak_peak = zeros(1,0);
+            param.I_ac_rms = zeros(1,0);
+            param.I_all_peak = zeros(1,0);
+            param.I_all_rms = zeros(1,0);
+        end
+        
         function param = get_param_tri(self, f, I_dc, I_peak_peak)
             % Get the parameters of a triangular waveform (with DC bias).
             %
@@ -268,6 +292,16 @@ classdef WaveformModel < handle
             param.I_ac_rms = I_ac_rms;
             param.I_all_peak = I_all_peak;
             param.I_all_rms = I_all_rms;
+        end
+        
+        function freq = get_freq_empty(self)
+            % Get the frequency harmonics of an empty waveform (dummy function).
+            %
+            %    Returns:
+            %        freq (struct): struct with the Fourier harmonics (peak values)
+            
+            freq.f_vec = zeros(self.signal.n_freq, 0);
+            freq.I_freq_vec = zeros(self.signal.n_freq, 0);
         end
         
         function freq = get_freq_tri(self, f, d_c, I_peak_peak)
@@ -322,6 +356,17 @@ classdef WaveformModel < handle
             % assign values
             freq.f_vec = f_vec;
             freq.I_freq_vec = I_freq_vec;
+        end
+        
+        function time = get_time_empty(self)
+            % Get the time domain representation of an empty waveform (dummy function).
+            %
+            %    Returns:
+            %        time (struct): struct with the time domain representation
+            
+            time.t_vec = zeros(self.signal.n_time, 0);
+            time.I_time_vec = zeros(self.signal.n_time, 0);
+            time.I_loop_vec = zeros(self.signal.n_time, 0);
         end
         
         function time = get_time_tri(self, f, d_c, I_peak_peak)
