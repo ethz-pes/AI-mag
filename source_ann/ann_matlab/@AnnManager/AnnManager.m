@@ -131,7 +131,7 @@ classdef AnnManager < handle
             % Get the figures of merit of the regression (if available).
             %
             %    Returns:
-            %        fom (struct): : figures of merit for the regression quality
+            %        fom (struct): figures of merit for the regression quality
             
             assert(self.is_train==true, 'invalid state: model is not trained')
             fom = self.fom;
