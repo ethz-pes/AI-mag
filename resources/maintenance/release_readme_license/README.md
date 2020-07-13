@@ -13,7 +13,7 @@ The main purpose of this dataset is:
 
 The folder 'data' should be placed inside the source code folder (at the root of the project).
 
-All the releases (code and data) are on [GitHub Releases](https://github.com/otvam/AI-mag/releases).
+All the releases (code and data) are on [GitHub Releases](https://github.com/ethz-pes/AI-mag/releases).
 
 ## Author
 

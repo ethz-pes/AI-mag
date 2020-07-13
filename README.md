@@ -124,12 +124,12 @@ The source code is available in the GitHub Git repository and contains:
 * All the code is included (MATLAB, Python, and COMSOL)
 * All the ressources (generation of material data, images, analytical equations, etc.) are included
 * The generated data (FEM solution, trained ANN, etc.) are NOT included
-* [GitHub Repository](https://github.com/otvam/AI-mag)
+* [GitHub Repository](https://github.com/ethz-pes/AI-mag)
 
 The releases are available at GitHub and contains:
 * A archive (zip or tar.gz) containing a stable version of the source code (code and ressources)
 * An archive (zip or tar.gz) containing the generated data (FEM solution, trained ANN, etc.)
-* [GitHub Releases](https://github.com/otvam/AI-mag/releases)
+* [GitHub Releases](https://github.com/ethz-pes/AI-mag/releases)
 
 ## Metrics
 
