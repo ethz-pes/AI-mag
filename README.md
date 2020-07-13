@@ -4,7 +4,8 @@
 
 **AI-mag** is a **MATLAB** toolbox (using also COMSOL and Python) for **power electronic inductor optimization**. 
 The goal of this tool is to **combine** the **accuracy of the Finite Element Method (FEM)** with the **evaluation speed** of **Artificial Neural Network (ANN)**.
-This project developed by the **Power Electronic Systems Laboratory at ETH Zurich** and is available under the **BSD License**.
+
+This project is developed by the **Power Electronic Systems Laboratory at ETH Zurich** and is available under the **BSD License**. The code is also available on the ETH Data Archive.
 
 More precisely, the following **workflow** is implemented:
 * Simulating many designs with **FEM thermal and magnetic** simulations (COMSOL)
