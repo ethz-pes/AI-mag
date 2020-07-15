@@ -80,7 +80,7 @@ switch var.type
         
         % span the data in the transformed coordinate
         switch var.span
-            case 'lin'
+            case 'linear'
                 vec = linspace(lb, ub, var.n);
             case 'random'
                 vec = lb+(ub-lb).*rand(1, var.n);

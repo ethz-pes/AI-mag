@@ -19,7 +19,7 @@ function run_1_fem()
 init_toolbox();
 
 % run the thermal model
-% run_sub('ht');
+run_sub('ht');
 
 % run the magnetic model
 run_sub('mf');
