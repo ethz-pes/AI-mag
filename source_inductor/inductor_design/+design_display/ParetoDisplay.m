@@ -185,7 +185,7 @@ classdef ParetoDisplay < handle
             %
             %    Returns:
             %        str_tmp (str): parsed variable
-        
+            
             switch data_fom_tmp.type
                 case 'numeric'
                     value = data_fom_tmp.scale.*data_fom_tmp.value(idx);
