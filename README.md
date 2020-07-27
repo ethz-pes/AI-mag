@@ -72,11 +72,17 @@ The following code structure is considered:
 * Shell script (Linux) and (batch) script (MS Windows) for starting the COMSOL MATLAB Livelink
 * Readme and license files
 
-The example shows the complete workflow: FEM simulations, ANN training, design generation, and display with GUI:
-* The inductor of a DC-DC Buck converter is optimized
-* The converter has the following ratings: 2kW, 400V input voltage, 200V output voltage
-* The following parameters are optimized: frequency, geometry, air gap, number of turns, ripple
-
+The included example shows the complete workflow:
+* FEM simulations (dataset generation)
+* ANN training (magnetic and thermal)
+* Design computation and optimization
+    * The inductor of a DC-DC Buck converter is optimized
+    * The converter has the following ratings: 2kW, 400V input voltage, 200V output voltage
+    * The following parameters are optimized: frequency, geometry, air gap, number of turns, ripple
+* Result analysis
+    * Interactive GUI
+    * Pareto fronts exploration
+	
 ## Inductor Optimization Capabilities
 
 Currently the following inductors are optimized:
