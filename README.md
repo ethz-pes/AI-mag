@@ -24,8 +24,8 @@ The following performances are achieved:
 ## Scientific Paper
 
 A **scientific paper** has been published in the **IEEE Open Journal of Power Electronics** about this tool. The paper describes the method used in the tool and presents some results (ANN trainings and inductor optimization). The paper is available as open-acces:
-** [PDF version](paper.pdf)
-** [DOI link](https://doi.org/10.1109/OJPEL.2020.xxxxxxx)
+* [PDF version](paper.pdf)
+* [DOI link](https://doi.org/10.1109/OJPEL.2020.xxxxxxx)
 
 ## Simplified Workflow
 
