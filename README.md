@@ -21,6 +21,12 @@ The following performances are achieved:
 * The tool is able **generate 300'000 designs per second** on a laptop computer
 * The tool is able for compute **50'000 operating points per second** on a laptop computer
 
+## Scientific Paper
+
+A **scientific paper** has been published in the **IEEE Open Journal of Power Electronics** about this tool. The paper describes the method used in the tool and presents some results (ANN trainings and inductor optimization). The paper is available as open-acces:
+** [PDF version](paper.pdf)
+** [DOI link](https://doi.org/10.1109/OJPEL.2020.xxxxxxx)
+
 ## Simplified Workflow
 
 <p float="middle">
@@ -49,7 +55,8 @@ The following code structure is considered:
 * [source_ann](source_ann) - ANN library for regression/fitting (standalone code, see [README.md](source_ann/README.md))
 * [source_inductor](source_inductor) - Source code for the FEM/ANN inductor design tool
 * [source_input](source_input) - Input data and parameters defined by the user
-* [source_input](source_input) - Input data and parameters defined by the user
+* [paper.pdf](paper.pdf) - Scientific paper published in IEEE OJ-PEL
+* [init_toolbox.m](init_toolbox.m) - Load the MATLAB toolbox
 * [init_toolbox.m](init_toolbox.m) - Load the MATLAB toolbox
 * [run_0_init.m](run_0_init.m) - Init the simulations with constant data
 * [run_1_fem.m](run_1_fem.m) - Run the different FEM simulations
