@@ -25,7 +25,7 @@ The following performances are achieved:
 
 A **scientific paper** has been published in the **IEEE Open Journal of Power Electronics** about this tool. The paper describes the method used in the tool and presents some results (ANN trainings and inductor optimization). The paper is available as open-acces:
 * [PDF version](paper.pdf)
-* [DOI link](https://doi.org/10.1109/OJPEL.2020.xxxxxxx)
+* [DOI link](https://doi.org/10.1109/OJPEL.2020.3012777)
 
 ## Simplified Workflow
 
@@ -150,13 +150,13 @@ The releases are available at GitHub and contains:
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-MATLAB                         105           1775           5115           4817
+MATLAB                         105           1790           5147           4888
 Python                           8            365            451            450
-Markdown                         6             90              0            320
+Markdown                         6             93              0            331
 DOS Batch                        3              9              0             34
 Bourne Shell                     3              9              9             21
 -------------------------------------------------------------------------------
-SUM:                           125           2248           5575           5642
+SUM:                           125           2266           5607           5724
 -------------------------------------------------------------------------------
 ```
 
