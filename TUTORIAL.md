@@ -140,3 +140,41 @@ gui
 <p float="middle">
     <img src="resources/img_tutorial/tutorial_pareto.png" width="700">
 </p>
+
+## Change the Simulation Parameters
+
+All the files describing the inductor computation and optimization are located in the [run_design](run_design) folder:
+* [run_design_compute_single.m](run_design/run_design_compute_single.m) - Single design (entry point)
+* [run_design_compute_pareto.m](run_design/run_design_compute_pareto.m) - Pareto fronts (entry point)
+* [material](run_design/material) - Material database
+    * [core_data.mat](run_design/material/core_data.mat) - Core data (losses, permeability, saturation, etc.)
+    * [iso_data.mat](run_design/material/iso_data.mat) - Insulation data (weight, thermal properties, etc.)
+    * [winding_data.mat](run_design/material/winding_data.mat) - Winding data (stranding, fill factor, etc.)
+* [param](run_design/param) - User defined parameters
+    * [get_design_circuit.m](run_design/param/get_design_circuit.m) - Applied stress on the inductor (current, voltage, etc.)
+    * [get_design_data_const.m](run_design/param/get_design_data_const.m) - Parameters for the numerical methods
+    * [get_design_data_vec.m](run_design/param/get_design_data_vec.m) - Inductor parameters
+    * [get_design_excitation.m](run_design/param/get_design_excitation.m) - Inductor operating point definition
+    * [get_design_fct.m](run_design/param/get_design_fct.m) - Functions for filtering invalid designs
+    * [get_design_param_compute_pareto.m](run_design/param/get_design_param_compute_pareto.m) - Definition of the parameter sweep (many designs)
+    * [get_design_param_compute_pareto.m](run_design/param/get_design_param_compute_single.m) - Definition of the parameter (single design)
+    * [get_design_param_plot_pareto.m](run_design/param/get_design_param_plot_pareto.m) - Parameters for the Pareto fronts
+
+## FEM Dataset and ANN Training
+
+In this tutorial, pre-trained ANNs have been used.
+However, if required, the dataset and the ANNs can be generated from scratch.
+
+All the files describing the dataset generation and the ANN training are located in the [run_dataset](run_dataset) folder:
+* [run_dataset_1_init.m](run_dataset/run_dataset_1_init.m) - Init the simulations with constant data (entry point)
+* [run_dataset_2_fem.m](run_dataset/run_dataset_2_fem.m) - Run the different FEM simulations (entry point)
+* [run_dataset_3_assemble.m](run_dataset/run_dataset_3_assemble.m) - Assemble the FEM simulations results, add the analytical solutions (entry point)
+* [run_dataset_4_train.m](run_dataset/run_dataset_4_train.m) - Train the regressions with ANNs with simulation results (entry point)
+* [run_dataset_5_export.m](run_dataset/run_dataset_5_export.m) - Export the ANNs in prevision of the evaluation of inductor designs (entry point)
+* [model](run_dataset/model) - COMSOL models
+    * [model_ht.mph](run_dataset/model/model_ht.mph) - COMSOL 3D model for the thermal simulations
+    * [model_mf.mph](run_dataset/model/model_mf.mph) - COMSOL 3D model for the magnetic simulations
+* [param](run_dataset/param) - User defined parameters
+    * [get_dataset_param_init.m](run_dataset/param/get_dataset_param_init.m) - Constant physical parameters
+    * [get_dataset_param_fem.m](run_dataset/param/get_dataset_param_fem.m) - Parameters for generating the FEM dataset
+    * [get_dataset_param_train.m](run_dataset/param/get_dataset_param_train.m) - Parameters for training the ANNs

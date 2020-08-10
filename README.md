@@ -61,8 +61,8 @@ The following code structure is considered:
     * [run_dataset_4_train.m](run_dataset/run_dataset_4_train.m) - Train the regressions with ANNs with simulation results
     * [run_dataset_5_export.m](run_dataset/run_dataset_5_export.m) - Export the ANNs in prevision of the evaluation of inductor designs 
 * [run_design](run_design) - Code for designing inductors and plotting the results
-    * [run_design_compute_pareto.m](run_design/run_design_compute_pareto.m) - Optimize many inductor designs and make Pareto plots (ANN or ana. approx.)
     * [run_design_compute_single.m](run_design/run_design_compute_single.m) - Simulate a single inductor design and plot the result (ANN or FEM or ana. approx)
+    * [run_design_compute_pareto.m](run_design/run_design_compute_pareto.m) - Optimize many inductor designs and make Pareto plots (ANN or ana. approx.)
 * [src](src) - Source code (backend)
     * [ann_regression](src/ann_regression) - ANN library for regression/fitting (standalone code, see [README.md](src/ann_regression/README.md))
     * [inductor_dataset](src/inductor_dataset) - Source code for the FEM dataset and ANN training

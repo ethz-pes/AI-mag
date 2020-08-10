@@ -26,7 +26,7 @@ All the releases (code and data) are on [GitHub Releases](https://github.com/eth
     * ht_ann.mat - trained thermal ANN - created by run_dataset_4_train.m
     * mf_ann.mat - trained magnetic ANN - created by run_dataset_4_train.m
     * export.mat  - assembled ANNs (thermal and magnetic) - created by run_dataset_5_export.m
-* design - Examples of generated inductor designs
+* design - examples of generated inductor designs
    * compute_pareto_ann.mat - inductor Pareto front example (ANN computation) - created by run_design_compute_pareto.m
    * compute_pareto_approx.mat  - inductor Pareto front example (analytical approximation) - created by run_design_compute_pareto.m
    * compute_single_ann.mat - inductor single design example (ANN computation) - created by run_design_compute_single.m
