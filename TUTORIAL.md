@@ -1,6 +1,6 @@
-# AI-mag: Tutorial
+# AI-mag: Short Tutorial
 
-## Goal
+## Goal of the Tutorial
 
 This is a simple example how to design an inductor:
 * Design computation and optimization
@@ -11,11 +11,11 @@ This is a simple example how to design an inductor:
     * Pareto fronts exploration
 
 The following inductor is considered.
-* Non-solated DC-DC Buck converter
+* Non-isolated DC-DC Buck converter
 * Converter ratings: 2kW, 400V input voltage, 200V output voltage
-* Optimized parameters : frequency, geometry, air gap, number of turns, ripple
+* Optimized parameters: frequency, geometry, air gap, number of turns, ripple
 
-## Installation
+## Installation and Initialization
 
 > **WARNING**: The repository does NOT contain the dataset and the trained ANNs.
 
@@ -154,14 +154,14 @@ All the files describing the inductor computation and optimization are located i
     * [iso_data.mat](run_design/material/iso_data.mat) - Insulation data (weight, thermal properties, etc.)
     * [winding_data.mat](run_design/material/winding_data.mat) - Winding data (stranding, fill factor, etc.)
 * [param](run_design/param) - User defined parameters
-    * [get_design_circuit.m](run_design/param/get_design_circuit.m) - Applied stress on the inductor (current, voltage, etc.)
-    * [get_design_data_const.m](run_design/param/get_design_data_const.m) - Parameters for the numerical methods
-    * [get_design_data_vec.m](run_design/param/get_design_data_vec.m) - Inductor parameters
-    * [get_design_excitation.m](run_design/param/get_design_excitation.m) - Inductor operating point definition
-    * [get_design_fct.m](run_design/param/get_design_fct.m) - Functions for filtering invalid designs
     * [get_design_param_compute_pareto.m](run_design/param/get_design_param_compute_pareto.m) - Definition of the parameter sweep (many designs)
     * [get_design_param_compute_pareto.m](run_design/param/get_design_param_compute_single.m) - Definition of the parameter (single design)
     * [get_design_param_plot_pareto.m](run_design/param/get_design_param_plot_pareto.m) - Parameters for the Pareto fronts
+    * [get_design_circuit.m](run_design/param/get_design_circuit.m) - Applied stress on the inductor (current, voltage, etc.)
+    * [get_design_excitation.m](run_design/param/get_design_excitation.m) - Inductor operating point definition
+    * [get_design_data_vec.m](run_design/param/get_design_data_vec.m) - Inductor parameters
+    * [get_design_fct.m](run_design/param/get_design_fct.m) - Functions for filtering invalid designs
+    * [get_design_data_const.m](run_design/param/get_design_data_const.m) - Parameters for the numerical methods
 
 ## FEM Dataset and ANN Training
 

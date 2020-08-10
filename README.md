@@ -23,12 +23,12 @@ The following performances are achieved:
 
 ## Tutorial
 
-This [tutorial](TUTORIAL.md) explains how to install the tool, design inductors, and obtain Pareto fronts.
+This [short tutorial](TUTORIAL.md) explains how to install the tool, design inductors, and obtain Pareto fronts.
 
 ## Scientific Paper
 
 A **scientific paper** has been published in the **IEEE Open Journal of Power Electronics** about this tool. The paper describes the method used in the tool and presents some results (ANN trainings and inductor optimization). The paper is available as open-acces:
-* [PDF version](paper.pdf)
+* [PDF version](PAPER.pdf)
 * [DOI link](https://doi.org/10.1109/OJPEL.2020.3012777)
 
 ## Simplified Workflow
@@ -76,7 +76,7 @@ The following code structure is considered:
 * [LICENSE.md](LICENSE.md) - License files
 * [README.md](README.md) - Readme file
 * [TUTORIAL.md](TUTORIAL.md) - Simple inductor optimization tutorial
-* [paper.pdf](paper.pdf) - Scientific paper published in IEEE OJ-PEL
+* [PAPER.pdf](PAPER.pdf) - Scientific paper published in IEEE OJ-PEL
 * [start_comsol_matlab.bat](start_comsol_matlab.bat) - Batch script (MS Windows) for starting the COMSOL MATLAB Livelink
 * [start_comsol_matlab.sh](start_comsol_matlab.sh) - Shell script (Linux) for starting the COMSOL MATLAB Livelink
 
@@ -141,19 +141,23 @@ The releases are available at GitHub and contains:
 * An archive (zip or tar.gz) containing the generated data (FEM solution, trained ANN, etc.)
 * [GitHub Releases](https://github.com/ethz-pes/AI-mag/releases)
 
+> **WARNING**: The repository does NOT contain the dataset and the trained ANNs.
+
+> **WARNING**: The dataset and the trained ANNs are only included in the releases.
+
 ## Metrics
 
 ```
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-MATLAB                         105           1790           5147           4888
-Python                           8            365            451            450
-Markdown                         6             93              0            331
-DOS Batch                        3              9              0             34
-Bourne Shell                     3              9              9             21
+MATLAB                         107           1795           5144           4925
+Markdown                         7            118              0            504
+Python                           7            343            417            415
+DOS Batch                        2              6              0             24
+Bourne Shell                     2              6              6             14
 -------------------------------------------------------------------------------
-SUM:                           125           2266           5607           5724
+SUM:                           125           2268           5567           5882
 -------------------------------------------------------------------------------
 ```
 
