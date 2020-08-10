@@ -21,10 +21,14 @@ The following performances are achieved:
 * The tool is able **generate 300'000 designs per second** on a laptop computer
 * The tool is able for compute **50'000 operating points per second** on a laptop computer
 
+## Tutorial
+
+This [short tutorial](TUTORIAL.md) explains how to install the tool, design inductors, and obtain Pareto fronts.
+
 ## Scientific Paper
 
 A **scientific paper** has been published in the **IEEE Open Journal of Power Electronics** about this tool. The paper describes the method used in the tool and presents some results (ANN trainings and inductor optimization). The paper is available as open-acces:
-* [PDF version](paper.pdf)
+* [PDF version](PAPER.pdf)
 * [DOI link](https://doi.org/10.1109/OJPEL.2020.3012777)
 
 ## Simplified Workflow
@@ -48,41 +52,34 @@ A **scientific paper** has been published in the **IEEE Open Journal of Power El
     <img src="resources/img_readme/screenshot_6.png" width="400">
 </p>
 
-## Getting Started / Example
+## Code Structure
 
 The following code structure is considered:
+* [dataset](dataset) - FEM dataset and trained ANNs (the data are only included in the releases, not in the repository)
+* [design](design) - Inductor design results (the data are only included in the releases, not in the repository)
 * [resources](resources) - Different resources which are not directly used in the toolbox
-* [source_ann](source_ann) - ANN library for regression/fitting (standalone code, see [README.md](source_ann/README.md))
-* [source_inductor](source_inductor) - Source code for the FEM/ANN inductor design tool
-* [source_input](source_input) - Input data and parameters defined by the user
-* [paper.pdf](paper.pdf) - Scientific paper published in IEEE OJ-PEL
+* [run_dataset](run_dataset) - Code for creating the dataset and training the ANNs
+    * [run_dataset_1_init.m](run_dataset/run_dataset_1_init.m) - Init the simulations with constant data
+    * [run_dataset_2_fem.m](run_dataset/run_dataset_2_fem.m) - Run the different FEM simulations
+    * [run_dataset_3_assemble.m](run_dataset/run_dataset_3_assemble.m) - Assemble the FEM simulations results, add the analytical solutions
+    * [run_dataset_4_train.m](run_dataset/run_dataset_4_train.m) - Train the regressions with ANNs with simulation results
+    * [run_dataset_5_export.m](run_dataset/run_dataset_5_export.m) - Export the ANNs in prevision of the evaluation of inductor designs 
+* [run_design](run_design) - Code for designing inductors and plotting the results
+    * [run_design_compute_single.m](run_design/run_design_compute_single.m) - Simulate a single inductor design and plot the result (ANN or FEM or ana. approx)
+    * [run_design_compute_pareto.m](run_design/run_design_compute_pareto.m) - Optimize many inductor designs and make Pareto plots (ANN or ana. approx.)
+* [src](src) - Source code (backend)
+    * [ann_regression](src/ann_regression) - ANN library for regression/fitting (standalone code, see [readme](src/ann_regression/README.md))
+    * [inductor_dataset](src/inductor_dataset) - Source code for the FEM dataset and ANN training
+    * [inductor_design](src/inductor_design) - Source code for the inductor design
+    * [utils](src/utils) - Different small utils functions
 * [init_toolbox.m](init_toolbox.m) - Load the MATLAB toolbox
-* [init_toolbox.m](init_toolbox.m) - Load the MATLAB toolbox
-* [run_0_init.m](run_0_init.m) - Init the simulations with constant data
-* [run_1_fem.m](run_1_fem.m) - Run the different FEM simulations
-* [run_2_assemble.m](run_2_assemble.m) - Assemble the FEM simulations results, add the analytical solutions
-* [run_3_train.m](run_3_train.m) - Train the regressions with ANNs with simulation results
-* [run_4_export.m](run_4_export.m) - Export the ANNs in prevision of the evaluation of inductor designs 
-* [run_5_compute_all.m](run_5_compute_all.m) - Simulate many inductor designs (ANN or ana. approx.)
-* [run_6_compute_single.m](run_6_compute_single.m) - Simulate a single inductor design (ANN or FEM or ana. approx)
-* [run_7_plot_all.m](run_7_plot_all.m) - Plot the optimization results (Pareto fronts) in a GUI
-* [run_8_plot_single.m](run_8_plot_single.m) - Display a single design in a GUI
-* [run_ann_server.py](run_ann_server.py) - Python ANN server for using Keras and TensorFlow from MATLAB
-* Shell script (Linux) and (batch) script (MS Windows) for starting the Python ANN server
-* Shell script (Linux) and (batch) script (MS Windows) for starting the COMSOL MATLAB Livelink
-* Readme and license files
+* [LICENSE.md](LICENSE.md) - License files
+* [README.md](README.md) - Readme file
+* [TUTORIAL.md](TUTORIAL.md) - Simple inductor optimization tutorial
+* [PAPER.pdf](PAPER.pdf) - Scientific paper published in IEEE OJ-PEL
+* [start_comsol_matlab.bat](start_comsol_matlab.bat) - Batch script (MS Windows) for starting the COMSOL MATLAB Livelink
+* [start_comsol_matlab.sh](start_comsol_matlab.sh) - Shell script (Linux) for starting the COMSOL MATLAB Livelink
 
-The included example shows the complete workflow:
-* FEM simulations (dataset generation)
-* ANN training (magnetic and thermal)
-* Design computation and optimization
-    * The inductor of a DC-DC Buck converter is optimized
-    * The converter has the following ratings: 2kW, 400V input voltage, 200V output voltage
-    * The following parameters are optimized: frequency, geometry, air gap, number of turns, ripple
-* Result analysis
-    * Interactive GUI
-    * Pareto fronts exploration
-	
 ## Inductor Optimization Capabilities
 
 Currently the following inductors are optimized:
@@ -144,19 +141,23 @@ The releases are available at GitHub and contains:
 * An archive (zip or tar.gz) containing the generated data (FEM solution, trained ANN, etc.)
 * [GitHub Releases](https://github.com/ethz-pes/AI-mag/releases)
 
+> **WARNING**: The repository does NOT contain the dataset and the trained ANNs.
+
+> **WARNING**: The dataset and the trained ANNs are only included in the releases.
+
 ## Metrics
 
 ```
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-MATLAB                         105           1790           5147           4888
-Python                           8            365            451            450
-Markdown                         6             93              0            331
-DOS Batch                        3              9              0             34
-Bourne Shell                     3              9              9             21
+MATLAB                         107           1795           5144           4925
+Markdown                         7            118              0            504
+Python                           7            343            417            415
+DOS Batch                        2              6              0             24
+Bourne Shell                     2              6              6             14
 -------------------------------------------------------------------------------
-SUM:                           125           2266           5607           5724
+SUM:                           125           2268           5567           5882
 -------------------------------------------------------------------------------
 ```
 

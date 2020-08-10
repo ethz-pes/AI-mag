@@ -9,9 +9,9 @@ function init_toolbox()
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % add path
-addpath(genpath('source_ann'))
-addpath(genpath('source_inductor'))
-addpath(genpath('source_input'))
+addpath(genpath('src'))
+addpath(genpath('run_dataset'))
+addpath(genpath('run_design'))
 
 % init random number generators
 rng('shuffle')
