@@ -15,6 +15,22 @@ The folder 'data' should be placed inside the source code folder (at the root of
 
 All the releases (code and data) are on [GitHub Releases](https://github.com/ethz-pes/AI-mag/releases).
 
+## File Description
+
+* init.mat - init data - created by run_0_init.m
+* fem_ht.zip - thermal 3D FEM dataset - created by run_1_fem.m
+* fem_mf.zip - magnetic 3D FEM dataset - created by run_1_fem.m
+* ht_assemble.mat - assembled thermal 3D FEM dataset - created by run_2_assemble.m
+* mf_assemble.mat - assembled magnetic 3D FEM dataset - created by run_2_assemble.m
+* ht_ann.mat - trained thermal ANN - created by run_3_train.m
+* mf_ann.mat - trained magnetic ANN - created by run_3_train.m
+* export.mat  - assembled ANNs (thermal and magnetic) - created by run_4_export.m
+* compute_all_ann.mat - inductor Pareto front example (ANN computation) - created by run_5_compute_all.m
+* compute_all_approx.mat  - inductor Pareto front example (analytical approximation) - created by run_5_compute_all.m
+* compute_single_ann.mat - inductor single design example (ANN computation) - created by run_6_compute_single.m
+* compute_single_approx.mat - inductor single design example (analytical approximation) - created by run_6_compute_single.m
+* compute_single_fem.mat - inductor single design example (FEM simulation) - created by run_6_compute_single.m
+
 ## Author
 
 * **Thomas Guillod, ETH Zurich, Power Electronic Systems Laboratory** - [GitHub Profile](https://github.com/otvam)
