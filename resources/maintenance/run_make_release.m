@@ -37,6 +37,7 @@ fprintf('init\n')
 folder_work = pwd();
 folder_data_tmp = tempname();
 folder_archive_tmp = tempname();
+[s, m] = mkdir(folder_archive);
 [s, m] = mkdir(folder_data_tmp);
 [s, m] = mkdir(folder_archive_tmp);
 
