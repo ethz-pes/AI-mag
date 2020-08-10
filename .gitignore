@@ -7,7 +7,8 @@
 *.idea
 
 # folder with data
-data/*
+dataset/*
+design/*
 
 # release folder
 resources/maintenance/release_archive

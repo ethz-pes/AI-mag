@@ -12,8 +12,8 @@ function run_update_fem()
 folder = '../..';
 
 % update the datasets
-get_assemble('data/fem_ht', folder, @fct_handle)
-get_assemble('data/fem_mf', folder, @fct_handle)
+get_assemble('dataset/fem_ht', folder, @fct_handle)
+get_assemble('dataset/fem_mf', folder, @fct_handle)
 
 end
 
