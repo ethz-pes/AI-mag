@@ -1,4 +1,4 @@
-function run_design_compute_all()
+function run_design_compute_pareto()
 % Compute many inductor inductor designs (properties, thermal, losses, etc.).
 %
 %    Load the ANN/regression obtained with the FEM/ANN workflow.
@@ -53,13 +53,13 @@ function run_sub(eval_type)
 file_export = 'dataset/export.mat';
 
 % path of the file to be written with the computed designs
-file_compute_all = ['design/compute_all_' eval_type '.mat'];
+file_compute_pareto = ['design/compute_pareto_' eval_type '.mat'];
 
 % get the design parameters for the inductors
-[sweep, n_split, fct, eval_ann, data_compute] = get_design_param_compute_all(eval_type);
+[sweep, n_split, fct, eval_ann, data_compute] = get_design_param_compute_pareto(eval_type);
 
 % compute the inductor designs
-master_compute_all(file_compute_all, file_export, sweep, n_split, fct, eval_ann, data_compute)
+master_compute_pareto(file_compute_pareto, file_export, sweep, n_split, fct, eval_ann, data_compute)
 
 end
 
@@ -70,12 +70,12 @@ function plot_sub(eval_type)
 %        eval_type (str): type of the evaluation ('ann', or approx')
 
 % path of the file contained the computed designs
-file_compute_all = ['design/compute_all_' eval_type '.mat'];
+file_compute_pareto = ['design/compute_pareto_' eval_type '.mat'];
 
 % get the GUI parameters
-[fct_data, plot_param, text_param] = get_design_param_plot_all();
+[fct_data, plot_param, text_param] = get_design_param_plot_pareto();
 
 % start the GUI
-master_plot_all(file_compute_all, fct_data, plot_param, text_param)
+master_plot_pareto(file_compute_pareto, fct_data, plot_param, text_param)
 
 end

@@ -33,7 +33,7 @@ else
     run_sub(choice)
     plot_sub(choice)
 end
-    
+
 end
 
 function run_sub(eval_type)

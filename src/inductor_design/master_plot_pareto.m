@@ -1,4 +1,4 @@
-function master_plot_all(file_compute_all, fct_data, plot_param, text_param)
+function master_plot_pareto(file_compute_all, fct_data, plot_param, text_param)
 % Display many inductors design in a GUI.
 %
 %    Start a GUI with several Pareto fronts.
@@ -16,7 +16,7 @@ function master_plot_all(file_compute_all, fct_data, plot_param, text_param)
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % init
-fprintf('################## master_plot_all\n')
+fprintf('################## master_plot_pareto\n')
 
 % load the designs
 fprintf('load\n')
@@ -30,6 +30,6 @@ fprintf('gui\n')
 design_display.ParetoGui(id_design, fom, operating, fct_data, plot_param, text_param);
 
 % teardown
-fprintf('################## master_plot_all\n')
+fprintf('################## master_plot_pareto\n')
 
 end

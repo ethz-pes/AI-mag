@@ -1,4 +1,4 @@
-function master_compute_all(file_compute_all, file_export, sweep, n_split, fct, eval_ann, data_compute)
+function master_compute_pareto(file_compute_all, file_export, sweep, n_split, fct, eval_ann, data_compute)
 % Compute many inductor inductor designs (properties, thermal, losses, etc.).
 %
 %    Load the ANN/regression obtained with the FEM/ANN workflow.
@@ -30,7 +30,7 @@ function master_compute_all(file_compute_all, file_export, sweep, n_split, fct, 
 %    (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 % init
-fprintf('################## master_compute_all\n')
+fprintf('################## master_compute_pareto\n')
 
 % load the FEM/ANN data
 fprintf('load\n')
@@ -83,7 +83,7 @@ fprintf('    n_sol = %d\n', n_sol)
 fprintf('save\n')
 save(file_compute_all, '-v7.3', 'diff', 'n_tot', 'n_filter_var', 'n_filter_fom', 'n_sol', 'id_design', 'fom', 'operating')
 
-fprintf('################## master_compute_all\n')
+fprintf('################## master_compute_pareto\n')
 
 end
 

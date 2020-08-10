@@ -7,8 +7,10 @@
 *.idea
 
 # folder with data
-dataset/*
-design/*
+dataset/*.zip
+dataset/*.mat
+design/*.zip
+design/*.mat
 
 # release folder
 resources/maintenance/release_archive

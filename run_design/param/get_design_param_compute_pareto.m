@@ -1,4 +1,4 @@
-function [sweep, n_split, fct, eval_ann, data_compute] = get_design_param_compute_all(eval_type)
+function [sweep, n_split, fct, eval_ann, data_compute] = get_design_param_compute_pareto(eval_type)
 % Return the data required for the computation of inductor designs.
 %
 %    Define the variables and how to generate the samples.
