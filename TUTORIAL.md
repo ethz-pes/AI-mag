@@ -4,6 +4,8 @@
 
 This is a simple example how to design an inductor:
 * Design computation and optimization
+    * Single design
+    * Pareto optimization
 * Result analysis
     * Interactive GUI
     * Pareto fronts exploration
@@ -16,6 +18,7 @@ The following inductor is considered.
 ## Installation
 
 > **WARNING**: The repository does NOT contain the dataset and the trained ANNs.
+
 > **WARNING**: The dataset and the trained ANNs are only included in the releases.
 
 * Go to the latest release: [download](https://github.com/ethz-pes/AI-mag/releases/latest)

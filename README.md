@@ -21,6 +21,10 @@ The following performances are achieved:
 * The tool is able **generate 300'000 designs per second** on a laptop computer
 * The tool is able for compute **50'000 operating points per second** on a laptop computer
 
+## Tutorial
+
+This [tutorial](TUTORIAL.md) explains how to install the tool, design inductors, and obtain Pareto fronts.
+
 ## Scientific Paper
 
 A **scientific paper** has been published in the **IEEE Open Journal of Power Electronics** about this tool. The paper describes the method used in the tool and presents some results (ANN trainings and inductor optimization). The paper is available as open-acces:
@@ -64,7 +68,7 @@ The following code structure is considered:
     * [run_design_compute_single.m](run_design/run_design_compute_single.m) - Simulate a single inductor design and plot the result (ANN or FEM or ana. approx)
     * [run_design_compute_pareto.m](run_design/run_design_compute_pareto.m) - Optimize many inductor designs and make Pareto plots (ANN or ana. approx.)
 * [src](src) - Source code (backend)
-    * [ann_regression](src/ann_regression) - ANN library for regression/fitting (standalone code, see [README.md](src/ann_regression/README.md))
+    * [ann_regression](src/ann_regression) - ANN library for regression/fitting (standalone code, see [readme](src/ann_regression/README.md))
     * [inductor_dataset](src/inductor_dataset) - Source code for the FEM dataset and ANN training
     * [inductor_design](src/inductor_design) - Source code for the inductor design
     * [utils](src/utils) - Different small utils functions
