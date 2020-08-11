@@ -58,15 +58,25 @@ The following code structure is considered:
 * [dataset](dataset) - FEM dataset and trained ANNs (the data are only included in the releases, not in the repository)
 * [design](design) - Inductor design results (the data are only included in the releases, not in the repository)
 * [resources](resources) - Different resources which are not directly used in the toolbox
+    * [artwork](resources/artwork) - Source code of the different artworks (Illustrator)
+    * [img_readme](resources/img_readme) - Images for the readme
+    * [img_tutorial](resources/img_tutorial) - Images for the tutorial
+    * [maintenance](resources/maintenance) - Maintenance code (indent, release, etc.)
+    * [material_database](resources/material_database) - Code for parsing and generating the material database
+    * [mathematica](resources/mathematica) - Source code for the symbolic computations (Mathematica)
 * [run_dataset](run_dataset) - Code for creating the dataset and training the ANNs
     * [run_dataset_1_init.m](run_dataset/run_dataset_1_init.m) - Init the simulations with constant data
     * [run_dataset_2_fem.m](run_dataset/run_dataset_2_fem.m) - Run the different FEM simulations
     * [run_dataset_3_assemble.m](run_dataset/run_dataset_3_assemble.m) - Assemble the FEM simulations results, add the analytical solutions
     * [run_dataset_4_train.m](run_dataset/run_dataset_4_train.m) - Train the regressions with ANNs with simulation results
-    * [run_dataset_5_export.m](run_dataset/run_dataset_5_export.m) - Export the ANNs in prevision of the evaluation of inductor designs 
+    * [run_dataset_5_export.m](run_dataset/run_dataset_5_export.m) - Export the ANNs in prevision of the evaluation of inductor designs
+    * [model](run_dataset/model) - COMSOL models
+    * [param](run_dataset/param) - User defined parameters
 * [run_design](run_design) - Code for designing inductors and plotting the results
     * [run_design_compute_single.m](run_design/run_design_compute_single.m) - Simulate a single inductor design and plot the result (ANN or FEM or ana. approx)
     * [run_design_compute_pareto.m](run_design/run_design_compute_pareto.m) - Optimize many inductor designs and make Pareto plots (ANN or ana. approx.)
+    * [material](run_design/material) - Material database
+    * [param](run_design/param) - User defined parameters
 * [src](src) - Source code (backend)
     * [ann_regression](src/ann_regression) - ANN library for regression/fitting (standalone code, see [readme](src/ann_regression/README.md))
     * [inductor_dataset](src/inductor_dataset) - Source code for the FEM dataset and ANN training

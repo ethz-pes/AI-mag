@@ -13,6 +13,7 @@ This is a simple example how to design an inductor:
 The following inductor is considered.
 * Non-isolated DC-DC Buck converter
 * Converter ratings: 2kW, 400V input voltage, 200V output voltage
+* E-core inductor (ferrite and litz-wire)
 * Optimized parameters: frequency, geometry, air gap, number of turns, ripple
 
 ## Installation and Initialization
@@ -21,13 +22,13 @@ The following inductor is considered.
 
 > **WARNING**: The dataset and the trained ANNs are only included in the releases.
 
-* Go to the latest release: [download](https://github.com/ethz-pes/AI-mag/releases/latest)
-* Download the source code: "Source code (zip)" or "Source code (tar.gz)"
-* Unpack the source code
-* Download the data: "data.zip" or "data.tar.gz"
-* Unpack the data (replace the folder "dataset" and "design")
-* Start MATLAB and go to the corresponding folder
-* Type "init_toolbox" to load the toolbox
+1. Go to the latest release: [Release](https://github.com/ethz-pes/AI-mag/releases/latest)
+1. Download the source code: "Source code (zip)" or "Source code (tar.gz)"
+1. Unpack the folder "AI-mag-x.x"
+1. Download the data: "data.zip" or "data.tar.gz"
+1. Unpack the data (replace the folders "dataset" and "design")
+1. Start MATLAB and go to the corresponding folder
+1. Type "init_toolbox" to load the toolbox
 
 ## Run a Single Inductor Design
 
