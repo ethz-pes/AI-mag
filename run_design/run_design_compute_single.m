@@ -4,7 +4,7 @@ function run_design_compute_single()
 %    Load the ANN/regression obtained with the FEM/ANN workflow.
 %    Compute the specified design.
 %
-%    Use the ANN/regression (or FEM or analytical approximation) is used for predicting:
+%    Use the ANN/regression (or FEM or analytical approximation) for the computation:
 %        - the thermal model (hotspot and average temperatures)
 %        - the magnetic model (inductance, current density, flux density, and magnetic field)
 %
@@ -25,7 +25,7 @@ idx = input('Enter your choice >> ');
 choice_cell = {'ann', 'approx', 'fem'};
 choice = get_choice(choice_cell, idx);
 
-% run the regression
+% compute the design
 if isempty(choice)
     fprintf('Invalid input\n')
 else

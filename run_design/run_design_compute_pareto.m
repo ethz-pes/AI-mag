@@ -5,7 +5,7 @@ function run_design_compute_pareto()
 %    Sweep different inductor designs.
 %    Compute the inductor properties, thermal, losses, etc.
 %
-%    Use the ANN/regression are used for predicting:
+%    Use the ANN/regression (or analytical approximation) for the computation:
 %        - the thermal model (hotspot and average temperatures)
 %        - the magnetic model (inductance, current density, flux density, and magnetic field)
 %
@@ -32,7 +32,7 @@ idx = input('Enter your choice >> ');
 choice_cell = {'ann', 'approx'};
 choice = get_choice(choice_cell, idx);
 
-% run the regression
+% compute the designs
 if isempty(choice)
     fprintf('Invalid input\n')
 else
