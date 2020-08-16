@@ -25,6 +25,9 @@ The following performances are achieved:
 
 This [short tutorial](TUTORIAL.md) explains how to install the tool, design inductors, and obtain Pareto fronts.
 
+If you don't have MATLAB, you can quickly test the code on [Code Ocean](https://codeocean.com/capsule/5365652/tree).
+Due to the limitations of Code Ocean, you can not use plots, GUI, or COMSOL.
+
 ## Scientific Paper
 
 A **scientific paper** has been published in the **IEEE Open Journal of Power Electronics** about this tool. The paper describes the method used in the tool and presents some results (ANN trainings and inductor optimization). The paper is available as open-acces:
