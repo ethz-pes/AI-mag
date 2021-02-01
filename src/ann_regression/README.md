@@ -39,7 +39,7 @@ The examples show the capabilities of the toolbox:
 ## Compatibility
 
 The toolbox is tested with the following MATLAB setup:
-* Tested with MATLAB R2018b or 2019a
+* Tested with MATLAB R2018a, R2018b and 2019a
 * Deep Learning Toolbox ("neural_network_toolbox")
 * Global Optimization Toolbox ("gads_toolbox")
 * Optimization Toolbox ("optimization_toolbox")
@@ -107,4 +107,4 @@ Can this code run with GNU Octave?
 ## License
 
 * This project is licensed under the **BSD License**, see [LICENSE.md](LICENSE.md).
-* This project is copyrighted by: (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod.
+* This project is copyrighted by: (c) 2019-2021, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod.

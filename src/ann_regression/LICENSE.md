@@ -1,4 +1,4 @@
-(c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
+(c) 2019-2021, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:

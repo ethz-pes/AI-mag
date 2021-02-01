@@ -108,7 +108,7 @@ However, this toolbox is made in order to be **easily extended** with other indu
 ## Compatibility
 
 The tool is tested with the following MATLAB setup:
-* Tested with MATLAB R2018b or 2019a
+* Tested with MATLAB R2018a, R2018b and 2019a
 * Deep Learning Toolbox ("neural_network_toolbox")
 * Global Optimization Toolbox ("gads_toolbox")
 * Optimization Toolbox ("optimization_toolbox")
@@ -211,7 +211,7 @@ Why the tool in MATLAB and Python and not only in Python?
 * The MATLAB ANN engine is also simpler to begin than Keras/TensorFlow.
 * Due to legacy code on MATLAB (some inductor models).
 
-Can I use another FEM solver (e.g., Ansys, OpenFOAM)?
+Can I use another FEM solver (e.g., Ansys, OpenFOAM, Fenics)?
 * The tool has been written in order to minimize the dependencies to COMSOL
 * Therefore, it would be easy to use another FEM solver.
 
@@ -232,5 +232,5 @@ Can I use another FEM solver (e.g., Ansys, OpenFOAM)?
 ## License
 
 * This project is licensed under the **BSD License**, see [LICENSE.md](LICENSE.md).
-* This project is copyrighted by: (c) 2019-2020, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod.
+* This project is copyrighted by: (c) 2019-2021, ETH Zurich, Power Electronic Systems Laboratory, T. Guillod.
 * The "ETH Zurich" and "Power Electronic Systems Laboratory" logos are the property of their respective owners.
