@@ -1,5 +1,11 @@
 # AI-mag: Inductor Modeling and Design with FEM/ANN
 
+![license - BSD](https://img.shields.io/badge/license-BSD-green)
+![language - MATLAB](https://img.shields.io/badge/language-MATLAB-blue)
+![language - python](https://img.shields.io/badge/language-python-blue)
+![category - power electronics](https://img.shields.io/badge/category-power%20electronics-lightgrey)
+![status - unmaintained](https://img.shields.io/badge/status-unmaintained-red)
+
 [**https://ai-mag.github.io**](https://ai-mag.github.io)
 
 **AI-mag** is a **MATLAB** toolbox (using also COMSOL and Python) for **power electronic inductor optimization**. 
