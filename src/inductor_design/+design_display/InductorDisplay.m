@@ -146,7 +146,7 @@ classdef InductorDisplay < handle
             text{end+1} = sprintf('V_t_sat_sat = %.2f Vms', 1e3.*fom_tmp.circuit.V_t_sat_sat);
             text{end+1} = sprintf('I_sat = %.2f A', fom_tmp.circuit.I_sat);
             text{end+1} = sprintf('I_rms = %.2f A', fom_tmp.circuit.I_rms);
-            text{end+1} = sprintf('J_norm = %.2f 1/mm2', 1e-6.*fom_tmp.circuit.H_norm);
+            text{end+1} = sprintf('J_norm = %.2f 1/mm2', 1e-6.*fom_tmp.circuit.J_norm);
             text{end+1} = sprintf('H_norm = %.2f 1/mm', 1e-3.*fom_tmp.circuit.H_norm);
             text{end+1} = sprintf('B_norm = %.2f mT/A', 1e3.*fom_tmp.circuit.B_norm);
             text_data{end+1} = struct('title', 'circuit', 'text', {text});
