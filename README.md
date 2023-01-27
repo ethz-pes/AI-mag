@@ -204,7 +204,7 @@ How fast is the code, do I need a powerful machine?
 
 I have a powerful cluster, can I use it?
 * Yes, the code can run in parallel (multithreaded and/or completely distributed).
-* The code has been run succesfully on a HPC cluster (bith a LSF batching system). 
+* The code has been run succesfully on a HPC cluster (with a LSF batching system). 
 
 Can this code run with GNU Octave?
 * The code is not compatible with GNU Octave.
@@ -213,8 +213,8 @@ Can this code run with GNU Octave?
 * The GUI is not compatible with GNU Octave.
 
 Why the tool in MATLAB and Python and not only in Python?
-* Mainly due to the COMSOL MATLAB Livelink which is great on MATLAB.
-* The MATLAB ANN engine is also simpler to begin than Keras/TensorFlow.
+* Mainly due to the COMSOL MATLAB Livelink which is great.
+* The MATLAB ANN engine is also simpler for beginners (compared to Keras/TensorFlow).
 * Due to legacy code on MATLAB (some inductor models).
 
 Can I use another FEM solver (e.g., Ansys, OpenFOAM, Fenics)?
