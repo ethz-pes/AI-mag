@@ -122,7 +122,7 @@ inp.r_fill = min(inp.r_fill, inp.r_fill_max);
 inp.r_fill = max(inp.r_fill, inp.r_fill_min);
 
 % get the insulation distance, relative to the window size, with boundaries
-inp.d_iso = inp.d_iso_fact.*min(inp.x_window, inp.x_window);
+inp.d_iso = inp.d_iso_fact.*min(inp.x_window, inp.y_window);
 inp.d_iso = min(inp.d_iso, inp.d_iso_max);
 inp.d_iso = max(inp.d_iso, inp.d_iso_min);
 
