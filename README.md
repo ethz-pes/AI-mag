@@ -112,13 +112,13 @@ However, this toolbox is made in order to be **easily extended** with other indu
 ## Compatibility
 
 The tool is tested with the following MATLAB setup:
-* Tested with MATLAB R2018a, R2018b and 2019a
+* Tested with MATLAB R2018a, R2018b, 2019a, and R2024b
 * Deep Learning Toolbox ("neural_network_toolbox")
 * Global Optimization Toolbox ("gads_toolbox")
 * Optimization Toolbox ("optimization_toolbox")
 * Signal Processing Toolbox ("signal_toolbox")
 
-The tool is tested with the following COMSOL setup (for FEM simulations):
+The tool is tested with the following COMSOL setup (for FEM simulations, not maintained):
 * COMSOL Multiphysics 5.4 or 5.5
 * AC/DC Module (for the magnetic simulation)
 * Heat Transfer Module (for the thermal simulation)
@@ -128,7 +128,7 @@ The tool is tested with the following COMSOL setup (for FEM simulations):
 It should be noted that COMSOL is only required to run the FEM simulations, not for the ANN/regression or the inductor design evaluation.
 In other word, COMSOL is required to generate the ANN training set, but not for running the design tool.
 
-The tool is tested with the following Python setup (for ANN with Keras and TensorFlow):
+The tool is tested with the following Python setup (for ANN with Keras and TensorFlow, not maintained):
 * Python 3.6.8
 * Numpy 1.18.1
 * TensorFlow 2.1.0
@@ -136,6 +136,7 @@ The tool is tested with the following Python setup (for ANN with Keras and Tenso
 However, the toolbox can work without Python, as long as the Python ANN engine is not used.
 
 The tool is known to run with the following operating systems:
+* Linux Ubuntu 24.04.2 LTS
 * Linux Ubuntu 18.04.4 LTS
 * Linux CentOS 7.5
 * Microsoft Windows 10
@@ -183,11 +184,13 @@ SUM:                           125           2268           5567           5882
 Do I need Python?
 * Only if the Keras/TensorFlow ANN engine is used.
 * Python is not required if the MATLAB ANN engine is used.
+* The Python workflow has not been tested with a modern Python version.
 
 Do I need COMSOL?
 * Only for generating the training/testing datasets for the ANN.
 * Only for computing inductor design with FEM (without ANN).
 * COMSOL is not required for designing inductors with ANN
+* The COMSOL workflow has not been tested with a modern COMSOL version.
 
 Can this toolbox handle big data?
 * Depending what is big data, few 10 millions of designs are definitely OK.
